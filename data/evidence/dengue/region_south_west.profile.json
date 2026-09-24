@@ -1,0 +1,259 @@
+{
+  "row_count": 29,
+  "columns": [
+    "Description",
+    "Name",
+    "html_AREANAME",
+    "html_DETAIL",
+    "html_FMEL_UPD_D",
+    "html_INC_CRC",
+    "html_JOIN_COUNT"
+  ],
+  "missing_counts": {
+    "Description": 0,
+    "Name": 0,
+    "html_AREANAME": 0,
+    "html_DETAIL": 0,
+    "html_FMEL_UPD_D": 0,
+    "html_INC_CRC": 0,
+    "html_JOIN_COUNT": 0
+  },
+  "exact_duplicate_rows": 0,
+  "distinct_counts": {
+    "Description": 29,
+    "Name": 29,
+    "html_AREANAME": 2,
+    "html_DETAIL": 2,
+    "html_FMEL_UPD_D": 5,
+    "html_INC_CRC": 29,
+    "html_JOIN_COUNT": 2
+  },
+  "sample_rows": [
+    {
+      "Name": "kml_1",
+      "Description": "<center><table><tr><th colspan='2' align='center'><em>Attributes</em></th></tr><tr bgcolor=\"#E3E3F3\"> <th>JOIN_COUNT</th> <td>1</td> </tr><tr bgcolor=\"\"> <th>AREANAME</th> <td>No. of Dengue Cases : 1</td> </tr><tr bgcolor=\"#E3E3F3\"> <th>DETAIL</th> <td>No. of Dengue Cases : 1</td> </tr><tr bgcolor=\"\"> <th>INC_CRC</th> <td>2660F925FB5BC13E</td> </tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D</th> <td>20230302153245</td> </tr></table></center>",
+      "html_JOIN_COUNT": "1",
+      "html_AREANAME": "No. of Dengue Cases : 1",
+      "html_DETAIL": "No. of Dengue Cases : 1",
+      "html_INC_CRC": "2660F925FB5BC13E",
+      "html_FMEL_UPD_D": "20230302153245"
+    },
+    {
+      "Name": "kml_2",
+      "Description": "<center><table><tr><th colspan='2' align='center'><em>Attributes</em></th></tr><tr bgcolor=\"#E3E3F3\"> <th>JOIN_COUNT</th> <td>1</td> </tr><tr bgcolor=\"\"> <th>AREANAME</th> <td>No. of Dengue Cases : 1</td> </tr><tr bgcolor=\"#E3E3F3\"> <th>DETAIL</th> <td>No. of Dengue Cases : 1</td> </tr><tr bgcolor=\"\"> <th>INC_CRC</th> <td>6822FE907E872012</td> </tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D</th> <td>20230302153245</td> </tr></table></center>",
+      "html_JOIN_COUNT": "1",
+      "html_AREANAME": "No. of Dengue Cases : 1",
+      "html_DETAIL": "No. of Dengue Cases : 1",
+      "html_INC_CRC": "6822FE907E872012",
+      "html_FMEL_UPD_D": "20230302153245"
+    },
+    {
+      "Name": "kml_3",
+      "Description": "<center><table><tr><th colspan='2' align='center'><em>Attributes</em></th></tr><tr bgcolor=\"#E3E3F3\"> <th>JOIN_COUNT</th> <td>1</td> </tr><tr bgcolor=\"\"> <th>AREANAME</th> <td>No. of Dengue Cases : 1</td> </tr><tr bgcolor=\"#E3E3F3\"> <th>DETAIL</th> <td>No. of Dengue Cases : 1</td> </tr><tr bgcolor=\"\"> <th>INC_CRC</th> <td>4FDFADDBF21258BB</td> </tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D</th> <td>20230302153245</td> </tr></table></center>",
+      "html_JOIN_COUNT": "1",
+      "html_AREANAME": "No. of Dengue Cases : 1",
+      "html_DETAIL": "No. of Dengue Cases : 1",
+      "html_INC_CRC": "4FDFADDBF21258BB",
+      "html_FMEL_UPD_D": "20230302153245"
+    }
+  ],
+  "format": "GeoJSON",
+  "all_rows_profiled": true,
+  "feature_count": 29,
+  "top_level_keys": [
+    "type",
+    "crs",
+    "features"
+  ],
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "geometry_types": {
+    "Polygon": 29
+  },
+  "invalid_geometries": [],
+  "empty_geometry_indices": [],
+  "missing_geometry_indices": [],
+  "exact_duplicate_geometries": 1,
+  "exact_duplicate_features": 0,
+  "duplicate_identifiers": {
+    "Name": 0,
+    "html_INC_CRC": 0
+  },
+  "property_summaries": {
+    "Name": {
+      "order": "lexicographic",
+      "distinct_count": 29,
+      "min": "kml_1",
+      "max": "kml_9",
+      "values": [
+        "kml_1",
+        "kml_10",
+        "kml_11",
+        "kml_12",
+        "kml_13",
+        "kml_14",
+        "kml_15",
+        "kml_16",
+        "kml_17",
+        "kml_18",
+        "kml_19",
+        "kml_2",
+        "kml_20",
+        "kml_21",
+        "kml_22",
+        "kml_23",
+        "kml_24",
+        "kml_25",
+        "kml_26",
+        "kml_27",
+        "kml_28",
+        "kml_29",
+        "kml_3",
+        "kml_4",
+        "kml_5",
+        "kml_6",
+        "kml_7",
+        "kml_8",
+        "kml_9"
+      ]
+    },
+    "html_AREANAME": {
+      "order": "lexicographic",
+      "distinct_count": 2,
+      "min": "No. of Dengue Cases : 1",
+      "max": "No. of Dengue Cases : 3",
+      "values": [
+        "No. of Dengue Cases : 1",
+        "No. of Dengue Cases : 3"
+      ]
+    },
+    "html_DETAIL": {
+      "order": "lexicographic",
+      "distinct_count": 2,
+      "min": "No. of Dengue Cases : 1",
+      "max": "No. of Dengue Cases : 3",
+      "values": [
+        "No. of Dengue Cases : 1",
+        "No. of Dengue Cases : 3"
+      ]
+    },
+    "html_FMEL_UPD_D": {
+      "order": "lexicographic",
+      "distinct_count": 5,
+      "min": "20230221203224",
+      "max": "20230302153245",
+      "values": [
+        "20230221203224",
+        "20230222224240",
+        "20230227171152",
+        "20230228165708",
+        "20230302153245"
+      ]
+    },
+    "html_INC_CRC": {
+      "order": "lexicographic",
+      "distinct_count": 29,
+      "min": "07D47EDAD0FF1407",
+      "max": "DFEC847632D1513B",
+      "values": [
+        "07D47EDAD0FF1407",
+        "09380379A073233D",
+        "2660F925FB5BC13E",
+        "268F1ADAB72C9691",
+        "2F323C1CCC6D8EF9",
+        "304731DE25A75AC3",
+        "3A77AD558900026D",
+        "3C166B6094A56A58",
+        "4FDFADDBF21258BB",
+        "5402D540E31FA81D",
+        "5EA2450B59531D66",
+        "5F0BBB6A87F10C40",
+        "5F71318CF43D1546",
+        "6822FE907E872012",
+        "68FC9DDE52B310B6",
+        "7B365F17D5625DE5",
+        "80515FD15DFDCD45",
+        "84331330C44F3046",
+        "8A3FCE0FEDBB1965",
+        "8CF0F90205D7C85E",
+        "9102ACD31AE1EB70",
+        "975364AC396B2961",
+        "975364AC75350C92",
+        "9888F5399AD09555",
+        "A0FEA5BC345912DE",
+        "B806E2FB188CA295",
+        "BF2BC836138DA38D",
+        "CE17FCA24D116A3A",
+        "DFEC847632D1513B"
+      ]
+    },
+    "html_JOIN_COUNT": {
+      "order": "lexicographic",
+      "distinct_count": 2,
+      "min": "1",
+      "max": "3",
+      "values": [
+        "1",
+        "3"
+      ],
+      "numeric_count": 29,
+      "numeric_sum": 31.0,
+      "negative_count": 0
+    }
+  },
+  "dataset_id": "d_e34261c5ccace716132b55a5b02ebb1f",
+  "source_url": "https://data.gov.sg/datasets/d_e34261c5ccace716132b55a5b02ebb1f/view",
+  "raw_path": "data/raw/dengue/region_south_west.geojson.gz",
+  "metadata_path": "data/evidence/dengue/region_south_west.metadata.json",
+  "profiled_at_utc": "2026-09-24T03:42:56.290377+00:00",
+  "download": {
+    "dataset_id": "d_e34261c5ccace716132b55a5b02ebb1f",
+    "source_url": "https://data.gov.sg/datasets/d_e34261c5ccace716132b55a5b02ebb1f/view",
+    "api_url": "https://api-open.data.gov.sg/v1/public/api/datasets/d_e34261c5ccace716132b55a5b02ebb1f/poll-download",
+    "retrieved_at_utc": "2026-09-24T03:39:54.266138+00:00",
+    "completed_at_utc": "2026-09-24T03:39:54.393866+00:00",
+    "raw_bytes": 24693,
+    "raw_sha256": "b19dd65231aa3263c5a52d53098954f0fa30a7c9cc01f0852ad601a8e85ace35",
+    "stored_path": "data/raw/dengue/region_south_west.geojson.gz",
+    "stored_bytes": 3192,
+    "stored_sha256": "d9f10cf7c8c4c07232ddff21252051f5700709f74f7e0ca0e6a80c70fb1e886a",
+    "compression": "gzip (original bytes after decompression)",
+    "status": "complete"
+  },
+  "catalogue_metadata": {
+    "datasetId": "d_e34261c5ccace716132b55a5b02ebb1f",
+    "createdAt": "2019-01-31T00:00:00+08:00",
+    "name": "Dengue (Cases) - South West (GEOJSON)",
+    "collectionIds": [
+      "1440"
+    ],
+    "format": "GEOJSON",
+    "lastUpdatedAt": "2024-06-06T15:04:38+08:00",
+    "managedBy": "National Environment Agency",
+    "datasetSize": 24693,
+    "geoJsonMetadata": {
+      "properties": [
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "Name",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "Description",
+          "description": ""
+        }
+      ]
+    }
+  }
+}

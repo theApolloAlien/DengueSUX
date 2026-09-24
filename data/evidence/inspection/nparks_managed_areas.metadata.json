@@ -1,0 +1,86 @@
+{
+  "code": 0,
+  "data": {
+    "datasetId": "d_77d7ec97be83d44f61b85454f844382f",
+    "createdAt": "2023-07-31T16:24:27+08:00",
+    "name": "NParks Parks and Nature Reserves",
+    "collectionIds": [
+      "1489"
+    ],
+    "description": "The polygon in this layer represents the indicative Managed Areas of Parks which are currently under the purview of NParks. Includes the reserve boundary of Bukit Timah Nature Reserve, Central Catchment Nature Reserve, Labrador Nature Reserve and Sungei Buloh Wetland Reserve, and other parklands managed by NParks.",
+    "format": "GEOJSON",
+    "lastUpdatedAt": "2026-09-24T10:06:50+08:00",
+    "managedBy": "National Parks Board",
+    "coverageStart": "2025-11-07T00:00:00+08:00",
+    "datasetSize": 3095917,
+    "geoJsonMetadata": {
+      "properties": [
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "OBJECTID_1",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "L_CODE",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "NAME",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "N_RESERVE",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "INC_CRC",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "FMEL_UPD_D",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "SHAPE_1.AREA",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "SHAPE_1.LEN",
+          "description": ""
+        }
+      ]
+    }
+  },
+  "errorMsg": ""
+}

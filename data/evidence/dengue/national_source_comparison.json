@@ -1,0 +1,405 @@
+{
+  "compared_nonmissing_disease_week_pairs": 522,
+  "differing_disease_week_pairs": 54,
+  "all_differences": [
+    {
+      "epiweek": "2015-W03",
+      "disease": "Dengue Fever",
+      "bulletin": 237,
+      "alternate_weekly": 238
+    },
+    {
+      "epiweek": "2015-W07",
+      "disease": "Dengue Fever",
+      "bulletin": 99,
+      "alternate_weekly": 98
+    },
+    {
+      "epiweek": "2015-W17",
+      "disease": "Dengue Fever",
+      "bulletin": 120,
+      "alternate_weekly": 119
+    },
+    {
+      "epiweek": "2015-W40",
+      "disease": "Dengue Fever",
+      "bulletin": 235,
+      "alternate_weekly": 236
+    },
+    {
+      "epiweek": "2015-W47",
+      "disease": "Dengue Fever",
+      "bulletin": 285,
+      "alternate_weekly": 282
+    },
+    {
+      "epiweek": "2015-W51",
+      "disease": "Dengue Fever",
+      "bulletin": 372,
+      "alternate_weekly": 367
+    },
+    {
+      "epiweek": "2015-W52",
+      "disease": "Dengue Fever",
+      "bulletin": 458,
+      "alternate_weekly": 457
+    },
+    {
+      "epiweek": "2016-W01",
+      "disease": "Dengue Fever",
+      "bulletin": 549,
+      "alternate_weekly": 545
+    },
+    {
+      "epiweek": "2016-W02",
+      "disease": "Dengue Fever",
+      "bulletin": 628,
+      "alternate_weekly": 620
+    },
+    {
+      "epiweek": "2016-W03",
+      "disease": "Dengue Fever",
+      "bulletin": 635,
+      "alternate_weekly": 636
+    },
+    {
+      "epiweek": "2016-W04",
+      "disease": "Dengue Fever",
+      "bulletin": 629,
+      "alternate_weekly": 623
+    },
+    {
+      "epiweek": "2016-W05",
+      "disease": "Dengue Fever",
+      "bulletin": 528,
+      "alternate_weekly": 523
+    },
+    {
+      "epiweek": "2016-W06",
+      "disease": "Dengue Fever",
+      "bulletin": 420,
+      "alternate_weekly": 419
+    },
+    {
+      "epiweek": "2016-W07",
+      "disease": "Dengue Fever",
+      "bulletin": 592,
+      "alternate_weekly": 589
+    },
+    {
+      "epiweek": "2016-W08",
+      "disease": "Dengue Fever",
+      "bulletin": 508,
+      "alternate_weekly": 507
+    },
+    {
+      "epiweek": "2016-W09",
+      "disease": "Dengue Fever",
+      "bulletin": 412,
+      "alternate_weekly": 411
+    },
+    {
+      "epiweek": "2016-W10",
+      "disease": "Dengue Fever",
+      "bulletin": 396,
+      "alternate_weekly": 394
+    },
+    {
+      "epiweek": "2016-W11",
+      "disease": "Dengue Fever",
+      "bulletin": 373,
+      "alternate_weekly": 372
+    },
+    {
+      "epiweek": "2016-W12",
+      "disease": "Dengue Fever",
+      "bulletin": 306,
+      "alternate_weekly": 301
+    },
+    {
+      "epiweek": "2016-W14",
+      "disease": "Dengue Fever",
+      "bulletin": 290,
+      "alternate_weekly": 289
+    },
+    {
+      "epiweek": "2016-W15",
+      "disease": "Dengue Fever",
+      "bulletin": 225,
+      "alternate_weekly": 221
+    },
+    {
+      "epiweek": "2016-W16",
+      "disease": "Dengue Fever",
+      "bulletin": 231,
+      "alternate_weekly": 228
+    },
+    {
+      "epiweek": "2016-W17",
+      "disease": "Dengue Fever",
+      "bulletin": 244,
+      "alternate_weekly": 242
+    },
+    {
+      "epiweek": "2016-W18",
+      "disease": "Dengue Fever",
+      "bulletin": 181,
+      "alternate_weekly": 178
+    },
+    {
+      "epiweek": "2016-W19",
+      "disease": "Dengue Fever",
+      "bulletin": 217,
+      "alternate_weekly": 215
+    },
+    {
+      "epiweek": "2016-W20",
+      "disease": "Dengue Fever",
+      "bulletin": 212,
+      "alternate_weekly": 211
+    },
+    {
+      "epiweek": "2016-W22",
+      "disease": "Dengue Fever",
+      "bulletin": 219,
+      "alternate_weekly": 214
+    },
+    {
+      "epiweek": "2016-W23",
+      "disease": "Dengue Fever",
+      "bulletin": 159,
+      "alternate_weekly": 157
+    },
+    {
+      "epiweek": "2016-W25",
+      "disease": "Dengue Fever",
+      "bulletin": 215,
+      "alternate_weekly": 213
+    },
+    {
+      "epiweek": "2016-W27",
+      "disease": "Dengue Fever",
+      "bulletin": 246,
+      "alternate_weekly": 245
+    },
+    {
+      "epiweek": "2016-W30",
+      "disease": "Dengue Fever",
+      "bulletin": 221,
+      "alternate_weekly": 219
+    },
+    {
+      "epiweek": "2016-W31",
+      "disease": "Dengue Fever",
+      "bulletin": 211,
+      "alternate_weekly": 209
+    },
+    {
+      "epiweek": "2016-W32",
+      "disease": "Dengue Fever",
+      "bulletin": 197,
+      "alternate_weekly": 196
+    },
+    {
+      "epiweek": "2016-W33",
+      "disease": "Dengue Fever",
+      "bulletin": 221,
+      "alternate_weekly": 219
+    },
+    {
+      "epiweek": "2016-W34",
+      "disease": "Dengue Fever",
+      "bulletin": 274,
+      "alternate_weekly": 271
+    },
+    {
+      "epiweek": "2016-W35",
+      "disease": "Dengue Fever",
+      "bulletin": 310,
+      "alternate_weekly": 308
+    },
+    {
+      "epiweek": "2016-W35",
+      "disease": "Dengue Haemorrhagic Fever",
+      "bulletin": 1,
+      "alternate_weekly": 0
+    },
+    {
+      "epiweek": "2016-W36",
+      "disease": "Dengue Fever",
+      "bulletin": 242,
+      "alternate_weekly": 238
+    },
+    {
+      "epiweek": "2016-W39",
+      "disease": "Dengue Fever",
+      "bulletin": 138,
+      "alternate_weekly": 135
+    },
+    {
+      "epiweek": "2016-W40",
+      "disease": "Dengue Fever",
+      "bulletin": 125,
+      "alternate_weekly": 124
+    },
+    {
+      "epiweek": "2016-W42",
+      "disease": "Dengue Fever",
+      "bulletin": 108,
+      "alternate_weekly": 106
+    },
+    {
+      "epiweek": "2016-W43",
+      "disease": "Dengue Fever",
+      "bulletin": 84,
+      "alternate_weekly": 81
+    },
+    {
+      "epiweek": "2016-W44",
+      "disease": "Dengue Haemorrhagic Fever",
+      "bulletin": 1,
+      "alternate_weekly": 0
+    },
+    {
+      "epiweek": "2016-W45",
+      "disease": "Dengue Fever",
+      "bulletin": 84,
+      "alternate_weekly": 82
+    },
+    {
+      "epiweek": "2016-W46",
+      "disease": "Dengue Fever",
+      "bulletin": 72,
+      "alternate_weekly": 71
+    },
+    {
+      "epiweek": "2016-W51",
+      "disease": "Dengue Fever",
+      "bulletin": 72,
+      "alternate_weekly": 70
+    },
+    {
+      "epiweek": "2017-W03",
+      "disease": "Dengue Fever",
+      "bulletin": 74,
+      "alternate_weekly": 73
+    },
+    {
+      "epiweek": "2017-W04",
+      "disease": "Dengue Fever",
+      "bulletin": 66,
+      "alternate_weekly": 63
+    },
+    {
+      "epiweek": "2017-W18",
+      "disease": "Dengue Fever",
+      "bulletin": 42,
+      "alternate_weekly": 40
+    },
+    {
+      "epiweek": "2017-W24",
+      "disease": "Dengue Fever",
+      "bulletin": 79,
+      "alternate_weekly": 78
+    },
+    {
+      "epiweek": "2017-W30",
+      "disease": "Dengue Fever",
+      "bulletin": 66,
+      "alternate_weekly": 65
+    },
+    {
+      "epiweek": "2017-W33",
+      "disease": "Dengue Fever",
+      "bulletin": 52,
+      "alternate_weekly": 51
+    },
+    {
+      "epiweek": "2018-W44",
+      "disease": "Dengue Fever",
+      "bulletin": 75,
+      "alternate_weekly": 74
+    },
+    {
+      "epiweek": "2018-W49",
+      "disease": "Dengue Fever",
+      "bulletin": 114,
+      "alternate_weekly": 113
+    }
+  ],
+  "unpaired_or_missing_rows": [
+    {
+      "weekly_source_row": {
+        "year": "2015",
+        "eweek": "53",
+        "type_dengue": "Dengue",
+        "number": "NA"
+      },
+      "bulletin_key_exists": false
+    },
+    {
+      "weekly_source_row": {
+        "year": "2015",
+        "eweek": "53",
+        "type_dengue": "DHF",
+        "number": "NA"
+      },
+      "bulletin_key_exists": false
+    },
+    {
+      "weekly_source_row": {
+        "year": "2016",
+        "eweek": "53",
+        "type_dengue": "Dengue",
+        "number": "NA"
+      },
+      "bulletin_key_exists": false
+    },
+    {
+      "weekly_source_row": {
+        "year": "2016",
+        "eweek": "53",
+        "type_dengue": "DHF",
+        "number": "NA"
+      },
+      "bulletin_key_exists": false
+    },
+    {
+      "weekly_source_row": {
+        "year": "2017",
+        "eweek": "53",
+        "type_dengue": "Dengue",
+        "number": "NA"
+      },
+      "bulletin_key_exists": false
+    },
+    {
+      "weekly_source_row": {
+        "year": "2017",
+        "eweek": "53",
+        "type_dengue": "DHF",
+        "number": "NA"
+      },
+      "bulletin_key_exists": false
+    },
+    {
+      "weekly_source_row": {
+        "year": "2018",
+        "eweek": "53",
+        "type_dengue": "Dengue",
+        "number": "NA"
+      },
+      "bulletin_key_exists": false
+    },
+    {
+      "weekly_source_row": {
+        "year": "2018",
+        "eweek": "53",
+        "type_dengue": "DHF",
+        "number": "NA"
+      },
+      "bulletin_key_exists": false
+    }
+  ],
+  "method": "Compare identical year/week labels and matching DF/DHF disease categories; no dates inferred and no sources spliced."
+}

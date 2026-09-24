@@ -1,0 +1,13 @@
+{
+  "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+  "source_url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+  "api_url": "https://api-open.data.gov.sg/v1/public/api/datasets/d_dbfabf16158d1b0e1c420627c0819168/poll-download",
+  "retrieved_at_utc": "2026-09-24T04:30:57.476561+00:00",
+  "completed_at_utc": "2026-09-24T04:30:57.922231+00:00",
+  "raw_bytes": 20386,
+  "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+  "stored_bytes": 6412,
+  "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+  "status": "complete",
+  "compression": "gzip (original bytes after decompression)"
+}

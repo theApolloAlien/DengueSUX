@@ -1,0 +1,182 @@
+{
+  "code": 0,
+  "data": {
+    "datasetId": "d_4a086da0a5553be1d89383cd90d07ecd",
+    "createdAt": "2019-01-16T00:00:00+08:00",
+    "name": "Hawker Centres (GEOJSON)",
+    "collectionIds": [
+      "1445"
+    ],
+    "description": "Location of hawker centres.",
+    "format": "GEOJSON",
+    "lastUpdatedAt": "2026-09-24T10:06:44+08:00",
+    "managedBy": "National Environment Agency",
+    "coverageStart": "2025-11-07T00:00:00+08:00",
+    "datasetSize": 140561,
+    "geoJsonMetadata": {
+      "properties": [
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "OBJECTID",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "LANDXADDRESSPOINT",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "LANDYADDRESSPOINT",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "ADDRESSBUILDINGNAME",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "ADDRESSPOSTALCODE",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "ADDRESSSTREETNAME",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "DESCRIPTION",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "NAME",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "PHOTOURL",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "ADDRESSBLOCKHOUSENUMBER",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "STATUS",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "AWARDED_DATE",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "IMPLEMENTATION_DATE",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "INFO_ON_CO_LOCATORS",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "ADDRESS_MYENV",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "EST_ORIGINAL_COMPLETION_DATE",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "HUP_COMPLETION_DATE",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "NUMBER_OF_COOKED_FOOD_STALLS",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "INC_CRC",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "FMEL_UPD_D",
+          "description": ""
+        }
+      ]
+    }
+  },
+  "errorMsg": ""
+}

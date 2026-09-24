@@ -1,0 +1,35 @@
+{
+  "row_count": 462,
+  "geometry_types": {
+    "Point": 462
+  },
+  "invalid_geometries": 0,
+  "properties": [
+    "FMEL_UPD_D",
+    "INC_CRC",
+    "NAME",
+    "OBJECTID",
+    "X",
+    "Y"
+  ],
+  "slug": "parks",
+  "dataset_id": "d_0542d48f0991541706b58059381a6eca",
+  "source_name": "Parks",
+  "receipt": {
+    "dataset_id": "d_0542d48f0991541706b58059381a6eca",
+    "source_url": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
+    "api_url": "https://api-open.data.gov.sg/v1/public/api/datasets/d_0542d48f0991541706b58059381a6eca/poll-download",
+    "retrieved_at_utc": "2026-09-24T05:40:05.635404+00:00",
+    "completed_at_utc": "2026-09-24T05:40:05.842168+00:00",
+    "raw_bytes": 168423,
+    "raw_sha256": "85cfe483c04fed637a8e5abad2818465246b03c6e586e3d14eeffb36732076cd",
+    "stored_path": "data/raw/inspection/parks.geojson.gz",
+    "stored_bytes": 33424,
+    "stored_sha256": "c289439fac111eeada8c248e56b669697f503b4008ed762b1563c9eca69d5886",
+    "compression": "gzip (original bytes after decompression)",
+    "status": "complete"
+  },
+  "source_updated_at": "2026-09-24T10:06:47+08:00",
+  "coverage_start": "2025-11-07T00:00:00+08:00",
+  "coverage_end": null
+}

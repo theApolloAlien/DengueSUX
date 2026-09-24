@@ -1,0 +1,93 @@
+{
+  "verified_at_utc": "2026-09-24T03:42:33.120381+00:00",
+  "status": "passed",
+  "dataset_count": 10,
+  "checks": [
+    {
+      "dataset_id": "d_ca168b2cb763640d72c4600a68f9909e",
+      "path": "data/raw/dengue/national_bulletin.csv.gz",
+      "raw_bytes": 534409,
+      "stored_bytes": 78710,
+      "row_count": 20070,
+      "status": "passed"
+    },
+    {
+      "dataset_id": "d_ac1eecf0886ff0bceefbc51556247015",
+      "path": "data/raw/dengue/national_weekly.csv.gz",
+      "raw_bytes": 8572,
+      "stored_bytes": 2178,
+      "row_count": 530,
+      "status": "passed"
+    },
+    {
+      "dataset_id": "d_8763ae810003718ad638e719ec9118df",
+      "path": "data/raw/dengue/national_annual.csv.gz",
+      "raw_bytes": 118,
+      "stored_bytes": 104,
+      "row_count": 9,
+      "status": "passed"
+    },
+    {
+      "dataset_id": "d_5f90123ce50e3d323bfd0ff3c9a84601",
+      "path": "data/raw/dengue/region_central.geojson.gz",
+      "raw_bytes": 37352,
+      "stored_bytes": 4588,
+      "row_count": 44,
+      "status": "passed"
+    },
+    {
+      "dataset_id": "d_ce8cf1e3f4f5ff1a68393a7cb101eb9c",
+      "path": "data/raw/dengue/region_north_west.geojson.gz",
+      "raw_bytes": 21320,
+      "stored_bytes": 2819,
+      "row_count": 25,
+      "status": "passed"
+    },
+    {
+      "dataset_id": "d_2c13093a9d36377478755716f861ef14",
+      "path": "data/raw/dengue/region_south_east.geojson.gz",
+      "raw_bytes": 17933,
+      "stored_bytes": 2591,
+      "row_count": 21,
+      "status": "passed"
+    },
+    {
+      "dataset_id": "d_e34261c5ccace716132b55a5b02ebb1f",
+      "path": "data/raw/dengue/region_south_west.geojson.gz",
+      "raw_bytes": 24693,
+      "stored_bytes": 3192,
+      "row_count": 29,
+      "status": "passed"
+    },
+    {
+      "dataset_id": "d_e95e09fb3e54a3249e4bdf32e463effa",
+      "path": "data/raw/dengue/region_north_east.geojson.gz",
+      "raw_bytes": 26391,
+      "stored_bytes": 3500,
+      "row_count": 31,
+      "status": "passed"
+    },
+    {
+      "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+      "path": "data/raw/dengue/active_clusters.geojson.gz",
+      "raw_bytes": 20386,
+      "stored_bytes": 6412,
+      "row_count": 11,
+      "status": "passed"
+    },
+    {
+      "dataset_id": "d_2cc750190544007400b2cfd5d7f53209",
+      "path": "data/raw/boundaries/planning_areas_2025.geojson.gz",
+      "raw_bytes": 2191270,
+      "stored_bytes": 720329,
+      "row_count": 55,
+      "status": "passed"
+    }
+  ],
+  "checks_per_dataset": [
+    "gzip integrity",
+    "decompressed SHA256 and byte count",
+    "stored SHA256 and byte count",
+    "full-file profile exists"
+  ]
+}

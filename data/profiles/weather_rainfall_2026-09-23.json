@@ -1,0 +1,1692 @@
+{
+  "metric": "rainfall",
+  "requested_date": "2026-09-23",
+  "scope": "complete paginated V2 day",
+  "complete": true,
+  "page_count": 12,
+  "pages": [
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2026-09-23",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:47.957187+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/rainfall/2026-09-23/page_0000000000000000.json",
+      "bytes": 79706,
+      "sha256": "fcb0f73968d34bde253ef2c3c21a768ca01e64fee103ab5958c393bcd69beb08",
+      "pagination_token": null
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2026-09-23&paginationToken=b2Zmc2V0PTI1",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:50.327313+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/rainfall/2026-09-23/page_9a6da57f55fbe1d4.json",
+      "bytes": 79706,
+      "sha256": "ded1bf5256a21da895ce8a55b2834a0a8ed0e4fd05bc56268ae74c1bc11f8022",
+      "pagination_token": "b2Zmc2V0PTI1"
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2026-09-23&paginationToken=b2Zmc2V0PTUw",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:52.857813+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/rainfall/2026-09-23/page_812ed87910af6919.json",
+      "bytes": 79708,
+      "sha256": "6daffd499de307b2da56e2d2ece44812bcf15baba59d4004cb074110b9656adf",
+      "pagination_token": "b2Zmc2V0PTUw"
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2026-09-23&paginationToken=b2Zmc2V0PTc1",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:55.476572+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/rainfall/2026-09-23/page_dc1283f1728d66ab.json",
+      "bytes": 79289,
+      "sha256": "80325310a1f9ae41cdb84115a7e1b332e29d7fb349f2112ffe071bbc1246b171",
+      "pagination_token": "b2Zmc2V0PTc1"
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2026-09-23&paginationToken=b2Zmc2V0PTEwMA%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:58.193935+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/rainfall/2026-09-23/page_b49950aaae84c403.json",
+      "bytes": 79865,
+      "sha256": "9aa1504aaa3823d432b64956f22211b3629e948b278146c3fdfeab77afddfcc6",
+      "pagination_token": "b2Zmc2V0PTEwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2026-09-23&paginationToken=b2Zmc2V0PTEyNQ%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:29:00.707083+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/rainfall/2026-09-23/page_efc4a4870427730b.json",
+      "bytes": 80098,
+      "sha256": "64f28e59499c904154c908771160f45531a85d926ea12c994d74dfed4b1674f7",
+      "pagination_token": "b2Zmc2V0PTEyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2026-09-23&paginationToken=b2Zmc2V0PTE1MA%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:29:03.312513+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/rainfall/2026-09-23/page_1eb43e5bd78b0dad.json",
+      "bytes": 79742,
+      "sha256": "1b3e40f87b6f7183d16e45d450c70245a2d1a7a2301ff91b19e3eee4077d34e3",
+      "pagination_token": "b2Zmc2V0PTE1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2026-09-23&paginationToken=b2Zmc2V0PTE3NQ%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:29:05.901397+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/rainfall/2026-09-23/page_19e99aa3209b6f13.json",
+      "bytes": 79730,
+      "sha256": "067550f2f64c04ea746f3e569a6c24a9fd59d4224aa613c3500c4eef832bd81c",
+      "pagination_token": "b2Zmc2V0PTE3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2026-09-23&paginationToken=b2Zmc2V0PTIwMA%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:29:08.673780+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/rainfall/2026-09-23/page_538f7d19d85190ed.json",
+      "bytes": 79712,
+      "sha256": "922b5f519e4db3c3eb464ff6e38a1555f02c60f1c0644a39b870b9ff4f70553a",
+      "pagination_token": "b2Zmc2V0PTIwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2026-09-23&paginationToken=b2Zmc2V0PTIyNQ%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:29:11.194792+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/rainfall/2026-09-23/page_071ce00a9e965991.json",
+      "bytes": 79681,
+      "sha256": "29b8c8973168a6eb283b79a09f0f1559daea70d7003b83ab5f37a92cabba1c46",
+      "pagination_token": "b2Zmc2V0PTIyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2026-09-23&paginationToken=b2Zmc2V0PTI1MA%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:29:13.922033+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/rainfall/2026-09-23/page_d1ce1f3f1ea73cdd.json",
+      "bytes": 79685,
+      "sha256": "df0798da84ca5fda296bddd6cc9a83f57d475d60122b04fd7cb90889bbaa89f2",
+      "pagination_token": "b2Zmc2V0PTI1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2026-09-23&paginationToken=b2Zmc2V0PTI3NQ%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:29:16.540083+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/rainfall/2026-09-23/page_a3635b6c90cf3d6d.json",
+      "bytes": 46267,
+      "sha256": "3281023c84bfa6dcd2f0400f0f939a657add5794e3151c47521a73d89c58626b",
+      "pagination_token": "b2Zmc2V0PTI3NQ=="
+    }
+  ],
+  "timestamp_records": 288,
+  "distinct_timestamps": 288,
+  "station_measurements": 25611,
+  "stations_in_metadata": 89,
+  "stations_with_readings": 89,
+  "start": "2026-09-23T00:00:00+08:00",
+  "end": "2026-09-23T23:55:00+08:00",
+  "null_readings": 0,
+  "invalid_numeric_readings": 0,
+  "out_of_range_readings": 0,
+  "range_rule": "rainfall >=0; humidity 0..100; temperature -10..60 (screen only)",
+  "duplicate_station_timestamp_excess": 0,
+  "duplicate_timestamp_records": 0,
+  "unknown_station_ids": 0,
+  "wrong_requested_date_timestamps": 0,
+  "station_metadata_conflicts": [],
+  "min_value": 0,
+  "max_value": 5.6,
+  "max_network_gap_seconds": 300.0,
+  "gaps_above_nominal": 0,
+  "nominal_timestamps_per_day": 288,
+  "station_coverage": [
+    {
+      "station_id": "S06",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S07",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S08",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S100",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S102",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S104",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S106",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S107",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S108",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S109",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S111",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S112",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S113",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S114",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S115",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S116",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S117",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S119",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S120",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S121",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S123",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S127",
+      "measurements": 287,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 600.0
+    },
+    {
+      "station_id": "S129",
+      "measurements": 286,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 600.0
+    },
+    {
+      "station_id": "S132",
+      "measurements": 287,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 600.0
+    },
+    {
+      "station_id": "S148",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S180",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S184",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S187",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S201",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S208",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S209",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S210",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S211",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S213",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S214",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S215",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S216",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S217",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S218",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S219",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S220",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S221",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S222",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S223",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S224",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S226",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S227",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S228",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S229",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S23",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S230",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S24",
+      "measurements": 287,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 600.0
+    },
+    {
+      "station_id": "S300",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S301",
+      "measurements": 286,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 600.0
+    },
+    {
+      "station_id": "S302",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S303",
+      "measurements": 286,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 600.0
+    },
+    {
+      "station_id": "S305",
+      "measurements": 281,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 1800.0
+    },
+    {
+      "station_id": "S306",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S307",
+      "measurements": 283,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 1200.0
+    },
+    {
+      "station_id": "S308",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S33",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S35",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S40",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S43",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S44",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S50",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S60",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S64",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S66",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S69",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S71",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S77",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S78",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S79",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S80",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S81",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S84",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S88",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S90",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S900",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S902",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S903",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S904",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S905",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S907",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S908",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S909",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S92",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S94",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    }
+  ],
+  "stations": [
+    {
+      "id": "S218",
+      "deviceId": "S218",
+      "name": "Bukit Batok Street 34",
+      "location": {
+        "longitude": 103.75065,
+        "latitude": 1.36491
+      }
+    },
+    {
+      "id": "S219",
+      "deviceId": "S219",
+      "name": "Yio Chu Kang Road",
+      "location": {
+        "latitude": 1.37998,
+        "longitude": 103.87639
+      }
+    },
+    {
+      "id": "S216",
+      "deviceId": "S216",
+      "name": "Ang Mo Kio Avenue 10",
+      "location": {
+        "latitude": 1.36019,
+        "longitude": 103.85335
+      }
+    },
+    {
+      "id": "S217",
+      "deviceId": "S217",
+      "name": "Bishan Street 13",
+      "location": {
+        "latitude": 1.35028,
+        "longitude": 103.855
+      }
+    },
+    {
+      "id": "S214",
+      "deviceId": "S214",
+      "name": "Tanjong Rhu",
+      "location": {
+        "longitude": 103.88289,
+        "latitude": 1.29911
+      }
+    },
+    {
+      "id": "S215",
+      "deviceId": "S215",
+      "name": "Geylang East Central",
+      "location": {
+        "latitude": 1.31944,
+        "longitude": 103.88194
+      }
+    },
+    {
+      "id": "S213",
+      "deviceId": "S213",
+      "name": "Coronation Walk",
+      "location": {
+        "longitude": 103.8097,
+        "latitude": 1.32427
+      }
+    },
+    {
+      "id": "S80",
+      "deviceId": "S80",
+      "name": "Sembawang Meteorological Station",
+      "location": {
+        "latitude": 1.4247,
+        "longitude": 103.8201
+      }
+    },
+    {
+      "id": "S81",
+      "deviceId": "S81",
+      "name": "Punggol Central",
+      "location": {
+        "longitude": 103.9095,
+        "latitude": 1.4028
+      }
+    },
+    {
+      "id": "S40",
+      "deviceId": "S40",
+      "name": "Mandai Lake Road",
+      "location": {
+        "longitude": 103.7832,
+        "latitude": 1.4067
+      }
+    },
+    {
+      "id": "S84",
+      "deviceId": "S84",
+      "name": "Tampines Avenue 5",
+      "location": {
+        "longitude": 103.9441,
+        "latitude": 1.3443
+      }
+    },
+    {
+      "id": "S180",
+      "deviceId": "S180",
+      "name": "Taman Jurong Greens",
+      "location": {
+        "latitude": 1.33701,
+        "longitude": 103.71828
+      }
+    },
+    {
+      "id": "S44",
+      "deviceId": "S44",
+      "name": "Nanyang Avenue",
+      "location": {
+        "longitude": 103.6817,
+        "latitude": 1.3458
+      }
+    },
+    {
+      "id": "S88",
+      "deviceId": "S88",
+      "name": "Toa Payoh North",
+      "location": {
+        "longitude": 103.8515,
+        "latitude": 1.3417
+      }
+    },
+    {
+      "id": "S43",
+      "deviceId": "S43",
+      "name": "Kim Chuan Road",
+      "location": {
+        "latitude": 1.3406,
+        "longitude": 103.8882
+      }
+    },
+    {
+      "id": "S06",
+      "deviceId": "S06",
+      "name": "Paya Lebar Meteorological Station",
+      "location": {
+        "latitude": 1.357,
+        "longitude": 103.904
+      }
+    },
+    {
+      "id": "S100",
+      "deviceId": "S100",
+      "name": "Sungei Kadut Street 3",
+      "location": {
+        "longitude": 103.74855,
+        "latitude": 1.4172
+      }
+    },
+    {
+      "id": "S221",
+      "deviceId": "S221",
+      "name": "Hougang Avenue 1",
+      "location": {
+        "longitude": 103.89088,
+        "latitude": 1.35691
+      }
+    },
+    {
+      "id": "S222",
+      "deviceId": "S222",
+      "name": "Henderson Road",
+      "location": {
+        "latitude": 1.28987,
+        "longitude": 103.82364
+      }
+    },
+    {
+      "id": "S08",
+      "deviceId": "S08",
+      "name": "Lower Peirce Reservoir",
+      "location": {
+        "latitude": 1.37,
+        "longitude": 103.8271
+      }
+    },
+    {
+      "id": "S07",
+      "deviceId": "S07",
+      "name": "Macritchie Reservoir",
+      "location": {
+        "longitude": 103.8339,
+        "latitude": 1.3418
+      }
+    },
+    {
+      "id": "S187",
+      "deviceId": "S187",
+      "name": "Coronation Road",
+      "location": {
+        "longitude": 103.80139,
+        "latitude": 1.32251
+      }
+    },
+    {
+      "id": "S220",
+      "deviceId": "S220",
+      "name": "Compassvale Lane",
+      "location": {
+        "latitude": 1.38666,
+        "longitude": 103.89797
+      }
+    },
+    {
+      "id": "S184",
+      "deviceId": "S184",
+      "name": "Sengkang East Avenue",
+      "location": {
+        "latitude": 1.38256,
+        "longitude": 103.89852
+      }
+    },
+    {
+      "id": "S208",
+      "deviceId": "S208",
+      "name": "Changi East Close",
+      "location": {
+        "longitude": 104.00317,
+        "latitude": 1.31363
+      }
+    },
+    {
+      "id": "S129",
+      "deviceId": "S129",
+      "name": "Bedok Stadium",
+      "location": {
+        "longitude": 103.93969,
+        "latitude": 1.32575
+      }
+    },
+    {
+      "id": "S127",
+      "deviceId": "S127",
+      "name": "Kallang Practice Track",
+      "location": {
+        "latitude": 1.30574,
+        "longitude": 103.87817
+      }
+    },
+    {
+      "id": "S201",
+      "deviceId": "S201",
+      "name": "Sunset Way",
+      "location": {
+        "longitude": 103.76714,
+        "latitude": 1.32319
+      }
+    },
+    {
+      "id": "S90",
+      "deviceId": "S90",
+      "name": "Bukit Timah Road",
+      "location": {
+        "longitude": 103.8193,
+        "latitude": 1.3191
+      }
+    },
+    {
+      "id": "S92",
+      "deviceId": "S92",
+      "name": "South Buona Vista Road",
+      "location": {
+        "latitude": 1.2841,
+        "longitude": 103.7888
+      }
+    },
+    {
+      "id": "S209",
+      "deviceId": "S209",
+      "name": "Yishun Ring Road",
+      "location": {
+        "longitude": 103.84472,
+        "latitude": 1.42111
+      }
+    },
+    {
+      "id": "S50",
+      "deviceId": "S50",
+      "name": "Clementi Road",
+      "location": {
+        "latitude": 1.3318,
+        "longitude": 103.7762
+      }
+    },
+    {
+      "id": "S94",
+      "deviceId": "S94",
+      "name": "Pasir Ris Street 51",
+      "location": {
+        "longitude": 103.9489,
+        "latitude": 1.3679
+      }
+    },
+    {
+      "id": "S210",
+      "deviceId": "S210",
+      "name": "Woodlands Centre Road",
+      "location": {
+        "longitude": 103.76904,
+        "latitude": 1.44003
+      }
+    },
+    {
+      "id": "S211",
+      "deviceId": "S211",
+      "name": "Kranji Road",
+      "location": {
+        "latitude": 1.42918,
+        "longitude": 103.75711
+      }
+    },
+    {
+      "id": "S132",
+      "deviceId": "S132",
+      "name": "Jurong West Stadium",
+      "location": {
+        "latitude": 1.33786,
+        "longitude": 103.69538
+      }
+    },
+    {
+      "id": "S119",
+      "deviceId": "S119",
+      "name": "Nicoll Highway",
+      "location": {
+        "longitude": 103.8622,
+        "latitude": 1.295
+      }
+    },
+    {
+      "id": "S117",
+      "deviceId": "S117",
+      "name": "Banyan Road (Jurong Island)",
+      "location": {
+        "longitude": 103.6741,
+        "latitude": 1.2542
+      }
+    },
+    {
+      "id": "S115",
+      "deviceId": "S115",
+      "name": "Tuas South Avenue 3",
+      "location": {
+        "latitude": 1.2938,
+        "longitude": 103.6184
+      }
+    },
+    {
+      "id": "S116",
+      "deviceId": "S116",
+      "name": "Pasir Panjang Terminal",
+      "location": {
+        "latitude": 1.2824,
+        "longitude": 103.7545
+      }
+    },
+    {
+      "id": "S113",
+      "deviceId": "S113",
+      "name": "Marine Parade Road",
+      "location": {
+        "latitude": 1.305,
+        "longitude": 103.9112
+      }
+    },
+    {
+      "id": "S114",
+      "deviceId": "S114",
+      "name": "Choa Chu Kang Avenue 4",
+      "location": {
+        "latitude": 1.3821,
+        "longitude": 103.7381
+      }
+    },
+    {
+      "id": "S60",
+      "deviceId": "S60",
+      "name": "Artillery Avenue (Sentosa)",
+      "location": {
+        "latitude": 1.2504,
+        "longitude": 103.8275
+      }
+    },
+    {
+      "id": "S64",
+      "deviceId": "S64",
+      "name": "Bukit Panjang Road",
+      "location": {
+        "latitude": 1.3823,
+        "longitude": 103.7607
+      }
+    },
+    {
+      "id": "S66",
+      "deviceId": "S66",
+      "name": "Kranji Reservoir",
+      "location": {
+        "latitude": 1.4387,
+        "longitude": 103.736
+      }
+    },
+    {
+      "id": "S24",
+      "deviceId": "S24",
+      "name": "Changi Meteorological Station",
+      "location": {
+        "longitude": 103.9823,
+        "latitude": 1.3678
+      }
+    },
+    {
+      "id": "S23",
+      "deviceId": "S23",
+      "name": "Tengah Meteorological Station",
+      "location": {
+        "latitude": 1.3858,
+        "longitude": 103.7119
+      }
+    },
+    {
+      "id": "S69",
+      "deviceId": "S69",
+      "name": "Upper Peirce Reservoir Park",
+      "location": {
+        "longitude": 103.8046,
+        "latitude": 1.3704
+      }
+    },
+    {
+      "id": "S123",
+      "deviceId": "S123",
+      "name": "Towner Road",
+      "location": {
+        "latitude": 1.3214,
+        "longitude": 103.8577
+      }
+    },
+    {
+      "id": "S120",
+      "deviceId": "S120",
+      "name": "Botanic Garden",
+      "location": {
+        "longitude": 103.818,
+        "latitude": 1.3087
+      }
+    },
+    {
+      "id": "S121",
+      "deviceId": "S121",
+      "name": "Old Choa Chu Kang Road",
+      "location": {
+        "longitude": 103.7217,
+        "latitude": 1.3738
+      }
+    },
+    {
+      "id": "S108",
+      "deviceId": "S108",
+      "name": "Marina Barrage",
+      "location": {
+        "longitude": 103.8703,
+        "latitude": 1.2799
+      }
+    },
+    {
+      "id": "S229",
+      "deviceId": "S229",
+      "name": "Jurong West Street 42",
+      "location": {
+        "longitude": 103.72195,
+        "latitude": 1.35167
+      }
+    },
+    {
+      "id": "S306",
+      "deviceId": "S306",
+      "name": "Murnane Service Reservoir",
+      "location": {
+        "longitude": 103.78596,
+        "latitude": 1.35085
+      }
+    },
+    {
+      "id": "S900",
+      "deviceId": "S900",
+      "name": "Seletar Meteorological Station",
+      "location": {
+        "latitude": 1.4114,
+        "longitude": 103.8627
+      }
+    },
+    {
+      "id": "S109",
+      "deviceId": "S109",
+      "name": "Ang Mo Kio Avenue 5",
+      "location": {
+        "longitude": 103.85,
+        "latitude": 1.3793
+      }
+    },
+    {
+      "id": "S307",
+      "deviceId": "S307",
+      "name": "Pulau Tekong Reservoir",
+      "location": {
+        "longitude": 104.04156,
+        "latitude": 1.41076
+      }
+    },
+    {
+      "id": "S106",
+      "deviceId": "S106",
+      "name": "Jalan Noordin (Pulau Ubin)",
+      "location": {
+        "longitude": 103.9673,
+        "latitude": 1.4168
+      }
+    },
+    {
+      "id": "S227",
+      "deviceId": "S227",
+      "name": "Woodlands Drive 62",
+      "location": {
+        "latitude": 1.43944,
+        "longitude": 103.80389
+      }
+    },
+    {
+      "id": "S107",
+      "deviceId": "S107",
+      "name": "East Coast Park",
+      "location": {
+        "longitude": 103.962,
+        "latitude": 1.3133
+      }
+    },
+    {
+      "id": "S228",
+      "deviceId": "S228",
+      "name": "Jurong West Street 73",
+      "location": {
+        "longitude": 103.70073,
+        "latitude": 1.34703
+      }
+    },
+    {
+      "id": "S305",
+      "deviceId": "S305",
+      "name": "Sarimbum Reservoir",
+      "location": {
+        "latitude": 1.4216,
+        "longitude": 103.68127
+      }
+    },
+    {
+      "id": "S104",
+      "deviceId": "S104",
+      "name": "Woodlands Avenue 9",
+      "location": {
+        "longitude": 103.7854,
+        "latitude": 1.4439
+      }
+    },
+    {
+      "id": "S148",
+      "deviceId": "S148",
+      "name": "Pasir Ris Walk",
+      "location": {
+        "latitude": 1.3715,
+        "longitude": 103.9642
+      }
+    },
+    {
+      "id": "S302",
+      "deviceId": "S302",
+      "name": "Tengeh Reservoir",
+      "location": {
+        "longitude": 103.66303,
+        "latitude": 1.33813
+      }
+    },
+    {
+      "id": "S226",
+      "deviceId": "S226",
+      "name": "Malan Road",
+      "location": {
+        "longitude": 103.80389,
+        "latitude": 1.27472
+      }
+    },
+    {
+      "id": "S303",
+      "deviceId": "S303",
+      "name": "Ponyan Reservoir",
+      "location": {
+        "latitude": 1.38375,
+        "longitude": 103.65817
+      }
+    },
+    {
+      "id": "S102",
+      "deviceId": "S102",
+      "name": "Semakau Island",
+      "location": {
+        "latitude": 1.1902,
+        "longitude": 103.7657
+      }
+    },
+    {
+      "id": "S223",
+      "deviceId": "S223",
+      "name": "Margaret Drive",
+      "location": {
+        "longitude": 103.80264,
+        "latitude": 1.29984
+      }
+    },
+    {
+      "id": "S300",
+      "deviceId": "S300",
+      "name": "Bedok Reservoir",
+      "location": {
+        "latitude": 1.34301,
+        "longitude": 103.91971
+      }
+    },
+    {
+      "id": "S224",
+      "deviceId": "S224",
+      "name": "Airport Boulevard",
+      "location": {
+        "longitude": 103.98386,
+        "latitude": 1.34394
+      }
+    },
+    {
+      "id": "S301",
+      "deviceId": "S301",
+      "name": "Neo Tiew Lane 2",
+      "location": {
+        "latitude": 1.41532,
+        "longitude": 103.72871
+      }
+    },
+    {
+      "id": "S908",
+      "deviceId": "S908",
+      "name": "Fernvale Lane",
+      "location": {
+        "longitude": 103.87412,
+        "latitude": 1.39027
+      }
+    },
+    {
+      "id": "S909",
+      "deviceId": "S909",
+      "name": "Seraya Road",
+      "location": {
+        "longitude": 103.90093,
+        "latitude": 1.30568
+      }
+    },
+    {
+      "id": "S907",
+      "deviceId": "S907",
+      "name": "Rivervale Drive",
+      "location": {
+        "latitude": 1.39316,
+        "longitude": 103.87412
+      }
+    },
+    {
+      "id": "S71",
+      "deviceId": "S71",
+      "name": "Kent Ridge Road",
+      "location": {
+        "latitude": 1.2923,
+        "longitude": 103.7815
+      }
+    },
+    {
+      "id": "S904",
+      "deviceId": "S904",
+      "name": "Holland Grove Road",
+      "location": {
+        "latitude": 1.31622,
+        "longitude": 103.7837
+      }
+    },
+    {
+      "id": "S905",
+      "deviceId": "S905",
+      "name": "Hillcrest Road",
+      "location": {
+        "longitude": 103.8045,
+        "latitude": 1.3308
+      }
+    },
+    {
+      "id": "S308",
+      "deviceId": "S308",
+      "name": "Seletar Reservoir",
+      "location": {
+        "longitude": 103.80814,
+        "latitude": 1.40158
+      }
+    },
+    {
+      "id": "S902",
+      "deviceId": "S902",
+      "name": "Yishun Walk",
+      "location": {
+        "longitude": 103.83106,
+        "latitude": 1.41457
+      }
+    },
+    {
+      "id": "S903",
+      "deviceId": "S903",
+      "name": "Lorong Kismis",
+      "location": {
+        "latitude": 1.33742,
+        "longitude": 103.76699
+      }
+    },
+    {
+      "id": "S33",
+      "deviceId": "S33",
+      "name": "Jurong Pier Road",
+      "location": {
+        "longitude": 103.71,
+        "latitude": 1.3082
+      }
+    },
+    {
+      "id": "S77",
+      "deviceId": "S77",
+      "name": "Alexandra Road",
+      "location": {
+        "longitude": 103.8127,
+        "latitude": 1.2937
+      }
+    },
+    {
+      "id": "S35",
+      "deviceId": "S35",
+      "name": "Old Toh Tuck Road",
+      "location": {
+        "latitude": 1.3325,
+        "longitude": 103.755
+      }
+    },
+    {
+      "id": "S79",
+      "deviceId": "S79",
+      "name": "Somerset Road",
+      "location": {
+        "longitude": 103.8372,
+        "latitude": 1.3003
+      }
+    },
+    {
+      "id": "S78",
+      "deviceId": "S78",
+      "name": "Poole Road",
+      "location": {
+        "longitude": 103.8907,
+        "latitude": 1.307
+      }
+    },
+    {
+      "id": "S111",
+      "deviceId": "S111",
+      "name": "Scotts Road",
+      "location": {
+        "latitude": 1.3106,
+        "longitude": 103.8365
+      }
+    },
+    {
+      "id": "S112",
+      "deviceId": "S112",
+      "name": "Lim Chu Kang Road",
+      "location": {
+        "longitude": 103.7017,
+        "latitude": 1.4388
+      }
+    },
+    {
+      "id": "S230",
+      "deviceId": "S230",
+      "name": "West Coast Road",
+      "location": {
+        "longitude": 103.76444,
+        "latitude": 1.30167
+      }
+    }
+  ],
+  "profiled_at_utc": "2026-09-24T03:29:19.132179+00:00"
+}

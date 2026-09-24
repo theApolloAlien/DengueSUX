@@ -1,0 +1,37 @@
+{
+  "row_count": 878,
+  "geometry_types": {
+    "LineString": 784,
+    "MultiLineString": 94
+  },
+  "invalid_geometries": 0,
+  "properties": [
+    "FMEL_UPD_D",
+    "INC_CRC",
+    "MORE_INFO",
+    "OBJECTID",
+    "PARK",
+    "PCN_LOOP",
+    "SHAPE.LEN"
+  ],
+  "slug": "park_connectors",
+  "dataset_id": "d_a69ef89737379f231d2ae93fd1c5707f",
+  "source_name": "Park Connector Loop",
+  "receipt": {
+    "dataset_id": "d_a69ef89737379f231d2ae93fd1c5707f",
+    "source_url": "https://data.gov.sg/datasets/d_a69ef89737379f231d2ae93fd1c5707f/view",
+    "api_url": "https://api-open.data.gov.sg/v1/public/api/datasets/d_a69ef89737379f231d2ae93fd1c5707f/poll-download",
+    "retrieved_at_utc": "2026-09-24T05:40:18.734932+00:00",
+    "completed_at_utc": "2026-09-24T05:40:19.028702+00:00",
+    "raw_bytes": 2008356,
+    "raw_sha256": "83c1838bea9ee355d2ba52c2060eb185612dd0e2e3fdb113aff9cdd6e5c27efd",
+    "stored_path": "data/raw/inspection/park_connectors.geojson.gz",
+    "stored_bytes": 600897,
+    "stored_sha256": "115dec458302940c18a999156aa222fc12c60dfe8542d1910a2f7ab0aab4b038",
+    "compression": "gzip (original bytes after decompression)",
+    "status": "complete"
+  },
+  "source_updated_at": "2026-07-15T10:06:55+08:00",
+  "coverage_start": "2025-10-13T00:00:00+08:00",
+  "coverage_end": null
+}

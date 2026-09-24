@@ -1,0 +1,16 @@
+{
+  "revision": "2026-09-24 user review fixes",
+  "run_id": "ef02042b46d74bde9e46c60962f71e1c",
+  "selected_model": "gradient_boosting",
+  "sha256": {
+    "denguesux/model.py": "d31b051111738e3c5d1792c63d0e11f91f69ff684485b88120270b83918e069a",
+    "denguesux/spatial.py": "532da3c8e51b4b573931ffba633e7559aa9c31aa84c645d0a33b371375fdecb3",
+    "app/web/index.html": "ad3bca8c79e1c1a228e0408b7a70d67cf1ae604f518d13b10e98d928f1048604",
+    "app/web/app.js": "3ab20409d53f110de032d7afda9c66057a01a253ae5f3363e2b97c3d35947bb9",
+    "app/web/styles.css": "948736b40d1599b529d17fa942c5db0e1cec843e315bffc85da0acd695fc4946",
+    "output/web/model.json": "d49abd1f8589674e196771dfcfe3c4301ee57e22585edf351e5b2c9de55973b5",
+    "output/web/current.json": "e6fd8d51ffd3ed295a12039bb9d4825046f2bd48da7ad93261fff43bfbf5cf46",
+    "output/web/dashboard.json": "c08b4dbcab5bd35de8ce7c82bb16069cb9536be35327ca9ae8a7316e60d0c01f",
+    "output/denguesux.html": "fe0d9e01fada96b64aaf5880ad4e6542a83369c45d1c7a2672cea77936db309c"
+  }
+}

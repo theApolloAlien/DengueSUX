@@ -1,0 +1,952 @@
+{
+  "metric": "air-temperature",
+  "requested_date": "2024-01-01",
+  "scope": "complete paginated V2 day",
+  "complete": true,
+  "page_count": 58,
+  "pages": [
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:19.134842+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_0000000000000000.json",
+      "bytes": 13585,
+      "sha256": "24695a53ef1bbb162dd43f28030fe50232d2a8a642ef88c79cc62f1f4376450a",
+      "pagination_token": null
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTI1",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:21.476900+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_9a6da57f55fbe1d4.json",
+      "bytes": 13602,
+      "sha256": "a8d635d65d0b04c08afc7f7e4dac61d3849160fb69c586b950bbdba0f1d6c254",
+      "pagination_token": "b2Zmc2V0PTI1"
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTUw",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:24.128116+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_812ed87910af6919.json",
+      "bytes": 13560,
+      "sha256": "56a3496c6898be6e52d5fa3b31f1f8fd0838f17ca1b4708b1dfecae8f2eea8ec",
+      "pagination_token": "b2Zmc2V0PTUw"
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTc1",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:26.714621+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_dc1283f1728d66ab.json",
+      "bytes": 13476,
+      "sha256": "f2e3d0a3be448a947816b3d010fdfcb5e7f3bb929e74b0dca7ab7d437c663eb1",
+      "pagination_token": "b2Zmc2V0PTc1"
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTEwMA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:29.346025+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_b49950aaae84c403.json",
+      "bytes": 13602,
+      "sha256": "e8145eaf5d6fd0a992acb5aae76d410fe2afc8d1bbe338e0807438c006c763b9",
+      "pagination_token": "b2Zmc2V0PTEwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTEyNQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:31.962234+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_efc4a4870427730b.json",
+      "bytes": 13601,
+      "sha256": "729189e810a72bcb4cd7c63971447fdc1a97a2173f5e068163c9c9cfae775ee5",
+      "pagination_token": "b2Zmc2V0PTEyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTE1MA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:34.569155+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_1eb43e5bd78b0dad.json",
+      "bytes": 13739,
+      "sha256": "a8590d2feaa8b0645f1089f10e59281e28364866acc9f12d33936151c033d8fc",
+      "pagination_token": "b2Zmc2V0PTE1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTE3NQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:37.180413+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_19e99aa3209b6f13.json",
+      "bytes": 13618,
+      "sha256": "d8f748a2374297c0717d12c83edd1e0e6e9de74108ced8d3b6aa12e8d9d04446",
+      "pagination_token": "b2Zmc2V0PTE3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTIwMA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:39.794534+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_538f7d19d85190ed.json",
+      "bytes": 13471,
+      "sha256": "d0dae8aae92171e91fb7f11b293b119c3e79c467db13cecb1fba701b10fd2877",
+      "pagination_token": "b2Zmc2V0PTIwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTIyNQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:42.402359+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_071ce00a9e965991.json",
+      "bytes": 13546,
+      "sha256": "218ed4fb3edf046168dd2f020e094ea701986c812f85d482b9c6d559b086479a",
+      "pagination_token": "b2Zmc2V0PTIyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTI1MA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:45.128737+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_d1ce1f3f1ea73cdd.json",
+      "bytes": 13556,
+      "sha256": "3cba64fefea3fc2a88149cd9c70bbead1646150195834cbf7ecf84098e85532d",
+      "pagination_token": "b2Zmc2V0PTI1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTI3NQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:47.603102+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_a3635b6c90cf3d6d.json",
+      "bytes": 13439,
+      "sha256": "9b14296f3d41b8ffd80e08dd971b2ff4ce057d9f63ae0f59f93ae82d6c3552bf",
+      "pagination_token": "b2Zmc2V0PTI3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTMwMA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:50.261013+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_95e39dba49eadaeb.json",
+      "bytes": 13597,
+      "sha256": "4415d761302a7e75d66aeb8b792ce6c4301571765971a635bacabed20ad59e91",
+      "pagination_token": "b2Zmc2V0PTMwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTMyNQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:52.859167+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_f8c8d7dff997f6af.json",
+      "bytes": 13602,
+      "sha256": "e398d82a22322dceff391caacf64b790dfa9381c3186caf241f75262e994996d",
+      "pagination_token": "b2Zmc2V0PTMyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTM1MA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:55.364417+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_ae91988eb40dfd51.json",
+      "bytes": 13642,
+      "sha256": "2c8268c1c099a7868379cda695893132bedabbc952518a9eeb3c83a9dcf54a0a",
+      "pagination_token": "b2Zmc2V0PTM1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTM3NQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:29:57.982096+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_07c23dc0002e4926.json",
+      "bytes": 13612,
+      "sha256": "0de3171d4236a68b46d707ca7d3896fe6f27ff7999e41eddad353605b3f95877",
+      "pagination_token": "b2Zmc2V0PTM3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTQwMA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:00.628941+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_1531d89d7c8edadb.json",
+      "bytes": 13604,
+      "sha256": "47fea7ff75240bc65737dea36cc313dc8de20cdbd3a07df4302f0dfcbc16b8b5",
+      "pagination_token": "b2Zmc2V0PTQwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTQyNQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:03.225353+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_6a3a9a48b84fbcec.json",
+      "bytes": 13548,
+      "sha256": "11e7d9c064c6adfbe4a25703b5843882de54247a140e8715bf67cd0af6969f71",
+      "pagination_token": "b2Zmc2V0PTQyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTQ1MA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:05.824714+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_1ecea4024364ede7.json",
+      "bytes": 13603,
+      "sha256": "45ef3de5cf7d992bed7a0996ac4a5bcb4db6ebfff8835daab448741a8540602a",
+      "pagination_token": "b2Zmc2V0PTQ1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTQ3NQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:08.442492+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_4a1c7306390a1b0a.json",
+      "bytes": 13630,
+      "sha256": "d68662c4cbe779d0510f7a7e11b4af7a8e20e58bfd67707d4f4395e1bb8c6f43",
+      "pagination_token": "b2Zmc2V0PTQ3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTUwMA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:11.065877+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_21471e8916067ad1.json",
+      "bytes": 13496,
+      "sha256": "5b9aae5507b6de181d10f67558e7661186723b7b974ff7f63d528fd4dfc3a7e4",
+      "pagination_token": "b2Zmc2V0PTUwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTUyNQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:13.686671+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_8fade8990b918fea.json",
+      "bytes": 13600,
+      "sha256": "3e3aa314b46a775bf2851d7649115e8632f40257730bd537f8020fd29afa51c4",
+      "pagination_token": "b2Zmc2V0PTUyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTU1MA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:16.306539+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_1fa264771d08f83d.json",
+      "bytes": 13388,
+      "sha256": "bee291f8820f5127ddac7f5f680452473aee5ff27c59db72b75c2f71efe4e686",
+      "pagination_token": "b2Zmc2V0PTU1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTU3NQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:18.837516+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_fb05dd6349f6b143.json",
+      "bytes": 13605,
+      "sha256": "607fd28617e0703254c1b6374643cd25d3554882dd7f488fd9c1553f5c0dd50a",
+      "pagination_token": "b2Zmc2V0PTU3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTYwMA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:21.476458+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_992f72be0756987a.json",
+      "bytes": 13677,
+      "sha256": "e81e57b675b06b9f0b143a6d587f6bd414843347232d7e1c50af4377bada6e69",
+      "pagination_token": "b2Zmc2V0PTYwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTYyNQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:24.169220+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_25ffe8255834e7b9.json",
+      "bytes": 13584,
+      "sha256": "5124a459b60daefbf35acdf659bbf475eb417ac477ed2261bcab2f4b608956f0",
+      "pagination_token": "b2Zmc2V0PTYyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTY1MA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:26.670887+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_5ea3000d12538e26.json",
+      "bytes": 13596,
+      "sha256": "47fce0ed81da64dc75a5fcd81fd99fbf6ef80c96f33c940a8ea302e031616e42",
+      "pagination_token": "b2Zmc2V0PTY1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTY3NQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:29.519108+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_a5a3ef4ceec1fd64.json",
+      "bytes": 13528,
+      "sha256": "6ceb4e7a7d7ddbad77ad2725c25dec9553c2a5277734cf0e49da1e28cb668d43",
+      "pagination_token": "b2Zmc2V0PTY3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTcwMA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:31.947496+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_d83bb366e520fd1d.json",
+      "bytes": 13608,
+      "sha256": "10f0b961d28c9f9b001a63340aa37b80e482c80029bd985efa5d1a9326a60169",
+      "pagination_token": "b2Zmc2V0PTcwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTcyNQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:34.504066+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_05e5c827a2f87b46.json",
+      "bytes": 13614,
+      "sha256": "859ac931543cb5675496f86b9c5af5f2be251ab8ba53ec4cd00cf8774c1a5274",
+      "pagination_token": "b2Zmc2V0PTcyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTc1MA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:37.191829+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_f7f2d1dbdd038f54.json",
+      "bytes": 13693,
+      "sha256": "9364665dde3045d37051bf737071430fff1bb5c3387df3247c866ee5a6f15191",
+      "pagination_token": "b2Zmc2V0PTc1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTc3NQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:39.913128+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_6ace2120a38fb62c.json",
+      "bytes": 13586,
+      "sha256": "50bc53986cf377d52579a2092e20fbb461036076575d4dc2db9d5ee40bb9b2e3",
+      "pagination_token": "b2Zmc2V0PTc3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTgwMA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:42.400380+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_b0c534b310878d41.json",
+      "bytes": 13576,
+      "sha256": "9f45a2c8d4f6f8563d44ba818dae7ace17d2eb8b0d1b2ee87b393e1bcd00355d",
+      "pagination_token": "b2Zmc2V0PTgwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTgyNQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:45.008370+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_c64f74e509072cba.json",
+      "bytes": 13570,
+      "sha256": "4b9c445d8c0989922e2df732fc30f342ceb962bd11d5a43d7d2031725be62a80",
+      "pagination_token": "b2Zmc2V0PTgyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTg1MA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:47.613517+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_ad195a29f24f854c.json",
+      "bytes": 13564,
+      "sha256": "09f3215c6f67e4bc9f81b4855769d6a6269be95adad46eacf728613b2e412ad5",
+      "pagination_token": "b2Zmc2V0PTg1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTg3NQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:50.208457+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_670fd15609ad2cc9.json",
+      "bytes": 13554,
+      "sha256": "5399a67f78b4f48d6d193ca76b030efdc22bb47595ad22a1b9cf379c46dcd33b",
+      "pagination_token": "b2Zmc2V0PTg3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTkwMA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:52.808433+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_0550f939ca8637ac.json",
+      "bytes": 13661,
+      "sha256": "a45f7be13292b7b8af9e9d3419dda8be59a9a9230203a8dfc0fb7c0fba1efb53",
+      "pagination_token": "b2Zmc2V0PTkwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTkyNQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:55.428615+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_455b7823391806a2.json",
+      "bytes": 13435,
+      "sha256": "6b2befc7bd63a2800b06e371396c6848e941e4b39ad82cba73de3ec036d436a8",
+      "pagination_token": "b2Zmc2V0PTkyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTk1MA%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:30:58.055380+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_fce5b165689aeb90.json",
+      "bytes": 13332,
+      "sha256": "7b588bfcc6f2ed4e89a53378cce816cd160f002134e5f00ec84db80118835859",
+      "pagination_token": "b2Zmc2V0PTk1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTk3NQ%3D%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:00.734928+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_2e27cfc7b965c06e.json",
+      "bytes": 13616,
+      "sha256": "42b93f4fb70f1c3bf371421d39126b1b02a1fd8462e13c2ddd46ac529b1923b2",
+      "pagination_token": "b2Zmc2V0PTk3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTEwMDA%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:03.284396+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_8689a203b4d8a867.json",
+      "bytes": 13584,
+      "sha256": "fcec146a25ac365d509a5301c519126de00be9d6161bc89c4de5cf9b6d061738",
+      "pagination_token": "b2Zmc2V0PTEwMDA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTEwMjU%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:05.891808+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_964b28bf993a2411.json",
+      "bytes": 13582,
+      "sha256": "147919ccbd8b7e2f82877068d9af1d836fa2c5077eb2efaca252f1291240bafb",
+      "pagination_token": "b2Zmc2V0PTEwMjU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTEwNTA%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:08.484146+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_2a865b587ad93cc0.json",
+      "bytes": 13533,
+      "sha256": "0017a38bc4921474522149216b7fc2972d71248d167da1ab4c846c25e6765246",
+      "pagination_token": "b2Zmc2V0PTEwNTA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTEwNzU%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:11.102068+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_59a56648c49e338c.json",
+      "bytes": 13604,
+      "sha256": "48311ff76010a6deedee666c2cd3824ebb6dc4f4e5d55908c56fdaa1a4b14726",
+      "pagination_token": "b2Zmc2V0PTEwNzU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTExMDA%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:13.765009+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_36eb896fe5803c2a.json",
+      "bytes": 13574,
+      "sha256": "c5a58ea78f1a12e1e5411f5f7747441c930f89a7a0836bd8f6ceca1657870d5c",
+      "pagination_token": "b2Zmc2V0PTExMDA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTExMjU%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:16.306222+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_cbe57be94ec13e3b.json",
+      "bytes": 13518,
+      "sha256": "a8c47c31c0fc4eaaf71e228bfb6e1eac81c4bdef58a19b0bf1a1d35b277b5ff2",
+      "pagination_token": "b2Zmc2V0PTExMjU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTExNTA%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:19.991118+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_9eccfc1fa6364194.json",
+      "bytes": 13582,
+      "sha256": "1f3b6eba51247d3213874f235d80593285fa3d2e0550d523f08cc380ce083e07",
+      "pagination_token": "b2Zmc2V0PTExNTA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTExNzU%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:21.463159+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_25720b6f8a7a66d8.json",
+      "bytes": 13584,
+      "sha256": "6a44f130c11578ce93ada4d07b65ffbd6354d2a9be1b72e1c5bae2255f0afc84",
+      "pagination_token": "b2Zmc2V0PTExNzU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTEyMDA%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:24.144880+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_1975ca5b737b0123.json",
+      "bytes": 13681,
+      "sha256": "a9638a4a6f9cdb91c2d463f1f05059e517957cbd8917e712b9b7b2b6b058448d",
+      "pagination_token": "b2Zmc2V0PTEyMDA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTEyMjU%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:26.686206+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_f1880ef6771f4b11.json",
+      "bytes": 13679,
+      "sha256": "1fafe36f9a11a60f94f74dfaf7e580faf9db536f76c543915e5100b3041fd9e9",
+      "pagination_token": "b2Zmc2V0PTEyMjU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTEyNTA%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:29.401686+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_74db2ac84f18837a.json",
+      "bytes": 13620,
+      "sha256": "52c238873b77a0c7bbd535a736610fa3d615e9716f7093f9dd9c87fbfb866ab3",
+      "pagination_token": "b2Zmc2V0PTEyNTA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTEyNzU%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:31.919118+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_834ccc1aa9a81741.json",
+      "bytes": 13630,
+      "sha256": "a8cb75f53974a053b2863118bc9fe2afd48a7fe7167ee8eba8d408c65144bf45",
+      "pagination_token": "b2Zmc2V0PTEyNzU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTEzMDA%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:34.526018+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_04e534aad5bbbeeb.json",
+      "bytes": 13697,
+      "sha256": "52fdcca2106876fe580f842f6c3b67e1491c9ecc59e10c1304ce89ca0f99d1cf",
+      "pagination_token": "b2Zmc2V0PTEzMDA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTEzMjU%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:37.097600+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_facecfb7591d0eab.json",
+      "bytes": 13664,
+      "sha256": "94680a4a750dad43c1c32e2068f40baedaaf3ae675fadbe109157c24dbc63ee3",
+      "pagination_token": "b2Zmc2V0PTEzMjU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTEzNTA%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:39.862330+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_864f4c4408fa775d.json",
+      "bytes": 13753,
+      "sha256": "2e1cfe2c183ea9940c2afbbf4ebb7cd24cfc63ab17c93122700f36ca5bed71c1",
+      "pagination_token": "b2Zmc2V0PTEzNTA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTEzNzU%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:42.325691+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_8ceb539997b47306.json",
+      "bytes": 13618,
+      "sha256": "c23afd553dd3682e90b06d62217f997a5e3b71fa92679005b896b698610f4219",
+      "pagination_token": "b2Zmc2V0PTEzNzU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTE0MDA%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:44.917272+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_9e31360cb4fa4ba0.json",
+      "bytes": 13619,
+      "sha256": "b5f513c663a47cc9f5be77886fa2d10e1a28b5edf850ed5a37609fb8f7e30228",
+      "pagination_token": "b2Zmc2V0PTE0MDA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2024-01-01&paginationToken=b2Zmc2V0PTE0MjU%3D",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:31:47.590866+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/air-temperature/2024-01-01/page_9360c2bf6a209059.json",
+      "bytes": 8259,
+      "sha256": "400eda210577ca39a1e6cd77d0e59e39e656456ff7270a274ffdc97826119752",
+      "pagination_token": "b2Zmc2V0PTE0MjU="
+    }
+  ],
+  "timestamp_records": 1439,
+  "distinct_timestamps": 1439,
+  "station_measurements": 18501,
+  "stations_in_metadata": 13,
+  "stations_with_readings": 13,
+  "start": "2024-01-01T00:00:00+08:00",
+  "end": "2024-01-01T23:59:00+08:00",
+  "null_readings": 0,
+  "invalid_numeric_readings": 0,
+  "out_of_range_readings": 0,
+  "range_rule": "rainfall >=0; humidity 0..100; temperature -10..60 (screen only)",
+  "duplicate_station_timestamp_excess": 0,
+  "duplicate_timestamp_records": 0,
+  "unknown_station_ids": 0,
+  "wrong_requested_date_timestamps": 0,
+  "station_metadata_conflicts": [],
+  "min_value": 24.2,
+  "max_value": 29.5,
+  "max_network_gap_seconds": 120.0,
+  "gaps_above_nominal": 1,
+  "nominal_timestamps_per_day": 1440,
+  "station_coverage": [
+    {
+      "station_id": "S104",
+      "measurements": 1439,
+      "expected_nominal": 1440,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S107",
+      "measurements": 1436,
+      "expected_nominal": 1440,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:57:00+08:00",
+      "max_gap_seconds": 180.0
+    },
+    {
+      "station_id": "S109",
+      "measurements": 1406,
+      "expected_nominal": 1440,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:59:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S111",
+      "measurements": 1432,
+      "expected_nominal": 1440,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:59:00+08:00",
+      "max_gap_seconds": 240.0
+    },
+    {
+      "station_id": "S115",
+      "measurements": 1343,
+      "expected_nominal": 1440,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:59:00+08:00",
+      "max_gap_seconds": 180.0
+    },
+    {
+      "station_id": "S116",
+      "measurements": 1435,
+      "expected_nominal": 1440,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:59:00+08:00",
+      "max_gap_seconds": 180.0
+    },
+    {
+      "station_id": "S117",
+      "measurements": 1435,
+      "expected_nominal": 1440,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:59:00+08:00",
+      "max_gap_seconds": 360.0
+    },
+    {
+      "station_id": "S121",
+      "measurements": 1438,
+      "expected_nominal": 1440,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:59:00+08:00",
+      "max_gap_seconds": 180.0
+    },
+    {
+      "station_id": "S24",
+      "measurements": 1435,
+      "expected_nominal": 1440,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:59:00+08:00",
+      "max_gap_seconds": 360.0
+    },
+    {
+      "station_id": "S43",
+      "measurements": 1392,
+      "expected_nominal": 1440,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:59:00+08:00",
+      "max_gap_seconds": 180.0
+    },
+    {
+      "station_id": "S44",
+      "measurements": 1438,
+      "expected_nominal": 1440,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:59:00+08:00",
+      "max_gap_seconds": 180.0
+    },
+    {
+      "station_id": "S50",
+      "measurements": 1434,
+      "expected_nominal": 1440,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:59:00+08:00",
+      "max_gap_seconds": 240.0
+    },
+    {
+      "station_id": "S60",
+      "measurements": 1438,
+      "expected_nominal": 1440,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:59:00+08:00",
+      "max_gap_seconds": 180.0
+    }
+  ],
+  "stations": [
+    {
+      "id": "S109",
+      "deviceId": "S109",
+      "name": "Ang Mo Kio Avenue 5",
+      "location": {
+        "latitude": 1.3764,
+        "longitude": 103.8492
+      }
+    },
+    {
+      "id": "S117",
+      "deviceId": "S117",
+      "name": "Banyan Road",
+      "location": {
+        "latitude": 1.256,
+        "longitude": 103.679
+      }
+    },
+    {
+      "id": "S50",
+      "deviceId": "S50",
+      "name": "Clementi Road",
+      "location": {
+        "latitude": 1.3337,
+        "longitude": 103.7768
+      }
+    },
+    {
+      "id": "S107",
+      "deviceId": "S107",
+      "name": "East Coast Parkway",
+      "location": {
+        "latitude": 1.3135,
+        "longitude": 103.9625
+      }
+    },
+    {
+      "id": "S43",
+      "deviceId": "S43",
+      "name": "Kim Chuan Road",
+      "location": {
+        "latitude": 1.3399,
+        "longitude": 103.8878
+      }
+    },
+    {
+      "id": "S44",
+      "deviceId": "S44",
+      "name": "Nanyang Avenue",
+      "location": {
+        "latitude": 1.34583,
+        "longitude": 103.68166
+      }
+    },
+    {
+      "id": "S121",
+      "deviceId": "S121",
+      "name": "Old Choa Chu Kang Road",
+      "location": {
+        "latitude": 1.37288,
+        "longitude": 103.72244
+      }
+    },
+    {
+      "id": "S111",
+      "deviceId": "S111",
+      "name": "Scotts Road",
+      "location": {
+        "latitude": 1.31055,
+        "longitude": 103.8365
+      }
+    },
+    {
+      "id": "S60",
+      "deviceId": "S60",
+      "name": "Sentosa",
+      "location": {
+        "latitude": 1.25,
+        "longitude": 103.8279
+      }
+    },
+    {
+      "id": "S115",
+      "deviceId": "S115",
+      "name": "Tuas South Avenue 3",
+      "location": {
+        "latitude": 1.29377,
+        "longitude": 103.61843
+      }
+    },
+    {
+      "id": "S24",
+      "deviceId": "S24",
+      "name": "Upper Changi Road North",
+      "location": {
+        "latitude": 1.3678,
+        "longitude": 103.9826
+      }
+    },
+    {
+      "id": "S116",
+      "deviceId": "S116",
+      "name": "West Coast Highway",
+      "location": {
+        "latitude": 1.281,
+        "longitude": 103.754
+      }
+    },
+    {
+      "id": "S104",
+      "deviceId": "S104",
+      "name": "Woodlands Avenue 9",
+      "location": {
+        "latitude": 1.44387,
+        "longitude": 103.78538
+      }
+    }
+  ],
+  "profiled_at_utc": "2026-09-24T03:31:50.353745+00:00"
+}

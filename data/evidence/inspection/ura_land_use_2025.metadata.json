@@ -1,0 +1,100 @@
+{
+  "code": 0,
+  "data": {
+    "datasetId": "d_a8c3546b26712e35021f3a681d0353ae",
+    "createdAt": "2026-01-19T19:38:36+08:00",
+    "name": "Master Plan 2025 Land Use Layer",
+    "collectionIds": [],
+    "description": "Indicative land use zoning layer. This layer is extracted from the Master Plan 2025 that was gazetted on 1 Dec 2025. For the latest Master Plan, please visit URA web site at https://www.ura.gov.sg/",
+    "format": "GEOJSON",
+    "lastUpdatedAt": "2026-03-27T10:07:23+08:00",
+    "managedBy": "Urban Redevelopment Authority",
+    "coverageStart": "2025-12-29T00:00:00+08:00",
+    "datasetSize": 189611398,
+    "geoJsonMetadata": {
+      "properties": [
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "OBJECTID",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "LU_DESC",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "LU_TEXT",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "GPR",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "WHI_Q_MX",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "GPR_B_MN",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "INC_CRC",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "FMEL_UPD_D",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "SHAPE.AREA",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "SHAPE.LEN",
+          "description": ""
+        }
+      ]
+    }
+  },
+  "errorMsg": ""
+}

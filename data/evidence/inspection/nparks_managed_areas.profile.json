@@ -1,0 +1,38 @@
+{
+  "row_count": 462,
+  "geometry_types": {
+    "Polygon": 384,
+    "MultiPolygon": 78
+  },
+  "invalid_geometries": 2,
+  "properties": [
+    "FMEL_UPD_D",
+    "INC_CRC",
+    "L_CODE",
+    "NAME",
+    "N_RESERVE",
+    "OBJECTID_1",
+    "SHAPE_1.AREA",
+    "SHAPE_1.LEN"
+  ],
+  "slug": "nparks_managed_areas",
+  "dataset_id": "d_77d7ec97be83d44f61b85454f844382f",
+  "source_name": "NParks Parks and Nature Reserves",
+  "receipt": {
+    "dataset_id": "d_77d7ec97be83d44f61b85454f844382f",
+    "source_url": "https://data.gov.sg/datasets/d_77d7ec97be83d44f61b85454f844382f/view",
+    "api_url": "https://api-open.data.gov.sg/v1/public/api/datasets/d_77d7ec97be83d44f61b85454f844382f/poll-download",
+    "retrieved_at_utc": "2026-09-24T05:40:44.701981+00:00",
+    "completed_at_utc": "2026-09-24T05:40:45.237883+00:00",
+    "raw_bytes": 3095917,
+    "raw_sha256": "032a96ae1cde6057a2fd701b51388fc019df1b6e63e2a599e97a5942ada70526",
+    "stored_path": "data/raw/inspection/nparks_managed_areas.geojson.gz",
+    "stored_bytes": 982445,
+    "stored_sha256": "ea9d0602ab2dcfd2de4d5b35af7ce184bd5cbc94682edee788af66a9175e0c93",
+    "compression": "gzip (original bytes after decompression)",
+    "status": "complete"
+  },
+  "source_updated_at": "2026-09-24T10:06:50+08:00",
+  "coverage_start": "2025-11-07T00:00:00+08:00",
+  "coverage_end": null
+}

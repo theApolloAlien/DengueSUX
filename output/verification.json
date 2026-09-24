@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "national_weeks": 574,
+  "feature_origins": 304,
+  "test_predictions": 52,
+  "selected_model": "gradient_boosting",
+  "unique_clusters": 11,
+  "unique_cluster_cases": 101,
+  "area_cluster_associations": 12,
+  "area_case_associations": 175,
+  "area_weeks": 17215,
+  "incomplete_weather_weeks_2017_2022": {
+    "rainfall": 37,
+    "temperature": 30,
+    "humidity": 33
+  },
+  "checks": [
+    "Delta tables readable",
+    "CDC Sunday calendar",
+    "target is exact t+2 observed label",
+    "purged temporal splits",
+    "no invented historical area cases or clusters",
+    "missing weather preserved",
+    "unique area/week keys",
+    "selected and baseline metrics independently recomputed",
+    "selection excludes evaluation labels",
+    "selected predictor labels and additive explanations agree",
+    "clusters associated with every positive-area overlap",
+    "unique national cluster totals and overlapping area counts reconciled",
+    "no synthetic observations"
+  ]
+}

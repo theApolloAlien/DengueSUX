@@ -1,0 +1,10 @@
+{
+  "api_url": "https://api-open.data.gov.sg/v2/public/api/datasets/d_ce8cf1e3f4f5ff1a68393a7cb101eb9c/metadata",
+  "retrieved_at_utc": "2026-09-24T03:38:22.754330+00:00",
+  "http_status": 200,
+  "source_bytes": 513,
+  "source_sha256": "61f6451f32f1987b9c14751d648ef8e282fbad3a4e0d71836157b7391605634c",
+  "stored_bytes": 513,
+  "stored_sha256": "61f6451f32f1987b9c14751d648ef8e282fbad3a4e0d71836157b7391605634c",
+  "complete": true
+}

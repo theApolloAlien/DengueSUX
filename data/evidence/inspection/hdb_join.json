@@ -1,0 +1,163 @@
+{
+  "source": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+  "block_joined": 26,
+  "block_count": 26,
+  "rows": [
+    {
+      "cluster_id": 527702,
+      "block": "207",
+      "street": "Bt Batok St 21",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527702,
+      "block": "210",
+      "street": "Bt Batok St 21",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527704,
+      "block": "117",
+      "street": "Ho Ching Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527704,
+      "block": "119",
+      "street": "Ho Ching Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527704,
+      "block": "120",
+      "street": "Ho Ching Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527704,
+      "block": "335",
+      "street": "Kang Ching Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527704,
+      "block": "321",
+      "street": "Tah Ching Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527704,
+      "block": "322",
+      "street": "Tah Ching Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527704,
+      "block": "323",
+      "street": "Tah Ching Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527704,
+      "block": "324",
+      "street": "Tah Ching Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527704,
+      "block": "326",
+      "street": "Tah Ching Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527704,
+      "block": "329",
+      "street": "Tah Ching Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527704,
+      "block": "330",
+      "street": "Tah Ching Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527704,
+      "block": "332",
+      "street": "Tah Ching Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527704,
+      "block": "122",
+      "street": "Yuan Ching Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527705,
+      "block": "573A",
+      "street": "Woodlands Dr 16",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527705,
+      "block": "573B",
+      "street": "Woodlands Dr 16",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527706,
+      "block": "110",
+      "street": "Bishan St 12",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527706,
+      "block": "115",
+      "street": "Bishan St 12",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527706,
+      "block": "116",
+      "street": "Bishan St 12",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527707,
+      "block": "119B",
+      "street": "Kim Tian Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527707,
+      "block": "119D",
+      "street": "Kim Tian Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527707,
+      "block": "127D",
+      "street": "Kim Tian Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527707,
+      "block": "131B",
+      "street": "Kim Tian Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527698,
+      "block": "308",
+      "street": "Canberra Rd",
+      "hdb_property_joined": true
+    },
+    {
+      "cluster_id": 527698,
+      "block": "318",
+      "street": "Sembawang Vista",
+      "hdb_property_joined": true
+    }
+  ]
+}

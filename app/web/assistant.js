@@ -1,0 +1,368 @@
+/* Ask DengueSUX: answers by calling functions over the exported gold data and cites each dated source.
+   The responder below composes answers locally from those function results; a hosted model can replace
+   `respond` later without changing the tools, citations or UI. */
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const icon = n => `<i class="ph ph-${n}" aria-hidden="true"></i>`;
+  const finite = v => typeof v === 'number' && Number.isFinite(v);
+  const num = (v, d=0) => finite(v) ? v.toLocaleString('en-SG', {maximumFractionDigits:d, minimumFractionDigits:0}) : '—';
+  const date = (v, opts={day:'numeric', month:'short', year:'numeric'}) => {
+    if (!v) return 'unavailable';
+    const raw = String(v), text = /^\d{14}$/.test(raw) ? `${raw.slice(0,4)}-${raw.slice(4,6)}-${raw.slice(6,8)}` : raw;
+    const d = new Date(text.length === 10 ? `${text}T12:00:00+08:00` : text);
+    return Number.isNaN(+d) ? raw : d.toLocaleDateString('en-SG', opts);
+  };
+  const wait = ms => new Promise(r => setTimeout(r, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : ms));
+  const TABLE = 'main.denguesux';
+  const MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+  let data = {}, hooks = {}, busy = false, mode = 'ask';
+
+  const current = () => data.current || {};
+  const model = () => data.model || {};
+  const areas = () => [...(current().areas || [])].sort((a,b) => (b.cluster_cases||0)-(a.cluster_cases||0) || (b.cluster_count||0)-(a.cluster_count||0) || a.name.localeCompare(b.name));
+  const predictions = () => model().predictions || [];
+  const clustersIn = code => (current().clusters?.features || []).map(f => f.properties).filter(p => (p.area_codes || [p.area_code]).includes(code));
+  const sourceUrl = name => (data.meta?.sources || []).find(s => s.name.startsWith(name))?.url;
+  const SOURCES = {
+    clusters: () => ({id:'clusters', name:'NEA active clusters · data.gov.sg', date:current().as_of, url:sourceUrl('NEA active clusters'), table:'gold_area_priorities'}),
+    weather: () => ({id:'weather', name:'NEA weather stations · data.gov.sg', date:current().weather_date, url:sourceUrl('NEA weather'), table:'gold_area_priorities'}),
+    growth: () => ({id:'growth', name:'Daily cluster snapshots', date:data.growth?.retrieved_at || current().as_of, table:'gold_cluster_growth'}),
+    inspection: () => ({id:'inspection', name:'OneMap places and walking route', date:data.inspection?.as_of, url:'https://www.onemap.gov.sg/', table:'inspection_routes'}),
+    forecast: () => ({id:'forecast', name:`2022 forecast backtest · MLflow run ${String(model().run_id || '').slice(0,8)}`, date:data.meta?.generated_at, table:'gold_national_predictions'}),
+    bulletin: () => ({id:'bulletin', name:'MOH weekly infectious disease bulletin', date:data.meta?.labels?.contract?.retrieved_at, url:sourceUrl('Weekly national'), table:'gold_national_features'})
+  };
+
+  /* ---------- Functions the assistant can call ---------- */
+  function findArea(text) {
+    const q = ` ${String(text).toLowerCase().replace(/[^a-z0-9 ]/g, ' ')} `;
+    return [...(current().areas || [])].sort((a,b) => b.name.length - a.name.length).find(a => q.includes(` ${a.name.toLowerCase()} `));
+  }
+  function weekIndex(text) {
+    const rows = predictions(); if (!rows.length) return -1;
+    const lead = model().peak_lead_time || {};
+    const t = String(text).toLowerCase();
+    const iso = t.match(/\b(20\d\d)-(\d\d)-(\d\d)\b/);
+    if (iso) { const target = iso[0]; const i = rows.findIndex(r => r.target_date >= target); return i < 0 ? rows.length-1 : i; }
+    const month = MONTHS.findIndex(m => t.includes(m) || new RegExp(`\\b${m.slice(0,3)}\\b`).test(t));
+    if (month >= 0) {
+      const inMonth = rows.map((r,i) => ({r,i})).filter(({r}) => new Date(`${r.target_date}T12:00:00`).getMonth() === month);
+      if (!inMonth.length) return -1;
+      const day = t.match(/\b(\d{1,2})\b(?!\d)/)?.[1];
+      if (day && !/20\d\d/.test(day)) return inMonth.reduce((best, x) => Math.abs(new Date(`${x.r.target_date}T12:00:00`).getDate()-day) < Math.abs(new Date(`${best.r.target_date}T12:00:00`).getDate()-day) ? x : best).i;
+      if (/warning|high|alert/.test(t)) return (inMonth.find(({r}) => r.risk === 'High') || inMonth[0]).i;
+      return inMonth[0].i;
+    }
+    if (/peak/.test(t)) return rows.reduce((b, r, i) => r.actual > rows[b].actual ? i : b, 0);
+    if (/warning|first high|turn(ed|s)? high/.test(t)) return Math.max(0, rows.findIndex(r => r.issue_date === lead.selected?.first_high_issue_date));
+    return -1;
+  }
+  const weatherOf = a => {
+    const w = a.weather || {}, pick = k => w[k] && finite(w[k].value) ? {value:w[k].value, station:w[k].station_name, km:w[k].distance_km} : null;
+    return {rain_mm:pick('rainfall'), temperature_c:pick('temperature'), humidity_pct:pick('humidity')};
+  };
+  const tools = {
+    get_area({code}) {
+      const a = (current().areas || []).find(x => x.code === code); if (!a) return {result:{error:'unknown_area'}, sources:[]};
+      const clusters = clustersIn(code).sort((x,y) => y.cases - x.cases).map(p => ({id:p.id, locality:p.name, people:p.cases, shared_with:(p.area_names||[]).filter(n => n !== a.name), updated:p.updated_at}));
+      return {result:{code:a.code, name:a.name, region:a.region, priority:a.risk, cluster_count:a.cluster_count, people_in_clusters:a.cluster_cases, clusters, weather:weatherOf(a)}, sources:[SOURCES.clusters(), SOURCES.weather()]};
+    },
+    top_areas({n=5}) {
+      return {result:areas().slice(0, n).map((a,i) => ({rank:i+1, code:a.code, name:a.name, priority:a.risk, people_in_clusters:a.cluster_cases, cluster_count:a.cluster_count})), sources:[SOURCES.clusters()]};
+    },
+    cluster_growth({area}) {
+      const g = data.growth || {}, rows = area ? clustersIn(area) : (current().clusters?.features || []).map(f => f.properties);
+      return {result:{history_available:g.history_available === true, snapshots_saved:g.snapshot_count ?? 1, baseline_date:g.baseline_date, growing_count:g.growing_count, clusters:rows.map(p => ({id:p.id, locality:p.name, people:p.cases, status:p.growth_label || 'Not enough history yet', change:p.growth_cases}))}, sources:[SOURCES.growth()]};
+    },
+    inspection_plan({area}) {
+      const plan = data.inspection?.areas?.[area] || {};
+      const stops = (plan.stops || []).map(s => ({stop:s.number, name:s.name, type:s.place_type, checklist:s.checklist}));
+      return {result:{area, status:plan.status || 'unavailable', message:plan.message, stops, distance_km:plan.route?.distance_m ? plan.route.distance_m/1000 : null, route_method:plan.route?.method, unresolved_blocks:plan.unresolved_blocks || 0}, sources:[SOURCES.inspection(), SOURCES.clusters()]};
+    },
+    forecast_replay({week}) {
+      const r = predictions()[week]; if (!r) return {result:{error:'no_such_week'}, sources:[]};
+      const lead = model().peak_lead_time || {};
+      return {result:{week_index:week, issue_date:r.issue_date, target_week:r.target_date, forecast:r.selected_prediction ?? r.prediction, reported:r.actual, simple_average:r.baseline, level:r.risk, reported_level:r.actual_risk, origin_week_cases:r.origin_cases, high_threshold:model().thresholds?.high, peak_week:lead.peak_week, peak_people:lead.peak_people, first_high_issue:lead.selected?.first_high_issue_date, weeks_before_peak:lead.selected?.weeks_before_peak}, sources:[SOURCES.forecast(), SOURCES.bulletin()]};
+    },
+    explain_forecast({week}) {
+      const r = predictions()[week]; if (!r) return {result:{error:'no_such_week'}, sources:[]};
+      return {result:{method:r.explanation_method || 'Grouped TreeSHAP contributions', base_value:r.explanation_base, contributions:(r.top_features || []).map(f => ({feature:f.feature, value:f.value}))}, sources:[SOURCES.forecast()]};
+    }
+  };
+
+  /* ---------- Planning and composing an answer ---------- */
+  function planCalls(question) {
+    const t = question.toLowerCase(), area = findArea(t), week = weekIndex(t);
+    const n = Number(t.match(/\btop\s+(\d{1,2})\b/)?.[1] || t.match(/\b(\d{1,2})\s+(areas|places)\b/)?.[1] || 5);
+    if (area && /route|walk|volunteer|inspect|plan|visit|check first|where .*look/.test(t)) return {intent:'route', area, calls:[['get_area', {code:area.code}], ['inspection_plan', {area:area.code}]]};
+    if (/forecast|warning|predict|outlook|drove|driver|shap|replay|2022|peak/.test(t) && !area) {
+      const w = week >= 0 ? week : weekIndex('first high warning');
+      return {intent:'forecast', calls:[['forecast_replay', {week:w}], ['explain_forecast', {week:w}]]};
+    }
+    if (/grow|growing|spread|increas|rising|shrink/.test(t)) return {intent:'growth', area, calls:[['cluster_growth', {area:area?.code}]]};
+    if (area) return {intent:'area', area, calls:[['get_area', {code:area.code}], ['cluster_growth', {area:area.code}]]};
+    if (/top|worst|highest|most|which areas?|where|priorit|rank|hotspot/.test(t)) return {intent:'top', calls:[['top_areas', {n:Math.min(Math.max(n,1),20)}]]};
+    return {intent:'help', calls:[]};
+  }
+
+  function cite(sources, src) { let i = sources.findIndex(s => s.id === src.id); if (i < 0) { sources.push(src); i = sources.length-1; } return `<sup class="ask-cite">[${i+1}]</sup>`; }
+  const people = n => `${num(n)} ${n === 1 ? 'person' : 'people'}`;
+  const nearestActive = a => {
+    const [lat, lng] = a.centroid || [0,0];
+    return areas().filter(x => x.cluster_count && x.code !== a.code && x.centroid).map(x => ({x, d:Math.hypot(x.centroid[0]-lat, (x.centroid[1]-lng)*Math.cos(lat*Math.PI/180))*111})).sort((p,q) => p.d-q.d).slice(0,2);
+  };
+
+  function compose(plan, results, question) {
+    const sources = [], out = {paragraphs:[], actions:[], sources};
+    const R = name => results.find(r => r.name === name);
+    const C = (name, id) => cite(sources, R(name).sources.find(s => s.id === id) || R(name).sources[0]);
+    if (plan.intent === 'area') {
+      const a = R('get_area').result, g = R('cluster_growth').result, w = a.weather;
+      const why = a.priority === 'High' ? `because <b>${people(a.people_in_clusters)}</b> are in <b>${a.cluster_count}</b> active ${a.cluster_count === 1 ? 'cluster' : 'clusters'} overlapping the area. High starts at 10 people.`
+        : a.priority === 'Medium' ? `because it has <b>${a.cluster_count}</b> active ${a.cluster_count === 1 ? 'cluster' : 'clusters'} with <b>${people(a.people_in_clusters)}</b>, under the 10-person High line.`
+        : `because no active cluster overlaps it in this snapshot. Low isn't the same as no risk, so routine checks still matter.`;
+      out.paragraphs.push(`<b>${esc(a.name)}</b> is <b>${esc(a.priority)}</b> priority ${why}${C('get_area','clusters')}`);
+      if (a.clusters.length) {
+        const top = a.clusters[0], streets = top.locality.split(' / ').slice(0,2).join(' / ');
+        out.paragraphs.push(`The largest is the <b>${num(top.people)}-person</b> cluster around ${esc(streets)}${top.shared_with.length ? `, which it shares with ${esc(top.shared_with.join(' and '))}` : ''}. NEA last updated it on ${date(top.updated)}.${C('get_area','clusters')}`);
+      }
+      const wx = [w.rain_mm && `${num(w.rain_mm.value,1)} mm rain`, w.temperature_c && `${num(w.temperature_c.value,1)}°C`, w.humidity_pct && `${num(w.humidity_pct.value,0)}% humidity`].filter(Boolean);
+      if (wx.length) out.paragraphs.push(`Nearby stations recorded ${wx.join(', ')} on ${date(current().weather_date)}. Weather adds context but doesn't change the priority level.${C('get_area','weather')}`);
+      out.paragraphs.push(g.history_available ? `${g.clusters.filter(c => /grow/i.test(c.status)).length} of these clusters grew since ${date(g.baseline_date)}.${C('cluster_growth','growth')}` : `It's too early to say whether these clusters are growing: growth needs two snapshots at least 7 days apart, and ${g.snapshots_saved} ${g.snapshots_saved === 1 ? 'is' : 'are'} saved so far.${C('cluster_growth','growth')}`);
+      if (a.cluster_count) out.actions.push({label:`Plan a route in ${a.name}`, ask:`Plan a volunteer route in ${a.name}.`});
+      out.actions.push({label:'Show on map', run:() => hooks.selectArea?.(a.code)});
+    }
+    if (plan.intent === 'route') {
+      const a = R('get_area').result, p = R('inspection_plan').result, day = question.match(/\b(mon|tues|wednes|thurs|fri|satur|sun)day\b/i)?.[0];
+      if (p.stops.length) {
+        const km = p.distance_km, minutes = Math.round((km ? km/4.5*60 : 0) + p.stops.length*5);
+        out.paragraphs.push(`${day ? `For a ${esc(day.charAt(0).toUpperCase()+day.slice(1).toLowerCase())} session in` : 'In'} <b>${esc(a.name)}</b>, walk these <b>${p.stops.length} places</b> in order${km ? ` along a <b>${num(km,1)} km</b> ${p.route_method === 'onemap_walk' ? 'walking route' : 'route'}` : ''}. Allow about <b>${minutes} minutes</b>, including roughly 5 minutes at each stop.${C('inspection_plan','inspection')}`);
+        out.paragraphs.push(`<ol class="ask-list">${p.stops.map(s => `<li>${esc(s.name)}</li>`).join('')}</ol>`);
+        const checklist = p.stops[0].checklist || [];
+        if (checklist.length) out.paragraphs.push(`At each stop: ${checklist.map(c => esc(c.charAt(0).toLowerCase()+c.slice(1))).join('; ')}. These stops sit near the ${people(a.people_in_clusters)} in active clusters, but none is a confirmed breeding site.${C('inspection_plan','clusters')}`);
+        if (p.unresolved_blocks) out.paragraphs.push(`${p.unresolved_blocks} listed ${p.unresolved_blocks === 1 ? 'block' : 'blocks'} couldn't be located, so a few nearby places may be missing.`);
+        out.actions.push({label:'Open the full plan', run:() => hooks.openPlan?.(a.code)}, {label:'Draft a resident notice', run:() => hooks.openNotice?.(a.code)});
+      } else {
+        const near = nearestActive((current().areas || []).find(x => x.code === a.code) || {});
+        out.paragraphs.push(`<b>${esc(a.name)}</b> has no active dengue cluster in the ${date(current().as_of)} snapshot, so there's no cluster-led route to plan there.${C('inspection_plan','clusters')}`);
+        if (near.length) out.paragraphs.push(`The nearest areas with active clusters are ${near.map(({x,d}) => `<b>${esc(x.name)}</b> (${people(x.cluster_cases)}, about ${num(d,0)} km away)`).join(' and ')}.${C('inspection_plan','clusters')} A volunteer group could start there.`);
+        out.paragraphs.push(`Around ${esc(a.name)}, a general sweep still helps: loosen hardened soil, empty flowerpot plates, overturn pails, change vase water and keep gutters clear.`);
+        near.forEach(({x}) => out.actions.push({label:`Plan a route in ${x.name}`, ask:`Plan a volunteer route in ${x.name}.`}));
+      }
+    }
+    if (plan.intent === 'forecast') {
+      const f = R('forecast_replay').result, e = R('explain_forecast').result;
+      if (f.error) { out.paragraphs.push("I couldn't find that week in the 2022 replay. Try a month, such as “March 2022”."); return out; }
+      const isFirst = f.issue_date === f.first_high_issue;
+      if (/peak/i.test(question)) out.paragraphs.push(`Reported cases peaked in the week of <b>${date(f.peak_week)}</b>, at <b>${people(f.peak_people)}</b>.${C('forecast_replay','bulletin')}`);
+      out.paragraphs.push(`${isFirst ? 'The early warning came on' : 'The forecast issued on'} <b>${date(f.issue_date)}</b>${isFirst ? ', when the forecast' : ''} predicted <b>${people(Math.round(f.forecast))}</b> (${esc(f.level)}) for the week of ${date(f.target_week,{day:'numeric',month:'short'})}. The High line is ${num(f.high_threshold,0)}.${C('forecast_replay','forecast')}${isFirst ? ` That was <b>${num(f.weeks_before_peak)} weeks</b> before the ${date(f.peak_week,{day:'numeric',month:'short'})} peak of ${people(f.peak_people)}.` : ''}`);
+      const parts = [...e.contributions].sort((x,y) => Math.abs(y.value)-Math.abs(x.value));
+      const lead = parts[0], total = parts.reduce((s,c) => s+Math.abs(c.value), 0) || 1;
+      const weatherShare = parts.filter(c => /rain|heat/i.test(c.feature)).reduce((s,c) => s+Math.abs(c.value), 0) / total;
+      out.paragraphs.push(`What drove it, starting from a typical week of ${num(e.base_value,0)}: ${parts.map(c => `${esc(c.feature.toLowerCase())} <b>${c.value >= 0 ? '+' : '−'}${num(Math.abs(c.value),1)}</b>`).join(', ')}.${C('explain_forecast','forecast')}`);
+      if (lead) out.paragraphs.push(lead.feature === 'Recent cases' ? `So the signal came mostly from recent cases: <b>${people(f.origin_week_cases)}</b> were reported in the week the forecast was made.${C('forecast_replay','bulletin')} ${weatherShare < .25 ? 'Weather played a small part.' : 'Weather also mattered.'} These are associations, not causes.` : `The largest factor was ${esc(lead.feature.toLowerCase())}. These contributions are associations, not causes.`);
+      out.paragraphs.push(`${people(f.reported)} were actually reported that week; a simple four-week average would have said ${num(Math.round(f.simple_average))}.${C('forecast_replay','bulletin')}`);
+      out.actions.push({label:'Show this week on the chart', run:() => hooks.showWeek?.(f.week_index)});
+    }
+    if (plan.intent === 'top') {
+      const rows = R('top_areas').result;
+      out.paragraphs.push(`Start with these ${rows.length} areas, ranked by people in active clusters:${C('top_areas','clusters')}`);
+      out.paragraphs.push(`<ol class="ask-list">${rows.map(r => `<li><b>${esc(r.name)}</b> · ${esc(r.priority)} · ${people(r.people_in_clusters)} in ${r.cluster_count} ${r.cluster_count === 1 ? 'cluster' : 'clusters'}</li>`).join('')}</ol>`);
+      out.paragraphs.push('A cluster that crosses a boundary counts in both areas, so these totals shouldn’t be added up.');
+      if (rows[0]) out.actions.push({label:`Why is ${rows[0].name} ${rows[0].priority}?`, ask:`Why is ${rows[0].name} ${rows[0].priority}?`});
+    }
+    if (plan.intent === 'growth') {
+      const g = R('cluster_growth').result;
+      if (g.history_available) {
+        const growing = g.clusters.filter(c => /grow/i.test(c.status));
+        out.paragraphs.push(`${growing.length} of ${g.clusters.length} clusters${plan.area ? ` in ${esc(plan.area.name)}` : ''} grew since ${date(g.baseline_date)}.${C('cluster_growth','growth')}`);
+        if (growing.length) out.paragraphs.push(`<ol class="ask-list">${growing.map(c => `<li>${esc(c.locality.split(' / ')[0])} · +${num(c.change)}</li>`).join('')}</ol>`);
+      } else {
+        out.paragraphs.push(`Not yet. Growth compares two snapshots at least 7 days apart, and ${g.snapshots_saved} ${g.snapshots_saved === 1 ? 'snapshot is' : 'snapshots are'} saved so far (${date(data.growth?.as_of_date || current().as_of)}).${C('cluster_growth','growth')} The daily job keeps collecting, so this will fill in automatically.`);
+        const biggest = [...g.clusters].sort((x,y) => y.people-x.people).slice(0,3);
+        if (biggest.length) out.paragraphs.push(`For now, the largest ${biggest.length === 1 ? 'cluster' : 'clusters'}${plan.area ? ` in ${esc(plan.area.name)}` : ''} ${biggest.length === 1 ? 'is' : 'are'} ${biggest.map(c => `${esc(c.locality.split(' / ')[0])} (${people(c.people)})`).join(', ')}.${C('cluster_growth','growth')}`);
+      }
+    }
+    if (plan.intent === 'help') {
+      out.paragraphs.push('I can answer questions about area priorities, active clusters, inspection routes and the 2022 forecast replay, using the saved data. Try one of these:');
+      ['Why is Jurong East High?', 'Plan a Saturday volunteer route in Bedok.', 'What drove the March 2022 early warning?', 'Which areas should we check first?'].forEach(q => out.actions.push({label:q, ask:q}));
+    }
+    return out;
+  }
+
+  async function respond(question, onStep) {
+    const plan = planCalls(question), results = [];
+    for (const [name, args] of plan.calls) {
+      onStep(name, args);
+      await wait(380);
+      results.push({name, args, ...tools[name](args)});
+    }
+    return {plan, results, answer:compose(plan, results, question)};
+  }
+
+  /* ---------- Ask the data: plain-English questions to SQL over the gold tables ---------- */
+  const REGIONS = ['north-east','north','east','west','central'];
+  const areaRows = () => areas().map(a => ({area_code:a.code, area_name:a.name, region:a.region, priority:a.risk, cluster_count:a.cluster_count, cluster_cases:a.cluster_cases}));
+  const monthName = i => MONTHS[i].charAt(0).toUpperCase() + MONTHS[i].slice(1, 3);
+  function sqlFor(question) {
+    const t = question.toLowerCase(), n = Number(t.match(/\b(?:top|first)\s+(\d{1,2})\b/)?.[1] || 10);
+    const more = Number(t.match(/(?:more than|over|above|at least|>=?)\s*(\d+)/)?.[1]);
+    const region = REGIONS.find(r => t.includes(`${r} region`) || t.includes(r.replace('-', ' ')) && /region|areas? in/.test(t));
+    if (/error|accura|off by|mae/.test(t)) return {
+      table:'gold_national_predictions', summary:'Average absolute weekly error of the forecast and the simple average, by month of 2022.',
+      sql:`SELECT date_format(target_date, 'MMM') AS month,\n       round(avg(abs(prediction - actual)), 0) AS forecast_error,\n       round(avg(abs(baseline - actual)), 0) AS simple_average_error\nFROM ${TABLE}.gold_national_predictions\nWHERE year(target_date) = 2022\nGROUP BY month(target_date), month\nORDER BY month(target_date);`,
+      run:() => { const g = {}; predictions().forEach(r => { const m = new Date(`${r.target_date}T12:00:00`).getMonth(); (g[m] ||= []).push(r); }); return Object.entries(g).map(([m, rs]) => ({month:monthName(+m), forecast_error:Math.round(rs.reduce((s,r) => s+Math.abs((r.selected_prediction ?? r.prediction)-r.actual),0)/rs.length), simple_average_error:Math.round(rs.reduce((s,r) => s+Math.abs(r.baseline-r.actual),0)/rs.length)})); }
+    };
+    if (/week|forecast|predict|2022/.test(t) && /high/.test(t)) return {
+      table:'gold_national_predictions', summary:'Weeks in 2022 where the two-week forecast was High.',
+      sql:`SELECT issue_date, target_date, round(prediction) AS forecast, actual AS reported\nFROM ${TABLE}.gold_national_predictions\nWHERE risk = 'High'\nORDER BY target_date;`,
+      run:() => predictions().filter(r => r.risk === 'High').map(r => ({issue_date:r.issue_date, target_date:r.target_date, forecast:Math.round(r.selected_prediction ?? r.prediction), reported:r.actual}))
+    };
+    if (/peak|busiest|worst week|most cases/.test(t) && /week|2022/.test(t)) return {
+      table:'gold_national_predictions', summary:'The five weeks of 2022 with the most reported people.',
+      sql:`SELECT target_date, actual AS reported, round(prediction) AS forecast\nFROM ${TABLE}.gold_national_predictions\nORDER BY actual DESC\nLIMIT 5;`,
+      run:() => [...predictions()].sort((a,b) => b.actual-a.actual).slice(0,5).map(r => ({target_date:r.target_date, reported:r.actual, forecast:Math.round(r.selected_prediction ?? r.prediction)}))
+    };
+    if (/how many|count|breakdown|split/.test(t) && /priorit|high|medium|low|level/.test(t)) return {
+      table:'gold_area_priorities', summary:'Planning areas by priority level.',
+      sql:`SELECT priority, count(*) AS areas, sum(cluster_cases) AS people_in_clusters\nFROM ${TABLE}.gold_area_priorities\nGROUP BY priority\nORDER BY CASE priority WHEN 'High' THEN 1 WHEN 'Medium' THEN 2 ELSE 3 END;`,
+      run:() => ['High','Medium','Low'].map(p => { const rs = areaRows().filter(r => r.priority === p); return {priority:p, areas:rs.length, people_in_clusters:rs.reduce((s,r) => s+r.cluster_cases,0)}; })
+    };
+    if (/cluster/.test(t) && !/area/.test(t) || finite(more) && /cluster/.test(t)) return {
+      table:'gold_cluster_growth', summary:finite(more) ? `Active clusters with more than ${more} people.` : 'Active clusters, largest first.',
+      sql:`SELECT cluster_id, locality, case_size, classification\nFROM ${TABLE}.gold_cluster_growth\nWHERE as_of_date = (SELECT max(as_of_date) FROM ${TABLE}.gold_cluster_growth)${finite(more) ? `\n  AND case_size > ${more}` : ''}\nORDER BY case_size DESC;`,
+      run:() => (current().clusters?.features || []).map(f => f.properties).filter(p => !finite(more) || p.cases > more).sort((a,b) => b.cases-a.cases).map(p => ({cluster_id:p.id, locality:p.name.split(' / ').slice(0,2).join(' / ') + (p.name.split(' / ').length > 2 ? ' …' : ''), case_size:p.cases, classification:p.growth_status || 'not_enough_history'}))
+    };
+    if (region) return {
+      table:'gold_area_priorities', summary:`Planning areas in the ${region.replace(/\b\w/g, c => c.toUpperCase())} Region with active clusters.`,
+      sql:`SELECT area_name, priority, cluster_count, cluster_cases\nFROM ${TABLE}.gold_area_priorities\nWHERE region = '${region.replace(/\b\w/g, c => c.toUpperCase())} Region'\n  AND cluster_count > 0\nORDER BY cluster_cases DESC;`,
+      run:() => areaRows().filter(r => (r.region || '').toLowerCase() === `${region} region` && r.cluster_count > 0).map(({area_name, priority, cluster_count, cluster_cases}) => ({area_name, priority, cluster_count, cluster_cases}))
+    };
+    if (/area|where|top|rank|priorit|most/.test(t)) return {
+      table:'gold_area_priorities', summary:`Top ${n} planning areas by people in active clusters.`,
+      sql:`SELECT area_name, priority, cluster_count, cluster_cases\nFROM ${TABLE}.gold_area_priorities\nORDER BY cluster_cases DESC, cluster_count DESC\nLIMIT ${n};`,
+      run:() => areaRows().slice(0, n).map(({area_name, priority, cluster_count, cluster_cases}) => ({area_name, priority, cluster_count, cluster_cases}))
+    };
+    return null;
+  }
+  const SQL_EXAMPLES = ['Top 10 areas by people in clusters', 'How many areas are High, Medium and Low?', 'Clusters with more than 3 people', 'Weeks in 2022 where the forecast was High', 'Monthly forecast error in 2022', 'Areas in the West Region with active clusters'];
+  const highlightSql = sql => esc(sql).replace(/\b(SELECT|FROM|WHERE|AND|GROUP BY|ORDER BY|LIMIT|AS|DESC|CASE|WHEN|THEN|ELSE|END)\b/g, '<b>$1</b>').replace(/\b(count|sum|avg|abs|round|max|year|month|date_format)(?=\()/g, '<b>$1</b>');
+
+  /* ---------- UI ---------- */
+  function render() {
+    const fab = document.createElement('button');
+    fab.className = 'ask-fab'; fab.id = 'ask-fab'; fab.innerHTML = `${icon('sparkle')} <span>Ask DengueSUX</span>`;
+    fab.setAttribute('aria-label', 'Ask DengueSUX'); fab.setAttribute('title', 'Ask DengueSUX'); fab.setAttribute('aria-controls', 'ask-panel'); fab.setAttribute('aria-expanded', 'false');
+    const panel = document.createElement('aside');
+    panel.className = 'ask-panel'; panel.id = 'ask-panel'; panel.hidden = true; panel.setAttribute('aria-label', 'Ask DengueSUX');
+    panel.innerHTML = `<header class="ask-head"><div class="ask-title">${icon('sparkle')} <strong>Ask DengueSUX</strong></div><div class="ask-modes" role="tablist"><button role="tab" data-mode="ask" aria-selected="true">Assistant</button><button role="tab" data-mode="sql" aria-selected="false">Ask the data</button></div><button class="icon-button ask-close" aria-label="Close assistant">${icon('x')}</button></header>
+      <div class="ask-log" id="ask-log" aria-live="polite"></div>
+      <form class="ask-form" id="ask-form"><textarea id="ask-input" rows="1" placeholder="Ask about areas, routes or the forecast" aria-label="Your question"></textarea><button class="solid-button ask-send" aria-label="Send">${icon('paper-plane-right')}</button></form>`;
+    document.body.append(panel);$('.topbar-actions').append(fab);
+    fab.addEventListener('click', () => toggle(true));
+    panel.querySelector('.ask-close').addEventListener('click', () => toggle(false));
+    panel.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+    const input = $('#ask-input');
+    input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = `${Math.min(input.scrollHeight, 120)}px`; });
+    input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#ask-form').requestSubmit(); } });
+    $('#ask-form').addEventListener('submit', e => { e.preventDefault(); const q = input.value.trim(); if (!q || busy) return; input.value = ''; input.style.height = 'auto'; ask(q); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden && !document.querySelector('dialog[open]')) toggle(false); });
+    matchMedia('(max-width:720px)').addEventListener('change',syncPanelAccess);
+    panel.addEventListener('keydown',e=>{
+      if(e.key!=='Tab'||!panel.hasAttribute('aria-modal'))return;
+      const items=[...panel.querySelectorAll('button:not([disabled]),textarea,a[href],summary')].filter(el=>el.getClientRects().length);
+      const first=items[0],last=items.at(-1);
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}
+    });
+    setMode('ask');
+  }
+  function syncPanelAccess(){
+    const panel=$('#ask-panel'),modal=!panel.hidden&&matchMedia('(max-width:720px)').matches;
+    $('.app-shell').inert=modal;
+    if(modal){panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');}
+    else{panel.removeAttribute('role');panel.removeAttribute('aria-modal');}
+  }
+  function toggle(open) {
+    $('#ask-panel').hidden = !open; $('#ask-fab').hidden = open; $('#ask-fab').setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('ask-open', open);
+    syncPanelAccess();
+    if (open) $('#ask-input').focus(); else $('#ask-fab').focus();
+    requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
+  }
+  function setMode(next) {
+    mode = next;
+    $$('.ask-modes [data-mode]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === mode)));
+    $('#ask-input').placeholder = mode === 'sql' ? 'Ask a question about the gold tables' : 'Ask about areas, routes or the forecast';
+    const log = $('#ask-log'); log.innerHTML = '';
+    const examples = mode === 'sql' ? SQL_EXAMPLES : ['Why is Jurong East High?', 'Plan a Saturday volunteer route in Bedok.', 'What drove the March 2022 early warning?', 'Which areas should we check first?'];
+    log.innerHTML = `<div class="ask-welcome"><p>${mode === 'sql' ? `Ask in plain English. I'll write SQL over the gold Delta tables and show the result.` : `Answers come from the saved cluster, weather, route and forecast data, with a dated source for every number.`}</p><div class="ask-suggestions">${examples.map(q => `<button class="ask-chip">${esc(q)}</button>`).join('')}</div></div>`;
+    log.querySelectorAll('.ask-chip').forEach(b => b.addEventListener('click', () => ask(b.textContent)));
+  }
+  function bubble(role, html) {
+    const el = document.createElement('div'); el.className = `ask-msg ask-${role}`; el.innerHTML = html;
+    $('#ask-log').append(el); el.scrollIntoView({block:'end', behavior:'smooth'}); return el;
+  }
+  async function ask(question) {
+    if (busy) return; busy = true; $('.ask-send').disabled = true;
+    $('#ask-log .ask-welcome')?.remove();
+    bubble('user', esc(question));
+    const msg = bubble('bot', `<div class="ask-steps"></div><div class="ask-thinking">${icon('circle-notch')} Thinking</div>`);
+    try { mode === 'sql' ? await answerSql(question, msg) : await answerAsk(question, msg); }
+    catch (error) { console.error('Ask DengueSUX:', error); msg.innerHTML = `<p>Something went wrong reading the saved data. Try again or rephrase the question.</p>`; }
+    busy = false; $('.ask-send').disabled = false; $('#ask-input').focus();
+  }
+  async function reveal(msg, parts) {
+    msg.querySelector('.ask-thinking')?.remove();
+    const body = document.createElement('div'); body.className = 'ask-body'; msg.append(body);
+    for (const html of parts) { const p = document.createElement('div'); p.className = 'ask-para'; p.innerHTML = html; body.append(p); p.scrollIntoView({block:'end', behavior:'smooth'}); await wait(160); }
+    return body;
+  }
+  const preview = value => { const text = JSON.stringify(value); return esc(text.length > 220 ? `${text.slice(0, 220)}…` : text); };
+  async function answerAsk(question, msg) {
+    const steps = msg.querySelector('.ask-steps');
+    const {results, answer} = await respond(question, (name, args) => { steps.insertAdjacentHTML('beforeend', `<div class="ask-step">${icon('function')} <code>${name}(${esc(Object.values(args).filter(v => v !== undefined).map(v => JSON.stringify(v)).join(', '))})</code></div>`); });
+    await wait(250); steps.remove();
+    const body = await reveal(msg, answer.paragraphs);
+    if (answer.actions.length) {
+      const row = document.createElement('div'); row.className = 'ask-actions';
+      answer.actions.forEach(a => { const b = document.createElement('button'); b.className = 'ask-chip'; b.textContent = a.label; b.addEventListener('click', () => a.ask ? ask(a.ask) : a.run?.()); row.append(b); });
+      body.append(row);
+    }
+    if (answer.sources.length || results.length) body.insertAdjacentHTML('beforeend', `<div class="ask-sources">${answer.sources.map((s,i) => `<span>[${i+1}] ${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)} · ${date(s.date)}</span>`).join('')}</div>${results.length ? `<details class="ask-trace"><summary>${results.length} function ${results.length === 1 ? 'call' : 'calls'}</summary>${results.map(r => `<div><code>${r.name}(${esc(JSON.stringify(r.args))})</code><pre>${preview(r.result)}</pre></div>`).join('')}</details>` : ''}`);
+  }
+  async function answerSql(question, msg) {
+    const q = sqlFor(question);
+    await wait(500);
+    if (!q) { await reveal(msg, [`I couldn't map that to the gold tables. Try asking about areas, priorities, clusters or the 2022 forecast, for example “${esc(SQL_EXAMPLES[0])}”.`]); return; }
+    msg.querySelector('.ask-steps').innerHTML = `<div class="ask-step">${icon('database')} Querying <code>${q.table}</code></div>`;
+    await wait(450);
+    const rows = q.run(), cols = rows[0] ? Object.keys(rows[0]) : [];
+    msg.querySelector('.ask-steps').remove();
+    const shown = rows.slice(0, 20);
+    await reveal(msg, [esc(q.summary),
+      rows.length ? `<div class="ask-table-wrap"><table class="ask-table"><thead><tr>${cols.map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${shown.map(r => `<tr>${cols.map(c => `<td>${esc(typeof r[c] === 'number' ? num(r[c]) : r[c])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : '<p>No rows matched.</p>',
+      `<details class="ask-sql"><summary>${icon('code')} Show SQL</summary><pre>${highlightSql(q.sql)}</pre></details>`,
+      `<div class="ask-sources"><span>${rows.length} ${rows.length === 1 ? 'row' : 'rows'}${rows.length > shown.length ? `, first ${shown.length} shown` : ''} · ${TABLE}.${q.table} · as of ${date(q.table === 'gold_national_predictions' ? data.meta?.generated_at : current().as_of)}</span></div>`]);
+  }
+
+  /* ---------- Cluster growth model status (Forecast lab) ---------- */
+  function renderGrowthModel() {
+    const view = $('#forecast-view'); if (!view || $('#growth-model')) return;
+    const g = data.growth || {}, snapshots = g.snapshot_count ?? 1, target = 28, days = g.history_days ?? 0;
+    const pct = Math.min(100, Math.round(days / target * 100));
+    const section = document.createElement('section'); section.className = 'growth-model'; section.id = 'growth-model';
+    section.innerHTML = `<div><h3>Area model: will a cluster grow next week?</h3><p>Will learn from the daily NEA cluster snapshots this pipeline is collecting, so areas can be ranked by likely growth instead of current size.</p></div>
+      <div class="growth-model-status"><span class="growth-pill">${icon('circle-notch')} Collecting data</span><div class="growth-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${target}" aria-valuenow="${days}"><b style="width:${Math.max(pct, 3)}%"></b></div><small>${num(snapshots)} ${snapshots === 1 ? 'snapshot' : 'snapshots'} since ${date(g.as_of_date || current().as_of)} · first evaluation after ${target} days</small></div>`;
+    view.append(section);
+  }
+
+  function init(payload, callbacks) {
+    data = payload; hooks = callbacks || {};
+    if (!$('#ask-panel')) render();
+    renderGrowthModel();
+  }
+  window.Assistant = {init, tools, respond, sqlFor};
+})();

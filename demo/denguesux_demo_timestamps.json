@@ -1,0 +1,149 @@
+{
+  "video": "/Users/apollo/1m/dengueRadar/demo/denguesux_demo.mp4",
+  "duration_seconds": 134.533008,
+  "prewarm_trim_seconds": 2.533333333333333,
+  "encoding": [
+    {
+      "codec_name": "h264",
+      "width": 1440,
+      "height": 900,
+      "pix_fmt": "yuv420p",
+      "r_frame_rate": "30/1"
+    }
+  ],
+  "scenes": [
+    {
+      "scene": 1,
+      "title": "Area signals and Singapore map",
+      "seconds": 0.001,
+      "timestamp": "00:00:00,001"
+    },
+    {
+      "scene": 2,
+      "title": "Largest cluster first",
+      "seconds": 8.008,
+      "timestamp": "00:00:08,008"
+    },
+    {
+      "scene": 3,
+      "title": "High and Active priority filters",
+      "seconds": 15.013,
+      "timestamp": "00:00:15,013"
+    },
+    {
+      "scene": 4,
+      "title": "Walking inspection plan and Done checklist",
+      "seconds": 23.019,
+      "timestamp": "00:00:23,019"
+    },
+    {
+      "scene": 5,
+      "title": "Resident notice, rewrite, safety checks and Chinese",
+      "seconds": 39.974,
+      "timestamp": "00:00:39,974"
+    },
+    {
+      "scene": 6,
+      "title": "Ask DengueSUX: Jurong East and function calls",
+      "seconds": 64.111,
+      "timestamp": "00:01:04,111"
+    },
+    {
+      "scene": 7,
+      "title": "March early warning and the forecast chart",
+      "seconds": 79.114,
+      "timestamp": "00:01:19,114"
+    },
+    {
+      "scene": 8,
+      "title": "Ask the data: monthly forecast error and SQL",
+      "seconds": 95.6,
+      "timestamp": "00:01:35,600"
+    },
+    {
+      "scene": 9,
+      "title": "Forecast replay and next area growth model",
+      "seconds": 110.547,
+      "timestamp": "00:01:50,547"
+    },
+    {
+      "scene": 10,
+      "title": "DengueSUX end card",
+      "seconds": 130.158,
+      "timestamp": "00:02:10,158"
+    }
+  ],
+  "captions": [
+    {
+      "title": "DengueSUX — where to check for mosquitoes this week",
+      "subtitle": "Built on Singapore's open NEA, MOH and URA data",
+      "page_time": 2.578899999856949,
+      "duration": 4.8,
+      "seconds": 0.002
+    },
+    {
+      "title": "Largest cluster first",
+      "subtitle": "74 people across Jurong West and Jurong East",
+      "page_time": 12.147,
+      "duration": 4.8,
+      "seconds": 9.57
+    },
+    {
+      "title": "Areas ranked by people in active clusters",
+      "subtitle": "High = 10 or more people",
+      "page_time": 19.13489999985695,
+      "duration": 4.8,
+      "seconds": 16.558
+    },
+    {
+      "title": "One-click inspection plan",
+      "subtitle": "8 stops on a 1.2 km OneMap walking route",
+      "page_time": 27.135699999809265,
+      "duration": 4.8,
+      "seconds": 24.559
+    },
+    {
+      "title": "Resident notice, drafted from dated facts",
+      "subtitle": "Every draft passes 5 automatic safety checks",
+      "page_time": 44.07929999995232,
+      "duration": 4.8,
+      "seconds": 41.502
+    },
+    {
+      "title": "Ask DengueSUX",
+      "subtitle": "Answers come from the data, and every number cites a dated source",
+      "page_time": 68.2135,
+      "duration": 4.8,
+      "seconds": 65.636
+    },
+    {
+      "title": "Explains the forecast",
+      "subtitle": "Recent cases drove the warning, 11 weeks before the peak",
+      "page_time": 89.70829999995232,
+      "duration": 4.8,
+      "seconds": 87.131
+    },
+    {
+      "title": "Ask the data",
+      "subtitle": "Plain English → SQL over the gold Delta tables",
+      "page_time": 103.07979999995231,
+      "duration": 4.8,
+      "seconds": 100.503
+    },
+    {
+      "title": "Tested on a real outbreak",
+      "subtitle": "Error ~83 people a week, vs ~172 for a simple average",
+      "page_time": 117.53389999985694,
+      "duration": 4.8,
+      "seconds": 114.957
+    },
+    {
+      "title": "Next: an area-level growth model",
+      "subtitle": "Collecting daily snapshots now",
+      "page_time": 127.59919999980926,
+      "duration": 4.8,
+      "seconds": 125.022
+    }
+  ],
+  "app_files_unchanged": true
+}

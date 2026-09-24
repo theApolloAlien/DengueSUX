@@ -1,0 +1,41 @@
+{
+  "row_count": 113394,
+  "geometry_types": {
+    "Polygon": 113001,
+    "MultiPolygon": 393
+  },
+  "invalid_geometries": 3,
+  "properties": [
+    "FMEL_UPD_D",
+    "GPR",
+    "GPR_B_MN",
+    "INC_CRC",
+    "LU_DESC",
+    "LU_TEXT",
+    "OBJECTID",
+    "SHAPE.AREA",
+    "SHAPE.LEN",
+    "WHI_Q_MX"
+  ],
+  "waterbody_count": 1017,
+  "slug": "ura_land_use_2025",
+  "dataset_id": "d_a8c3546b26712e35021f3a681d0353ae",
+  "source_name": "Master Plan 2025 Land Use Layer",
+  "receipt": {
+    "dataset_id": "d_a8c3546b26712e35021f3a681d0353ae",
+    "source_url": "https://data.gov.sg/datasets/d_a8c3546b26712e35021f3a681d0353ae/view",
+    "api_url": "https://api-open.data.gov.sg/v1/public/api/datasets/d_a8c3546b26712e35021f3a681d0353ae/poll-download",
+    "retrieved_at_utc": "2026-09-24T05:41:23.707204+00:00",
+    "completed_at_utc": "2026-09-24T05:41:33.722162+00:00",
+    "raw_bytes": 189611398,
+    "raw_sha256": "69477dedbb67fc557dcb2f8da55486d32cb9938cde8a386c2d5e281e9c02d13c",
+    "stored_path": "data/raw/inspection/ura_land_use_2025.geojson.gz",
+    "stored_bytes": 51124546,
+    "stored_sha256": "ea7ed487a7ac6396c538ce9bd998e3e25cb925ef3c9d05461eb17bedd08eda74",
+    "compression": "gzip (original bytes after decompression)",
+    "status": "complete"
+  },
+  "source_updated_at": "2026-03-27T10:07:23+08:00",
+  "coverage_start": "2025-12-29T00:00:00+08:00",
+  "coverage_end": null
+}

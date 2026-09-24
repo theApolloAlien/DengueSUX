@@ -1,0 +1,186 @@
+Weekly Infectious Disease Bulletin Cases | MOH | data.gov.sg
+A Singapore Government Agency Website
+How to identify
+Official website links end with .gov.sg
+Government agencies communicate via .gov.sg websites (e.g. go.gov.sg/open).
+Trusted websites
+Secure websites use HTTPS
+Look for a
+lock
+(
+) or https:// as an added precaution. Share sensitive information only on official, secure websites.
+Scam alert
+Government officers will never ask you to send money or share your details over the phone.
+When unsure, hang up and call Scamshield at 1799.
+Search for datasets
+Open main menu
+Datasets
+Guide
+Feedback
+Log in
+Datasets
+Agencies
+Guide
+Log in
+Feedback
+Product status
+Report card
+Open Data Licence
+Privacy & Terms
+Health
+Weekly Infectious Disease Bulletin Cases
+MOH
+(
+Ministry of Health
+)
+Data from Jan 2012 to Dec 2022
+Last updated
+6 Jun 2024
+See history
+Download
+CSV
+(521.9 KB)
+Data from Jan 2012 to Dec 2022
+Last updated
+6 Jun 2024
+See history
+Data explorer
+WeeklyInfectiousDiseaseBulletinCases.csv (20.1K rows, 521.9 KB)
+Showing 3 of 3 columns
+Epidemiological Week
+Text
+Disease
+Text
+No. of Cases
+Numeric
+(Null)
+0.0%
+(Null)
+0.0%
+(Null)
+0.0%
+2012-W01
+Acute Viral hepatitis B
+0
+2012-W01
+Acute Viral hepatitis C
+0
+2012-W01
+Avian Influenza
+0
+2012-W01
+Campylobacterenterosis
+6
+2012-W01
+Chikungunya Fever
+0
+2012-W01
+Cholera
+0
+2012-W01
+Dengue Fever
+74
+2012-W01
+Dengue Haemorrhagic Fever
+0
+2012-W01
+Diphtheria
+0
+2012-W01
+Encephalitis
+0
+No results found
+Clear all table filters
+Previous
+1
+2
+3
+4
+5
+More pages
+2007
+Next
+Analyse this dataset with Colab Notebook
+1. Copy this dataset ID:
+d_ca168b2cb763640d72c4600a68f9909e
+2. Click on the button below
+Open in Colab
+Sample OpenAPI query
+This code can be used to test a sample API query. It retrieves the data catalogue of this dataset. For a complete guide on query parameters and syntax, please refer to the
+API documentation
+. Try it out
+on your browser
+to see the response schema.
+Adding an API key gives you higher
+rate limits
+and priority support.
+Log in
+to create your API key.
+Python
+Copy
+import
+requests
+dataset_id
+=
+"d_ca168b2cb763640d72c4600a68f9909e"
+url
+=
+"https://data.gov.sg/api/action/datastore_search?resource_id="
++
+dataset_id
+response
+=
+requests
+.
+get
+(url)
+print
+(response.
+json
+())
+Citation
+This dataset can be reused and cited in research publications.
+APA
+Copy
+Ministry of Health. (2016). Weekly Infectious Disease Bulletin Cases (2024) [Dataset]. data.gov.sg. Retrieved September 24, 2026 from https://data.gov.sg/datasets/d_ca168b2cb763640d72c4600a68f9909e/view
+About this dataset
+Contact
+feedback@data.gov.sg
+Created on
+13 Jan 2016
+Licence
+Free forever for personal or commercial use, under the
+Open Data Licence
+.
+Agency
+MOH (Ministry of Health)
+Feedback
+Product status
+Report card
+Open Data Licence
+Privacy & Terms
+©
+2026
+Open Government Products
+Search for datasets
+Column legend
+Title
+Column name
+Data type
+Unit of measure
+Description
+Epidemiological Week
+epi_week
+Text
+-
+Each epidemiological week begins on a Sunday and ends on Saturday.
+Disease
+disease
+Text
+-
+-
+No. of Cases
+no._of_cases
+Numeric
+No.
+-

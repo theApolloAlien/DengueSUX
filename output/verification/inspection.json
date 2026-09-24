@@ -1,0 +1,18 @@
+{
+  "verified_at": "2026-09-24T06:26:55.560743+00:00",
+  "as_of": "2026-09-24T04:00:34.085707+00:00",
+  "automated_checks_passed": true,
+  "errors": [],
+  "checked_stops": 36,
+  "score_traceability": "passed",
+  "public_output_secret_fields": [],
+  "growth_insufficient_history_check": "passed",
+  "jurong_acceptance": {
+    "status": "passed",
+    "verified_cluster_blocks": 10,
+    "accepted_independent_spot_checks": 3,
+    "reason": "Jurong route requires exact OneMap coordinates and three error-free independent spot checks. HTTP 200 with an authentication error is rejected."
+  },
+  "onemap_status": "ready",
+  "map_data_stale": false
+}

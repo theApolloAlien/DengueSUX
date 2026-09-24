@@ -1,0 +1,419 @@
+{
+  "row_count": 11,
+  "columns": [
+    "CASE_SIZE",
+    "CONSTRUCTION_SITES",
+    "FMEL_UPD_D",
+    "HOMES",
+    "HYPERLINK",
+    "INC_CRC",
+    "LOCALITY",
+    "NAME",
+    "OBJECTID",
+    "PUBLIC_PLACES",
+    "SHAPE.AREA",
+    "SHAPE.LEN"
+  ],
+  "missing_counts": {
+    "CASE_SIZE": 0,
+    "CONSTRUCTION_SITES": 10,
+    "FMEL_UPD_D": 0,
+    "HOMES": 10,
+    "HYPERLINK": 0,
+    "INC_CRC": 0,
+    "LOCALITY": 0,
+    "NAME": 0,
+    "OBJECTID": 0,
+    "PUBLIC_PLACES": 9,
+    "SHAPE.AREA": 0,
+    "SHAPE.LEN": 0
+  },
+  "exact_duplicate_rows": 0,
+  "distinct_counts": {
+    "CASE_SIZE": 5,
+    "CONSTRUCTION_SITES": 2,
+    "FMEL_UPD_D": 5,
+    "HOMES": 2,
+    "HYPERLINK": 1,
+    "INC_CRC": 11,
+    "LOCALITY": 11,
+    "NAME": 1,
+    "OBJECTID": 11,
+    "PUBLIC_PLACES": 3,
+    "SHAPE.AREA": 11,
+    "SHAPE.LEN": 11
+  },
+  "sample_rows": [
+    {
+      "OBJECTID": 527702,
+      "LOCALITY": "Bt Batok St 21 (Blk 207, 210) ",
+      "CASE_SIZE": 2,
+      "NAME": "Dengue_Cluster",
+      "HYPERLINK": "https://www.nea.gov.sg/dengue-zika/dengue/dengue-clusters",
+      "HOMES": null,
+      "PUBLIC_PLACES": null,
+      "CONSTRUCTION_SITES": null,
+      "INC_CRC": "993004A4027E4BA3",
+      "FMEL_UPD_D": "20260914162722",
+      "SHAPE.AREA": 144439.7707701,
+      "SHAPE.LEN": 1785.50824557429
+    },
+    {
+      "OBJECTID": 527703,
+      "LOCALITY": "Upp Changi Rd East (Changi Ct)",
+      "CASE_SIZE": 3,
+      "NAME": "Dengue_Cluster",
+      "HYPERLINK": "https://www.nea.gov.sg/dengue-zika/dengue/dengue-clusters",
+      "HOMES": null,
+      "PUBLIC_PLACES": null,
+      "CONSTRUCTION_SITES": null,
+      "INC_CRC": "573AC0E3B3EAD60C",
+      "FMEL_UPD_D": "20260915145917",
+      "SHAPE.AREA": 44344.63254677,
+      "SHAPE.LEN": 951.005967970153
+    },
+    {
+      "OBJECTID": 527704,
+      "LOCALITY": "Ho Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 335) / Tah Ching Rd (Blk 321, 322, 323, 324, 326, 329, 330, 332) / Yuan Ching Rd / Yuan Ching Rd (Blk 122) / Yuan Ching Rd (Lakeside Twr)",
+      "CASE_SIZE": 74,
+      "NAME": "Dengue_Cluster",
+      "HYPERLINK": "https://www.nea.gov.sg/dengue-zika/dengue/dengue-clusters",
+      "HOMES": "Dish tray, Overturned plastic stool, Glass jar, Flower pot plate, Flower pot, Vase, Domestic container, Mop pail, Plastic basin, Pail, Earthern jar",
+      "PUBLIC_PLACES": "Gully trap, Closed perimeter drain, Plant axil, Shell of snail, Service road drain",
+      "CONSTRUCTION_SITES": "Canvas sheet, Common toilet, Scupper drain, Floor trap, Pail",
+      "INC_CRC": "1AF3F3872479E33C",
+      "FMEL_UPD_D": "20260917151918",
+      "SHAPE.AREA": 283480.98671425,
+      "SHAPE.LEN": 2528.82498863875
+    }
+  ],
+  "format": "GeoJSON",
+  "all_rows_profiled": true,
+  "feature_count": 11,
+  "top_level_keys": [
+    "type",
+    "name",
+    "features"
+  ],
+  "crs": null,
+  "geometry_types": {
+    "Polygon": 11
+  },
+  "invalid_geometries": [],
+  "empty_geometry_indices": [],
+  "missing_geometry_indices": [],
+  "exact_duplicate_geometries": 0,
+  "exact_duplicate_features": 0,
+  "duplicate_identifiers": {
+    "INC_CRC": 0,
+    "OBJECTID": 0
+  },
+  "property_summaries": {
+    "CASE_SIZE": {
+      "order": "lexicographic",
+      "distinct_count": 5,
+      "min": "2",
+      "max": "74",
+      "values": [
+        2,
+        3,
+        4,
+        5,
+        74
+      ],
+      "numeric_count": 11,
+      "numeric_sum": 101.0,
+      "negative_count": 0
+    },
+    "CONSTRUCTION_SITES": {
+      "order": "lexicographic",
+      "distinct_count": 1,
+      "min": "Canvas sheet, Common toilet, Scupper drain, Floor trap, Pail",
+      "max": "Canvas sheet, Common toilet, Scupper drain, Floor trap, Pail",
+      "values": [
+        "Canvas sheet, Common toilet, Scupper drain, Floor trap, Pail"
+      ]
+    },
+    "FMEL_UPD_D": {
+      "order": "lexicographic",
+      "distinct_count": 5,
+      "min": "20260914162722",
+      "max": "20260918151158",
+      "values": [
+        "20260914162722",
+        "20260915145917",
+        "20260916160048",
+        "20260917151918",
+        "20260918151158"
+      ]
+    },
+    "HOMES": {
+      "order": "lexicographic",
+      "distinct_count": 1,
+      "min": "Dish tray, Overturned plastic stool, Glass jar, Flower pot plate, Flower pot, Vase, Domestic container, Mop pail, Plastic basin, Pail, Earthern jar",
+      "max": "Dish tray, Overturned plastic stool, Glass jar, Flower pot plate, Flower pot, Vase, Domestic container, Mop pail, Plastic basin, Pail, Earthern jar",
+      "values": [
+        "Dish tray, Overturned plastic stool, Glass jar, Flower pot plate, Flower pot, Vase, Domestic container, Mop pail, Plastic basin, Pail, Earthern jar"
+      ]
+    },
+    "HYPERLINK": {
+      "order": "lexicographic",
+      "distinct_count": 1,
+      "min": "https://www.nea.gov.sg/dengue-zika/dengue/dengue-clusters",
+      "max": "https://www.nea.gov.sg/dengue-zika/dengue/dengue-clusters",
+      "values": [
+        "https://www.nea.gov.sg/dengue-zika/dengue/dengue-clusters"
+      ]
+    },
+    "INC_CRC": {
+      "order": "lexicographic",
+      "distinct_count": 11,
+      "min": "1AF3F3872479E33C",
+      "max": "E261D1730F849561",
+      "values": [
+        "1AF3F3872479E33C",
+        "298BDC3A8043BC78",
+        "573AC0E3B3EAD60C",
+        "58484418882AA6ED",
+        "89A6A553C262D56F",
+        "8AF9B30325A1EBB2",
+        "993004A4027E4BA3",
+        "B5EEC074B568BECC",
+        "BFC7A454B9D06A87",
+        "E1336228CE80169A",
+        "E261D1730F849561"
+      ]
+    },
+    "LOCALITY": {
+      "order": "lexicographic",
+      "distinct_count": 11,
+      "min": "Bishan St 12 (Blk 110, 115, 116)",
+      "max": "Woodlands Dr 16 (Blk 573A, 573B)",
+      "values": [
+        "Bishan St 12 (Blk 110, 115, 116)",
+        "Bt Batok St 21 (Blk 207, 210) ",
+        "Canberra Rd (Blk 308) / Sembawang Vista (Blk 318)",
+        "Defu South St 1",
+        "Farleigh Ave / S'goon Gdn Way ",
+        "Ho Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 335) / Tah Ching Rd (Blk 321, 322, 323, 324, 326, 329, 330, 332) / Yuan Ching Rd / Yuan Ching Rd (Blk 122) / Yuan Ching Rd (Lakeside Twr)",
+        "Jln Papan",
+        "Kim Tian Rd (Blk 119B, 119D, 127D, 131B)",
+        "Mandai Est",
+        "Upp Changi Rd East (Changi Ct)",
+        "Woodlands Dr 16 (Blk 573A, 573B)"
+      ]
+    },
+    "NAME": {
+      "order": "lexicographic",
+      "distinct_count": 1,
+      "min": "Dengue_Cluster",
+      "max": "Dengue_Cluster",
+      "values": [
+        "Dengue_Cluster"
+      ]
+    },
+    "OBJECTID": {
+      "order": "lexicographic",
+      "distinct_count": 11,
+      "min": "527698",
+      "max": "527708",
+      "values": [
+        527698,
+        527699,
+        527700,
+        527701,
+        527702,
+        527703,
+        527704,
+        527705,
+        527706,
+        527707,
+        527708
+      ]
+    },
+    "PUBLIC_PLACES": {
+      "order": "lexicographic",
+      "distinct_count": 2,
+      "min": "Gully trap, Closed perimeter drain, Plant axil, Shell of snail, Service road drain",
+      "max": "Puddle, Flower pot, Inspection chamber",
+      "values": [
+        "Gully trap, Closed perimeter drain, Plant axil, Shell of snail, Service road drain",
+        "Puddle, Flower pot, Inspection chamber"
+      ]
+    },
+    "SHAPE.AREA": {
+      "order": "lexicographic",
+      "distinct_count": 11,
+      "min": "105338.07716318",
+      "max": "82025.01298225",
+      "values": [
+        105338.07716318,
+        120080.87762835,
+        138139.175531265,
+        140495.315618875,
+        144439.7707701,
+        155406.748799175,
+        218020.75104773,
+        224506.99284492,
+        283480.98671425,
+        44344.63254677,
+        82025.01298225
+      ]
+    },
+    "SHAPE.LEN": {
+      "order": "lexicographic",
+      "distinct_count": 11,
+      "min": "1334.73089547853",
+      "max": "951.005967970153",
+      "values": [
+        1334.73089547853,
+        1438.23366443443,
+        1489.80669607045,
+        1582.22415836045,
+        1584.70318876867,
+        1785.50824557429,
+        1892.00053739475,
+        1919.61778148122,
+        2045.87754259486,
+        2528.82498863875,
+        951.005967970153
+      ]
+    }
+  },
+  "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+  "source_url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+  "raw_path": "data/raw/dengue/active_clusters.geojson.gz",
+  "metadata_path": "data/evidence/dengue/active_clusters.metadata.json",
+  "profiled_at_utc": "2026-09-24T03:42:56.295625+00:00",
+  "download": {
+    "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+    "source_url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+    "api_url": "https://api-open.data.gov.sg/v1/public/api/datasets/d_dbfabf16158d1b0e1c420627c0819168/poll-download",
+    "retrieved_at_utc": "2026-09-24T03:41:12.255127+00:00",
+    "completed_at_utc": "2026-09-24T03:41:12.378598+00:00",
+    "raw_bytes": 20386,
+    "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+    "stored_path": "data/raw/dengue/active_clusters.geojson.gz",
+    "stored_bytes": 6412,
+    "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+    "compression": "gzip (original bytes after decompression)",
+    "status": "complete"
+  },
+  "catalogue_metadata": {
+    "datasetId": "d_dbfabf16158d1b0e1c420627c0819168",
+    "createdAt": "2020-09-21T00:00:00+08:00",
+    "name": "Dengue Clusters (GEOJSON)",
+    "collectionIds": [
+      "1441"
+    ],
+    "description": "Access up-to-date dengue cluster data in Singapore with this GEOJSON file from the National Environment Agency (NEA). This dataset provides geospatial polygon boundaries of active dengue clusters, along with key metadata such as case count and locality. Visit https://www.nea.gov.sg/dengue-zika/dengue/dengue-clusters for more details.",
+    "format": "GEOJSON",
+    "lastUpdatedAt": "2026-09-24T10:06:43+08:00",
+    "managedBy": "National Environment Agency",
+    "coverageStart": "2025-11-07T00:00:00+08:00",
+    "contactEmails": [
+      "feedback@data.gov.sg"
+    ],
+    "datasetSize": 20386,
+    "geoJsonMetadata": {
+      "properties": [
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "OBJECTID",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "LOCALITY",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "CASE_SIZE",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "NAME",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "HYPERLINK",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "HOMES",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "PUBLIC_PLACES",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "CONSTRUCTION_SITES",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "INC_CRC",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "FMEL_UPD_D",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "SHAPE.AREA",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "SHAPE.LEN",
+          "description": ""
+        }
+      ]
+    }
+  }
+}

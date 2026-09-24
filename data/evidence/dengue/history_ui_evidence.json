@@ -1,0 +1,13 @@
+{
+  "source_url": "https://data.gov.sg/_next/static/chunks/9523-5234c224c1812892.js",
+  "retrieved_at_utc": "2026-09-24T03:38:39.802113+00:00",
+  "component_sha256": "528d9db46a7883e4ffdcbd755e5d18f0699092f7bf834d514568f1be8ff054c2",
+  "displayed_explanation": "The update history only shows the data ingestion timestamps. Metadata changes, such as the title or the description, are not reflected.",
+  "action_name": "getDatasetIngestionSuccessHistory",
+  "action_id": "7f472c8da9cdbcb364ab6ff9e506ace35aa866942d",
+  "exposed_version_fields": [
+    "version",
+    "updatedAt",
+    "status"
+  ]
+}

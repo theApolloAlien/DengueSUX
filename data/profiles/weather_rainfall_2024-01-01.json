@@ -1,0 +1,1267 @@
+{
+  "metric": "rainfall",
+  "requested_date": "2024-01-01",
+  "scope": "complete paginated V2 day",
+  "complete": true,
+  "page_count": 12,
+  "pages": [
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2024-01-01",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:18.737874+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/rainfall/2024-01-01/page_0000000000000000.json",
+      "bytes": 57441,
+      "sha256": "cb30b5cc5808eefa005a51bf5051947bf7ba22ff6a5bda97a49be5fee5fb6120",
+      "pagination_token": null
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2024-01-01&paginationToken=b2Zmc2V0PTI1",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:19.077823+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/rainfall/2024-01-01/page_9a6da57f55fbe1d4.json",
+      "bytes": 57967,
+      "sha256": "8bdce918ee56d0234f4a1919085f568d6009323bc6b8db84a91b51e8df77698e",
+      "pagination_token": "b2Zmc2V0PTI1"
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2024-01-01&paginationToken=b2Zmc2V0PTUw",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:21.665319+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/rainfall/2024-01-01/page_812ed87910af6919.json",
+      "bytes": 58375,
+      "sha256": "15b14bdf3e0cced6f1d5ae352b2d6b20ae392bf432f8d87ebcd5e4d2b454d2db",
+      "pagination_token": "b2Zmc2V0PTUw"
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2024-01-01&paginationToken=b2Zmc2V0PTc1",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:24.311447+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/rainfall/2024-01-01/page_dc1283f1728d66ab.json",
+      "bytes": 57610,
+      "sha256": "ebe3b4fe0042f514df058459b8359123cc5583fa080efeab97e0f34ce66a8f1f",
+      "pagination_token": "b2Zmc2V0PTc1"
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2024-01-01&paginationToken=b2Zmc2V0PTEwMA%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:26.993507+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/rainfall/2024-01-01/page_b49950aaae84c403.json",
+      "bytes": 58379,
+      "sha256": "1ba0abb1b48ddee858b7eb009836a1766484cd602c68a63a063be9125f67c178",
+      "pagination_token": "b2Zmc2V0PTEwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2024-01-01&paginationToken=b2Zmc2V0PTEyNQ%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:29.603007+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/rainfall/2024-01-01/page_efc4a4870427730b.json",
+      "bytes": 57393,
+      "sha256": "60406781cf6f7ced6988219147ad085b1fcaf6b64307ad79d6df32df2d11e155",
+      "pagination_token": "b2Zmc2V0PTEyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2024-01-01&paginationToken=b2Zmc2V0PTE1MA%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:32.198294+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/rainfall/2024-01-01/page_1eb43e5bd78b0dad.json",
+      "bytes": 57462,
+      "sha256": "05eeba83e6b512edc1f740b99af233b434376efa0ed85d0a1b923e64ccdb7178",
+      "pagination_token": "b2Zmc2V0PTE1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2024-01-01&paginationToken=b2Zmc2V0PTE3NQ%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:34.841225+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/rainfall/2024-01-01/page_19e99aa3209b6f13.json",
+      "bytes": 56924,
+      "sha256": "094bd0060decd6c83b39210ed527bb9951b8c9d00df295cf7c19234c19a96236",
+      "pagination_token": "b2Zmc2V0PTE3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2024-01-01&paginationToken=b2Zmc2V0PTIwMA%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:37.395610+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/rainfall/2024-01-01/page_538f7d19d85190ed.json",
+      "bytes": 56695,
+      "sha256": "92e9d0ff30dace1655e6b6dd9831c09cf311feb594f03a548a89d75e1bc36556",
+      "pagination_token": "b2Zmc2V0PTIwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2024-01-01&paginationToken=b2Zmc2V0PTIyNQ%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:40.060944+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/rainfall/2024-01-01/page_071ce00a9e965991.json",
+      "bytes": 56525,
+      "sha256": "4427fea83a379f752d3d640373abc28f33bcec1cc6fb3500bd61f513770384af",
+      "pagination_token": "b2Zmc2V0PTIyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2024-01-01&paginationToken=b2Zmc2V0PTI1MA%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:42.667401+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/rainfall/2024-01-01/page_d1ce1f3f1ea73cdd.json",
+      "bytes": 56785,
+      "sha256": "0a381820fd7a11aee04086368b32139a503d1517a8eb98c9c0c8622517c1ea38",
+      "pagination_token": "b2Zmc2V0PTI1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2024-01-01&paginationToken=b2Zmc2V0PTI3NQ%3D%3D",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:28:45.417198+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2024-01-01",
+      "path": "data/raw/weather/rainfall/2024-01-01/page_a3635b6c90cf3d6d.json",
+      "bytes": 32904,
+      "sha256": "c0e7420dcae265e5589cbd6340ec7c23512efde5a3fdfb9922afdfb4b888d79d",
+      "pagination_token": "b2Zmc2V0PTI3NQ=="
+    }
+  ],
+  "timestamp_records": 288,
+  "distinct_timestamps": 288,
+  "station_measurements": 18354,
+  "stations_in_metadata": 64,
+  "stations_with_readings": 64,
+  "start": "2024-01-01T00:00:00+08:00",
+  "end": "2024-01-01T23:55:00+08:00",
+  "null_readings": 0,
+  "invalid_numeric_readings": 0,
+  "out_of_range_readings": 0,
+  "range_rule": "rainfall >=0; humidity 0..100; temperature -10..60 (screen only)",
+  "duplicate_station_timestamp_excess": 0,
+  "duplicate_timestamp_records": 0,
+  "unknown_station_ids": 0,
+  "wrong_requested_date_timestamps": 0,
+  "station_metadata_conflicts": [],
+  "min_value": 0,
+  "max_value": 6.4,
+  "max_network_gap_seconds": 300.0,
+  "gaps_above_nominal": 0,
+  "nominal_timestamps_per_day": 288,
+  "station_coverage": [
+    {
+      "station_id": "S07",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S08",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S104",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S107",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S109",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S111",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S112",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S113",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S114",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S115",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S116",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S117",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S118",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S119",
+      "measurements": 287,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 600.0
+    },
+    {
+      "station_id": "S120",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S121",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S123",
+      "measurements": 286,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 900.0
+    },
+    {
+      "station_id": "S201",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S203",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S207",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S208",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S209",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S210",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S211",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S212",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S213",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S214",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S215",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S216",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S217",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S218",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S219",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S220",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S221",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S222",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S223",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S224",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S226",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S227",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S228",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S229",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S230",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S24",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S33",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S35",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S40",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S43",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S44",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S50",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S60",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S64",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S66",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S69",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S71",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S77",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S78",
+      "measurements": 287,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 600.0
+    },
+    {
+      "station_id": "S79",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S81",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S84",
+      "measurements": 215,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 11100.0
+    },
+    {
+      "station_id": "S88",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S89",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S90",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S900",
+      "measurements": 288,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 300.0
+    },
+    {
+      "station_id": "S94",
+      "measurements": 287,
+      "expected_nominal": 288,
+      "start": "2024-01-01T00:00:00+08:00",
+      "end": "2024-01-01T23:55:00+08:00",
+      "max_gap_seconds": 600.0
+    }
+  ],
+  "stations": [
+    {
+      "id": "S77",
+      "deviceId": "S77",
+      "name": "Alexandra Road",
+      "location": {
+        "latitude": 1.2937,
+        "longitude": 103.8125
+      }
+    },
+    {
+      "id": "S109",
+      "deviceId": "S109",
+      "name": "Ang Mo Kio Avenue 5",
+      "location": {
+        "latitude": 1.3764,
+        "longitude": 103.8492
+      }
+    },
+    {
+      "id": "S117",
+      "deviceId": "S117",
+      "name": "Banyan Road",
+      "location": {
+        "latitude": 1.256,
+        "longitude": 103.679
+      }
+    },
+    {
+      "id": "S64",
+      "deviceId": "S64",
+      "name": "Bukit Panjang Road",
+      "location": {
+        "latitude": 1.3824,
+        "longitude": 103.7603
+      }
+    },
+    {
+      "id": "S90",
+      "deviceId": "S90",
+      "name": "Bukit Timah Road",
+      "location": {
+        "latitude": 1.3191,
+        "longitude": 103.8191
+      }
+    },
+    {
+      "id": "S114",
+      "deviceId": "S114",
+      "name": "Choa Chu Kang Avenue 4",
+      "location": {
+        "latitude": 1.38,
+        "longitude": 103.73
+      }
+    },
+    {
+      "id": "S50",
+      "deviceId": "S50",
+      "name": "Clementi Road",
+      "location": {
+        "latitude": 1.3337,
+        "longitude": 103.7768
+      }
+    },
+    {
+      "id": "S107",
+      "deviceId": "S107",
+      "name": "East Coast Parkway",
+      "location": {
+        "latitude": 1.3135,
+        "longitude": 103.9625
+      }
+    },
+    {
+      "id": "S215",
+      "deviceId": "S215",
+      "name": "GEYLANG EAST CENTRAL",
+      "location": {
+        "latitude": 1.32785,
+        "longitude": 103.88899
+      }
+    },
+    {
+      "id": "S118",
+      "deviceId": "S118",
+      "name": "Handy Road",
+      "location": {
+        "latitude": 1.2994,
+        "longitude": 103.8461
+      }
+    },
+    {
+      "id": "S120",
+      "deviceId": "S120",
+      "name": "Holland Road",
+      "location": {
+        "latitude": 1.30874,
+        "longitude": 103.818
+      }
+    },
+    {
+      "id": "S33",
+      "deviceId": "S33",
+      "name": "Jurong Pier Road",
+      "location": {
+        "latitude": 1.3081,
+        "longitude": 103.71
+      }
+    },
+    {
+      "id": "S71",
+      "deviceId": "S71",
+      "name": "Kent Ridge Road",
+      "location": {
+        "latitude": 1.2923,
+        "longitude": 103.7815
+      }
+    },
+    {
+      "id": "S43",
+      "deviceId": "S43",
+      "name": "Kim Chuan Road",
+      "location": {
+        "latitude": 1.3399,
+        "longitude": 103.8878
+      }
+    },
+    {
+      "id": "S66",
+      "deviceId": "S66",
+      "name": "Kranji Way",
+      "location": {
+        "latitude": 1.4387,
+        "longitude": 103.7363
+      }
+    },
+    {
+      "id": "S112",
+      "deviceId": "S112",
+      "name": "Lim Chu Kang Road",
+      "location": {
+        "latitude": 1.43854,
+        "longitude": 103.70131
+      }
+    },
+    {
+      "id": "S07",
+      "deviceId": "S07",
+      "name": "Lornie Road",
+      "location": {
+        "latitude": 1.3415,
+        "longitude": 103.8334
+      }
+    },
+    {
+      "id": "S40",
+      "deviceId": "S40",
+      "name": "Mandai Lake Road",
+      "location": {
+        "latitude": 1.4044,
+        "longitude": 103.78962
+      }
+    },
+    {
+      "id": "S113",
+      "deviceId": "S113",
+      "name": "Marine Parade Road",
+      "location": {
+        "latitude": 1.30648,
+        "longitude": 103.9104
+      }
+    },
+    {
+      "id": "S44",
+      "deviceId": "S44",
+      "name": "Nanyang Avenue",
+      "location": {
+        "latitude": 1.34583,
+        "longitude": 103.68166
+      }
+    },
+    {
+      "id": "S119",
+      "deviceId": "S119",
+      "name": "Nicoll Highway",
+      "location": {
+        "latitude": 1.30105,
+        "longitude": 103.8666
+      }
+    },
+    {
+      "id": "S121",
+      "deviceId": "S121",
+      "name": "Old Choa Chu Kang Road",
+      "location": {
+        "latitude": 1.37288,
+        "longitude": 103.72244
+      }
+    },
+    {
+      "id": "S35",
+      "deviceId": "S35",
+      "name": "Old Toh Tuck Road",
+      "location": {
+        "latitude": 1.3329,
+        "longitude": 103.7556
+      }
+    },
+    {
+      "id": "S94",
+      "deviceId": "S94",
+      "name": "Pasir Ris Street 51",
+      "location": {
+        "latitude": 1.3662,
+        "longitude": 103.9528
+      }
+    },
+    {
+      "id": "S78",
+      "deviceId": "S78",
+      "name": "Poole Road",
+      "location": {
+        "latitude": 1.30703,
+        "longitude": 103.89067
+      }
+    },
+    {
+      "id": "S81",
+      "deviceId": "S81",
+      "name": "Punggol Central",
+      "location": {
+        "latitude": 1.4029,
+        "longitude": 103.9092
+      }
+    },
+    {
+      "id": "S201",
+      "deviceId": "S201",
+      "name": "S201",
+      "location": {
+        "latitude": 1.32311,
+        "longitude": 103.76714
+      }
+    },
+    {
+      "id": "S203",
+      "deviceId": "S203",
+      "name": "S203",
+      "location": {
+        "latitude": 1.29164,
+        "longitude": 103.7702
+      }
+    },
+    {
+      "id": "S207",
+      "deviceId": "S207",
+      "name": "S207",
+      "location": {
+        "latitude": 1.32485,
+        "longitude": 103.95836
+      }
+    },
+    {
+      "id": "S208",
+      "deviceId": "S208",
+      "name": "S208",
+      "location": {
+        "latitude": 1.3136,
+        "longitude": 104.00317
+      }
+    },
+    {
+      "id": "S209",
+      "deviceId": "S209",
+      "name": "S209",
+      "location": {
+        "latitude": 1.42111,
+        "longitude": 103.84472
+      }
+    },
+    {
+      "id": "S210",
+      "deviceId": "S210",
+      "name": "S210",
+      "location": {
+        "latitude": 1.44003,
+        "longitude": 103.76904
+      }
+    },
+    {
+      "id": "S211",
+      "deviceId": "S211",
+      "name": "S211",
+      "location": {
+        "latitude": 1.42918,
+        "longitude": 103.75711
+      }
+    },
+    {
+      "id": "S212",
+      "deviceId": "S212",
+      "name": "S212",
+      "location": {
+        "latitude": 1.31835,
+        "longitude": 103.93574
+      }
+    },
+    {
+      "id": "S213",
+      "deviceId": "S213",
+      "name": "S213",
+      "location": {
+        "latitude": 1.32427,
+        "longitude": 103.8097
+      }
+    },
+    {
+      "id": "S214",
+      "deviceId": "S214",
+      "name": "S214",
+      "location": {
+        "latitude": 1.29911,
+        "longitude": 103.88289
+      }
+    },
+    {
+      "id": "S216",
+      "deviceId": "S216",
+      "name": "S216",
+      "location": {
+        "latitude": 1.36019,
+        "longitude": 103.85335
+      }
+    },
+    {
+      "id": "S217",
+      "deviceId": "S217",
+      "name": "S217",
+      "location": {
+        "latitude": 1.35041,
+        "longitude": 103.85526
+      }
+    },
+    {
+      "id": "S218",
+      "deviceId": "S218",
+      "name": "S218",
+      "location": {
+        "latitude": 1.36491,
+        "longitude": 103.75065
+      }
+    },
+    {
+      "id": "S219",
+      "deviceId": "S219",
+      "name": "S219",
+      "location": {
+        "latitude": 1.37999,
+        "longitude": 103.87643
+      }
+    },
+    {
+      "id": "S220",
+      "deviceId": "S220",
+      "name": "S220",
+      "location": {
+        "latitude": 1.38666,
+        "longitude": 103.89797
+      }
+    },
+    {
+      "id": "S221",
+      "deviceId": "S221",
+      "name": "S221",
+      "location": {
+        "latitude": 1.35691,
+        "longitude": 103.89088
+      }
+    },
+    {
+      "id": "S222",
+      "deviceId": "S222",
+      "name": "S222",
+      "location": {
+        "latitude": 1.28987,
+        "longitude": 103.82364
+      }
+    },
+    {
+      "id": "S223",
+      "deviceId": "S223",
+      "name": "S223",
+      "location": {
+        "latitude": 1.29984,
+        "longitude": 103.80264
+      }
+    },
+    {
+      "id": "S224",
+      "deviceId": "S224",
+      "name": "S224",
+      "location": {
+        "latitude": 1.34392,
+        "longitude": 103.98409
+      }
+    },
+    {
+      "id": "S226",
+      "deviceId": "S226",
+      "name": "S226",
+      "location": {
+        "latitude": 1.27472,
+        "longitude": 103.80389
+      }
+    },
+    {
+      "id": "S227",
+      "deviceId": "S227",
+      "name": "S227",
+      "location": {
+        "latitude": 1.43944,
+        "longitude": 103.80389
+      }
+    },
+    {
+      "id": "S228",
+      "deviceId": "S228",
+      "name": "S228",
+      "location": {
+        "latitude": 1.34703,
+        "longitude": 103.70073
+      }
+    },
+    {
+      "id": "S229",
+      "deviceId": "S229",
+      "name": "S229",
+      "location": {
+        "latitude": 1.35167,
+        "longitude": 103.72195
+      }
+    },
+    {
+      "id": "S230",
+      "deviceId": "S230",
+      "name": "S230",
+      "location": {
+        "latitude": 1.30167,
+        "longitude": 103.76444
+      }
+    },
+    {
+      "id": "S111",
+      "deviceId": "S111",
+      "name": "Scotts Road",
+      "location": {
+        "latitude": 1.31055,
+        "longitude": 103.8365
+      }
+    },
+    {
+      "id": "S900",
+      "deviceId": "S900",
+      "name": "Seletar Aerospace View",
+      "location": {
+        "latitude": 1.41284,
+        "longitude": 103.86922
+      }
+    },
+    {
+      "id": "S60",
+      "deviceId": "S60",
+      "name": "Sentosa",
+      "location": {
+        "latitude": 1.25,
+        "longitude": 103.8279
+      }
+    },
+    {
+      "id": "S84",
+      "deviceId": "S84",
+      "name": "Simei Avenue",
+      "location": {
+        "latitude": 1.3437,
+        "longitude": 103.9444
+      }
+    },
+    {
+      "id": "S79",
+      "deviceId": "S79",
+      "name": "Somerset Road",
+      "location": {
+        "latitude": 1.3004,
+        "longitude": 103.8372
+      }
+    },
+    {
+      "id": "S88",
+      "deviceId": "S88",
+      "name": "Toa Payoh North",
+      "location": {
+        "latitude": 1.3427,
+        "longitude": 103.8482
+      }
+    },
+    {
+      "id": "S123",
+      "deviceId": "S123",
+      "name": "Towner Road",
+      "location": {
+        "latitude": 1.3214,
+        "longitude": 103.8577
+      }
+    },
+    {
+      "id": "S89",
+      "deviceId": "S89",
+      "name": "Tuas Road",
+      "location": {
+        "latitude": 1.31985,
+        "longitude": 103.66162
+      }
+    },
+    {
+      "id": "S115",
+      "deviceId": "S115",
+      "name": "Tuas South Avenue 3",
+      "location": {
+        "latitude": 1.29377,
+        "longitude": 103.61843
+      }
+    },
+    {
+      "id": "S24",
+      "deviceId": "S24",
+      "name": "Upper Changi Road North",
+      "location": {
+        "latitude": 1.3678,
+        "longitude": 103.9826
+      }
+    },
+    {
+      "id": "S69",
+      "deviceId": "S69",
+      "name": "Upper Peirce Reservoir Park",
+      "location": {
+        "latitude": 1.37,
+        "longitude": 103.805
+      }
+    },
+    {
+      "id": "S08",
+      "deviceId": "S08",
+      "name": "Upper Thomson Road",
+      "location": {
+        "latitude": 1.3701,
+        "longitude": 103.8271
+      }
+    },
+    {
+      "id": "S116",
+      "deviceId": "S116",
+      "name": "West Coast Highway",
+      "location": {
+        "latitude": 1.281,
+        "longitude": 103.754
+      }
+    },
+    {
+      "id": "S104",
+      "deviceId": "S104",
+      "name": "Woodlands Avenue 9",
+      "location": {
+        "latitude": 1.44387,
+        "longitude": 103.78538
+      }
+    }
+  ],
+  "profiled_at_utc": "2026-09-24T03:28:47.955610+00:00"
+}

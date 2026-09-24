@@ -1,0 +1,101 @@
+[
+  {
+    "query": "117 HO CHING ROAD",
+    "source_url": "https://www.onemap.gov.sg/api/common/elastic/search",
+    "retrieved_at_utc": "2026-09-24T05:42:43.226779+00:00",
+    "http_status": 200,
+    "response_sha256": "3acb3fa402450031b25a140012b4ce0fef4b4351b019b8b41a1201f506383bdd",
+    "found": 1,
+    "exact_block_street_matches": 1,
+    "matching_results": [
+      {
+        "SEARCHVAL": "117 HO CHING ROAD SINGAPORE 610117",
+        "BLK_NO": "117",
+        "ROAD_NAME": "HO CHING ROAD",
+        "BUILDING": "NIL",
+        "ADDRESS": "117 HO CHING ROAD SINGAPORE 610117",
+        "POSTAL": "610117",
+        "X": "15730.83684649225",
+        "Y": "35254.0289777182",
+        "LATITUDE": "1.335096949269254",
+        "LONGITUDE": "103.7230731509349"
+      }
+    ],
+    "spot_check": "Exact BLK_NO and ROAD_NAME compared to parsed NEA locality and HDB Property Information; Singapore lat/lon checked.",
+    "inside_nearest_cluster_polygon": true,
+    "planning_areas": [
+      "JURONG WEST"
+    ],
+    "accepted_for_geocode_cache": false,
+    "authentication_status": "rejected_missing_token",
+    "error": "Authentication token missing. Please create an account and generate or renew your API Token.",
+    "correction": "Original selected-field audit omitted error attribute. Clean authenticated response required; coordinate consistency is not API success.",
+    "raw_recheck_matches_original_hash": true
+  },
+  {
+    "query": "335 KANG CHING ROAD",
+    "source_url": "https://www.onemap.gov.sg/api/common/elastic/search",
+    "retrieved_at_utc": "2026-09-24T05:42:46.405116+00:00",
+    "http_status": 200,
+    "response_sha256": "6a9212c5c9a2c0d31efa891b08fc95e2c2a91ea9c7d09df17d4cb843ec957491",
+    "found": 1,
+    "exact_block_street_matches": 1,
+    "matching_results": [
+      {
+        "SEARCHVAL": "335 KANG CHING ROAD SINGAPORE 610335",
+        "BLK_NO": "335",
+        "ROAD_NAME": "KANG CHING ROAD",
+        "BUILDING": "NIL",
+        "ADDRESS": "335 KANG CHING ROAD SINGAPORE 610335",
+        "POSTAL": "610335",
+        "X": "15738.99079916161",
+        "Y": "35690.32837267779",
+        "LATITUDE": "1.339042682212269",
+        "LONGITUDE": "103.7231462428327"
+      }
+    ],
+    "spot_check": "Exact BLK_NO and ROAD_NAME compared to parsed NEA locality and HDB Property Information; Singapore lat/lon checked.",
+    "inside_nearest_cluster_polygon": true,
+    "planning_areas": [
+      "JURONG WEST"
+    ],
+    "accepted_for_geocode_cache": false,
+    "authentication_status": "rejected_missing_token",
+    "error": "Authentication token missing. Please create an account and generate or renew your API Token.",
+    "correction": "Original selected-field audit omitted error attribute. Clean authenticated response required; coordinate consistency is not API success.",
+    "raw_recheck_matches_original_hash": true
+  },
+  {
+    "query": "321 TAH CHING ROAD",
+    "source_url": "https://www.onemap.gov.sg/api/common/elastic/search",
+    "retrieved_at_utc": "2026-09-24T05:42:49.532976+00:00",
+    "http_status": 200,
+    "response_sha256": "ed84b6e1c7610ced911ece1827b0f596ab5a5fbdebe028d71f4994f190284190",
+    "found": 1,
+    "exact_block_street_matches": 1,
+    "matching_results": [
+      {
+        "SEARCHVAL": "321 TAH CHING ROAD SINGAPORE 610321",
+        "BLK_NO": "321",
+        "ROAD_NAME": "TAH CHING ROAD",
+        "BUILDING": "NIL",
+        "ADDRESS": "321 TAH CHING ROAD SINGAPORE 610321",
+        "POSTAL": "610321",
+        "X": "15873.56258771662",
+        "Y": "35494.49155176431",
+        "LATITUDE": "1.337271661097009",
+        "LONGITUDE": "103.7243555257174"
+      }
+    ],
+    "spot_check": "Exact BLK_NO and ROAD_NAME compared to parsed NEA locality and HDB Property Information; Singapore lat/lon checked.",
+    "inside_nearest_cluster_polygon": true,
+    "planning_areas": [
+      "JURONG WEST"
+    ],
+    "accepted_for_geocode_cache": false,
+    "authentication_status": "rejected_missing_token",
+    "error": "Authentication token missing. Please create an account and generate or renew your API Token.",
+    "correction": "Original selected-field audit omitted error attribute. Clean authenticated response required; coordinate consistency is not API success.",
+    "raw_recheck_matches_original_hash": false
+  }
+]

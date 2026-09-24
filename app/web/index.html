@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#163f35">
+  <meta name="description" content="Explore Singapore dengue signals and an evidence-led two-week national forecast backtest.">
+  <title>DengueSUX — Where to check first</title>
+  <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="/vendor/icons/style.css">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/fieldwork.css">
+  <link rel="stylesheet" href="/assistant.css">
+  <link rel="stylesheet" href="/experience.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to dashboard</a>
+  <noscript><p class="no-script">This interactive dashboard needs JavaScript to display the map and evidence.</p></noscript>
+  <div class="app-shell">
+    <aside class="nav-rail" aria-label="Main navigation">
+      <a class="brand-mark" href="#signals" aria-label="DengueSUX home"><i class="ph ph-aperture" aria-hidden="true"></i></a>
+      <div class="rail-line"></div>
+      <button class="rail-button active" data-view="signals" aria-label="Area signals" title="Area signals"><i class="ph ph-map-trifold" aria-hidden="true"></i></button>
+      <button class="rail-button" data-view="forecast" aria-label="Forecast lab" title="Forecast lab"><i class="ph ph-chart-line-up" aria-hidden="true"></i></button>
+      <div class="rail-bottom"><span class="rail-label">SG</span></div>
+    </aside>
+
+    <div class="page-shell">
+      <header class="topbar">
+        <a href="#signals" class="wordmark">Dengue<span>SUX</span><span class="wordmark-divider"></span><span class="brand-caption">Dengue early warning</span></a>
+        <div class="topbar-actions">
+          <button class="data-status" id="data-timestamp" data-methodology aria-label="View snapshot dates and sources"><span class="status-dot"></span> Loading</button>
+          <button class="text-button" data-methodology><i class="ph ph-book-open-text" aria-hidden="true"></i> <span>How to read this</span></button>
+        </div>
+      </header>
+
+      <main id="main" aria-busy="true">
+        <div class="page-heading compact">
+          <div><p class="workspace-kicker">SINGAPORE · DENGUE WATCH</p><h1 id="page-title">Area signals</h1><p id="page-description" class="page-description">Find an area. Understand the signals. Plan your next check.</p></div>
+          <button class="outline-button" id="download-data" aria-label="Export dashboard data"><i class="ph ph-download-simple" aria-hidden="true"></i> Export data</button>
+        </div>
+
+        <div class="view-bar">
+          <nav class="view-tabs" aria-label="Dashboard views">
+            <button class="view-tab active" data-view="signals" aria-pressed="true"><i class="ph ph-map-trifold" aria-hidden="true"></i> Area signals</button>
+            <button class="view-tab" data-view="forecast" aria-pressed="false"><i class="ph ph-chart-line-up" aria-hidden="true"></i> Forecast lab</button>
+          </nav>
+        </div>
+
+        <div id="loading-state" class="loading-state" role="status" aria-live="polite">
+          <div class="loading-brand" aria-label="DengueSUX">
+            <span class="loading-mark"><i class="ph ph-aperture" aria-hidden="true"></i></span>
+            <span>Dengue<span>SUX</span></span>
+          </div>
+          <div class="loading-copy">
+            <p class="loading-kicker">Preparing your evidence workspace</p>
+            <h2>Bringing the signals together</h2>
+            <p>Loading the saved data and model evidence.</p>
+          </div>
+          <div class="loading-progress" aria-hidden="true"><span></span></div>
+          <div class="loading-steps" aria-hidden="true"><span><i class="ph ph-database"></i>Cluster snapshot</span><span><i class="ph ph-cloud-sun"></i>Weather</span><span><i class="ph ph-chart-line-up"></i>Forecast</span></div>
+        </div>
+        <div id="error-state" class="error-state" hidden><i class="ph ph-cloud-warning" aria-hidden="true"></i><h2>The dashboard data is not ready yet</h2><p id="error-message"></p><button class="solid-button" onclick="location.reload()">Try again</button></div>
+
+        <section id="signals-view" class="view-content" aria-label="Current area signals" hidden>
+          <section class="weekly-briefing compact" aria-label="This week's briefing">
+            <i class="ph ph-crosshair" aria-hidden="true"></i>
+            <p id="briefing-text">Reading the latest cluster snapshot…</p>
+            <button class="text-button" id="briefing-view" hidden>View area <i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+          </section>
+
+          <div class="stats-row compact-stats">
+            <div class="stat-item"><div class="stat-label">Active clusters</div><div class="stat-value" id="cluster-count">—</div></div>
+            <div class="stat-item"><div class="stat-label">People in clusters</div><div class="stat-value" id="case-count">—</div></div>
+            <div class="stat-item" title="10 or more people in active clusters"><div class="stat-label">High-priority areas</div><div class="stat-value accent" id="high-count">—</div></div>
+          </div>
+
+          <div class="explorer">
+            <section id="area-browser" class="area-browser" aria-label="Planning area list">
+              <div class="area-browser-head">
+                <button class="close-areas" id="close-areas" aria-label="Close area list"><i class="ph ph-x" aria-hidden="true"></i></button>
+                <h3 title="Sorted by people in active clusters">Planning areas <span id="area-list-count">—</span></h3>
+                <label class="search-box"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input id="area-search" type="search" placeholder="Find an area" aria-label="Find a planning area"></label>
+                <div class="filter-row segmented" role="group" aria-label="Filter by priority">
+                  <button class="filter active" data-filter="active" aria-pressed="true">Active</button>
+                  <button class="filter" data-filter="High" aria-pressed="false">High</button>
+                  <button class="filter" data-filter="Medium" aria-pressed="false">Medium</button>
+                  <button class="filter" data-filter="all" aria-pressed="false">All</button>
+                </div>
+              </div>
+              <div class="area-list" id="area-list"></div>
+            </section>
+
+            <section class="map-panel" aria-label="Interactive Singapore planning priority map">
+              <div id="map"></div>
+              <div class="map-top">
+                <button class="map-chip" id="fit-map" title="Fit all planning areas"><i class="ph ph-arrows-out-simple" aria-hidden="true"></i> All Singapore</button>
+                <button class="map-chip mobile-areas" id="toggle-areas" aria-expanded="false" aria-controls="area-browser"><i class="ph ph-list" aria-hidden="true"></i> Areas</button>
+                <button class="map-chip layers-button" id="layers-button" aria-expanded="false" aria-controls="layers-menu"><i class="ph ph-stack" aria-hidden="true"></i> Layers</button>
+              </div>
+              <div class="layers-menu" id="layers-menu" hidden>
+                <label><input type="checkbox" id="show-priority" checked> Planning priority</label>
+                <label><input type="checkbox" id="show-clusters" checked> Active clusters</label>
+                <label><input type="checkbox" id="show-labels" checked> Area names</label>
+                <p>Boundaries: URA Master Plan 2025</p>
+              </div>
+              <div class="map-legend"><span><b class="legend-dot low"></b>Low</span><span><b class="legend-dot medium"></b>Medium</span><span><b class="legend-dot high"></b>High</span><span class="cluster-legend"><b class="legend-cluster"></b>Cluster</span></div>
+            </section>
+
+            <aside class="area-detail" id="area-detail" aria-label="Selected planning area" aria-live="polite"></aside>
+          </div>
+        </section>
+
+        <section id="inspection-view" class="view-content" aria-label="Inspection plan" hidden></section>
+
+        <section id="forecast-view" class="view-content" aria-label="Historical national forecast" hidden>
+          <div class="forecast-intro compact">
+            <p id="forecast-subtitle">Two-week national outlook, replayed week by week through 2022.</p>
+            <button class="outline-button" id="replay-button"><i class="ph ph-play" aria-hidden="true"></i> Replay 2022</button>
+          </div>
+          <div class="model-selection-note" id="model-selection-note" hidden></div>
+
+          <div class="stats-row forecast-stats compact-stats">
+            <div class="stat-item" title="Average absolute weekly error across 2022"><div class="stat-label">Forecast usually off by</div><div class="stat-value" id="model-mae">—</div><p>people a week</p></div>
+            <div class="stat-item" title="Average absolute weekly error of a four-week average"><div class="stat-label">Simple average off by</div><div class="stat-value" id="baseline-mae">—</div><p>people a week</p></div>
+            <div class="stat-item" id="lead-stat"><div class="stat-label">High before the peak</div><div class="stat-value" id="lead-weeks">—</div><p id="lead-caption">weeks of advance warning</p></div>
+          </div>
+
+          <div class="forecast-grid">
+            <section class="forecast-chart-card">
+              <div class="chart-heading">
+                <div><h3>Weekly cases, 2022</h3></div>
+                <span class="model-pill" id="model-name">Model</span>
+              </div>
+              <div class="chart-key"><span><b class="line-swatch actual"></b>Reported</span><span><b class="line-swatch predicted"></b>Forecast</span><span><b class="line-swatch baseline"></b>Simple average</span></div>
+              <div class="chart-container"><canvas id="forecast-chart" aria-label="Weekly dengue forecast, reported people and simple average"></canvas><div class="chart-tooltip" id="chart-tooltip" hidden></div></div>
+              <p id="replay-note" class="replay-note" aria-live="polite" hidden></p>
+              <div class="timeline">
+                <div><label for="forecast-week">Choose a week</label><strong id="forecast-week-date">—</strong></div>
+                <input id="forecast-week" type="range" min="0" max="0" value="0" aria-label="Choose a week">
+                <div class="timeline-ends"><span id="timeline-start">—</span><span id="timeline-end">—</span></div>
+              </div>
+            </section>
+            <aside class="forecast-detail" id="forecast-detail"></aside>
+          </div>
+
+          <div class="split-strip">
+            <div id="split-details" class="split-chips"></div>
+            <p id="model-comparison"></p>
+          </div>
+        </section>
+
+        <footer>
+          <span>DengueSUX <span class="footer-dot">·</span> Research prototype <span class="footer-dot">·</span> <button data-about>Our story</button></span>
+          <span>Data: NEA, MOH and URA via data.gov.sg</span>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <dialog id="methodology-dialog" aria-labelledby="methodology-title">
+    <div class="dialog-top"><h2 id="methodology-title">How to read this</h2><button id="close-methodology" class="icon-button" aria-label="Close methodology"><i class="ph ph-x" aria-hidden="true"></i></button></div>
+    <div id="methodology-content"></div>
+    <div class="dialog-footer"><span>Data from NEA, MOH and URA via data.gov.sg</span><button class="solid-button" id="methodology-done">Got it</button></div>
+  </dialog>
+
+  <dialog id="about-dialog" aria-labelledby="about-title">
+    <div class="dialog-top"><span></span><button id="close-about" class="icon-button" aria-label="Close our story"><i class="ph ph-x" aria-hidden="true"></i></button></div>
+    <h2 id="about-title">Three times was<br>three too many.</h2>
+    <p class="about-story">Built by someone who’s had dengue three times. DengueSUX turns Singapore’s open data into a place to start: where to check, what to look for, and small actions we can take together.</p>
+    <div class="methodology-block"><h3>Early warning starts with honest evidence.</h3><p id="about-model"></p></div>
+    <div class="dialog-footer"><span>A DAISI Challenge prototype</span><button class="solid-button" id="about-done">Back to the map</button></div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <dialog id="notice-dialog" aria-labelledby="notice-title">
+    <div class="dialog-top"><h2 id="notice-title">Resident notice</h2><button id="close-notice" class="icon-button" aria-label="Close resident notice"><i class="ph ph-x" aria-hidden="true"></i></button></div>
+    <div id="notice-content"></div>
+  </dialog>
+
+  <script src="/vendor/leaflet/leaflet.js"></script>
+  <script src="/fieldwork.js"></script>
+  <script src="/assistant.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

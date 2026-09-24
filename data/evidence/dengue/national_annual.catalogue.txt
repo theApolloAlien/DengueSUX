@@ -1,0 +1,158 @@
+Dengue Outbreak Statistics | NEA | data.gov.sg
+A Singapore Government Agency Website
+How to identify
+Official website links end with .gov.sg
+Government agencies communicate via .gov.sg websites (e.g. go.gov.sg/open).
+Trusted websites
+Secure websites use HTTPS
+Look for a
+lock
+(
+) or https:// as an added precaution. Share sensitive information only on official, secure websites.
+Scam alert
+Government officers will never ask you to send money or share your details over the phone.
+When unsure, hang up and call Scamshield at 1799.
+Search for datasets
+Open main menu
+Datasets
+Guide
+Feedback
+Log in
+Datasets
+Agencies
+Guide
+Log in
+Feedback
+Product status
+Report card
+Open Data Licence
+Privacy & Terms
+Environment
+Dengue Outbreak Statistics
+NEA
+(
+National Environment Agency
+)
+Yearly Dengue Incidence Rate
+Data from Jan 2007 to Dec 2015
+Last updated
+6 Jun 2024
+See history
+Download
+CSV
+(118 B)
+Data from Jan 2007 to Dec 2015
+Last updated
+6 Jun 2024
+See history
+Dengue incidence rate by Year
+Data explorer
+DengueOutbreakStatistics.csv (9 rows, 118 B)
+Showing 2 of 2 columns
+Year
+Year (YYYY)
+Dengue_incidence_rate
+Numeric
+(Null)
+0.0%
+(Null)
+0.0%
+2007
+180.6
+2008
+137
+2009
+83.9
+2010
+98.1
+2011
+98.3
+2012
+82.7
+2013
+404.9
+2014
+325.7
+2015
+196.1
+No results found
+Clear all table filters
+Analyse this dataset with Colab Notebook
+1. Copy this dataset ID:
+d_8763ae810003718ad638e719ec9118df
+2. Click on the button below
+Open in Colab
+Sample OpenAPI query
+This code can be used to test a sample API query. It retrieves the data catalogue of this dataset. For a complete guide on query parameters and syntax, please refer to the
+API documentation
+. Try it out
+on your browser
+to see the response schema.
+Adding an API key gives you higher
+rate limits
+and priority support.
+Log in
+to create your API key.
+Python
+Copy
+import
+requests
+dataset_id
+=
+"d_8763ae810003718ad638e719ec9118df"
+url
+=
+"https://data.gov.sg/api/action/datastore_search?resource_id="
++
+dataset_id
+response
+=
+requests
+.
+get
+(url)
+print
+(response.
+json
+())
+Citation
+This dataset can be reused and cited in research publications.
+APA
+Copy
+National Environment Agency. (2015). Dengue Outbreak Statistics (2024) [Dataset]. data.gov.sg. Retrieved September 24, 2026 from https://data.gov.sg/datasets/d_8763ae810003718ad638e719ec9118df/view
+About this dataset
+Contact
+feedback@data.gov.sg
+Created on
+21 May 2015
+Licence
+Free forever for personal or commercial use, under the
+Open Data Licence
+.
+Agency
+NEA (National Environment Agency)
+Feedback
+Product status
+Report card
+Open Data Licence
+Privacy & Terms
+©
+2026
+Open Government Products
+Search for datasets
+Column legend
+Title
+Column name
+Data type
+Unit of measure
+Description
+Year
+year
+Year (YYYY)
+-
+Year
+Dengue_incidence_rate
+dengueincidencerate
+Numeric
+na
+Number of DF/DHF local cases per 100,000 population

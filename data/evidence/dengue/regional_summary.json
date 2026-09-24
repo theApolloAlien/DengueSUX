@@ -1,0 +1,85 @@
+{
+  "feature_count": 150,
+  "distinct_exact_geometries": 146,
+  "excess_duplicate_geometry_rows": 4,
+  "duplicate_geometry_groups": [
+    [
+      {
+        "dataset_id": "d_5f90123ce50e3d323bfd0ff3c9a84601",
+        "source": "region_central",
+        "feature_index": 14,
+        "cell_id": "D8FE702EAB26F366",
+        "update_time": "20230228165337",
+        "case_count": 2
+      },
+      {
+        "dataset_id": "d_5f90123ce50e3d323bfd0ff3c9a84601",
+        "source": "region_central",
+        "feature_index": 15,
+        "cell_id": "D8FE702EAB26F366",
+        "update_time": "20230228165337",
+        "case_count": 2
+      }
+    ],
+    [
+      {
+        "dataset_id": "d_5f90123ce50e3d323bfd0ff3c9a84601",
+        "source": "region_central",
+        "feature_index": 17,
+        "cell_id": "35C660F701C40805",
+        "update_time": "20230228165337",
+        "case_count": 1
+      },
+      {
+        "dataset_id": "d_e95e09fb3e54a3249e4bdf32e463effa",
+        "source": "region_north_east",
+        "feature_index": 12,
+        "cell_id": "35C660F701C40805",
+        "update_time": "20230228165409",
+        "case_count": 1
+      }
+    ],
+    [
+      {
+        "dataset_id": "d_ce8cf1e3f4f5ff1a68393a7cb101eb9c",
+        "source": "region_north_west",
+        "feature_index": 3,
+        "cell_id": "DE4C6BD395C8C339",
+        "update_time": "20230302153152",
+        "case_count": 1
+      },
+      {
+        "dataset_id": "d_ce8cf1e3f4f5ff1a68393a7cb101eb9c",
+        "source": "region_north_west",
+        "feature_index": 12,
+        "cell_id": "DE4C6BD312017713",
+        "update_time": "20230228165532",
+        "case_count": 2
+      }
+    ],
+    [
+      {
+        "dataset_id": "d_e34261c5ccace716132b55a5b02ebb1f",
+        "source": "region_south_west",
+        "feature_index": 4,
+        "cell_id": "975364AC396B2961",
+        "update_time": "20230302153245",
+        "case_count": 3
+      },
+      {
+        "dataset_id": "d_e34261c5ccace716132b55a5b02ebb1f",
+        "source": "region_south_west",
+        "feature_index": 9,
+        "cell_id": "975364AC75350C92",
+        "update_time": "20230302153245",
+        "case_count": 1
+      }
+    ]
+  ],
+  "first_feature_update": "20230208202737",
+  "last_feature_update": "20230302153245",
+  "raw_case_count_sum": 167,
+  "warning": "The raw sum includes duplicate polygons and has no documented case observation period. It is not a weekly regional incidence target.",
+  "geographic_shape": "Small local grid polygons grouped into five regional files; no planning-area identifier in the case properties.",
+  "temporal_evidence": "FMEL_UPD_D is an update timestamp; the files have no epidemiological week or case-period fields."
+}

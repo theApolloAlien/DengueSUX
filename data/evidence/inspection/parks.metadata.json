@@ -1,0 +1,70 @@
+{
+  "code": 0,
+  "data": {
+    "datasetId": "d_0542d48f0991541706b58059381a6eca",
+    "createdAt": "2023-07-31T16:13:28+08:00",
+    "name": "Parks",
+    "collectionIds": [
+      "1491"
+    ],
+    "description": "The points in this layer represents the indicative Managed Areas of Parks which are under the purview of NParks.",
+    "format": "GEOJSON",
+    "lastUpdatedAt": "2026-09-24T10:06:47+08:00",
+    "managedBy": "National Parks Board",
+    "coverageStart": "2025-11-07T00:00:00+08:00",
+    "datasetSize": 168423,
+    "geoJsonMetadata": {
+      "properties": [
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "OBJECTID",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "NAME",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "X",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "Y",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "INC_CRC",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "FMEL_UPD_D",
+          "description": ""
+        }
+      ]
+    }
+  },
+  "errorMsg": ""
+}

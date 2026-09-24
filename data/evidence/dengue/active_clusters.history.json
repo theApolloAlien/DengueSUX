@@ -1,0 +1,512 @@
+{
+  "source_url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+  "source_ui": "See history",
+  "action_name": "getDatasetIngestionSuccessHistory",
+  "retrieved_at_utc": "2026-09-24T03:38:50.171418+00:00",
+  "response_sha256": "b310cf62bf47b6f4559868e5d2b2277a27c00f3a4d9905c2353f116927282aa2",
+  "history": {
+    "versions": [
+      {
+        "version": 519,
+        "updatedAt": 1790215604894,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 518,
+        "updatedAt": 1790129205433,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 517,
+        "updatedAt": 1790042805261,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 516,
+        "updatedAt": 1789956405050,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 515,
+        "updatedAt": 1789870005890,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 514,
+        "updatedAt": 1789783605520,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 513,
+        "updatedAt": 1789697206699,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 512,
+        "updatedAt": 1789610806532,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 511,
+        "updatedAt": 1789524405508,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 510,
+        "updatedAt": 1789438005659,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 509,
+        "updatedAt": 1789351605094,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 508,
+        "updatedAt": 1789265205953,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 507,
+        "updatedAt": 1789178805564,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 506,
+        "updatedAt": 1789092405692,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 505,
+        "updatedAt": 1789006005795,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 504,
+        "updatedAt": 1788919605413,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 503,
+        "updatedAt": 1788833204965,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 502,
+        "updatedAt": 1788746804255,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 501,
+        "updatedAt": 1788660405195,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 500,
+        "updatedAt": 1788574006153,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 499,
+        "updatedAt": 1788487605407,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 498,
+        "updatedAt": 1788401205120,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 497,
+        "updatedAt": 1788314803077,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 496,
+        "updatedAt": 1788228404953,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 495,
+        "updatedAt": 1788142005611,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 494,
+        "updatedAt": 1788055606264,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 493,
+        "updatedAt": 1787969205911,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 492,
+        "updatedAt": 1787882806220,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 491,
+        "updatedAt": 1787796405852,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 490,
+        "updatedAt": 1787710006505,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 489,
+        "updatedAt": 1787623605200,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 488,
+        "updatedAt": 1787537205579,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 487,
+        "updatedAt": 1787450807007,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 486,
+        "updatedAt": 1787364406693,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 485,
+        "updatedAt": 1787278007241,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 484,
+        "updatedAt": 1787191606133,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 483,
+        "updatedAt": 1787105207095,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 482,
+        "updatedAt": 1787018805299,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 481,
+        "updatedAt": 1786932405470,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 480,
+        "updatedAt": 1786846006670,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 479,
+        "updatedAt": 1786759606782,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 478,
+        "updatedAt": 1786673206153,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 477,
+        "updatedAt": 1786586806613,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 476,
+        "updatedAt": 1786500406447,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 475,
+        "updatedAt": 1786414005800,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 474,
+        "updatedAt": 1786327605115,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 473,
+        "updatedAt": 1786241205631,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 472,
+        "updatedAt": 1786154806175,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 471,
+        "updatedAt": 1786068406856,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 470,
+        "updatedAt": 1785982006646,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 469,
+        "updatedAt": 1785895606108,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 468,
+        "updatedAt": 1785809205234,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 467,
+        "updatedAt": 1785722804816,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 466,
+        "updatedAt": 1785636405167,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 465,
+        "updatedAt": 1785550005650,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 464,
+        "updatedAt": 1785463606318,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 463,
+        "updatedAt": 1785377206318,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 462,
+        "updatedAt": 1785290805669,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 461,
+        "updatedAt": 1785204404799,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 460,
+        "updatedAt": 1784945206738,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 459,
+        "updatedAt": 1784858805790,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 458,
+        "updatedAt": 1784772406012,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 457,
+        "updatedAt": 1784686005962,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 456,
+        "updatedAt": 1784599604164,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 455,
+        "updatedAt": 1784513204310,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 454,
+        "updatedAt": 1784426805007,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 453,
+        "updatedAt": 1784340405688,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 452,
+        "updatedAt": 1784254005392,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 451,
+        "updatedAt": 1784167608068,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 450,
+        "updatedAt": 1784081205299,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 449,
+        "updatedAt": 1783994805373,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 448,
+        "updatedAt": 1783908405675,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 447,
+        "updatedAt": 1783822007557,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 446,
+        "updatedAt": 1783735605640,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 445,
+        "updatedAt": 1783649206607,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 444,
+        "updatedAt": 1783562805545,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 443,
+        "updatedAt": 1783476406610,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 442,
+        "updatedAt": 1783390005078,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 441,
+        "updatedAt": 1783303604866,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 440,
+        "updatedAt": 1783217206299,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 439,
+        "updatedAt": 1783130804424,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 438,
+        "updatedAt": 1783044404987,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 437,
+        "updatedAt": 1782958005163,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 436,
+        "updatedAt": 1782871606162,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 435,
+        "updatedAt": 1782785205586,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 434,
+        "updatedAt": 1782698805779,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 433,
+        "updatedAt": 1782612406252,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 432,
+        "updatedAt": 1782526005645,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 431,
+        "updatedAt": 1782439606531,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 430,
+        "updatedAt": 1782353205673,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 429,
+        "updatedAt": 1782266806626,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 428,
+        "updatedAt": 1782180404926,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 427,
+        "updatedAt": 1782094004559,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 426,
+        "updatedAt": 1782007605350,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 425,
+        "updatedAt": 1781921205950,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 424,
+        "updatedAt": 1781834805979,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 423,
+        "updatedAt": 1781748406298,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 422,
+        "updatedAt": 1781662006209,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 421,
+        "updatedAt": 1781575604988,
+        "status": "INGESTION_SUCCESS"
+      },
+      {
+        "version": 420,
+        "updatedAt": 1781489204667,
+        "status": "INGESTION_SUCCESS"
+      }
+    ]
+  },
+  "limitation": "Ingestion timestamps only; no historical data files or case observation periods supplied by this UI."
+}

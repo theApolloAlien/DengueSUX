@@ -1,0 +1,3543 @@
+{
+  "name": "Weather + trend gradient boosting",
+  "recommended_model": "Weather + trend gradient boosting",
+  "selected_model": "gradient_boosting",
+  "selected_baseline": false,
+  "horizon_weeks": 2,
+  "metrics": {
+    "mae": 83.20872264451896,
+    "accuracy": 0.9423076923076923,
+    "n": 52
+  },
+  "selected_metrics": {
+    "mae": 83.20872264451896,
+    "accuracy": 0.9423076923076923,
+    "n": 52
+  },
+  "baseline_metrics": {
+    "mae": 172.4278846153846,
+    "accuracy": 0.9230769230769231,
+    "n": 52
+  },
+  "validation": [
+    {
+      "name": "baseline",
+      "mae": 101.60806451612903,
+      "accuracy": 0.9225806451612903,
+      "n": 155,
+      "by_year": {
+        "2019": {
+          "mae": 84.1826923076923,
+          "n": 52
+        },
+        "2020": {
+          "mae": 197.5721153846154,
+          "n": 52
+        },
+        "2021": {
+          "mae": 21.529411764705884,
+          "n": 51
+        }
+      },
+      "selection_mae": 101.09473981900453
+    },
+    {
+      "name": "ridge",
+      "mae": 68.81268173499211,
+      "accuracy": 0.9354838709677419,
+      "n": 155,
+      "by_year": {
+        "2019": {
+          "mae": 65.47935584847231,
+          "n": 52
+        },
+        "2020": {
+          "mae": 105.40672572997185,
+          "n": 52
+        },
+        "2021": {
+          "mae": 34.89979268322908,
+          "n": 51
+        }
+      },
+      "selection_mae": 68.59529142055776
+    },
+    {
+      "name": "gradient_boosting",
+      "mae": 63.0940291438447,
+      "accuracy": 0.9612903225806452,
+      "n": 155,
+      "by_year": {
+        "2019": {
+          "mae": 63.55920170660404,
+          "n": 52
+        },
+        "2020": {
+          "mae": 107.50205100833315,
+          "n": 52
+        },
+        "2021": {
+          "mae": 17.34096815919989,
+          "n": 51
+        }
+      },
+      "selection_mae": 62.800740291379036
+    }
+  ],
+  "validation_candidates": {
+    "baseline": {
+      "mae": 101.60806451612903,
+      "accuracy": 0.9225806451612903,
+      "n": 155,
+      "by_year": {
+        "2019": {
+          "mae": 84.1826923076923,
+          "n": 52
+        },
+        "2020": {
+          "mae": 197.5721153846154,
+          "n": 52
+        },
+        "2021": {
+          "mae": 21.529411764705884,
+          "n": 51
+        }
+      },
+      "selection_mae": 101.09473981900453
+    },
+    "ridge": {
+      "mae": 68.81268173499211,
+      "accuracy": 0.9354838709677419,
+      "n": 155,
+      "by_year": {
+        "2019": {
+          "mae": 65.47935584847231,
+          "n": 52
+        },
+        "2020": {
+          "mae": 105.40672572997185,
+          "n": 52
+        },
+        "2021": {
+          "mae": 34.89979268322908,
+          "n": 51
+        }
+      },
+      "selection_mae": 68.59529142055776
+    },
+    "gradient_boosting": {
+      "mae": 63.0940291438447,
+      "accuracy": 0.9612903225806452,
+      "n": 155,
+      "by_year": {
+        "2019": {
+          "mae": 63.55920170660404,
+          "n": 52
+        },
+        "2020": {
+          "mae": 107.50205100833315,
+          "n": 52
+        },
+        "2021": {
+          "mae": 17.34096815919989,
+          "n": 51
+        }
+      },
+      "selection_mae": 62.800740291379036
+    }
+  },
+  "validation_baseline": {
+    "mae": 101.60806451612903,
+    "accuracy": 0.9225806451612903,
+    "n": 155,
+    "by_year": {
+      "2019": {
+        "mae": 84.1826923076923,
+        "n": 52
+      },
+      "2020": {
+        "mae": 197.5721153846154,
+        "n": 52
+      },
+      "2021": {
+        "mae": 21.529411764705884,
+        "n": 51
+      }
+    },
+    "selection_mae": 101.09473981900453
+  },
+  "validation_folds": [
+    {
+      "fold": 1,
+      "train_rows": 93,
+      "validation_rows": 4,
+      "train_labels_through": "2018-12-29",
+      "first_issue_date": "2018-12-30",
+      "validation_start": "2019-01-06",
+      "validation_end": "2019-01-27",
+      "thresholds": {
+        "low": 50.0,
+        "high": 62.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 60.8125,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 35.2006834340216,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 39.38571669136313,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 2,
+      "train_rows": 97,
+      "validation_rows": 4,
+      "train_labels_through": "2019-01-26",
+      "first_issue_date": "2019-01-27",
+      "validation_start": "2019-02-03",
+      "validation_end": "2019-02-24",
+      "thresholds": {
+        "low": 50.0,
+        "high": 63.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 36.9375,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 63.72770154750473,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 60.870663008523294,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 3,
+      "train_rows": 101,
+      "validation_rows": 4,
+      "train_labels_through": "2019-02-23",
+      "first_issue_date": "2019-02-24",
+      "validation_start": "2019-03-03",
+      "validation_end": "2019-03-24",
+      "thresholds": {
+        "low": 50.33333333333333,
+        "high": 64.66666666666666
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 61.1875,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 43.018438846372796,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 40.53032666072056,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 4,
+      "train_rows": 105,
+      "validation_rows": 4,
+      "train_labels_through": "2019-03-23",
+      "first_issue_date": "2019-03-24",
+      "validation_start": "2019-03-31",
+      "validation_end": "2019-04-21",
+      "thresholds": {
+        "low": 51.0,
+        "high": 66.33333333333333
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 28.0625,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 63.004698967741305,
+          "accuracy": 0.5,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 54.37039181554554,
+          "accuracy": 0.5,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 5,
+      "train_rows": 109,
+      "validation_rows": 4,
+      "train_labels_through": "2019-04-20",
+      "first_issue_date": "2019-04-21",
+      "validation_start": "2019-04-28",
+      "validation_end": "2019-05-19",
+      "thresholds": {
+        "low": 51.0,
+        "high": 68.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 143.4375,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 112.13160592721546,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 105.95803492033329,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 6,
+      "train_rows": 113,
+      "validation_rows": 4,
+      "train_labels_through": "2019-05-18",
+      "first_issue_date": "2019-05-19",
+      "validation_start": "2019-05-26",
+      "validation_end": "2019-06-16",
+      "thresholds": {
+        "low": 51.0,
+        "high": 74.33333333333331
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 114.125,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 41.59658782585204,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 62.635356900463606,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 7,
+      "train_rows": 117,
+      "validation_rows": 4,
+      "train_labels_through": "2019-06-15",
+      "first_issue_date": "2019-06-16",
+      "validation_start": "2019-06-23",
+      "validation_end": "2019-07-14",
+      "thresholds": {
+        "low": 51.0,
+        "high": 75.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 153.875,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 65.89017298386597,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 76.49809676555499,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 8,
+      "train_rows": 121,
+      "validation_rows": 4,
+      "train_labels_through": "2019-07-13",
+      "first_issue_date": "2019-07-14",
+      "validation_start": "2019-07-21",
+      "validation_end": "2019-08-11",
+      "thresholds": {
+        "low": 51.0,
+        "high": 76.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 66.8125,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 177.19962797710593,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 113.95429729314594,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 9,
+      "train_rows": 125,
+      "validation_rows": 4,
+      "train_labels_through": "2019-08-10",
+      "first_issue_date": "2019-08-11",
+      "validation_start": "2019-08-18",
+      "validation_end": "2019-09-08",
+      "thresholds": {
+        "low": 52.0,
+        "high": 77.66666666666666
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 159.4375,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 64.85850958736427,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 76.90249195338023,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 10,
+      "train_rows": 129,
+      "validation_rows": 4,
+      "train_labels_through": "2019-09-07",
+      "first_issue_date": "2019-09-08",
+      "validation_start": "2019-09-15",
+      "validation_end": "2019-10-06",
+      "thresholds": {
+        "low": 52.666666666666664,
+        "high": 80.99999999999999
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 106.0,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 18.627556686483125,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 31.927507531471107,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 11,
+      "train_rows": 133,
+      "validation_rows": 4,
+      "train_labels_through": "2019-10-05",
+      "first_issue_date": "2019-10-06",
+      "validation_start": "2019-10-13",
+      "validation_end": "2019-11-03",
+      "thresholds": {
+        "low": 53.0,
+        "high": 97.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 51.8125,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 52.85800467643078,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 49.70339191298901,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 12,
+      "train_rows": 137,
+      "validation_rows": 4,
+      "train_labels_through": "2019-11-02",
+      "first_issue_date": "2019-11-03",
+      "validation_start": "2019-11-10",
+      "validation_end": "2019-12-01",
+      "thresholds": {
+        "low": 53.33333333333333,
+        "high": 108.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 60.25,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 59.08484380871644,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 65.65768905064864,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 13,
+      "train_rows": 141,
+      "validation_rows": 4,
+      "train_labels_through": "2019-11-30",
+      "first_issue_date": "2019-12-01",
+      "validation_start": "2019-12-08",
+      "validation_end": "2019-12-29",
+      "thresholds": {
+        "low": 54.0,
+        "high": 110.99999999999997
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 51.625,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 54.03319376146574,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 47.87565768171328,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 14,
+      "train_rows": 145,
+      "validation_rows": 4,
+      "train_labels_through": "2019-12-28",
+      "first_issue_date": "2019-12-29",
+      "validation_start": "2020-01-05",
+      "validation_end": "2020-01-26",
+      "thresholds": {
+        "low": 55.0,
+        "high": 128.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 67.0,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 41.757434698446744,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 56.07216381224798,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 15,
+      "train_rows": 149,
+      "validation_rows": 4,
+      "train_labels_through": "2020-01-25",
+      "first_issue_date": "2020-01-26",
+      "validation_start": "2020-02-02",
+      "validation_end": "2020-02-23",
+      "thresholds": {
+        "low": 55.33333333333333,
+        "high": 136.99999999999997
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 25.8125,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 46.57976799044087,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 41.08803213925502,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 16,
+      "train_rows": 153,
+      "validation_rows": 4,
+      "train_labels_through": "2020-02-22",
+      "first_issue_date": "2020-02-23",
+      "validation_start": "2020-03-01",
+      "validation_end": "2020-03-22",
+      "thresholds": {
+        "low": 56.0,
+        "high": 158.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 6.3125,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 12.47727588797413,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 19.09985297991078,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 17,
+      "train_rows": 157,
+      "validation_rows": 4,
+      "train_labels_through": "2020-03-21",
+      "first_issue_date": "2020-03-22",
+      "validation_start": "2020-03-29",
+      "validation_end": "2020-04-19",
+      "thresholds": {
+        "low": 56.0,
+        "high": 182.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 36.8125,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 47.830304993467294,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 49.230298865361334,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 18,
+      "train_rows": 161,
+      "validation_rows": 4,
+      "train_labels_through": "2020-04-18",
+      "first_issue_date": "2020-04-19",
+      "validation_start": "2020-04-26",
+      "validation_end": "2020-05-17",
+      "thresholds": {
+        "low": 56.66666666666666,
+        "high": 212.33333333333326
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 137.8125,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 74.6636186682432,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 67.57222992632984,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 19,
+      "train_rows": 165,
+      "validation_rows": 4,
+      "train_labels_through": "2020-05-16",
+      "first_issue_date": "2020-05-17",
+      "validation_start": "2020-05-24",
+      "validation_end": "2020-06-14",
+      "thresholds": {
+        "low": 58.666666666666664,
+        "high": 226.33333333333331
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 468.875,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 286.6019774807677,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 300.9771778577764,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 20,
+      "train_rows": 169,
+      "validation_rows": 4,
+      "train_labels_through": "2020-06-13",
+      "first_issue_date": "2020-06-14",
+      "validation_start": "2020-06-21",
+      "validation_end": "2020-07-12",
+      "thresholds": {
+        "low": 59.0,
+        "high": 239.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 464.75,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 102.6360085526689,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 205.8022799589824,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 21,
+      "train_rows": 173,
+      "validation_rows": 4,
+      "train_labels_through": "2020-07-11",
+      "first_issue_date": "2020-07-12",
+      "validation_start": "2020-07-19",
+      "validation_end": "2020-08-09",
+      "thresholds": {
+        "low": 60.33333333333333,
+        "high": 245.66666666666666
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 203.5,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 247.52300377506413,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 194.3096973671083,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 22,
+      "train_rows": 177,
+      "validation_rows": 4,
+      "train_labels_through": "2020-08-08",
+      "first_issue_date": "2020-08-09",
+      "validation_start": "2020-08-16",
+      "validation_end": "2020-09-06",
+      "thresholds": {
+        "low": 61.666666666666664,
+        "high": 267.6666666666666
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 465.25,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 275.8113501801584,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 262.1618092572058,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 23,
+      "train_rows": 181,
+      "validation_rows": 4,
+      "train_labels_through": "2020-09-05",
+      "first_issue_date": "2020-09-06",
+      "validation_start": "2020-09-13",
+      "validation_end": "2020-10-04",
+      "thresholds": {
+        "low": 62.0,
+        "high": 290.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 353.1875,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 68.2904719064534,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 59.473912258079935,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 24,
+      "train_rows": 185,
+      "validation_rows": 4,
+      "train_labels_through": "2020-10-03",
+      "first_issue_date": "2020-10-04",
+      "validation_start": "2020-10-11",
+      "validation_end": "2020-11-01",
+      "thresholds": {
+        "low": 62.0,
+        "high": 302.3333333333333
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 98.5,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 94.6973713728115,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 90.84170642737831,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 25,
+      "train_rows": 189,
+      "validation_rows": 4,
+      "train_labels_through": "2020-10-31",
+      "first_issue_date": "2020-11-01",
+      "validation_start": "2020-11-08",
+      "validation_end": "2020-11-29",
+      "thresholds": {
+        "low": 62.666666666666664,
+        "high": 309.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 180.0,
+          "accuracy": 0.25,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 37.06319738248763,
+          "accuracy": 0.5,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 28.707814489449504,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 26,
+      "train_rows": 193,
+      "validation_rows": 4,
+      "train_labels_through": "2020-11-28",
+      "first_issue_date": "2020-11-29",
+      "validation_start": "2020-12-06",
+      "validation_end": "2020-12-27",
+      "thresholds": {
+        "low": 63.0,
+        "high": 309.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 60.625,
+          "accuracy": 0.75,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 34.3556516006501,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 22.189687769245204,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 27,
+      "train_rows": 197,
+      "validation_rows": 4,
+      "train_labels_through": "2020-12-26",
+      "first_issue_date": "2020-12-27",
+      "validation_start": "2021-01-03",
+      "validation_end": "2021-01-24",
+      "thresholds": {
+        "low": 63.33333333333333,
+        "high": 308.66666666666663
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 45.125,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 18.116487896016594,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 39.97230342207441,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 28,
+      "train_rows": 201,
+      "validation_rows": 4,
+      "train_labels_through": "2021-01-23",
+      "first_issue_date": "2021-01-24",
+      "validation_start": "2021-01-31",
+      "validation_end": "2021-02-21",
+      "thresholds": {
+        "low": 64.66666666666666,
+        "high": 304.6666666666666
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 14.5,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 42.21772363245407,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 9.092803480254354,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 29,
+      "train_rows": 205,
+      "validation_rows": 4,
+      "train_labels_through": "2021-02-20",
+      "first_issue_date": "2021-02-21",
+      "validation_start": "2021-02-28",
+      "validation_end": "2021-03-21",
+      "thresholds": {
+        "low": 66.0,
+        "high": 301.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 10.5625,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 47.19433938592769,
+          "accuracy": 0.75,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 6.436984748194391,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 30,
+      "train_rows": 209,
+      "validation_rows": 4,
+      "train_labels_through": "2021-03-20",
+      "first_issue_date": "2021-03-21",
+      "validation_start": "2021-03-28",
+      "validation_end": "2021-04-18",
+      "thresholds": {
+        "low": 66.33333333333333,
+        "high": 293.33333333333326
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 21.5625,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 20.074471391371766,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 11.438835047655733,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 31,
+      "train_rows": 213,
+      "validation_rows": 4,
+      "train_labels_through": "2021-04-17",
+      "first_issue_date": "2021-04-18",
+      "validation_start": "2021-04-25",
+      "validation_end": "2021-05-16",
+      "thresholds": {
+        "low": 67.66666666666666,
+        "high": 287.99999999999994
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 13.5,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 79.69462520793476,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 20.26937805957865,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 32,
+      "train_rows": 217,
+      "validation_rows": 4,
+      "train_labels_through": "2021-05-15",
+      "first_issue_date": "2021-05-16",
+      "validation_start": "2021-05-23",
+      "validation_end": "2021-06-13",
+      "thresholds": {
+        "low": 68.0,
+        "high": 281.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 20.5625,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 60.77392345300866,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 11.169657194128511,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 33,
+      "train_rows": 221,
+      "validation_rows": 4,
+      "train_labels_through": "2021-06-12",
+      "first_issue_date": "2021-06-13",
+      "validation_start": "2021-06-20",
+      "validation_end": "2021-07-11",
+      "thresholds": {
+        "low": 71.66666666666666,
+        "high": 272.99999999999983
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 24.25,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 56.330681529757854,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 36.22227788360503,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 34,
+      "train_rows": 225,
+      "validation_rows": 4,
+      "train_labels_through": "2021-07-10",
+      "first_issue_date": "2021-07-11",
+      "validation_start": "2021-07-18",
+      "validation_end": "2021-08-08",
+      "thresholds": {
+        "low": 74.33333333333331,
+        "high": 258.99999999999994
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 22.25,
+          "accuracy": 0.75,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 40.87935126254675,
+          "accuracy": 0.75,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 20.090691307058023,
+          "accuracy": 0.75,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 35,
+      "train_rows": 229,
+      "validation_rows": 4,
+      "train_labels_through": "2021-08-07",
+      "first_issue_date": "2021-08-08",
+      "validation_start": "2021-08-15",
+      "validation_end": "2021-09-05",
+      "thresholds": {
+        "low": 75.0,
+        "high": 257.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 19.0625,
+          "accuracy": 0.5,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 14.486289437484787,
+          "accuracy": 0.75,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 10.188990027538711,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 36,
+      "train_rows": 233,
+      "validation_rows": 4,
+      "train_labels_through": "2021-09-04",
+      "first_issue_date": "2021-09-05",
+      "validation_start": "2021-09-12",
+      "validation_end": "2021-10-03",
+      "thresholds": {
+        "low": 71.66666666666666,
+        "high": 245.66666666666666
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 37.1875,
+          "accuracy": 0.25,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 14.168018517985772,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 19.85608346900324,
+          "accuracy": 0.75,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 37,
+      "train_rows": 237,
+      "validation_rows": 4,
+      "train_labels_through": "2021-10-02",
+      "first_issue_date": "2021-10-03",
+      "validation_start": "2021-10-10",
+      "validation_end": "2021-10-31",
+      "thresholds": {
+        "low": 72.33333333333331,
+        "high": 242.99999999999994
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 21.0625,
+          "accuracy": 0.75,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 11.80574031534596,
+          "accuracy": 1.0,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 17.718314625315333,
+          "accuracy": 0.75,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 38,
+      "train_rows": 241,
+      "validation_rows": 4,
+      "train_labels_through": "2021-10-30",
+      "first_issue_date": "2021-10-31",
+      "validation_start": "2021-11-07",
+      "validation_end": "2021-11-28",
+      "thresholds": {
+        "low": 74.0,
+        "high": 239.0
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 17.6875,
+          "accuracy": 0.75,
+          "n": 4
+        },
+        "ridge": {
+          "mae": 25.811242994339565,
+          "accuracy": 0.5,
+          "n": 4
+        },
+        "gradient_boosting": {
+          "mae": 15.949842896414856,
+          "accuracy": 1.0,
+          "n": 4
+        }
+      }
+    },
+    {
+      "fold": 39,
+      "train_rows": 245,
+      "validation_rows": 3,
+      "train_labels_through": "2021-11-27",
+      "first_issue_date": "2021-11-28",
+      "validation_start": "2021-12-05",
+      "validation_end": "2021-12-19",
+      "thresholds": {
+        "low": 70.33333333333333,
+        "high": 235.66666666666666
+      },
+      "metrics": {
+        "baseline": {
+          "mae": 9.583333333333334,
+          "accuracy": 1.0,
+          "n": 3
+        },
+        "ridge": {
+          "mae": 17.89261558266206,
+          "accuracy": 0.6666666666666666,
+          "n": 3
+        },
+        "gradient_boosting": {
+          "mae": 3.5882424919698153,
+          "accuracy": 0.6666666666666666,
+          "n": 3
+        }
+      }
+    }
+  ],
+  "selection_details": {
+    "rule": "Lowest equal-year mean of 2019, 2020 and 2021 rolling-origin mean absolute errors",
+    "tie_order": [
+      "baseline",
+      "ridge",
+      "gradient_boosting"
+    ],
+    "baseline_compared": true,
+    "evaluation_used_for_selection": false
+  },
+  "peak_lead_time": {
+    "peak_week": "2022-05-22",
+    "peak_week_end": "2022-05-28",
+    "peak_people": 1567.0,
+    "high_threshold": 230.3333333333332,
+    "date_basis": "Issue date to start of the peak observed week",
+    "selected": {
+      "status": "observed_crossing",
+      "first_high_issue_date": "2022-03-06",
+      "weeks_before_peak": 11.0,
+      "at_least_weeks_before_peak": null
+    },
+    "baseline": {
+      "status": "observed_crossing",
+      "first_high_issue_date": "2022-03-13",
+      "weeks_before_peak": 10.0,
+      "at_least_weeks_before_peak": null
+    }
+  },
+  "thresholds": {
+    "low": 68.0,
+    "high": 230.3333333333332
+  },
+  "training_window": "2017-03-05 to 2021-12-05",
+  "evaluation_window": "2022-01-02 to 2022-12-31",
+  "splits": {
+    "train": 93,
+    "validation": 155,
+    "test": 52,
+    "refit": 249,
+    "rolling_folds": 39
+  },
+  "model_config": {
+    "seed": 20260924,
+    "ridge_alpha": 100.0,
+    "gradient_boosting": {
+      "n_estimators": 120,
+      "learning_rate": 0.03,
+      "max_depth": 2,
+      "min_samples_leaf": 4,
+      "subsample": 0.9,
+      "loss": "huber",
+      "random_state": 20260924
+    },
+    "feature_schema": [
+      "cases_current",
+      "cases_mean_4",
+      "cases_trend",
+      "cases_lag_1",
+      "cases_lag_2",
+      "cases_lag_3",
+      "cases_lag_4",
+      "cases_lag_5",
+      "cases_lag_6",
+      "cases_lag_7",
+      "cases_lag_8",
+      "rainfall_lag_1",
+      "rainfall_lag_2",
+      "rainfall_lag_3",
+      "rainfall_lag_4",
+      "rainfall_lag_5",
+      "rainfall_lag_6",
+      "rainfall_lag_7",
+      "rainfall_lag_8",
+      "temperature_lag_1",
+      "temperature_lag_2",
+      "temperature_lag_3",
+      "temperature_lag_4",
+      "temperature_lag_5",
+      "temperature_lag_6",
+      "temperature_lag_7",
+      "temperature_lag_8",
+      "humidity_lag_1",
+      "humidity_lag_2",
+      "humidity_lag_3",
+      "humidity_lag_4",
+      "humidity_lag_5",
+      "humidity_lag_6",
+      "humidity_lag_7",
+      "humidity_lag_8",
+      "season_sin",
+      "season_cos"
+    ],
+    "validation": "Expanding four-week folds, 2019\u20132021, equal-year MAE selection",
+    "holdout": "2022 reused evaluation year; excluded from selection in this revision"
+  },
+  "predictions": [
+    {
+      "issue_date": "2021-12-26",
+      "origin_week": "2021-12-19",
+      "target_date": "2022-01-02",
+      "target_week_end": "2022-01-08",
+      "actual": 106.0,
+      "prediction": 59.062598074484974,
+      "selected_prediction": 59.062598074484974,
+      "baseline": 60.5,
+      "risk": "Low",
+      "baseline_risk": "Low",
+      "actual_risk": "Medium",
+      "origin_cases": 68.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": -175.11237480683855,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 0.20537112176786992,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -3.8781181283535364,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -9.822589292090873,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-01-02",
+      "origin_week": "2021-12-26",
+      "target_date": "2022-01-09",
+      "target_week_end": "2022-01-15",
+      "actual": 146.0,
+      "prediction": 73.61292193154829,
+      "selected_prediction": 73.61292193154829,
+      "baseline": 68.25,
+      "risk": "Medium",
+      "baseline_risk": "Medium",
+      "actual_risk": "Medium",
+      "origin_cases": 79.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": -164.15648792255917,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 0.35103646550195033,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -3.1642024543729406,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -7.0877333370216125,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-01-09",
+      "origin_week": "2022-01-02",
+      "target_date": "2022-01-16",
+      "target_week_end": "2022-01-22",
+      "actual": 180.0,
+      "prediction": 115.88123466430407,
+      "selected_prediction": 115.88123466430407,
+      "baseline": 78.5,
+      "risk": "Medium",
+      "baseline_risk": "Medium",
+      "actual_risk": "Medium",
+      "origin_cases": 106.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": -130.93334127887394,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 0.11098131027607729,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -4.356390079349146,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 3.3896755322510335,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-01-16",
+      "origin_week": "2022-01-09",
+      "target_date": "2022-01-23",
+      "target_week_end": "2022-01-29",
+      "actual": 171.0,
+      "prediction": 173.1110524108177,
+      "selected_prediction": 173.1110524108177,
+      "baseline": 99.75,
+      "risk": "Medium",
+      "baseline_risk": "Medium",
+      "actual_risk": "Medium",
+      "origin_cases": 146.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": -79.20990725542785,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 0.35103646550195033,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 9.172375520477713,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -4.8727614997341595,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-01-23",
+      "origin_week": "2022-01-16",
+      "target_date": "2022-01-30",
+      "target_week_end": "2022-02-05",
+      "actual": 154.0,
+      "prediction": 212.4900572742955,
+      "selected_prediction": 212.4900572742955,
+      "baseline": 127.75,
+      "risk": "Medium",
+      "baseline_risk": "Medium",
+      "actual_risk": "Medium",
+      "origin_cases": 180.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": -44.25271540463221,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 0.48687700903153436,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 11.654839974047905,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -3.069253484151761,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-01-30",
+      "origin_week": "2022-01-23",
+      "target_date": "2022-02-06",
+      "target_week_end": "2022-02-12",
+      "actual": 169.0,
+      "prediction": 167.73999076948795,
+      "selected_prediction": 167.73999076948795,
+      "baseline": 150.75,
+      "risk": "Medium",
+      "baseline_risk": "Medium",
+      "actual_risk": "Medium",
+      "origin_cases": 171.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": -73.96570243458476,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 1.2477711946450596,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -4.140440905871668,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -3.0719462647007263,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-02-06",
+      "origin_week": "2022-01-30",
+      "target_date": "2022-02-13",
+      "target_week_end": "2022-02-19",
+      "actual": 206.0,
+      "prediction": 144.2149871867397,
+      "selected_prediction": 144.2149871867397,
+      "baseline": 162.75,
+      "risk": "Medium",
+      "baseline_risk": "Medium",
+      "actual_risk": "Medium",
+      "origin_cases": 154.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": -89.57442137533315,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 1.5866557970670936,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -3.674695728793559,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -11.792860686200736,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-02-13",
+      "origin_week": "2022-02-06",
+      "target_date": "2022-02-20",
+      "target_week_end": "2022-02-26",
+      "actual": 201.0,
+      "prediction": 158.75156826010502,
+      "selected_prediction": 158.75156826010502,
+      "baseline": 168.5,
+      "risk": "Medium",
+      "baseline_risk": "Medium",
+      "actual_risk": "Medium",
+      "origin_cases": 169.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": -74.21109965362939,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 1.2477711946450596,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -5.3281487213263405,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -10.627263739584363,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-02-20",
+      "origin_week": "2022-02-13",
+      "target_date": "2022-02-27",
+      "target_week_end": "2022-03-05",
+      "actual": 263.0,
+      "prediction": 199.00287457760354,
+      "selected_prediction": 199.00287457760354,
+      "baseline": 175.0,
+      "risk": "Medium",
+      "baseline_risk": "Medium",
+      "actual_risk": "High",
+      "origin_cases": 206.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": -31.729270945679403,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 1.2477711946450596,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -7.910804546668366,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -10.275130304693795,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-02-27",
+      "origin_week": "2022-02-20",
+      "target_date": "2022-03-06",
+      "target_week_end": "2022-03-12",
+      "actual": 369.0,
+      "prediction": 221.14442432087208,
+      "selected_prediction": 221.14442432087208,
+      "baseline": 182.5,
+      "risk": "Medium",
+      "baseline_risk": "Medium",
+      "actual_risk": "High",
+      "origin_cases": 201.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": -34.89234696610365,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 1.4079398005849135,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 8.07880719806881,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -1.1202848916780543,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-03-06",
+      "origin_week": "2022-02-27",
+      "target_date": "2022-03-13",
+      "target_week_end": "2022-03-19",
+      "actual": 421.0,
+      "prediction": 277.36981949189163,
+      "selected_prediction": 277.36981949189163,
+      "baseline": 209.75,
+      "risk": "High",
+      "baseline_risk": "Medium",
+      "actual_risk": "High",
+      "origin_cases": 263.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 35.76702918803629,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 1.2477711946450596,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -2.10307240736553,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -5.212217663424233,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-03-13",
+      "origin_week": "2022-03-06",
+      "target_date": "2022-03-20",
+      "target_week_end": "2022-03-26",
+      "actual": 441.0,
+      "prediction": 433.5238580536255,
+      "selected_prediction": 433.5238580536255,
+      "baseline": 259.75,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 369.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 185.5551196231161,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 1.9441616818061522,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -3.447570272648872,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 1.8018378413521279,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-03-20",
+      "origin_week": "2022-03-13",
+      "target_date": "2022-03-27",
+      "target_week_end": "2022-04-02",
+      "actual": 510.0,
+      "prediction": 490.7127338676606,
+      "selected_prediction": 490.7127338676606,
+      "baseline": 313.5,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 421.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 236.03040760721387,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 1.700596066930342,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 9.539149793992985,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -4.227728780476697,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-03-27",
+      "origin_week": "2022-03-20",
+      "target_date": "2022-04-03",
+      "target_week_end": "2022-04-09",
+      "actual": 643.0,
+      "prediction": 515.281963368462,
+      "selected_prediction": 515.281963368462,
+      "baseline": 373.5,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 441.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 253.1694142088033,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 4.056006444994978,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 9.443636978934066,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 0.9425965557296359,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-04-03",
+      "origin_week": "2022-03-27",
+      "target_date": "2022-04-10",
+      "target_week_end": "2022-04-16",
+      "actual": 734.0,
+      "prediction": 564.1723516168095,
+      "selected_prediction": 564.1723516168095,
+      "baseline": 435.25,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 510.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 320.04445793619004,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 4.650378640903088,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -0.5471151843981954,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -7.64567895588548,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-04-10",
+      "origin_week": "2022-04-03",
+      "target_date": "2022-04-17",
+      "target_week_end": "2022-04-23",
+      "actual": 942.0,
+      "prediction": 730.702773679676,
+      "selected_prediction": 730.702773679676,
+      "baseline": 503.75,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 643.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 494.2161268536603,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 4.394891047417011,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -3.904460928062715,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -11.674092473338519,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-04-17",
+      "origin_week": "2022-04-10",
+      "target_date": "2022-04-24",
+      "target_week_end": "2022-04-30",
+      "actual": 1003.0,
+      "prediction": 914.2163170626136,
+      "selected_prediction": 914.2163170626136,
+      "baseline": 582.0,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 734.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 662.0378163201071,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 4.394891047417011,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 8.091549116356575,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -7.978248601267214,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-04-24",
+      "origin_week": "2022-04-17",
+      "target_date": "2022-05-01",
+      "target_week_end": "2022-05-07",
+      "actual": 846.0,
+      "prediction": 1125.7285535715725,
+      "selected_prediction": 1125.7285535715725,
+      "baseline": 707.25,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 942.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 879.9437114697307,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 3.8605457773081766,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -0.8136086554482594,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -4.932404200018238,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-05-01",
+      "origin_week": "2022-04-24",
+      "target_date": "2022-05-08",
+      "target_week_end": "2022-05-14",
+      "actual": 1315.0,
+      "prediction": 1164.2997675179358,
+      "selected_prediction": 1164.2997675179358,
+      "baseline": 830.5,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 1003.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 904.9667299675307,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 5.270279964786377,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 0.2858911007212287,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 6.106557304897585,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-05-08",
+      "origin_week": "2022-05-01",
+      "target_date": "2022-05-15",
+      "target_week_end": "2022-05-21",
+      "actual": 1276.0,
+      "prediction": 938.6294256937247,
+      "selected_prediction": 938.6294256937247,
+      "baseline": 881.25,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 846.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 665.946815497047,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 4.046360614978685,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 14.562297396657485,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 6.403643005041513,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-05-15",
+      "origin_week": "2022-05-08",
+      "target_date": "2022-05-22",
+      "target_week_end": "2022-05-28",
+      "actual": 1567.0,
+      "prediction": 1429.7663664207926,
+      "selected_prediction": 1429.7663664207926,
+      "baseline": 1026.5,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 1315.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 1194.7850325062955,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 4.19943037973021,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -2.920291288501919,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -13.968114356731121,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-05-22",
+      "origin_week": "2022-05-15",
+      "target_date": "2022-05-29",
+      "target_week_end": "2022-06-04",
+      "actual": 1454.0,
+      "prediction": 1419.7988234117481,
+      "selected_prediction": 1419.7988234117481,
+      "baseline": 1110.0,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 1276.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 1157.7601126724053,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 3.8040210062694326,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 15.365339325161322,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -4.8009587720880535,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-05-29",
+      "origin_week": "2022-05-22",
+      "target_date": "2022-06-05",
+      "target_week_end": "2022-06-11",
+      "actual": 1460.0,
+      "prediction": 1649.2149203345912,
+      "selected_prediction": 1649.2149203345912,
+      "baseline": 1251.0,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 1567.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 1414.033086489859,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 3.5691782070195557,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 0.7910090595272267,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -16.848662601814492,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-06-05",
+      "origin_week": "2022-05-29",
+      "target_date": "2022-06-12",
+      "target_week_end": "2022-06-18",
+      "actual": 1254.0,
+      "prediction": 1419.7172017233872,
+      "selected_prediction": 1419.7172017233872,
+      "baseline": 1403.0,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 1454.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 1177.6816265841262,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 3.0273195443405183,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -4.264255833999698,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -4.397797751079598,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-06-12",
+      "origin_week": "2022-06-05",
+      "target_date": "2022-06-19",
+      "target_week_end": "2022-06-25",
+      "actual": 1172.0,
+      "prediction": 1312.2817231598383,
+      "selected_prediction": 1312.2817231598383,
+      "baseline": 1439.25,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 1460.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 1072.558677536108,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 0.8605669091979753,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 2.722479200909177,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -11.530309666376994,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-06-19",
+      "origin_week": "2022-06-12",
+      "target_date": "2022-06-26",
+      "target_week_end": "2022-07-02",
+      "actual": 1187.0,
+      "prediction": 1166.1648372488305,
+      "selected_prediction": 1166.1648372488305,
+      "baseline": 1433.75,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 1254.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 939.9464591377264,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -3.07130412379542,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -10.347730670404012,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -8.03289627469647,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-06-26",
+      "origin_week": "2022-06-19",
+      "target_date": "2022-07-03",
+      "target_week_end": "2022-07-09",
+      "actual": 1164.0,
+      "prediction": 1018.965008031226,
+      "selected_prediction": 1018.965008031226,
+      "baseline": 1335.0,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 1172.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 769.7088751773224,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -3.2113422383610923,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -1.0210635300730035,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 5.81822944233776,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-07-03",
+      "origin_week": "2022-06-26",
+      "target_date": "2022-07-10",
+      "target_week_end": "2022-07-16",
+      "actual": 918.0,
+      "prediction": 1077.5820798905572,
+      "selected_prediction": 1077.5820798905572,
+      "baseline": 1268.25,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 1187.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 802.5750018336529,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -2.0351510683176244,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -4.126478852015182,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 33.498398797237314,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-07-10",
+      "origin_week": "2022-07-03",
+      "target_date": "2022-07-17",
+      "target_week_end": "2022-07-23",
+      "actual": 1036.0,
+      "prediction": 1050.3266551526801,
+      "selected_prediction": 1050.3266551526801,
+      "baseline": 1194.25,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 1164.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 752.2559615800393,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -1.86822091021752,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 11.027619389039911,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 41.24098591381852,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-07-17",
+      "origin_week": "2022-07-10",
+      "target_date": "2022-07-24",
+      "target_week_end": "2022-07-30",
+      "actual": 1092.0,
+      "prediction": 853.6340643280892,
+      "selected_prediction": 853.6340643280892,
+      "baseline": 1110.25,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 918.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 607.7713332930239,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -2.934515494230147,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -1.4085579618681539,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 2.535495311163576,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-07-24",
+      "origin_week": "2022-07-17",
+      "target_date": "2022-07-31",
+      "target_week_end": "2022-08-06",
+      "actual": 896.0,
+      "prediction": 888.6285089137411,
+      "selected_prediction": 888.6285089137411,
+      "baseline": 1076.25,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 1036.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 671.9017361508265,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -8.691567814565637,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -11.305587591765606,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -10.946381010754262,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-07-31",
+      "origin_week": "2022-07-24",
+      "target_date": "2022-08-07",
+      "target_week_end": "2022-08-13",
+      "actual": 879.0,
+      "prediction": 1029.2720555193237,
+      "selected_prediction": 1029.2720555193237,
+      "baseline": 1052.5,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 1092.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 808.7196776178007,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -6.463115794441604,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -6.885297142559688,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -13.769518341475804,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-08-07",
+      "origin_week": "2022-07-31",
+      "target_date": "2022-08-14",
+      "target_week_end": "2022-08-20",
+      "actual": 679.0,
+      "prediction": 804.0837789284896,
+      "selected_prediction": 804.0837789284896,
+      "baseline": 985.5,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 896.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 583.7052685693411,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -7.7790187789036285,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -11.71402346320545,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -7.79875657874241,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-08-14",
+      "origin_week": "2022-08-07",
+      "target_date": "2022-08-21",
+      "target_week_end": "2022-08-27",
+      "actual": 662.0,
+      "prediction": 798.9369236563972,
+      "selected_prediction": 798.9369236563972,
+      "baseline": 975.75,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 879.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 568.9671571926272,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -7.573666149675869,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -5.846695204072979,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -4.280181362481079,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-08-21",
+      "origin_week": "2022-08-14",
+      "target_date": "2022-08-28",
+      "target_week_end": "2022-09-03",
+      "actual": 581.0,
+      "prediction": 572.4049886704563,
+      "selected_prediction": 572.4049886704563,
+      "baseline": 886.5,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 679.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 330.80030315407294,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -7.713704264241542,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -8.310049569560839,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 9.958130170185783,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-08-28",
+      "origin_week": "2022-08-21",
+      "target_date": "2022-09-04",
+      "target_week_end": "2022-09-10",
+      "actual": 570.0,
+      "prediction": 558.9104894861962,
+      "selected_prediction": 558.9104894861962,
+      "baseline": 779.0,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 662.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 312.4046818557095,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -9.262474166207676,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -7.372399448204288,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 15.470372064898674,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-09-04",
+      "origin_week": "2022-08-28",
+      "target_date": "2022-09-11",
+      "target_week_end": "2022-09-17",
+      "actual": 544.0,
+      "prediction": 475.14817721814677,
+      "selected_prediction": 475.14817721814677,
+      "baseline": 700.25,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 581.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 237.2247699452208,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -7.488188656392936,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -3.840055516685602,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 1.5813422660045284,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-09-11",
+      "origin_week": "2022-09-04",
+      "target_date": "2022-09-18",
+      "target_week_end": "2022-09-24",
+      "actual": 472.0,
+      "prediction": 490.9969342799685,
+      "selected_prediction": 490.9969342799685,
+      "baseline": 623.0,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 570.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 236.17920060973628,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -7.142797912599505,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 8.99341289141045,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 5.296809511421262,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-09-18",
+      "origin_week": "2022-09-11",
+      "target_date": "2022-09-25",
+      "target_week_end": "2022-10-01",
+      "actual": 426.0,
+      "prediction": 472.10937372270155,
+      "selected_prediction": 472.10937372270155,
+      "baseline": 589.25,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 544.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 216.46635543058153,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -4.485091966547828,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -6.0689799561085644,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 18.52678103477639,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-09-25",
+      "origin_week": "2022-09-18",
+      "target_date": "2022-10-02",
+      "target_week_end": "2022-10-08",
+      "actual": 397.0,
+      "prediction": 382.9039683200299,
+      "selected_prediction": 382.9039683200299,
+      "baseline": 541.75,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 472.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 134.24114092190615,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 4.687926954364841,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -8.121320045884518,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 4.425911309643343,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-10-02",
+      "origin_week": "2022-09-25",
+      "target_date": "2022-10-09",
+      "target_week_end": "2022-10-15",
+      "actual": 376.0,
+      "prediction": 351.77523875911913,
+      "selected_prediction": 351.77523875911913,
+      "baseline": 503.0,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 426.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 104.25316269553865,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 3.724602951418013,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -2.5084503152194357,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -1.3643857526180707,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-10-09",
+      "origin_week": "2022-10-02",
+      "target_date": "2022-10-16",
+      "target_week_end": "2022-10-22",
+      "actual": 373.0,
+      "prediction": 354.3384335218913,
+      "selected_prediction": 354.3384335218913,
+      "baseline": 459.75,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 397.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 89.76273593533875,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 5.068020224156387,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 8.605121744925151,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 3.232246437471019,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-10-16",
+      "origin_week": "2022-10-09",
+      "target_date": "2022-10-23",
+      "target_week_end": "2022-10-29",
+      "actual": 314.0,
+      "prediction": 319.5837171642043,
+      "selected_prediction": 319.5837171642043,
+      "baseline": 417.75,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 376.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 59.83337338997528,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": 6.293143986992803,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 15.909600078238912,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -10.122709471002734,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-10-23",
+      "origin_week": "2022-10-16",
+      "target_date": "2022-10-30",
+      "target_week_end": "2022-11-05",
+      "actual": 318.0,
+      "prediction": 338.41127580995834,
+      "selected_prediction": 338.41127580995834,
+      "baseline": 393.0,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 373.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 80.6705448816355,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -2.1721267051026034,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 14.437441078632103,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -2.1948926252066756,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-10-30",
+      "origin_week": "2022-10-23",
+      "target_date": "2022-11-06",
+      "target_week_end": "2022-11-12",
+      "actual": 294.0,
+      "prediction": 281.12519778446404,
+      "selected_prediction": 281.12519778446404,
+      "baseline": 365.0,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 314.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 33.28695170546041,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -0.9033679880253065,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 0.8656402265775003,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 0.20566466045140114,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-11-06",
+      "origin_week": "2022-10-30",
+      "target_date": "2022-11-13",
+      "target_week_end": "2022-11-19",
+      "actual": 315.0,
+      "prediction": 288.845752137865,
+      "selected_prediction": 288.845752137865,
+      "baseline": 345.25,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 318.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 35.566717213007216,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -0.9033679880253065,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 12.794575527653109,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -6.282481794770026,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-11-13",
+      "origin_week": "2022-11-06",
+      "target_date": "2022-11-20",
+      "target_week_end": "2022-11-26",
+      "actual": 265.0,
+      "prediction": 279.3510696989241,
+      "selected_prediction": 279.3510696989241,
+      "baseline": 324.75,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 294.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 34.4347200724817,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -1.265564279943262,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 1.1707397875125367,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -2.659135061126898,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-11-20",
+      "origin_week": "2022-11-13",
+      "target_date": "2022-11-27",
+      "target_week_end": "2022-12-03",
+      "actual": 242.0,
+      "prediction": 319.64993684045896,
+      "selected_prediction": 319.64993684045896,
+      "baseline": 310.25,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 315.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 64.2125322397355,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -1.265564279943262,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 8.4008439867954,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": 0.6318157138712664,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-11-27",
+      "origin_week": "2022-11-20",
+      "target_date": "2022-12-04",
+      "target_week_end": "2022-12-10",
+      "actual": 327.0,
+      "prediction": 278.9546628829539,
+      "selected_prediction": 278.9546628829539,
+      "baseline": 298.0,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 265.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 27.10751354079166,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -1.265564279943262,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 9.540703861902234,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -4.098299419796778,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-12-04",
+      "origin_week": "2022-11-27",
+      "target_date": "2022-12-11",
+      "target_week_end": "2022-12-17",
+      "actual": 290.0,
+      "prediction": 255.70226063086113,
+      "selected_prediction": 255.70226063086113,
+      "baseline": 279.0,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 242.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 1.4291128891069178,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -0.6408338700239737,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 9.247934881568355,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -2.0042624497902417,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-12-11",
+      "origin_week": "2022-12-04",
+      "target_date": "2022-12-18",
+      "target_week_end": "2022-12-24",
+      "actual": 270.0,
+      "prediction": 351.1477769278948,
+      "selected_prediction": 351.1477769278948,
+      "baseline": 287.25,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 327.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 110.57236545258137,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -1.47091690917102,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": -0.4147418455773032,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -5.209238949938269,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    },
+    {
+      "issue_date": "2022-12-18",
+      "origin_week": "2022-12-11",
+      "target_date": "2022-12-25",
+      "target_week_end": "2022-12-31",
+      "actual": 285.0,
+      "prediction": 319.244879352881,
+      "selected_prediction": 319.244879352881,
+      "baseline": 281.0,
+      "risk": "High",
+      "baseline_risk": "High",
+      "actual_risk": "High",
+      "origin_cases": 290.0,
+      "top_features": [
+        {
+          "feature": "Recent cases",
+          "value": 64.05693946257519,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Time of year",
+          "value": -0.20140432270770403,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Rain",
+          "value": 9.77021085964334,
+          "association": "associated with the prediction"
+        },
+        {
+          "feature": "Heat",
+          "value": -2.051175826629865,
+          "association": "associated with the prediction"
+        }
+      ],
+      "explanation_base": 247.67030918000003,
+      "explanation_remainder": 0.0,
+      "explanation_method": "Grouped TreeSHAP contributions"
+    }
+  ],
+  "feature_importance": [
+    {
+      "feature": "Recent cases",
+      "value": 389.049777393302
+    },
+    {
+      "feature": "Time of year",
+      "value": 3.2471571953793634
+    },
+    {
+      "feature": "Rain",
+      "value": 6.542612023598439
+    },
+    {
+      "feature": "Heat",
+      "value": 7.6314777906526725
+    }
+  ],
+  "features": [
+    "cases_current",
+    "cases_mean_4",
+    "cases_trend",
+    "cases_lag_1",
+    "cases_lag_2",
+    "cases_lag_3",
+    "cases_lag_4",
+    "cases_lag_5",
+    "cases_lag_6",
+    "cases_lag_7",
+    "cases_lag_8",
+    "rainfall_lag_1",
+    "rainfall_lag_2",
+    "rainfall_lag_3",
+    "rainfall_lag_4",
+    "rainfall_lag_5",
+    "rainfall_lag_6",
+    "rainfall_lag_7",
+    "rainfall_lag_8",
+    "temperature_lag_1",
+    "temperature_lag_2",
+    "temperature_lag_3",
+    "temperature_lag_4",
+    "temperature_lag_5",
+    "temperature_lag_6",
+    "temperature_lag_7",
+    "temperature_lag_8",
+    "humidity_lag_1",
+    "humidity_lag_2",
+    "humidity_lag_3",
+    "humidity_lag_4",
+    "humidity_lag_5",
+    "humidity_lag_6",
+    "humidity_lag_7",
+    "humidity_lag_8",
+    "season_sin",
+    "season_cos"
+  ],
+  "latest_label": "2022-12-31",
+  "current_forecast": {
+    "available": false,
+    "reason": "latest complete label is 1363 days old",
+    "mode": "historical_backtest",
+    "latest_label_week_end": "2022-12-31",
+    "max_age_days": 21,
+    "source": "data.gov.sg"
+  },
+  "limitations": [
+    "2022 was viewed in earlier revisions. This revision fixes selection using only 2019\u20132021, then evaluates once on 2022.",
+    "Historical issue dates assume the preceding week's case total was available immediately; publication delays are not known.",
+    "Area priorities have no historical local outcome labels and no local forecast accuracy can be measured.",
+    "Feature contributions describe associations; Heat combines temperature and humidity.",
+    "High means above the pre-evaluation training distribution's upper third; it is not an official outbreak threshold.",
+    "Lead time is descriptive of one replay, not evidence that every outbreak can be predicted this far ahead."
+  ],
+  "synthetic_data": false,
+  "run_id": "ef02042b46d74bde9e46c60962f71e1c"
+}

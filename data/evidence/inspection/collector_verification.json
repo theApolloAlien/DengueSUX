@@ -1,0 +1,9 @@
+{
+  "atomic_download_fixture_passed": true,
+  "receipt_verified_after_download": true,
+  "temporary_file_removed": true,
+  "signed_download_url_not_retained": true,
+  "verified_real_sources_reused_without_network": 7,
+  "corrupt_raw_checksum_rejected": true,
+  "raw_sources_unchanged": true
+}

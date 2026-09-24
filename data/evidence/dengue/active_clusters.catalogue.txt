@@ -1,0 +1,184 @@
+Dengue Clusters (GEOJSON) | NEA | data.gov.sg
+A Singapore Government Agency Website
+How to identify
+Official website links end with .gov.sg
+Government agencies communicate via .gov.sg websites (e.g. go.gov.sg/open).
+Trusted websites
+Secure websites use HTTPS
+Look for a
+lock
+(
+) or https:// as an added precaution. Share sensitive information only on official, secure websites.
+Scam alert
+Government officers will never ask you to send money or share your details over the phone.
+When unsure, hang up and call Scamshield at 1799.
+Search for datasets
+Open main menu
+Datasets
+Guide
+Feedback
+Log in
+Datasets
+Agencies
+Guide
+Log in
+Feedback
+Product status
+Report card
+Open Data Licence
+Privacy & Terms
+Environment
+Geospatial
+Dengue Clusters (GEOJSON)
+NEA
+(
+National Environment Agency
+)
+Access up-to-date dengue cluster data in Singapore with this GEOJSON file from the National Environment Agency (NEA). This dataset provides geospatial polygon boundaries of active dengue clusters, along with key metadata such as case count and locality. Visit
+https://www.nea.gov.sg/dengue-zika/dengue/dengue-clusters
+for more details.
+Data from Nov 2025
+Last updated
+1 day ago (23 Sep 2026)
+See history
+Download
+GEOJSON
+(23 KB)
+Data from Nov 2025
+Last updated
+1 day ago (23 Sep 2026)
+See history
+‌
+Attribute Legend
+Attributes
+Data Type
+Description
+OBJECTID
+Numeric
+-
+LOCALITY
+Text
+-
+CASE_SIZE
+Numeric
+-
+NAME
+Text
+-
+HYPERLINK
+Text
+-
+HOMES
+Numeric
+-
+PUBLIC_PLACES
+Numeric
+-
+CONSTRUCTION_SITES
+Numeric
+-
+INC_CRC
+Text
+-
+FMEL_UPD_D
+Numeric
+-
+SHAPE.AREA
+Numeric
+-
+SHAPE.LEN
+Numeric
+-
+[Dataset preview omitted; full downloaded file retained]
+Sample OpenAPI query
+This code can be used to test a sample API query. It retrieves the data catalogue of this dataset. For a complete guide on query parameters and syntax, please refer to the
+API documentation
+Adding an API key gives you higher
+rate limits
+and priority support.
+Log in
+to create your API key.
+Python
+Copy
+import
+requests
+dataset_id
+=
+"d_dbfabf16158d1b0e1c420627c0819168"
+url
+=
+"https://api-open.data.gov.sg/v1/public/api/datasets/"
++
+dataset_id
++
+"/poll-download"
+response
+=
+requests
+.
+get
+(url)
+json_data
+=
+response
+.
+json
+()
+if
+json_data
+[
+'code'
+]
+!=
+0
+:
+print
+(json_data[
+'errMsg'
+])
+exit
+(
+1
+)
+url
+=
+json_data
+[
+'data'
+]
+[
+'url'
+]
+response
+=
+requests
+.
+get
+(url)
+print
+(response.text)
+Citation
+This dataset can be reused and cited in research publications.
+APA
+Copy
+National Environment Agency. (2020). Dengue Clusters (GEOJSON) (2026) [Dataset]. data.gov.sg. Retrieved September 24, 2026 from https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view
+About this dataset
+Contact
+feedback@data.gov.sg
+Created on
+20 Sep 2020
+Licence
+Free forever for personal or commercial use, under the
+Open Data Licence
+.
+Agency
+NEA (National Environment Agency)
+Feedback
+Product status
+Report card
+Open Data Licence
+Privacy & Terms
+©
+2026
+Open Government Products
+Search for datasets

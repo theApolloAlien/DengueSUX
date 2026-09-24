@@ -1,0 +1,176 @@
+Master Plan 2025 Planning Area Boundary (No Sea) | URA | data.gov.sg
+A Singapore Government Agency Website
+How to identify
+Official website links end with .gov.sg
+Government agencies communicate via .gov.sg websites (e.g. go.gov.sg/open).
+Trusted websites
+Secure websites use HTTPS
+Look for a
+lock
+(
+) or https:// as an added precaution. Share sensitive information only on official, secure websites.
+Scam alert
+Government officers will never ask you to send money or share your details over the phone.
+When unsure, hang up and call Scamshield at 1799.
+Search for datasets
+Open main menu
+Datasets
+Guide
+Feedback
+Log in
+Datasets
+Agencies
+Guide
+Log in
+Feedback
+Product status
+Report card
+Open Data Licence
+Privacy & Terms
+Housing
+Geospatial
+Master Plan 2025 Planning Area Boundary (No Sea)
+URA
+(
+Urban Redevelopment Authority
+)
+Indicative polygon of planning area boundary with sea area excluded. To facilitate urban planning, the Urban Redevelopment Authority (URA) divides Singapore into regions and planning areas. The Master Plan is a forward looking guiding plan for Singapore's development in the medium term over the next 10 to 15 years and the planning boundaries may not coincide with existing developments for some areas.
+Data from Dec 2025
+Last updated
+6 months ago (27 Feb 2026)
+See history
+Download
+GEOJSON
+(2.1 MB)
+Data from Dec 2025
+Last updated
+6 months ago (27 Feb 2026)
+See history
+‌
+Attribute Legend
+Attributes
+Data Type
+Description
+OBJECTID
+Numeric
+-
+PLN_AREA_N
+Text
+-
+PLN_AREA_C
+Text
+-
+CA_IND
+Text
+-
+REGION_N
+Text
+-
+REGION_C
+Text
+-
+INC_CRC
+Text
+-
+FMEL_UPD_D
+Numeric
+-
+SHAPE.AREA
+Numeric
+-
+SHAPE.LEN
+Numeric
+-
+[Dataset preview omitted; full downloaded file retained]
+Sample OpenAPI query
+This code can be used to test a sample API query. It retrieves the data catalogue of this dataset. For a complete guide on query parameters and syntax, please refer to the
+API documentation
+Adding an API key gives you higher
+rate limits
+and priority support.
+Log in
+to create your API key.
+Python
+Copy
+import
+requests
+dataset_id
+=
+"d_2cc750190544007400b2cfd5d7f53209"
+url
+=
+"https://api-open.data.gov.sg/v1/public/api/datasets/"
++
+dataset_id
++
+"/poll-download"
+response
+=
+requests
+.
+get
+(url)
+json_data
+=
+response
+.
+json
+()
+if
+json_data
+[
+'code'
+]
+!=
+0
+:
+print
+(json_data[
+'errMsg'
+])
+exit
+(
+1
+)
+url
+=
+json_data
+[
+'data'
+]
+[
+'url'
+]
+response
+=
+requests
+.
+get
+(url)
+print
+(response.text)
+Citation
+This dataset can be reused and cited in research publications.
+APA
+Copy
+Urban Redevelopment Authority. (2026). Master Plan 2025 Planning Area Boundary (No Sea) (2026) [Dataset]. data.gov.sg. Retrieved September 24, 2026 from https://data.gov.sg/datasets/d_2cc750190544007400b2cfd5d7f53209/view
+About this dataset
+Contact
+feedback@data.gov.sg
+Created on
+19 Jan 2026
+Licence
+Free forever for personal or commercial use, under the
+Open Data Licence
+.
+Agency
+URA (Urban Redevelopment Authority)
+Feedback
+Product status
+Report card
+Open Data Licence
+Privacy & Terms
+©
+2026
+Open Government Products
+Search for datasets

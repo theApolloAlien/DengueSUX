@@ -1,0 +1,101 @@
+{
+  "checks": [
+    {
+      "label": "Data ready with busy state cleared",
+      "ok": true
+    },
+    {
+      "label": "Empty recovery shown",
+      "ok": true
+    },
+    {
+      "label": "Search reset shows 55 areas",
+      "ok": true
+    },
+    {
+      "label": "Selection changes detail",
+      "ok": true
+    },
+    {
+      "label": "Plan shown",
+      "ok": true
+    },
+    {
+      "label": "Plan contains checks",
+      "ok": true
+    },
+    {
+      "label": "Progress updates",
+      "ok": true
+    },
+    {
+      "label": "Progress restored",
+      "ok": true
+    },
+    {
+      "label": "Notice copy available",
+      "ok": true
+    },
+    {
+      "label": "Forecast navigation",
+      "ok": true
+    },
+    {
+      "label": "Timeline chooses final week",
+      "ok": true
+    },
+    {
+      "label": "Replay advances",
+      "ok": true
+    },
+    {
+      "label": "Source-date button opens explanation",
+      "ok": true
+    },
+    {
+      "label": "Assistant responds",
+      "ok": true
+    },
+    {
+      "label": "No horizontal overflow at 900",
+      "ok": true
+    },
+    {
+      "label": "No horizontal overflow at 390",
+      "ok": true
+    },
+    {
+      "label": "Mobile drawer focuses search",
+      "ok": true
+    },
+    {
+      "label": "Drawer closes and restores focus",
+      "ok": true
+    },
+    {
+      "label": "No horizontal overflow at 325",
+      "ok": true
+    },
+    {
+      "label": "Reduced motion disables entrances",
+      "ok": true
+    },
+    {
+      "label": "Loading state exposed",
+      "ok": true
+    },
+    {
+      "label": "Error clears busy state",
+      "ok": true
+    },
+    {
+      "label": "Standalone includes polish",
+      "ok": true
+    },
+    {
+      "label": "No uncaught JS errors",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

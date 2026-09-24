@@ -1,0 +1,17 @@
+{
+  "source_url": "https://data.gov.sg/datasets/d_ac1eecf0886ff0bceefbc51556247015/view",
+  "source_ui": "See history",
+  "action_name": "getDatasetIngestionSuccessHistory",
+  "retrieved_at_utc": "2026-09-24T03:38:41.281280+00:00",
+  "response_sha256": "af581b4300fe6e3921b87c17a3dfa1eb619d6a712b49246100cfe7e761324212",
+  "history": {
+    "versions": [
+      {
+        "version": 1,
+        "updatedAt": 1717656824538,
+        "status": "INGESTION_SUCCESS"
+      }
+    ]
+  },
+  "limitation": "Ingestion timestamps only; no historical data files or case observation periods supplied by this UI."
+}

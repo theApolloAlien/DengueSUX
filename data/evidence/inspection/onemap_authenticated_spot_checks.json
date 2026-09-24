@@ -1,0 +1,86 @@
+[
+  {
+    "query": "117 HO CHING ROAD",
+    "source_url": "https://www.onemap.gov.sg/api/common/elastic/search",
+    "retrieved_at_utc": "2026-09-24T06:06:42.343124+00:00",
+    "http_status": 200,
+    "authentication_valid": true,
+    "response_error_field_present": false,
+    "response_sha256": "9e5ded0d6c2571999e29dbfc42c30fd327a4a5824ab35c3439a3d181cde614d8",
+    "exact_block_street_matches": 1,
+    "usable_for_geocoding": true,
+    "matches_pipeline_geocode": true,
+    "matching_results": [
+      {
+        "SEARCHVAL": "117 HO CHING ROAD SINGAPORE 610117",
+        "BLK_NO": "117",
+        "ROAD_NAME": "HO CHING ROAD",
+        "BUILDING": "NIL",
+        "ADDRESS": "117 HO CHING ROAD SINGAPORE 610117",
+        "POSTAL": "610117",
+        "X": "15730.83684649225",
+        "Y": "35254.0289777182",
+        "LATITUDE": "1.335096949269254",
+        "LONGITUDE": "103.7230731509349"
+      }
+    ],
+    "spot_check": "Independent authenticated request; exact source block/street, coordinates and pipeline pin compared.",
+    "inside_nearest_cluster_polygon": true
+  },
+  {
+    "query": "335 KANG CHING ROAD",
+    "source_url": "https://www.onemap.gov.sg/api/common/elastic/search",
+    "retrieved_at_utc": "2026-09-24T06:06:45.449025+00:00",
+    "http_status": 200,
+    "authentication_valid": true,
+    "response_error_field_present": false,
+    "response_sha256": "769195b5ba287196a1ee3f9f9f63443aa2d96ef68491ec13cd370045183d5bd9",
+    "exact_block_street_matches": 1,
+    "usable_for_geocoding": true,
+    "matches_pipeline_geocode": true,
+    "matching_results": [
+      {
+        "SEARCHVAL": "335 KANG CHING ROAD SINGAPORE 610335",
+        "BLK_NO": "335",
+        "ROAD_NAME": "KANG CHING ROAD",
+        "BUILDING": "NIL",
+        "ADDRESS": "335 KANG CHING ROAD SINGAPORE 610335",
+        "POSTAL": "610335",
+        "X": "15738.99079916161",
+        "Y": "35690.32837267779",
+        "LATITUDE": "1.339042682212269",
+        "LONGITUDE": "103.7231462428327"
+      }
+    ],
+    "spot_check": "Independent authenticated request; exact source block/street, coordinates and pipeline pin compared.",
+    "inside_nearest_cluster_polygon": true
+  },
+  {
+    "query": "321 TAH CHING ROAD",
+    "source_url": "https://www.onemap.gov.sg/api/common/elastic/search",
+    "retrieved_at_utc": "2026-09-24T06:06:48.589466+00:00",
+    "http_status": 200,
+    "authentication_valid": true,
+    "response_error_field_present": false,
+    "response_sha256": "ed84b6e1c7610ced911ece1827b0f596ab5a5fbdebe028d71f4994f190284190",
+    "exact_block_street_matches": 1,
+    "usable_for_geocoding": true,
+    "matches_pipeline_geocode": true,
+    "matching_results": [
+      {
+        "SEARCHVAL": "321 TAH CHING ROAD SINGAPORE 610321",
+        "BLK_NO": "321",
+        "ROAD_NAME": "TAH CHING ROAD",
+        "BUILDING": "NIL",
+        "ADDRESS": "321 TAH CHING ROAD SINGAPORE 610321",
+        "POSTAL": "610321",
+        "X": "15873.56258771662",
+        "Y": "35494.49155176431",
+        "LATITUDE": "1.337271661097009",
+        "LONGITUDE": "103.7243555257174"
+      }
+    ],
+    "spot_check": "Independent authenticated request; exact source block/street, coordinates and pipeline pin compared.",
+    "inside_nearest_cluster_polygon": true
+  }
+]

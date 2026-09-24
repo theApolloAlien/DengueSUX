@@ -1,0 +1,1037 @@
+{
+  "metric": "relative-humidity",
+  "requested_date": "2026-09-23",
+  "scope": "complete paginated V2 day",
+  "complete": true,
+  "page_count": 58,
+  "pages": [
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:36:53.267952+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_0000000000000000.json",
+      "bytes": 18488,
+      "sha256": "14975c24c9f626cf5e9bc3e3ad9870e1c64c6895831d16c01df09da0205c66f2",
+      "pagination_token": null
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTI1",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:36:55.458919+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_9a6da57f55fbe1d4.json",
+      "bytes": 18510,
+      "sha256": "85c993543fbca614a20cb6881bd7e1171af9f796cfd646b5ebedd0d8e3fb1773",
+      "pagination_token": "b2Zmc2V0PTI1"
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTUw",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:36:58.077727+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_812ed87910af6919.json",
+      "bytes": 18508,
+      "sha256": "a973ad12be61003aed3dfcd8f1ca04accec802b91cb7f1ac5a7afc3a9a4c0c19",
+      "pagination_token": "b2Zmc2V0PTUw"
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTc1",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:00.699842+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_dc1283f1728d66ab.json",
+      "bytes": 18507,
+      "sha256": "797e62a5d88b0bad8ef310d99a94bbae745511a2cdcbd63eb11714be77d5b4d4",
+      "pagination_token": "b2Zmc2V0PTc1"
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTEwMA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:03.385897+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_b49950aaae84c403.json",
+      "bytes": 18505,
+      "sha256": "651b0edb8760c623785ac77b65e2887b3417172c39a44d37bbafb3769e43de8e",
+      "pagination_token": "b2Zmc2V0PTEwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTEyNQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:05.965557+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_efc4a4870427730b.json",
+      "bytes": 18474,
+      "sha256": "6b6df52771b252ccaf9cec68755e4e9d18c21dae23984cbbe15fd6a09e8979b1",
+      "pagination_token": "b2Zmc2V0PTEyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTE1MA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:08.524817+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_1eb43e5bd78b0dad.json",
+      "bytes": 18490,
+      "sha256": "e5f59e41013b9a0c017ea941e06e468bcf801b3f059e04129d86102fe208bfe1",
+      "pagination_token": "b2Zmc2V0PTE1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTE3NQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:11.120187+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_19e99aa3209b6f13.json",
+      "bytes": 18490,
+      "sha256": "c4cefe61c3e22a53736a54af3a20e4ac2c6c58759d542ce0b253c6cd96ea55ac",
+      "pagination_token": "b2Zmc2V0PTE3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTIwMA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:13.715427+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_538f7d19d85190ed.json",
+      "bytes": 18518,
+      "sha256": "b006e51e0d71a7dcfdf2a6e9f7395b41aad73bd0a0a498a123467ebabc3339fa",
+      "pagination_token": "b2Zmc2V0PTIwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTIyNQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:16.430339+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_071ce00a9e965991.json",
+      "bytes": 18494,
+      "sha256": "358c15fa47fec89a57146856f275a56fc0ce1845865c2821560586a35ea64ea5",
+      "pagination_token": "b2Zmc2V0PTIyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTI1MA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:19.049776+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_d1ce1f3f1ea73cdd.json",
+      "bytes": 18474,
+      "sha256": "d752dac6f1221bc259e62dce3a38af9ba2e8965773165375e8f475e8d387bb5a",
+      "pagination_token": "b2Zmc2V0PTI1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTI3NQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:21.540622+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_a3635b6c90cf3d6d.json",
+      "bytes": 18470,
+      "sha256": "211a118399a0d8b4ef0cc688c207ac617d08e2fb0186f7e05a284cdfdb50b21e",
+      "pagination_token": "b2Zmc2V0PTI3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTMwMA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:24.116594+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_95e39dba49eadaeb.json",
+      "bytes": 18512,
+      "sha256": "cb0b008397e0189c6025084502a72232a1f72bf57fdbefdf5e45b7420dddf468",
+      "pagination_token": "b2Zmc2V0PTMwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTMyNQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:26.836247+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_f8c8d7dff997f6af.json",
+      "bytes": 18470,
+      "sha256": "1c4797e594b65a844293ab9c5092edc59bb94917f6d703a29e3f2fded64cbaf5",
+      "pagination_token": "b2Zmc2V0PTMyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTM1MA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:29.284510+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_ae91988eb40dfd51.json",
+      "bytes": 18500,
+      "sha256": "096ee497dbc4793f88827520a21daaceea3ec80c73962ba5d0f09836afc42c6b",
+      "pagination_token": "b2Zmc2V0PTM1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTM3NQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:31.981167+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_07c23dc0002e4926.json",
+      "bytes": 18490,
+      "sha256": "e77f286657b4d7d309764fef686410908660ee0dcdfe8521faf5e33ac769d19d",
+      "pagination_token": "b2Zmc2V0PTM3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTQwMA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:34.603190+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_1531d89d7c8edadb.json",
+      "bytes": 18486,
+      "sha256": "c5fcd48b9aa8c59d24de633a1d4cd34b6ff10ebb7d92f5894de857339f7e5d71",
+      "pagination_token": "b2Zmc2V0PTQwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTQyNQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:37.099870+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_6a3a9a48b84fbcec.json",
+      "bytes": 17499,
+      "sha256": "4a9c37facb7324fd0b166a9dd54310d962c53a0f0b7a560b5a8f83da942bc9a2",
+      "pagination_token": "b2Zmc2V0PTQyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTQ1MA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:39.750991+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_1ecea4024364ede7.json",
+      "bytes": 17462,
+      "sha256": "9f8e91314cca75913d605b6cb50ee85d5178f31e5bd6fce6ef8ccda66dbe4476",
+      "pagination_token": "b2Zmc2V0PTQ1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTQ3NQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:42.333781+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_4a1c7306390a1b0a.json",
+      "bytes": 17569,
+      "sha256": "90225b2d2f9ccac13774beebe19b4a9f3f56ffd73040b3c81c5dd73a88dc8037",
+      "pagination_token": "b2Zmc2V0PTQ3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTUwMA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:44.947792+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_21471e8916067ad1.json",
+      "bytes": 18258,
+      "sha256": "c3dae61d87d1101c301ac65606cc4e469035ed7ccce606386a25f47dc17b8d34",
+      "pagination_token": "b2Zmc2V0PTUwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTUyNQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:47.551575+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_8fade8990b918fea.json",
+      "bytes": 17547,
+      "sha256": "7dd0ce7cc53b6a7de6ac0f131aaceb76a1b4fb5875ceb862c9480471f1e947ee",
+      "pagination_token": "b2Zmc2V0PTUyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTU1MA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:50.133716+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_1fa264771d08f83d.json",
+      "bytes": 17565,
+      "sha256": "dcc01ff3d915a610c7863a0907b83a206459e01517d587fe539fec5749fea446",
+      "pagination_token": "b2Zmc2V0PTU1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTU3NQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:52.757531+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_fb05dd6349f6b143.json",
+      "bytes": 17555,
+      "sha256": "11090754a7fe312db34ae22e9392f0ba6f623c5c055fc0677a638343a0ae4c4a",
+      "pagination_token": "b2Zmc2V0PTU3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTYwMA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:55.383825+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_992f72be0756987a.json",
+      "bytes": 17561,
+      "sha256": "0593349951e09499ad152aba9ca0d129141244529298ae9cbfc67b85b726fa18",
+      "pagination_token": "b2Zmc2V0PTYwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTYyNQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:37:57.951852+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_25ffe8255834e7b9.json",
+      "bytes": 17571,
+      "sha256": "0c1e4d6fa8242e9b3d377f23d5bfcf34d24d59219db1e8b103482fed2ed284c6",
+      "pagination_token": "b2Zmc2V0PTYyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTY1MA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:00.630845+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_5ea3000d12538e26.json",
+      "bytes": 17553,
+      "sha256": "c12c9916ef823783686aaa4045c620311b90b2047fc33b9e25f3351b66b8a7eb",
+      "pagination_token": "b2Zmc2V0PTY1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTY3NQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:03.173714+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_a5a3ef4ceec1fd64.json",
+      "bytes": 17575,
+      "sha256": "e269427d9f26b1a76a148ec082ae7609f989e68bccf03cbee90f993dba8a6d9b",
+      "pagination_token": "b2Zmc2V0PTY3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTcwMA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:05.828351+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_d83bb366e520fd1d.json",
+      "bytes": 17563,
+      "sha256": "5ef06d96b1e7663df1c6b041cb8fa69bd20aa702c2a2ff8b1b330f7a2aa674f4",
+      "pagination_token": "b2Zmc2V0PTcwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTcyNQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:08.400554+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_05e5c827a2f87b46.json",
+      "bytes": 18468,
+      "sha256": "5f999f20464483714b720e57b8f6eadeedf0c5574a903b6c30f71aae610ba140",
+      "pagination_token": "b2Zmc2V0PTcyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTc1MA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:11.050305+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_f7f2d1dbdd038f54.json",
+      "bytes": 18484,
+      "sha256": "1e185631b0825cd604eb7c1e1d1808fb77fc95e00371348f717232017592240d",
+      "pagination_token": "b2Zmc2V0PTc1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTc3NQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:13.677533+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_6ace2120a38fb62c.json",
+      "bytes": 18486,
+      "sha256": "0b77a639eba2a22406b52ec134e706294440f2e11a19f673a435917405b10c81",
+      "pagination_token": "b2Zmc2V0PTc3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTgwMA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:16.346487+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_b0c534b310878d41.json",
+      "bytes": 18496,
+      "sha256": "0958e7bbc954a7906e65365825445461f62e8a27b4e3cf4c675b924c7fcca409",
+      "pagination_token": "b2Zmc2V0PTgwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTgyNQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:18.875795+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_c64f74e509072cba.json",
+      "bytes": 18486,
+      "sha256": "c90151e0132b59880cdad8e81b484bd7bc5bac252ca6705dda12d2b90cb5aacb",
+      "pagination_token": "b2Zmc2V0PTgyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTg1MA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:21.474390+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_ad195a29f24f854c.json",
+      "bytes": 18494,
+      "sha256": "5c787c2f837221ef1e58a0a92cb43ecb2d0aa466ea27295567e52df33deee448",
+      "pagination_token": "b2Zmc2V0PTg1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTg3NQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:24.099096+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_670fd15609ad2cc9.json",
+      "bytes": 18494,
+      "sha256": "38ca6d15fc2c26b9c70402943381b74bba7aa60555f1b1ce31192f408c4dafcc",
+      "pagination_token": "b2Zmc2V0PTg3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTkwMA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:26.774147+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_0550f939ca8637ac.json",
+      "bytes": 18466,
+      "sha256": "96a91423c70dc1215604bc0da873392c10e74e1cfa1ef6c48a8abed5b45619ac",
+      "pagination_token": "b2Zmc2V0PTkwMA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTkyNQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:29.306754+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_455b7823391806a2.json",
+      "bytes": 17609,
+      "sha256": "0daa1cec9a9506b3a5cdd9b3455b89f61fb927171cd43127b968ca21d227e154",
+      "pagination_token": "b2Zmc2V0PTkyNQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTk1MA%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:31.930769+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_fce5b165689aeb90.json",
+      "bytes": 17451,
+      "sha256": "1665d445064155777f7aedbd419ec7771c8d078b13ca19030e0fe63f7d7e6eee",
+      "pagination_token": "b2Zmc2V0PTk1MA=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTk3NQ%3D%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:34.534267+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_2e27cfc7b965c06e.json",
+      "bytes": 17509,
+      "sha256": "78d77e2addbdcfb52371d7dacd170d825d9ad15652def9f890f542e84d931b1e",
+      "pagination_token": "b2Zmc2V0PTk3NQ=="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTEwMDA%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:37.143900+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_8689a203b4d8a867.json",
+      "bytes": 17505,
+      "sha256": "0415c4f798c559bab1cc19e0e4f4e2caa04e14adb75ba6b11b34523e47eaaa5e",
+      "pagination_token": "b2Zmc2V0PTEwMDA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTEwMjU%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:39.833721+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_964b28bf993a2411.json",
+      "bytes": 17531,
+      "sha256": "521fcee249ec2e45d33c0fc39e25cb013eb5f21f45ba7582b7f0e3fd85ec7eb0",
+      "pagination_token": "b2Zmc2V0PTEwMjU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTEwNTA%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:42.379789+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_2a865b587ad93cc0.json",
+      "bytes": 17513,
+      "sha256": "95a010bca89803a85b5a3a3a22f4639a6b400250285e3e75f8c8ed9ef4e56dcc",
+      "pagination_token": "b2Zmc2V0PTEwNTA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTEwNzU%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:44.930289+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_59a56648c49e338c.json",
+      "bytes": 17515,
+      "sha256": "104c0452e43ba09e913833fbd0b4d45cdfa660b9960751c2cf2ddfeae1c209bc",
+      "pagination_token": "b2Zmc2V0PTEwNzU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTExMDA%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:47.605455+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_36eb896fe5803c2a.json",
+      "bytes": 17481,
+      "sha256": "57b39291ec7681db7eed78e0d076d73a904217057bb3c9d5d734f4a49547fe8b",
+      "pagination_token": "b2Zmc2V0PTExMDA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTExMjU%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:50.262962+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_cbe57be94ec13e3b.json",
+      "bytes": 17481,
+      "sha256": "6b36b37ef4fc26d74711a9c21a745419d54fd80bd6e2ae216a68744a9ebd12af",
+      "pagination_token": "b2Zmc2V0PTExMjU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTExNTA%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:52.755769+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_9eccfc1fa6364194.json",
+      "bytes": 17479,
+      "sha256": "27ac347dd7620711991371508f6a5a5395967d16ff3a9983f8af512106d06e11",
+      "pagination_token": "b2Zmc2V0PTExNTA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTExNzU%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:55.413677+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_25720b6f8a7a66d8.json",
+      "bytes": 17463,
+      "sha256": "67b2f2c8f3ed239caf115391725035f064106a400119151ebb7c6bc4b4508e58",
+      "pagination_token": "b2Zmc2V0PTExNzU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTEyMDA%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:38:57.996100+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_1975ca5b737b0123.json",
+      "bytes": 17515,
+      "sha256": "30a1a6f20949b72443ac72091da8d0bf81008d59675a76600f85213ddf095e14",
+      "pagination_token": "b2Zmc2V0PTEyMDA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTEyMjU%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:39:00.622781+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_f1880ef6771f4b11.json",
+      "bytes": 17511,
+      "sha256": "948bf0b812680f08a44bda9cf3abfae8dd7aeb096771d4a610c973c49fa1d75f",
+      "pagination_token": "b2Zmc2V0PTEyMjU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTEyNTA%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:39:03.296143+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_74db2ac84f18837a.json",
+      "bytes": 17537,
+      "sha256": "eb859e98694fa875224dfd529fef4402ed78e4cc87b29848125656a67677548c",
+      "pagination_token": "b2Zmc2V0PTEyNTA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTEyNzU%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:39:05.843510+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_834ccc1aa9a81741.json",
+      "bytes": 17517,
+      "sha256": "9d2e193db1ab29cd6ded8481f8e94d76a84f0433695296929fa0284aed7715e3",
+      "pagination_token": "b2Zmc2V0PTEyNzU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTEzMDA%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:39:08.547136+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_04e534aad5bbbeeb.json",
+      "bytes": 17509,
+      "sha256": "aed9e99bc9fc94aa03ddb6d17e9b32d255f9dc4265c8b926cf223786fb8e4f8b",
+      "pagination_token": "b2Zmc2V0PTEzMDA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTEzMjU%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:39:11.069473+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_facecfb7591d0eab.json",
+      "bytes": 17497,
+      "sha256": "8b1f810ea2d3b3d7fc4cf056307d1e26871160ef911f043e0b28d77104d2859a",
+      "pagination_token": "b2Zmc2V0PTEzMjU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTEzNTA%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:39:14.042560+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_864f4c4408fa775d.json",
+      "bytes": 17465,
+      "sha256": "1ed5b4fa77dcc9fdadb921ebb8a58e001f13f6ac2113185931d682d7d24f57b7",
+      "pagination_token": "b2Zmc2V0PTEzNTA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTEzNzU%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:39:16.615076+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_8ceb539997b47306.json",
+      "bytes": 17495,
+      "sha256": "0c1c782c3fd1a53ca5ab8ddcad498e33836a3680f3796dbcf667d20bf004ace2",
+      "pagination_token": "b2Zmc2V0PTEzNzU="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTE0MDA%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:39:19.196391+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_9e31360cb4fa4ba0.json",
+      "bytes": 17521,
+      "sha256": "75327b165ebc46e29fe3572ddf30dfa05762d8bbe19471d6cfa369032fff77d8",
+      "pagination_token": "b2Zmc2V0PTE0MDA="
+    },
+    {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2026-09-23&paginationToken=b2Zmc2V0PTE0MjU%3D",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:39:21.704533+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2026-09-23",
+      "path": "data/raw/weather/relative-humidity/2026-09-23/page_9360c2bf6a209059.json",
+      "bytes": 9464,
+      "sha256": "26626617e655af612e597c6338fc5212b910c6b7a6e677dac526a649819459cf",
+      "pagination_token": "b2Zmc2V0PTE0MjU="
+    }
+  ],
+  "timestamp_records": 1437,
+  "distinct_timestamps": 1437,
+  "station_measurements": 25054,
+  "stations_in_metadata": 18,
+  "stations_with_readings": 18,
+  "start": "2026-09-23T00:00:00+08:00",
+  "end": "2026-09-23T23:59:00+08:00",
+  "null_readings": 0,
+  "invalid_numeric_readings": 0,
+  "out_of_range_readings": 0,
+  "range_rule": "rainfall >=0; humidity 0..100; temperature -10..60 (screen only)",
+  "duplicate_station_timestamp_excess": 0,
+  "duplicate_timestamp_records": 0,
+  "unknown_station_ids": 0,
+  "wrong_requested_date_timestamps": 0,
+  "station_metadata_conflicts": [],
+  "min_value": 52.4,
+  "max_value": 100,
+  "max_network_gap_seconds": 120.0,
+  "gaps_above_nominal": 3,
+  "nominal_timestamps_per_day": 1440,
+  "station_coverage": [
+    {
+      "station_id": "S06",
+      "measurements": 1437,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S102",
+      "measurements": 1437,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S104",
+      "measurements": 1436,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S106",
+      "measurements": 930,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T08:28:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S107",
+      "measurements": 1400,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 540.0
+    },
+    {
+      "station_id": "S109",
+      "measurements": 1437,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S111",
+      "measurements": 1436,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S115",
+      "measurements": 1437,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S116",
+      "measurements": 1437,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S117",
+      "measurements": 1436,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S121",
+      "measurements": 1436,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S23",
+      "measurements": 1437,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S24",
+      "measurements": 1380,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 1200.0
+    },
+    {
+      "station_id": "S43",
+      "measurements": 1436,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S44",
+      "measurements": 1232,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 12360.0
+    },
+    {
+      "station_id": "S50",
+      "measurements": 1436,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S60",
+      "measurements": 1437,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    },
+    {
+      "station_id": "S80",
+      "measurements": 1437,
+      "expected_nominal": 1440,
+      "start": "2026-09-23T00:00:00+08:00",
+      "end": "2026-09-23T23:59:00+08:00",
+      "max_gap_seconds": 120.0
+    }
+  ],
+  "stations": [
+    {
+      "id": "S109",
+      "deviceId": "S109",
+      "name": "Ang Mo Kio Avenue 5",
+      "location": {
+        "latitude": 1.3793,
+        "longitude": 103.85
+      }
+    },
+    {
+      "id": "S106",
+      "deviceId": "S106",
+      "name": "Jalan Noordin (Pulau Ubin)",
+      "location": {
+        "latitude": 1.4168,
+        "longitude": 103.9673
+      }
+    },
+    {
+      "id": "S117",
+      "deviceId": "S117",
+      "name": "Banyan Road (Jurong Island)",
+      "location": {
+        "longitude": 103.6741,
+        "latitude": 1.2542
+      }
+    },
+    {
+      "id": "S107",
+      "deviceId": "S107",
+      "name": "East Coast Park",
+      "location": {
+        "longitude": 103.962,
+        "latitude": 1.3133
+      }
+    },
+    {
+      "id": "S104",
+      "deviceId": "S104",
+      "name": "Woodlands Avenue 9",
+      "location": {
+        "longitude": 103.7854,
+        "latitude": 1.4439
+      }
+    },
+    {
+      "id": "S115",
+      "deviceId": "S115",
+      "name": "Tuas South Avenue 3",
+      "location": {
+        "latitude": 1.2938,
+        "longitude": 103.6184
+      }
+    },
+    {
+      "id": "S116",
+      "deviceId": "S116",
+      "name": "Pasir Panjang Terminal",
+      "location": {
+        "longitude": 103.7545,
+        "latitude": 1.2824
+      }
+    },
+    {
+      "id": "S102",
+      "deviceId": "S102",
+      "name": "Semakau Island",
+      "location": {
+        "latitude": 1.1902,
+        "longitude": 103.7657
+      }
+    },
+    {
+      "id": "S80",
+      "deviceId": "S80",
+      "name": "Sembawang Meteorological Station",
+      "location": {
+        "longitude": 103.8201,
+        "latitude": 1.4247
+      }
+    },
+    {
+      "id": "S60",
+      "deviceId": "S60",
+      "name": "Artillery Avenue (Sentosa)",
+      "location": {
+        "latitude": 1.2504,
+        "longitude": 103.8275
+      }
+    },
+    {
+      "id": "S50",
+      "deviceId": "S50",
+      "name": "Clementi Road",
+      "location": {
+        "latitude": 1.3318,
+        "longitude": 103.7762
+      }
+    },
+    {
+      "id": "S44",
+      "deviceId": "S44",
+      "name": "Nanyang Avenue",
+      "location": {
+        "longitude": 103.6817,
+        "latitude": 1.3458
+      }
+    },
+    {
+      "id": "S43",
+      "deviceId": "S43",
+      "name": "Kim Chuan Road",
+      "location": {
+        "longitude": 103.8882,
+        "latitude": 1.3406
+      }
+    },
+    {
+      "id": "S24",
+      "deviceId": "S24",
+      "name": "Changi Meteorological Station",
+      "location": {
+        "longitude": 103.9823,
+        "latitude": 1.3678
+      }
+    },
+    {
+      "id": "S23",
+      "deviceId": "S23",
+      "name": "Tengah Meteorological Station",
+      "location": {
+        "latitude": 1.3858,
+        "longitude": 103.7119
+      }
+    },
+    {
+      "id": "S06",
+      "deviceId": "S06",
+      "name": "Paya Lebar Meteorological Station",
+      "location": {
+        "longitude": 103.904,
+        "latitude": 1.357
+      }
+    },
+    {
+      "id": "S111",
+      "deviceId": "S111",
+      "name": "Scotts Road",
+      "location": {
+        "latitude": 1.3106,
+        "longitude": 103.8365
+      }
+    },
+    {
+      "id": "S121",
+      "deviceId": "S121",
+      "name": "Old Choa Chu Kang Road",
+      "location": {
+        "longitude": 103.7217,
+        "latitude": 1.3738
+      }
+    }
+  ],
+  "profiled_at_utc": "2026-09-24T03:39:24.248782+00:00"
+}

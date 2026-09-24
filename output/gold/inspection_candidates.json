@@ -1,0 +1,4460 @@
+{
+  "as_of": "2026-09-24T04:00:34.085707+00:00",
+  "sources": [
+    {
+      "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+      "name": "Clusters 20260924T120033+0800",
+      "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+      "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+      "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+      "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+      "source_file": "clusters_20260924T120033+0800.geojson.gz"
+    },
+    {
+      "dataset_id": "d_4a086da0a5553be1d89383cd90d07ecd",
+      "name": "Hawker Centres",
+      "url": "https://data.gov.sg/datasets/d_4a086da0a5553be1d89383cd90d07ecd/view",
+      "retrieved_at": "2026-09-24T05:39:31.857259+00:00",
+      "raw_sha256": "722ffdb3e68627c1724bc47f72889e09e790904ff23a1fa630595d76265f7451",
+      "stored_sha256": "e549483a087a4ed4970f7b5c820e4ac438fa9b2da068378568401d5ea74dcab4",
+      "source_file": "hawker_centres.geojson.gz"
+    },
+    {
+      "dataset_id": "d_0542d48f0991541706b58059381a6eca",
+      "name": "Parks",
+      "url": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
+      "retrieved_at": "2026-09-24T05:40:05.635404+00:00",
+      "raw_sha256": "85cfe483c04fed637a8e5abad2818465246b03c6e586e3d14eeffb36732076cd",
+      "stored_sha256": "c289439fac111eeada8c248e56b669697f503b4008ed762b1563c9eca69d5886",
+      "source_file": "parks.geojson.gz"
+    },
+    {
+      "dataset_id": "d_a69ef89737379f231d2ae93fd1c5707f",
+      "name": "Park Connectors",
+      "url": "https://data.gov.sg/datasets/d_a69ef89737379f231d2ae93fd1c5707f/view",
+      "retrieved_at": "2026-09-24T05:40:18.734932+00:00",
+      "raw_sha256": "83c1838bea9ee355d2ba52c2060eb185612dd0e2e3fdb113aff9cdd6e5c27efd",
+      "stored_sha256": "115dec458302940c18a999156aa222fc12c60dfe8542d1910a2f7ab0aab4b038",
+      "source_file": "park_connectors.geojson.gz"
+    },
+    {
+      "dataset_id": "d_77d7ec97be83d44f61b85454f844382f",
+      "name": "Nparks Managed Areas",
+      "url": "https://data.gov.sg/datasets/d_77d7ec97be83d44f61b85454f844382f/view",
+      "retrieved_at": "2026-09-24T05:40:44.701981+00:00",
+      "raw_sha256": "032a96ae1cde6057a2fd701b51388fc019df1b6e63e2a599e97a5942ada70526",
+      "stored_sha256": "ea9d0602ab2dcfd2de4d5b35af7ce184bd5cbc94682edee788af66a9175e0c93",
+      "source_file": "nparks_managed_areas.geojson.gz"
+    },
+    {
+      "dataset_id": "d_a8c3546b26712e35021f3a681d0353ae",
+      "name": "Ura Land Use 2025",
+      "url": "https://data.gov.sg/datasets/d_a8c3546b26712e35021f3a681d0353ae/view",
+      "retrieved_at": "2026-09-24T05:41:23.707204+00:00",
+      "raw_sha256": "69477dedbb67fc557dcb2f8da55486d32cb9938cde8a386c2d5e281e9c02d13c",
+      "stored_sha256": "ea7ed487a7ac6396c538ce9bd998e3e25cb925ef3c9d05461eb17bedd08eda74",
+      "source_file": "ura_land_use_2025.geojson.gz"
+    },
+    {
+      "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+      "name": "Hdb Property",
+      "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+      "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+      "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+      "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+      "source_file": "hdb_property.csv.gz"
+    },
+    {
+      "dataset_id": "d_4180067b350bc9839a4cea487841d5d1",
+      "name": "Hdb Elderly",
+      "url": "https://data.gov.sg/datasets/d_4180067b350bc9839a4cea487841d5d1/view",
+      "retrieved_at": "2026-09-24T05:40:57.735182+00:00",
+      "raw_sha256": "7ea061fd5beb895b7ced3358e68b9903ada75bd6e1d5daba53be6556eeba0139",
+      "stored_sha256": "43c045044d9121ad74b11caf8061f5b406e36b1ede816eafce79e01dc04f3373",
+      "source_file": "hdb_elderly.csv.gz",
+      "usage": "Audited and dropped: no valid elderly share or planning-area join"
+    },
+    {
+      "name": "SLA OneMap Search and Routing",
+      "url": "https://www.onemap.gov.sg/apidocs/",
+      "retrieved_at": "2026-09-24T05:59:50.048893+00:00",
+      "status": "ready",
+      "attribution": "© OneMap, Singapore Land Authority"
+    }
+  ],
+  "formula": {
+    "label": "Inspection priority / 100 (assumed operational rule, not a prediction)",
+    "expression": "min(100, type + proximity + cluster_size + growth + elderly)",
+    "place_type": {
+      "cap": 25,
+      "weights": {
+        "block": 25.0,
+        "hawker": 20.0,
+        "park": 15.0
+      }
+    },
+    "proximity": {
+      "cap": 35,
+      "expression": "35 × max(0, 1 − distance_m / radius_m)"
+    },
+    "cluster_size": {
+      "cap": 20,
+      "expression": "20 × min(cases, 100) / 100"
+    },
+    "growth": {
+      "cap": 10,
+      "expression": "10 × min(max(7-day case change, 0), 20) / 20; unavailable → 0 points"
+    },
+    "elderly": {
+      "cap": 10,
+      "expression": "10 × min(share aged 65+ / 0.30, 1); unavailable → 0 points"
+    },
+    "missing": "Missing components add zero priority points and remain unavailable, not an observed zero. Weights are not redistributed.",
+    "cluster_choice": "Use the nearest verified cluster block; break ties by larger cluster, then source cluster ID. No double-counting cases across nearby clusters."
+  },
+  "rows": [
+    {
+      "id": "block:117-ho-ching-road",
+      "name": "Blk 117 Ho Ching Road",
+      "place_type": "block",
+      "latitude": 1.335096949269254,
+      "longitude": 103.7230731509349,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:58:41.968104+00:00",
+          "response_sha256": "e498c71833075fd7cbc30dfb3868fad32033618fec7f091d44ed162dcbe591d9"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JE",
+      "area_name": "Jurong East",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "117 HO CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3350969,103.7230732",
+      "radius_m": 300,
+      "rank": 1
+    },
+    {
+      "id": "block:119-ho-ching-road",
+      "name": "Blk 119 Ho Ching Road",
+      "place_type": "block",
+      "latitude": 1.335299059144542,
+      "longitude": 103.7247129747485,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:58:45.037592+00:00",
+          "response_sha256": "d6aeba76188b2aacd4a922791619f523f24f66511c702a9f5f0529d5a304b5ed"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JE",
+      "area_name": "Jurong East",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "119 HO CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3352991,103.7247130",
+      "radius_m": 300,
+      "rank": 2
+    },
+    {
+      "id": "block:120-ho-ching-road",
+      "name": "Blk 120 Ho Ching Road",
+      "place_type": "block",
+      "latitude": 1.335407648361846,
+      "longitude": 103.7242609535673,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:58:48.107493+00:00",
+          "response_sha256": "56aaa0458461993064357cd488d7d0eb6a7bd1246a2921427d2fd9a1663318fa"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JE",
+      "area_name": "Jurong East",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "120 HO CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3354076,103.7242610",
+      "radius_m": 300,
+      "rank": 3
+    },
+    {
+      "id": "block:122-yuan-ching-road",
+      "name": "Blk 122 Yuan Ching Road",
+      "place_type": "block",
+      "latitude": 1.335985469409893,
+      "longitude": 103.7238659920301,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:19.217766+00:00",
+          "response_sha256": "5806b8b6ae7eb11cd6bd38b9b7e9ed4d46b60954c14e2a96f29ce2c20eba4b3b"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JE",
+      "area_name": "Jurong East",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "122 YUAN CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3359855,103.7238660",
+      "radius_m": 300,
+      "rank": 4
+    },
+    {
+      "id": "block:321-tah-ching-road",
+      "name": "Blk 321 Tah Ching Road",
+      "place_type": "block",
+      "latitude": 1.337271661097009,
+      "longitude": 103.7243555257174,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:58:54.235094+00:00",
+          "response_sha256": "814f8dde37372996d218bf233d4107c4d6c869862ed1fbf9ff1bf28fd3b790d9"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JE",
+      "area_name": "Jurong East",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "321 TAH CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3372717,103.7243555",
+      "radius_m": 300,
+      "rank": 5
+    },
+    {
+      "id": "block:322-tah-ching-road",
+      "name": "Blk 322 Tah Ching Road",
+      "place_type": "block",
+      "latitude": 1.336876825284735,
+      "longitude": 103.7245562636455,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:58:57.311859+00:00",
+          "response_sha256": "c3c4915f62f3cd31aa55132ecc6c1a6561902912d19ae99b466aaf066bc87f39"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JE",
+      "area_name": "Jurong East",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "322 TAH CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3368768,103.7245563",
+      "radius_m": 300,
+      "rank": 6
+    },
+    {
+      "id": "block:326-tah-ching-road",
+      "name": "Blk 326 Tah Ching Road",
+      "place_type": "block",
+      "latitude": 1.335763042905787,
+      "longitude": 103.7226687887849,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:06.664961+00:00",
+          "response_sha256": "9af0016c20a304b5c27f3820625f98a4fa47749494883f8b409e6c10f262dd98"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JE",
+      "area_name": "Jurong East",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "326 TAH CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3357630,103.7226688",
+      "radius_m": 300,
+      "rank": 7
+    },
+    {
+      "id": "block:329-tah-ching-road",
+      "name": "Blk 329 Tah Ching Road",
+      "place_type": "block",
+      "latitude": 1.337460885051607,
+      "longitude": 103.7238450213328,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:09.756338+00:00",
+          "response_sha256": "0aeb6146dd177c58f43ab236a31a3789d9f9829679b0f252fd7d1112009d0047"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JE",
+      "area_name": "Jurong East",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "329 TAH CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3374609,103.7238450",
+      "radius_m": 300,
+      "rank": 8
+    },
+    {
+      "id": "block:330-tah-ching-road",
+      "name": "Blk 330 Tah Ching Road",
+      "place_type": "block",
+      "latitude": 1.337667460698384,
+      "longitude": 103.724154795838,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:12.900592+00:00",
+          "response_sha256": "1450be78afdb2503cb2c732448e8c6b8b94125627e5b126d0a89cd326d8d7663"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JE",
+      "area_name": "Jurong East",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "330 TAH CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3376675,103.7241548",
+      "radius_m": 300,
+      "rank": 9
+    },
+    {
+      "id": "block:335-kang-ching-road",
+      "name": "Blk 335 Kang Ching Road",
+      "place_type": "block",
+      "latitude": 1.339042682212269,
+      "longitude": 103.7231462428327,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:58:51.173200+00:00",
+          "response_sha256": "c7a26f363c18f7d98990cd06a10e01459aba3f0cfd57109ea27dd9709cafc335"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JE",
+      "area_name": "Jurong East",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "335 KANG CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3390427,103.7231462",
+      "radius_m": 300,
+      "rank": 10
+    },
+    {
+      "id": "hawker_centres:119380",
+      "name": "Taman Jurong Market and Food Centre",
+      "place_type": "hawker",
+      "latitude": 1.3347210666007077,
+      "longitude": 103.72158379761716,
+      "sources": [
+        {
+          "dataset_id": "d_4a086da0a5553be1d89383cd90d07ecd",
+          "name": "Hawker Centres",
+          "url": "https://data.gov.sg/datasets/d_4a086da0a5553be1d89383cd90d07ecd/view",
+          "retrieved_at": "2026-09-24T05:39:31.857259+00:00",
+          "raw_sha256": "722ffdb3e68627c1724bc47f72889e09e790904ff23a1fa630595d76265f7451",
+          "stored_sha256": "e549483a087a4ed4970f7b5c820e4ac438fa9b2da068378568401d5ea74dcab4",
+          "source_file": "hawker_centres.geojson.gz"
+        }
+      ],
+      "coordinate_method": "official_source_point",
+      "coordinate_note": "Official source point; check public access on site.",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JE",
+      "area_name": "Jurong East",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "326 TAH CHING ROAD",
+      "distance_m": 167.2,
+      "score": 50.29,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "hawker",
+          "contribution": 20.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 167.2,
+          "unit": "m",
+          "contribution": 15.49,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 170 m from a verified block associated with the 74-person cluster. Hawker checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check drains for trapped water",
+        "Empty unused containers",
+        "Check bin areas for pooled water"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3347211,103.7215838",
+      "radius_m": 300,
+      "rank": 11
+    },
+    {
+      "id": "block:117-ho-ching-road",
+      "name": "Blk 117 Ho Ching Road",
+      "place_type": "block",
+      "latitude": 1.335096949269254,
+      "longitude": 103.7230731509349,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:58:41.968104+00:00",
+          "response_sha256": "e498c71833075fd7cbc30dfb3868fad32033618fec7f091d44ed162dcbe591d9"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JW",
+      "area_name": "Jurong West",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "117 HO CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3350969,103.7230732",
+      "radius_m": 300,
+      "rank": 1
+    },
+    {
+      "id": "block:119-ho-ching-road",
+      "name": "Blk 119 Ho Ching Road",
+      "place_type": "block",
+      "latitude": 1.335299059144542,
+      "longitude": 103.7247129747485,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:58:45.037592+00:00",
+          "response_sha256": "d6aeba76188b2aacd4a922791619f523f24f66511c702a9f5f0529d5a304b5ed"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JW",
+      "area_name": "Jurong West",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "119 HO CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3352991,103.7247130",
+      "radius_m": 300,
+      "rank": 2
+    },
+    {
+      "id": "block:120-ho-ching-road",
+      "name": "Blk 120 Ho Ching Road",
+      "place_type": "block",
+      "latitude": 1.335407648361846,
+      "longitude": 103.7242609535673,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:58:48.107493+00:00",
+          "response_sha256": "56aaa0458461993064357cd488d7d0eb6a7bd1246a2921427d2fd9a1663318fa"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JW",
+      "area_name": "Jurong West",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "120 HO CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3354076,103.7242610",
+      "radius_m": 300,
+      "rank": 3
+    },
+    {
+      "id": "block:122-yuan-ching-road",
+      "name": "Blk 122 Yuan Ching Road",
+      "place_type": "block",
+      "latitude": 1.335985469409893,
+      "longitude": 103.7238659920301,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:19.217766+00:00",
+          "response_sha256": "5806b8b6ae7eb11cd6bd38b9b7e9ed4d46b60954c14e2a96f29ce2c20eba4b3b"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JW",
+      "area_name": "Jurong West",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "122 YUAN CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3359855,103.7238660",
+      "radius_m": 300,
+      "rank": 4
+    },
+    {
+      "id": "block:321-tah-ching-road",
+      "name": "Blk 321 Tah Ching Road",
+      "place_type": "block",
+      "latitude": 1.337271661097009,
+      "longitude": 103.7243555257174,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:58:54.235094+00:00",
+          "response_sha256": "814f8dde37372996d218bf233d4107c4d6c869862ed1fbf9ff1bf28fd3b790d9"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JW",
+      "area_name": "Jurong West",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "321 TAH CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3372717,103.7243555",
+      "radius_m": 300,
+      "rank": 5
+    },
+    {
+      "id": "block:322-tah-ching-road",
+      "name": "Blk 322 Tah Ching Road",
+      "place_type": "block",
+      "latitude": 1.336876825284735,
+      "longitude": 103.7245562636455,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:58:57.311859+00:00",
+          "response_sha256": "c3c4915f62f3cd31aa55132ecc6c1a6561902912d19ae99b466aaf066bc87f39"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JW",
+      "area_name": "Jurong West",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "322 TAH CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3368768,103.7245563",
+      "radius_m": 300,
+      "rank": 6
+    },
+    {
+      "id": "block:326-tah-ching-road",
+      "name": "Blk 326 Tah Ching Road",
+      "place_type": "block",
+      "latitude": 1.335763042905787,
+      "longitude": 103.7226687887849,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:06.664961+00:00",
+          "response_sha256": "9af0016c20a304b5c27f3820625f98a4fa47749494883f8b409e6c10f262dd98"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JW",
+      "area_name": "Jurong West",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "326 TAH CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3357630,103.7226688",
+      "radius_m": 300,
+      "rank": 7
+    },
+    {
+      "id": "block:329-tah-ching-road",
+      "name": "Blk 329 Tah Ching Road",
+      "place_type": "block",
+      "latitude": 1.337460885051607,
+      "longitude": 103.7238450213328,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:09.756338+00:00",
+          "response_sha256": "0aeb6146dd177c58f43ab236a31a3789d9f9829679b0f252fd7d1112009d0047"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JW",
+      "area_name": "Jurong West",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "329 TAH CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3374609,103.7238450",
+      "radius_m": 300,
+      "rank": 8
+    },
+    {
+      "id": "block:330-tah-ching-road",
+      "name": "Blk 330 Tah Ching Road",
+      "place_type": "block",
+      "latitude": 1.337667460698384,
+      "longitude": 103.724154795838,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:12.900592+00:00",
+          "response_sha256": "1450be78afdb2503cb2c732448e8c6b8b94125627e5b126d0a89cd326d8d7663"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JW",
+      "area_name": "Jurong West",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "330 TAH CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3376675,103.7241548",
+      "radius_m": 300,
+      "rank": 9
+    },
+    {
+      "id": "block:335-kang-ching-road",
+      "name": "Blk 335 Kang Ching Road",
+      "place_type": "block",
+      "latitude": 1.339042682212269,
+      "longitude": 103.7231462428327,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:58:51.173200+00:00",
+          "response_sha256": "c7a26f363c18f7d98990cd06a10e01459aba3f0cfd57109ea27dd9709cafc335"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JW",
+      "area_name": "Jurong West",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "335 KANG CHING ROAD",
+      "distance_m": 0.0,
+      "score": 74.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 74-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3390427,103.7231462",
+      "radius_m": 300,
+      "rank": 10
+    },
+    {
+      "id": "hawker_centres:119380",
+      "name": "Taman Jurong Market and Food Centre",
+      "place_type": "hawker",
+      "latitude": 1.3347210666007077,
+      "longitude": 103.72158379761716,
+      "sources": [
+        {
+          "dataset_id": "d_4a086da0a5553be1d89383cd90d07ecd",
+          "name": "Hawker Centres",
+          "url": "https://data.gov.sg/datasets/d_4a086da0a5553be1d89383cd90d07ecd/view",
+          "retrieved_at": "2026-09-24T05:39:31.857259+00:00",
+          "raw_sha256": "722ffdb3e68627c1724bc47f72889e09e790904ff23a1fa630595d76265f7451",
+          "stored_sha256": "e549483a087a4ed4970f7b5c820e4ac438fa9b2da068378568401d5ea74dcab4",
+          "source_file": "hawker_centres.geojson.gz"
+        }
+      ],
+      "coordinate_method": "official_source_point",
+      "coordinate_note": "Official source point; check public access on site.",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "JW",
+      "area_name": "Jurong West",
+      "cluster_id": "527704",
+      "nearest_cluster_block": "326 TAH CHING ROAD",
+      "distance_m": 167.2,
+      "score": 50.29,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "hawker",
+          "contribution": 20.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 167.2,
+          "unit": "m",
+          "contribution": 15.49,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 74,
+          "contribution": 14.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 170 m from a verified block associated with the 74-person cluster. Hawker checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check drains for trapped water",
+        "Empty unused containers",
+        "Check bin areas for pooled water"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3347211,103.7215838",
+      "radius_m": 300,
+      "rank": 11
+    },
+    {
+      "id": "block:110-bishan-street-12",
+      "name": "Blk 110 Bishan Street 12",
+      "place_type": "block",
+      "latitude": 1.347409570436247,
+      "longitude": 103.848054589423,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:28.413337+00:00",
+          "response_sha256": "9e31b78a88e895dcf625a6d6b6126b4c6ea5b2ced9e85e82abf9226d90e91d92"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "110 BISHAN STREET 12",
+      "distance_m": 0.0,
+      "score": 61.0,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3474096,103.8480546",
+      "radius_m": 300,
+      "rank": 1
+    },
+    {
+      "id": "block:115-bishan-street-12",
+      "name": "Blk 115 Bishan Street 12",
+      "place_type": "block",
+      "latitude": 1.34791838898823,
+      "longitude": 103.8487501254894,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:31.481620+00:00",
+          "response_sha256": "d62396f7db07b987b564f5d2e3d67bf7d538b5942de7337b8eb5757dbc6beb67"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "115 BISHAN STREET 12",
+      "distance_m": 0.0,
+      "score": 61.0,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3479184,103.8487501",
+      "radius_m": 300,
+      "rank": 2
+    },
+    {
+      "id": "block:116-bishan-street-12",
+      "name": "Blk 116 Bishan Street 12",
+      "place_type": "block",
+      "latitude": 1.347800720145618,
+      "longitude": 103.8493160866862,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:34.547448+00:00",
+          "response_sha256": "5a977f6b195774d026b3413aadd03fc2b8d0ff99e24da24fb24ab6afb7c8e20b"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "116 BISHAN STREET 12",
+      "distance_m": 0.0,
+      "score": 61.0,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3478007,103.8493161",
+      "radius_m": 300,
+      "rank": 3
+    },
+    {
+      "id": "block:111-bishan-street-12",
+      "name": "Blk 111 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.347067526642791,
+      "longitude": 103.8480636654041,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T06:00:24.129054+00:00",
+          "response_sha256": "5d1d96b52b0763793dca02e981679017ec4be7c69306dc8e9a3f07b6de0951d8"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "110 BISHAN STREET 12",
+      "distance_m": 38.0,
+      "score": 56.56,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 38.0,
+          "unit": "m",
+          "contribution": 30.56,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 40 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3470675,103.8480637",
+      "radius_m": 300,
+      "rank": 4
+    },
+    {
+      "id": "block:109-bishan-street-12",
+      "name": "Blk 109 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.34675059587743,
+      "longitude": 103.8479901683682,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T06:00:21.057452+00:00",
+          "response_sha256": "fd9c1d83b5601a0ba9a920c5ddb6bf83746c85020deb8820cfc92d29638df486"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "110 BISHAN STREET 12",
+      "distance_m": 73.6,
+      "score": 52.41,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 73.6,
+          "unit": "m",
+          "contribution": 26.41,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 70 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3467506,103.8479902",
+      "radius_m": 300,
+      "rank": 5
+    },
+    {
+      "id": "block:113-bishan-street-12",
+      "name": "Blk 113 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.347231850957299,
+      "longitude": 103.8488089888749,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T06:00:30.265648+00:00",
+          "response_sha256": "1c8d4e9aca04c6f751159b0b17defe065c8921c73fdf069080ecb846b304684d"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "115 BISHAN STREET 12",
+      "distance_m": 76.6,
+      "score": 52.06,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 76.6,
+          "unit": "m",
+          "contribution": 26.06,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 80 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3472319,103.8488090",
+      "radius_m": 300,
+      "rank": 6
+    },
+    {
+      "id": "block:108-bishan-street-12",
+      "name": "Blk 108 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.346714989202247,
+      "longitude": 103.8473983575436,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T06:00:17.965971+00:00",
+          "response_sha256": "0f3380f9e2ee48bcb2285937229cb1628dbbf9b849685dc52791b18805e22755"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "110 BISHAN STREET 12",
+      "distance_m": 106.2,
+      "score": 48.61,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 106.2,
+          "unit": "m",
+          "contribution": 22.61,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 110 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3467150,103.8473984",
+      "radius_m": 300,
+      "rank": 7
+    },
+    {
+      "id": "block:107-bishan-street-12",
+      "name": "Blk 107 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.346417614209677,
+      "longitude": 103.8479207068437,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T06:00:14.901222+00:00",
+          "response_sha256": "4358e702bf66501133e5c31bad11fdff0b9837fb004caad170d055b3b7098b7a"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "110 BISHAN STREET 12",
+      "distance_m": 111.3,
+      "score": 48.01,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 111.3,
+          "unit": "m",
+          "contribution": 22.01,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 110 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3464176,103.8479207",
+      "radius_m": 300,
+      "rank": 8
+    },
+    {
+      "id": "block:112-bishan-street-12",
+      "name": "Blk 112 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.346810297821676,
+      "longitude": 103.8490410605394,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T06:00:27.193130+00:00",
+          "response_sha256": "1d4d3c4798bf1e1dc9972ca527b1cf9e6ce8bbaf46068e91e115b10bd6789ffa"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "116 BISHAN STREET 12",
+      "distance_m": 114.3,
+      "score": 47.67,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 114.3,
+          "unit": "m",
+          "contribution": 21.67,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 110 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3468103,103.8490411",
+      "radius_m": 300,
+      "rank": 9
+    },
+    {
+      "id": "block:117-bishan-street-12",
+      "name": "Blk 117 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.347017421065627,
+      "longitude": 103.8499866599388,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T06:00:36.417112+00:00",
+          "response_sha256": "cf809c98aad10f978974d019e8f6e74b87348dc9c22aef8c0c676c5c609335b6"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "116 BISHAN STREET 12",
+      "distance_m": 114.6,
+      "score": 47.63,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 114.6,
+          "unit": "m",
+          "contribution": 21.63,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 110 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3470174,103.8499867",
+      "radius_m": 300,
+      "rank": 10
+    },
+    {
+      "id": "block:119-bishan-street-12",
+      "name": "Blk 119 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.347349574008248,
+      "longitude": 103.850535153606,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T06:00:42.622136+00:00",
+          "response_sha256": "c0e5e1dd6ba657f10a480483b8e8a207e349e05d6113ea2d3a4d4b55d4e81194"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "116 BISHAN STREET 12",
+      "distance_m": 144.5,
+      "score": 44.14,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 144.5,
+          "unit": "m",
+          "contribution": 18.14,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 140 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3473496,103.8505352",
+      "radius_m": 300,
+      "rank": 11
+    },
+    {
+      "id": "block:106-bishan-street-12",
+      "name": "Blk 106 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.346100700683148,
+      "longitude": 103.8478471913522,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T06:00:11.700073+00:00",
+          "response_sha256": "c2a20cb0e3f9e978521b4c9aea0ce24d1dfaf652faae420905f207b2f7f8c336"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "110 BISHAN STREET 12",
+      "distance_m": 147.4,
+      "score": 43.81,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 147.4,
+          "unit": "m",
+          "contribution": 17.81,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 150 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3461007,103.8478472",
+      "radius_m": 300,
+      "rank": 12
+    },
+    {
+      "id": "block:118-bishan-street-12",
+      "name": "Blk 118 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.346603703876373,
+      "longitude": 103.8499152978344,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T06:00:39.485058+00:00",
+          "response_sha256": "f62bed496b1baa634efc65d2bf389995b4a0d070640ddcc64a299ab95755727b"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "116 BISHAN STREET 12",
+      "distance_m": 148.8,
+      "score": 43.64,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 148.8,
+          "unit": "m",
+          "contribution": 17.64,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 150 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3466037,103.8499153",
+      "radius_m": 300,
+      "rank": 13
+    },
+    {
+      "id": "block:105-bishan-street-12",
+      "name": "Blk 105 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.345894936325064,
+      "longitude": 103.8473652527665,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T06:00:08.637258+00:00",
+          "response_sha256": "bfaec7219d27a91d11ecedeaebc9e6fb308cead63700c6a4355c11afb99c9541"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "110 BISHAN STREET 12",
+      "distance_m": 185.0,
+      "score": 39.41,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 185.0,
+          "unit": "m",
+          "contribution": 13.41,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 190 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3458949,103.8473653",
+      "radius_m": 300,
+      "rank": 14
+    },
+    {
+      "id": "block:104-bishan-street-12",
+      "name": "Blk 104 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.345675021119711,
+      "longitude": 103.8480329057601,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T06:00:05.569410+00:00",
+          "response_sha256": "715ba1cd47faef97fe8162248713a15d6fd1fa06196fe969aa60ad983088a271"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "110 BISHAN STREET 12",
+      "distance_m": 192.9,
+      "score": 38.5,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 192.9,
+          "unit": "m",
+          "contribution": 12.5,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 190 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3456750,103.8480329",
+      "radius_m": 300,
+      "rank": 15
+    },
+    {
+      "id": "block:103-bishan-street-12",
+      "name": "Blk 103 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.345512491321055,
+      "longitude": 103.8483141623863,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T06:00:02.382316+00:00",
+          "response_sha256": "f7914d6389517f8f3532b7314d3a6331ebd4f233bd0d399316fcdbcd176a5ee2"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "110 BISHAN STREET 12",
+      "distance_m": 212.9,
+      "score": 36.16,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 212.9,
+          "unit": "m",
+          "contribution": 10.16,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 210 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3455125,103.8483142",
+      "radius_m": 300,
+      "rank": 16
+    },
+    {
+      "id": "block:102-bishan-street-12",
+      "name": "Blk 102 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.345143123347699,
+      "longitude": 103.8479908052591,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:59.272949+00:00",
+          "response_sha256": "94021638e0eafc5d460bd8e4e1e65a680d749a8970c43ae1b8740fb70ebcfea0"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "110 BISHAN STREET 12",
+      "distance_m": 252.1,
+      "score": 31.59,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 252.1,
+          "unit": "m",
+          "contribution": 5.59,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 250 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3451431,103.8479908",
+      "radius_m": 300,
+      "rank": 17
+    },
+    {
+      "id": "block:101-bishan-street-12",
+      "name": "Blk 101 Bishan St 12",
+      "place_type": "block",
+      "latitude": 1.344859158281522,
+      "longitude": 103.8484007651851,
+      "sources": [
+        {
+          "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
+          "name": "Hdb Property",
+          "url": "https://data.gov.sg/datasets/d_17f5382f26140b1fdae0ba2ef6239d2f/view",
+          "retrieved_at": "2026-09-24T05:39:19.893844+00:00",
+          "raw_sha256": "a6e3105d02c4b59929371d1f7e4f8c0ed7939cdc081701d7e9197790bb78f4b1",
+          "stored_sha256": "ba2cf142463f5edfa75d33af65a385b4336e8c9563a972dd85d984f331e89e88",
+          "source_file": "hdb_property.csv.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:56.210469+00:00",
+          "response_sha256": "8f7471e594af5db94564cbe3c945d5b8695eaa24d362ace2796e35c106cef75a"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BS",
+      "area_name": "Bishan",
+      "cluster_id": "527706",
+      "nearest_cluster_block": "110 BISHAN STREET 12",
+      "distance_m": 286.2,
+      "score": 27.61,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 286.2,
+          "unit": "m",
+          "contribution": 1.61,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 5,
+          "contribution": 1.0,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 290 m from a verified block associated with the 5-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3448592,103.8484008",
+      "radius_m": 300,
+      "rank": 18
+    },
+    {
+      "id": "block:119b-kim-tian-road",
+      "name": "Blk 119B Kim Tian Road",
+      "place_type": "block",
+      "latitude": 1.281155584877645,
+      "longitude": 103.8272665597409,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:37.609444+00:00",
+          "response_sha256": "6a61106a851af2d43f1ccee03f161f7a61b47eddb2bab0f1d6c2e23326ae712a"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BM",
+      "area_name": "Bukit Merah",
+      "cluster_id": "527707",
+      "nearest_cluster_block": "119B KIM TIAN ROAD",
+      "distance_m": 0.0,
+      "score": 60.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 4,
+          "contribution": 0.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 4-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.2811556,103.8272666",
+      "radius_m": 300,
+      "rank": 1
+    },
+    {
+      "id": "block:119d-kim-tian-road",
+      "name": "Blk 119D Kim Tian Road",
+      "place_type": "block",
+      "latitude": 1.281945983612319,
+      "longitude": 103.8279110938674,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:40.748211+00:00",
+          "response_sha256": "96cb36441b629760cf8fadb667cfbb004916e30621a2bb1033f273060be228c2"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BM",
+      "area_name": "Bukit Merah",
+      "cluster_id": "527707",
+      "nearest_cluster_block": "119D KIM TIAN ROAD",
+      "distance_m": 0.0,
+      "score": 60.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 4,
+          "contribution": 0.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 4-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.2819460,103.8279111",
+      "radius_m": 300,
+      "rank": 2
+    },
+    {
+      "id": "block:127d-kim-tian-road",
+      "name": "Blk 127D Kim Tian Road",
+      "place_type": "block",
+      "latitude": 1.281119805550519,
+      "longitude": 103.8299431749274,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:43.833429+00:00",
+          "response_sha256": "0038ddd8c2b03711957eaf62e8cf0fea46e184128b8dd3a885a06b843cdfe797"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BM",
+      "area_name": "Bukit Merah",
+      "cluster_id": "527707",
+      "nearest_cluster_block": "127D KIM TIAN ROAD",
+      "distance_m": 0.0,
+      "score": 60.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 4,
+          "contribution": 0.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 4-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.2811198,103.8299432",
+      "radius_m": 300,
+      "rank": 3
+    },
+    {
+      "id": "block:131b-kim-tian-road",
+      "name": "Blk 131B Kim Tian Road",
+      "place_type": "block",
+      "latitude": 1.280917568733284,
+      "longitude": 103.8283703136936,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:46.978652+00:00",
+          "response_sha256": "2b30b9900d4852b57a8fe6ce9fc2a9837905125c4bef81923060480aac8fbf68"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BM",
+      "area_name": "Bukit Merah",
+      "cluster_id": "527707",
+      "nearest_cluster_block": "131B KIM TIAN ROAD",
+      "distance_m": 0.0,
+      "score": 60.8,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 4,
+          "contribution": 0.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 4-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.2809176,103.8283703",
+      "radius_m": 300,
+      "rank": 4
+    },
+    {
+      "id": "hawker_centres:119436",
+      "name": "Jalan Bukit Merah Blk 112 (Blk 112 Jalan Bukit Merah Market and Food Centre)",
+      "place_type": "hawker",
+      "latitude": 1.2800048011364626,
+      "longitude": 103.82601329649792,
+      "sources": [
+        {
+          "dataset_id": "d_4a086da0a5553be1d89383cd90d07ecd",
+          "name": "Hawker Centres",
+          "url": "https://data.gov.sg/datasets/d_4a086da0a5553be1d89383cd90d07ecd/view",
+          "retrieved_at": "2026-09-24T05:39:31.857259+00:00",
+          "raw_sha256": "722ffdb3e68627c1724bc47f72889e09e790904ff23a1fa630595d76265f7451",
+          "stored_sha256": "e549483a087a4ed4970f7b5c820e4ac438fa9b2da068378568401d5ea74dcab4",
+          "source_file": "hawker_centres.geojson.gz"
+        }
+      ],
+      "coordinate_method": "official_source_point",
+      "coordinate_note": "Official source point; check public access on site.",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BM",
+      "area_name": "Bukit Merah",
+      "cluster_id": "527707",
+      "nearest_cluster_block": "119B KIM TIAN ROAD",
+      "distance_m": 189.2,
+      "score": 33.73,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "hawker",
+          "contribution": 20.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 189.2,
+          "unit": "m",
+          "contribution": 12.93,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 4,
+          "contribution": 0.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 190 m from a verified block associated with the 4-person cluster. Hawker checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check drains for trapped water",
+        "Empty unused containers",
+        "Check bin areas for pooled water"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.2800048,103.8260133",
+      "radius_m": 300,
+      "rank": 5
+    },
+    {
+      "id": "parks:120048",
+      "name": "KIM PONG PARK",
+      "place_type": "park",
+      "latitude": 1.2835903963029012,
+      "longitude": 103.82973723100095,
+      "sources": [
+        {
+          "dataset_id": "d_0542d48f0991541706b58059381a6eca",
+          "name": "Parks",
+          "url": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
+          "retrieved_at": "2026-09-24T05:40:05.635404+00:00",
+          "raw_sha256": "85cfe483c04fed637a8e5abad2818465246b03c6e586e3d14eeffb36732076cd",
+          "stored_sha256": "c289439fac111eeada8c248e56b669697f503b4008ed762b1563c9eca69d5886",
+          "source_file": "parks.geojson.gz"
+        }
+      ],
+      "coordinate_method": "official_source_point",
+      "coordinate_note": "Indicative park location, not a surveyed entrance; check access on site.",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BM",
+      "area_name": "Bukit Merah",
+      "cluster_id": "527707",
+      "nearest_cluster_block": "119D KIM TIAN ROAD",
+      "distance_m": 273.2,
+      "score": 18.93,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "park",
+          "contribution": 15.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 273.2,
+          "unit": "m",
+          "contribution": 3.13,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 4,
+          "contribution": 0.8,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 270 m from a verified block associated with the 4-person cluster. Park checks may reveal stagnant water; no breeding site is confirmed. Indicative park location; check access on site.",
+      "checklist": [
+        "Check pond edges for stagnant water",
+        "Check water-holding tree holes",
+        "Check drains for trapped water"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.2835904,103.8297372",
+      "radius_m": 300,
+      "rank": 6
+    },
+    {
+      "id": "block:308-canberra-road",
+      "name": "Blk 308 Canberra Road",
+      "place_type": "block",
+      "latitude": 1.44632693492686,
+      "longitude": 103.8217444659455,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:50.048893+00:00",
+          "response_sha256": "1055e7151dff5414ed76a6482a1354c399b445f435e9a3285fb3f1f7fec90b32"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "SB",
+      "area_name": "Sembawang",
+      "cluster_id": "527698",
+      "nearest_cluster_block": "308 CANBERRA ROAD",
+      "distance_m": 0.0,
+      "score": 60.4,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 2,
+          "contribution": 0.4,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 2-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.4463269,103.8217445",
+      "radius_m": 300,
+      "rank": 1
+    },
+    {
+      "id": "parks:120043",
+      "name": "BUKIT CANBERRA (SPORTSG)",
+      "place_type": "park",
+      "latitude": 1.4477771589488868,
+      "longitude": 103.82339501617324,
+      "sources": [
+        {
+          "dataset_id": "d_0542d48f0991541706b58059381a6eca",
+          "name": "Parks",
+          "url": "https://data.gov.sg/datasets/d_0542d48f0991541706b58059381a6eca/view",
+          "retrieved_at": "2026-09-24T05:40:05.635404+00:00",
+          "raw_sha256": "85cfe483c04fed637a8e5abad2818465246b03c6e586e3d14eeffb36732076cd",
+          "stored_sha256": "c289439fac111eeada8c248e56b669697f503b4008ed762b1563c9eca69d5886",
+          "source_file": "parks.geojson.gz"
+        }
+      ],
+      "coordinate_method": "official_source_point",
+      "coordinate_note": "Indicative park location, not a surveyed entrance; check access on site.",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "SB",
+      "area_name": "Sembawang",
+      "cluster_id": "527698",
+      "nearest_cluster_block": "308 CANBERRA ROAD",
+      "distance_m": 244.3,
+      "score": 21.9,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "park",
+          "contribution": 15.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 244.3,
+          "unit": "m",
+          "contribution": 6.5,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 2,
+          "contribution": 0.4,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "About 240 m from a verified block associated with the 2-person cluster. Park checks may reveal stagnant water; no breeding site is confirmed. Indicative park location; check access on site.",
+      "checklist": [
+        "Check pond edges for stagnant water",
+        "Check water-holding tree holes",
+        "Check drains for trapped water"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.4477772,103.8233950",
+      "radius_m": 300,
+      "rank": 2
+    },
+    {
+      "id": "block:207-bukit-batok-street-21",
+      "name": "Blk 207 Bukit Batok Street 21",
+      "place_type": "block",
+      "latitude": 1.34624866176031,
+      "longitude": 103.7493821882646,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:58:35.774156+00:00",
+          "response_sha256": "4c70e6db64936fbd7c87e9e158577f0ca2ad33cb98a9e40c2a5611a76b0ceea3"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BK",
+      "area_name": "Bukit Batok",
+      "cluster_id": "527702",
+      "nearest_cluster_block": "207 BUKIT BATOK STREET 21",
+      "distance_m": 0.0,
+      "score": 60.4,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 2,
+          "contribution": 0.4,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 2-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3462487,103.7493822",
+      "radius_m": 300,
+      "rank": 1
+    },
+    {
+      "id": "block:210-bukit-batok-street-21",
+      "name": "Blk 210 Bukit Batok Street 21",
+      "place_type": "block",
+      "latitude": 1.34548008232168,
+      "longitude": 103.7499560958499,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:58:38.873939+00:00",
+          "response_sha256": "b36dd1077df21332cb943d2476ca395e64bc88a3c402a76f6ce515c482110ecc"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "BK",
+      "area_name": "Bukit Batok",
+      "cluster_id": "527702",
+      "nearest_cluster_block": "210 BUKIT BATOK STREET 21",
+      "distance_m": 0.0,
+      "score": 60.4,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 2,
+          "contribution": 0.4,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 2-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.3454801,103.7499561",
+      "radius_m": 300,
+      "rank": 2
+    },
+    {
+      "id": "block:573a-woodlands-drive-16",
+      "name": "Blk 573A Woodlands Drive 16",
+      "place_type": "block",
+      "latitude": 1.431281034131535,
+      "longitude": 103.7980182405115,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:22.285955+00:00",
+          "response_sha256": "2554c5ae0acd0454995cf8f8b22d22f36b96f5c2fb669701ee559b02da232b44"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "WD",
+      "area_name": "Woodlands",
+      "cluster_id": "527705",
+      "nearest_cluster_block": "573A WOODLANDS DRIVE 16",
+      "distance_m": 0.0,
+      "score": 60.4,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 2,
+          "contribution": 0.4,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 2-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.4312810,103.7980182",
+      "radius_m": 300,
+      "rank": 1
+    },
+    {
+      "id": "block:573b-woodlands-drive-16",
+      "name": "Blk 573B Woodlands Drive 16",
+      "place_type": "block",
+      "latitude": 1.430840724756702,
+      "longitude": 103.797770248134,
+      "sources": [
+        {
+          "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+          "name": "Clusters 20260924T120033+0800",
+          "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+          "retrieved_at": "2026-09-24T04:00:34.085707+00:00",
+          "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+          "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+          "source_file": "clusters_20260924T120033+0800.geojson.gz"
+        },
+        {
+          "name": "SLA OneMap Search",
+          "url": "https://www.onemap.gov.sg/apidocs/search",
+          "retrieved_at": "2026-09-24T05:59:25.350793+00:00",
+          "response_sha256": "abb4d34a9c4c8f7a6435cd87cf1f81cf7f41289e23cf3fae524c35120c6a0b0f"
+        }
+      ],
+      "coordinate_method": "exact_block_and_street",
+      "as_of": "2026-09-24T04:00:34.085707+00:00",
+      "area_code": "WD",
+      "area_name": "Woodlands",
+      "cluster_id": "527705",
+      "nearest_cluster_block": "573B WOODLANDS DRIVE 16",
+      "distance_m": 0.0,
+      "score": 60.4,
+      "components": [
+        {
+          "key": "place_type",
+          "label": "Place type",
+          "value": "block",
+          "contribution": 25.0,
+          "cap": 25,
+          "status": "assumed_weight"
+        },
+        {
+          "key": "proximity",
+          "label": "Distance to a verified cluster block",
+          "value": 0.0,
+          "unit": "m",
+          "contribution": 35.0,
+          "cap": 35,
+          "status": "observed_coordinates"
+        },
+        {
+          "key": "cluster_size",
+          "label": "People in the associated cluster",
+          "value": 2,
+          "contribution": 0.4,
+          "cap": 20,
+          "status": "source_snapshot"
+        },
+        {
+          "key": "growth",
+          "label": "Seven-day cluster change",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "not_enough_history"
+        },
+        {
+          "key": "elderly",
+          "label": "Share of residents aged 65+",
+          "value": null,
+          "contribution": 0.0,
+          "cap": 10,
+          "status": "unavailable_no_valid_area_join"
+        }
+      ],
+      "reason": "At a verified block associated with the 2-person cluster. Block checks may reveal stagnant water; no breeding site is confirmed.",
+      "checklist": [
+        "Check gutters for trapped water",
+        "Empty planter trays",
+        "Check corridor pails and containers"
+      ],
+      "google_maps_url": "https://www.google.com/maps/search/?api=1&query=1.4308407,103.7977702",
+      "radius_m": 300,
+      "rank": 2
+    }
+  ]
+}

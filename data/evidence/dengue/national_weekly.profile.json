@@ -1,0 +1,280 @@
+{
+  "row_count": 530,
+  "columns": [
+    "eweek",
+    "number",
+    "type_dengue",
+    "year"
+  ],
+  "missing_counts": {
+    "eweek": 0,
+    "number": 8,
+    "type_dengue": 0,
+    "year": 0
+  },
+  "exact_duplicate_rows": 0,
+  "distinct_counts": {
+    "eweek": 53,
+    "number": 169,
+    "type_dengue": 2,
+    "year": 5
+  },
+  "sample_rows": [
+    {
+      "year": "2014",
+      "eweek": "1",
+      "type_dengue": "Dengue",
+      "number": "436"
+    },
+    {
+      "year": "2014",
+      "eweek": "1",
+      "type_dengue": "DHF",
+      "number": "1"
+    },
+    {
+      "year": "2014",
+      "eweek": "2",
+      "type_dengue": "Dengue",
+      "number": "479"
+    }
+  ],
+  "all_rows_profiled": true,
+  "value_ranges": {
+    "eweek": {
+      "order": "lexicographic",
+      "min": "1",
+      "max": "9"
+    },
+    "number": {
+      "order": "lexicographic",
+      "min": "0",
+      "max": "98"
+    },
+    "type_dengue": {
+      "order": "lexicographic",
+      "min": "DHF",
+      "max": "Dengue",
+      "values": [
+        "DHF",
+        "Dengue"
+      ]
+    },
+    "year": {
+      "order": "lexicographic",
+      "min": "2014",
+      "max": "2018",
+      "values": [
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+      ]
+    }
+  },
+  "dengue_rows": {
+    "row_count": 530,
+    "columns": [
+      "eweek",
+      "number",
+      "type_dengue",
+      "year"
+    ],
+    "missing_counts": {
+      "eweek": 0,
+      "number": 8,
+      "type_dengue": 0,
+      "year": 0
+    },
+    "exact_duplicate_rows": 0,
+    "distinct_counts": {
+      "eweek": 53,
+      "number": 169,
+      "type_dengue": 2,
+      "year": 5
+    },
+    "sample_rows": [
+      {
+        "year": "2014",
+        "eweek": "1",
+        "type_dengue": "Dengue",
+        "number": "436"
+      },
+      {
+        "year": "2014",
+        "eweek": "1",
+        "type_dengue": "DHF",
+        "number": "1"
+      },
+      {
+        "year": "2014",
+        "eweek": "2",
+        "type_dengue": "Dengue",
+        "number": "479"
+      }
+    ]
+  },
+  "numeric_quality": {
+    "number": {
+      "non_numeric_count": 0,
+      "negative_count": 0,
+      "noninteger_count": 0,
+      "minimum": 0.0,
+      "maximum": 888.0
+    }
+  },
+  "time_profile": {
+    "first_year_week": [
+      2014,
+      1
+    ],
+    "last_year_week": [
+      2018,
+      53
+    ],
+    "unique_year_weeks": 265,
+    "unique_weeks_by_year": {
+      "2014": 53,
+      "2015": 53,
+      "2016": 53,
+      "2017": 53,
+      "2018": 53
+    },
+    "missing_count_rows": [
+      {
+        "year": "2015",
+        "eweek": "53",
+        "type_dengue": "Dengue",
+        "number": "NA"
+      },
+      {
+        "year": "2015",
+        "eweek": "53",
+        "type_dengue": "DHF",
+        "number": "NA"
+      },
+      {
+        "year": "2016",
+        "eweek": "53",
+        "type_dengue": "Dengue",
+        "number": "NA"
+      },
+      {
+        "year": "2016",
+        "eweek": "53",
+        "type_dengue": "DHF",
+        "number": "NA"
+      },
+      {
+        "year": "2017",
+        "eweek": "53",
+        "type_dengue": "Dengue",
+        "number": "NA"
+      },
+      {
+        "year": "2017",
+        "eweek": "53",
+        "type_dengue": "DHF",
+        "number": "NA"
+      },
+      {
+        "year": "2018",
+        "eweek": "53",
+        "type_dengue": "Dengue",
+        "number": "NA"
+      },
+      {
+        "year": "2018",
+        "eweek": "53",
+        "type_dengue": "DHF",
+        "number": "NA"
+      }
+    ]
+  },
+  "observation_key": [
+    "year",
+    "eweek",
+    "type_dengue"
+  ],
+  "duplicate_observation_keys": 0,
+  "dataset_id": "d_ac1eecf0886ff0bceefbc51556247015",
+  "source_url": "https://data.gov.sg/datasets/d_ac1eecf0886ff0bceefbc51556247015/view",
+  "raw_path": "data/raw/dengue/national_weekly.csv.gz",
+  "metadata_path": "data/evidence/dengue/national_weekly.metadata.json",
+  "profiled_at_utc": "2026-09-24T03:42:56.278390+00:00",
+  "download": {
+    "dataset_id": "d_ac1eecf0886ff0bceefbc51556247015",
+    "source_url": "https://data.gov.sg/datasets/d_ac1eecf0886ff0bceefbc51556247015/view",
+    "api_url": "https://api-open.data.gov.sg/v1/public/api/datasets/d_ac1eecf0886ff0bceefbc51556247015/poll-download",
+    "retrieved_at_utc": "2026-09-24T03:27:40.595052+00:00",
+    "completed_at_utc": "2026-09-24T03:27:40.756815+00:00",
+    "raw_bytes": 8572,
+    "raw_sha256": "722f3fbf5237280dbf9e1d503f527b707ce3e9cdb30a102944af48b757f149d2",
+    "stored_path": "data/raw/dengue/national_weekly.csv.gz",
+    "stored_bytes": 2178,
+    "stored_sha256": "55745ea786efc1db3ca5a0b41d6121917beb6b36137e1e6a08c7012ce3504fca",
+    "compression": "gzip (original bytes after decompression)",
+    "status": "complete"
+  },
+  "catalogue_metadata": {
+    "datasetId": "d_ac1eecf0886ff0bceefbc51556247015",
+    "createdAt": "2019-09-30T10:06:00+08:00",
+    "name": "Weekly Number of Dengue and Dengue Haemorrhagic Fever Cases",
+    "collectionIds": [
+      "509"
+    ],
+    "description": "This table gives the weekly number of lab-confirmed dengue and dengue haemorrhagic fever cases from 2014 to 2018.",
+    "format": "CSV",
+    "lastUpdatedAt": "2024-06-06T14:53:44+08:00",
+    "managedBy": "Ministry of Health",
+    "coverageStart": "2014-01-01T08:00:00+08:00",
+    "coverageEnd": "2018-12-31T08:00:00+08:00",
+    "datasetSize": 8572,
+    "columnMetadata": {
+      "order": [
+        "c_35uycj0efv7jsrnu0ch1h57vf",
+        "c_5kuxr17pnmd89jv8m9nxcomyf",
+        "c_5trx0lf2w9kj7rqo5mjfyprxt",
+        "c_dsg709f8oj7poq0g3a8llewq2"
+      ],
+      "map": {
+        "c_35uycj0efv7jsrnu0ch1h57vf": "year",
+        "c_5kuxr17pnmd89jv8m9nxcomyf": "eweek",
+        "c_5trx0lf2w9kj7rqo5mjfyprxt": "type_dengue",
+        "c_dsg709f8oj7poq0g3a8llewq2": "number"
+      },
+      "metaMapping": {
+        "c_35uycj0efv7jsrnu0ch1h57vf": {
+          "name": "year",
+          "columnTitle": "Year",
+          "dataType": "Year (YYYY)",
+          "index": "0",
+          "isCategorical": false
+        },
+        "c_5kuxr17pnmd89jv8m9nxcomyf": {
+          "unitOfMeasure": "Week",
+          "name": "eweek",
+          "columnTitle": "Eweek",
+          "dataType": "Numeric",
+          "index": "1",
+          "isCategorical": false
+        },
+        "c_5trx0lf2w9kj7rqo5mjfyprxt": {
+          "name": "type_dengue",
+          "columnTitle": "Type dengue",
+          "dataType": "Text",
+          "index": "2",
+          "isCategorical": false
+        },
+        "c_dsg709f8oj7poq0g3a8llewq2": {
+          "name": "number",
+          "columnTitle": "Number",
+          "dataType": "Text",
+          "index": "3",
+          "isCategorical": false
+        }
+      }
+    }
+  }
+}

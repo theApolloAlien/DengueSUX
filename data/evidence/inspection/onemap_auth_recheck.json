@@ -1,0 +1,62 @@
+[
+  {
+    "query": "117 HO CHING ROAD",
+    "source_url": "https://www.onemap.gov.sg/api/common/elastic/search",
+    "retrieved_at_utc": "2026-09-24T05:47:48.597350+00:00",
+    "http_status": 200,
+    "response_sha256": "3acb3fa402450031b25a140012b4ce0fef4b4351b019b8b41a1201f506383bdd",
+    "response_keys": [
+      "error",
+      "found",
+      "totalNumPages",
+      "pageNum",
+      "results"
+    ],
+    "error_key_present": true,
+    "error": "Authentication token missing. Please create an account and generate or renew your API Token.",
+    "found": 1,
+    "exact_block_street_matches": 1,
+    "raw_response_path": "data/evidence/inspection/onemap_recheck_117_ho_ching_road.json",
+    "usable_without_authentication_error": false
+  },
+  {
+    "query": "335 KANG CHING ROAD",
+    "source_url": "https://www.onemap.gov.sg/api/common/elastic/search",
+    "retrieved_at_utc": "2026-09-24T05:47:51.730409+00:00",
+    "http_status": 200,
+    "response_sha256": "6a9212c5c9a2c0d31efa891b08fc95e2c2a91ea9c7d09df17d4cb843ec957491",
+    "response_keys": [
+      "error",
+      "found",
+      "totalNumPages",
+      "pageNum",
+      "results"
+    ],
+    "error_key_present": true,
+    "error": "Authentication token missing. Please create an account and generate or renew your API Token.",
+    "found": 1,
+    "exact_block_street_matches": 1,
+    "raw_response_path": "data/evidence/inspection/onemap_recheck_335_kang_ching_road.json",
+    "usable_without_authentication_error": false
+  },
+  {
+    "query": "321 TAH CHING ROAD",
+    "source_url": "https://www.onemap.gov.sg/api/common/elastic/search",
+    "retrieved_at_utc": "2026-09-24T05:47:54.829292+00:00",
+    "http_status": 200,
+    "response_sha256": "25f4415709c216d86de40663252f41a4154d69f463944a2edc33cbbf0043f3ce",
+    "response_keys": [
+      "error",
+      "found",
+      "totalNumPages",
+      "pageNum",
+      "results"
+    ],
+    "error_key_present": true,
+    "error": "Authentication token missing. Please create an account and generate or renew your API Token.",
+    "found": 1,
+    "exact_block_street_matches": 1,
+    "raw_response_path": "data/evidence/inspection/onemap_recheck_321_tah_ching_road.json",
+    "usable_without_authentication_error": false
+  }
+]

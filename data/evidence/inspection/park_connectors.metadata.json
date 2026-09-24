@@ -1,0 +1,78 @@
+{
+  "code": 0,
+  "data": {
+    "datasetId": "d_a69ef89737379f231d2ae93fd1c5707f",
+    "createdAt": "2023-07-31T16:43:49+08:00",
+    "name": "Park Connector Loop",
+    "collectionIds": [
+      "1490"
+    ],
+    "description": "This dataset shows the indicative segments of the Park Connector Loop. The Park Connector Loop are islandwide network of linear open spaces around major residential areas, linking up parks and nature sites. An important part of Singapore's transformation into a City in a Garden, the Park Connector Loop brings you through the lush greenery and natural splendour of our island, as well as a wide range of exciting recreational activities.",
+    "format": "GEOJSON",
+    "lastUpdatedAt": "2026-07-15T10:06:55+08:00",
+    "managedBy": "National Parks Board",
+    "coverageStart": "2025-10-13T00:00:00+08:00",
+    "datasetSize": 2008356,
+    "geoJsonMetadata": {
+      "properties": [
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "OBJECTID",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "PARK",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "PCN_LOOP",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "MORE_INFO",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Text",
+            "value": "TEXT"
+          },
+          "attribute": "INC_CRC",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "FMEL_UPD_D",
+          "description": ""
+        },
+        {
+          "dataType": {
+            "label": "Numeric",
+            "value": "NUMERIC"
+          },
+          "attribute": "SHAPE.LEN",
+          "description": ""
+        }
+      ]
+    }
+  },
+  "errorMsg": ""
+}

@@ -1,0 +1,49 @@
+{
+  "row_count": 129,
+  "geometry_types": {
+    "Point": 129
+  },
+  "invalid_geometries": 0,
+  "properties": [
+    "ADDRESSBLOCKHOUSENUMBER",
+    "ADDRESSBUILDINGNAME",
+    "ADDRESSPOSTALCODE",
+    "ADDRESSSTREETNAME",
+    "ADDRESS_MYENV",
+    "AWARDED_DATE",
+    "DESCRIPTION",
+    "EST_ORIGINAL_COMPLETION_DATE",
+    "FMEL_UPD_D",
+    "HUP_COMPLETION_DATE",
+    "IMPLEMENTATION_DATE",
+    "INC_CRC",
+    "INFO_ON_CO_LOCATORS",
+    "LANDXADDRESSPOINT",
+    "LANDYADDRESSPOINT",
+    "NAME",
+    "NUMBER_OF_COOKED_FOOD_STALLS",
+    "OBJECTID",
+    "PHOTOURL",
+    "STATUS"
+  ],
+  "slug": "hawker_centres",
+  "dataset_id": "d_4a086da0a5553be1d89383cd90d07ecd",
+  "source_name": "Hawker Centres (GEOJSON)",
+  "receipt": {
+    "dataset_id": "d_4a086da0a5553be1d89383cd90d07ecd",
+    "source_url": "https://data.gov.sg/datasets/d_4a086da0a5553be1d89383cd90d07ecd/view",
+    "api_url": "https://api-open.data.gov.sg/v1/public/api/datasets/d_4a086da0a5553be1d89383cd90d07ecd/poll-download",
+    "retrieved_at_utc": "2026-09-24T05:39:31.857259+00:00",
+    "completed_at_utc": "2026-09-24T05:39:31.989492+00:00",
+    "raw_bytes": 140561,
+    "raw_sha256": "722ffdb3e68627c1724bc47f72889e09e790904ff23a1fa630595d76265f7451",
+    "stored_path": "data/raw/inspection/hawker_centres.geojson.gz",
+    "stored_bytes": 22631,
+    "stored_sha256": "e549483a087a4ed4970f7b5c820e4ac438fa9b2da068378568401d5ea74dcab4",
+    "compression": "gzip (original bytes after decompression)",
+    "status": "complete"
+  },
+  "source_updated_at": "2026-09-24T10:06:44+08:00",
+  "coverage_start": "2025-11-07T00:00:00+08:00",
+  "coverage_end": null
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "query": "117 HO CHING ROAD",
+    "source_url": "https://www.onemap.gov.sg/api/common/elastic/search",
+    "retrieved_at_utc": "2026-09-24T05:42:20.365583+00:00",
+    "http_status": 200,
+    "response_sha256": "9e5ded0d6c2571999e29dbfc42c30fd327a4a5824ab35c3439a3d181cde614d8",
+    "error": null,
+    "found": 1,
+    "results_accepted": false
+  },
+  {
+    "query": "335 KANG CHING ROAD",
+    "source_url": "https://www.onemap.gov.sg/api/common/elastic/search",
+    "retrieved_at_utc": "2026-09-24T05:42:20.467609+00:00",
+    "http_status": 200,
+    "response_sha256": "769195b5ba287196a1ee3f9f9f63443aa2d96ef68491ec13cd370045183d5bd9",
+    "error": null,
+    "found": 1,
+    "results_accepted": false
+  },
+  {
+    "query": "321 TAH CHING ROAD",
+    "source_url": "https://www.onemap.gov.sg/api/common/elastic/search",
+    "retrieved_at_utc": "2026-09-24T05:42:20.590880+00:00",
+    "http_status": 429,
+    "response_sha256": "d8b87fdafedf7b63d6fc285941af298dabb959b19905b13d6a3c2602946882ac",
+    "error": null,
+    "found": null,
+    "results_accepted": false
+  }
+]

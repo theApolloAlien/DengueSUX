@@ -1,0 +1,206 @@
+Weekly Number of Dengue and Dengue Haemorrhagic Fever Cases | MOH | data.gov.sg
+A Singapore Government Agency Website
+How to identify
+Official website links end with .gov.sg
+Government agencies communicate via .gov.sg websites (e.g. go.gov.sg/open).
+Trusted websites
+Secure websites use HTTPS
+Look for a
+lock
+(
+) or https:// as an added precaution. Share sensitive information only on official, secure websites.
+Scam alert
+Government officers will never ask you to send money or share your details over the phone.
+When unsure, hang up and call Scamshield at 1799.
+Search for datasets
+Open main menu
+Datasets
+Guide
+Feedback
+Log in
+Datasets
+Agencies
+Guide
+Log in
+Feedback
+Product status
+Report card
+Open Data Licence
+Privacy & Terms
+Health
+Weekly Number of Dengue and Dengue Haemorrhagic Fever Cases
+MOH
+(
+Ministry of Health
+)
+This table gives the weekly number of lab-confirmed dengue and dengue haemorrhagic fever cases from 2014 to 2018.
+Data from Jan 2014 to Dec 2018
+Last updated
+6 Jun 2024
+See history
+Download
+CSV
+(8.4 KB)
+Data from Jan 2014 to Dec 2018
+Last updated
+6 Jun 2024
+See history
+Data explorer
+WeeklyNumberofDengueandDengueHaemorrhagicFeverCases.csv (530 rows, 8.4 KB)
+Showing 4 of 4 columns
+Year
+Year (YYYY)
+Eweek
+Numeric
+Type dengue
+Text
+Number
+Text
+(Null)
+0.0%
+(Null)
+0.0%
+(Null)
+0.0%
+(Null)
+1.5%
+2014
+1
+Dengue
+436
+2014
+1
+DHF
+1
+2014
+2
+Dengue
+479
+2014
+2
+DHF
+0
+2014
+3
+Dengue
+401
+2014
+3
+DHF
+0
+2014
+4
+Dengue
+336
+2014
+4
+DHF
+0
+2014
+5
+Dengue
+234
+2014
+5
+DHF
+0
+No results found
+Clear all table filters
+Previous
+1
+2
+3
+4
+5
+More pages
+53
+Next
+Analyse this dataset with Colab Notebook
+1. Copy this dataset ID:
+d_ac1eecf0886ff0bceefbc51556247015
+2. Click on the button below
+Open in Colab
+Sample OpenAPI query
+This code can be used to test a sample API query. It retrieves the data catalogue of this dataset. For a complete guide on query parameters and syntax, please refer to the
+API documentation
+. Try it out
+on your browser
+to see the response schema.
+Adding an API key gives you higher
+rate limits
+and priority support.
+Log in
+to create your API key.
+Python
+Copy
+import
+requests
+dataset_id
+=
+"d_ac1eecf0886ff0bceefbc51556247015"
+url
+=
+"https://data.gov.sg/api/action/datastore_search?resource_id="
++
+dataset_id
+response
+=
+requests
+.
+get
+(url)
+print
+(response.
+json
+())
+Citation
+This dataset can be reused and cited in research publications.
+APA
+Copy
+Ministry of Health. (2019). Weekly Number of Dengue and Dengue Haemorrhagic Fever Cases (2024) [Dataset]. data.gov.sg. Retrieved September 24, 2026 from https://data.gov.sg/datasets/d_ac1eecf0886ff0bceefbc51556247015/view
+About this dataset
+Contact
+feedback@data.gov.sg
+Created on
+30 Sep 2019
+Licence
+Free forever for personal or commercial use, under the
+Open Data Licence
+.
+Agency
+MOH (Ministry of Health)
+Feedback
+Product status
+Report card
+Open Data Licence
+Privacy & Terms
+©
+2026
+Open Government Products
+Search for datasets
+Column legend
+Title
+Column name
+Data type
+Unit of measure
+Description
+Year
+year
+Year (YYYY)
+-
+-
+Eweek
+eweek
+Numeric
+Week
+-
+Type dengue
+type_dengue
+Text
+-
+-
+Number
+number
+Text
+-
+-

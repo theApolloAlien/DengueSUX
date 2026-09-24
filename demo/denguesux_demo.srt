@@ -1,0 +1,54 @@
+1
+00:00:00,002 --> 00:00:04,802
+DengueSUX — where to check for mosquitoes this week
+Built on Singapore's open NEA, MOH and URA data
+
+2
+00:00:09,570 --> 00:00:14,370
+Largest cluster first
+74 people across Jurong West and Jurong East
+
+3
+00:00:16,558 --> 00:00:21,358
+Areas ranked by people in active clusters
+High = 10 or more people
+
+4
+00:00:24,559 --> 00:00:29,359
+One-click inspection plan
+8 stops on a 1.2 km OneMap walking route
+
+5
+00:00:41,502 --> 00:00:46,302
+Resident notice, drafted from dated facts
+Every draft passes 5 automatic safety checks
+
+6
+00:01:05,636 --> 00:01:10,436
+Ask DengueSUX
+Answers come from the data, and every number cites a dated source
+
+7
+00:01:27,131 --> 00:01:31,931
+Explains the forecast
+Recent cases drove the warning, 11 weeks before the peak
+
+8
+00:01:40,503 --> 00:01:45,303
+Ask the data
+Plain English → SQL over the gold Delta tables
+
+9
+00:01:54,957 --> 00:01:59,757
+Tested on a real outbreak
+Error ~83 people a week, vs ~172 for a simple average
+
+10
+00:02:05,022 --> 00:02:09,822
+Next: an area-level growth model
+Collecting daily snapshots now
+
+11
+00:02:10,158 --> 00:02:14,531
+DengueSUX · Small actions. Fewer bites.
+DAISI Challenge Singapore

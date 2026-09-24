@@ -1,0 +1,114 @@
+"""Render the Phase 1 report from the persisted full-data profiles."""
+import json
+from pathlib import Path
+from phase1_common import ROOT, utc_now
+
+
+def load(path):return json.loads((ROOT/path).read_text())
+def table(headers, rows):
+    return '\n'.join(['| '+' | '.join(headers)+' |','| '+' | '.join(['---']*len(headers))+' |']+
+        ['| '+' | '.join(str(v).replace('|','\\|').replace('\n',' ') for v in row)+' |' for row in rows])
+def n(x):return f'{x:,}'
+def feature_date(x):
+    x=str(x)
+    return f'{x[:4]}-{x[4:6]}-{x[6:8]}' if len(x)==14 and x.isdigit() else x
+def source(dataset_id):return f'https://data.gov.sg/datasets/{dataset_id}/view'
+def api(dataset_id):return f'https://api-open.data.gov.sg/v1/public/api/datasets/{dataset_id}/poll-download'
+def ds(name,d):return f'[{name}]({source(d["dataset_id"])})'
+
+def main():
+    dengue=load('data/evidence/dengue/profiles.json')
+    rain=[load(f'data/profiles/rainfall_{y}.json') for y in range(2016,2025)]
+    weather=[load(f'data/profiles/weather_{m}_{date}.json') for m in ['rainfall','air-temperature','relative-humidity'] for date in ['2024-01-01','2026-09-23']]
+    probes=load('data/profiles/weather_probes.json')
+    receipts=[v['download'] for v in dengue.values()]+[r['source'] for r in rain]
+    archive_raw=sum(r['raw_bytes'] for r in receipts);archive_stored=sum(r['stored_bytes'] for r in receipts)
+    total_rain=sum(r['summary']['row_count'] for r in rain)
+    lines=['# DengueRadar — Phase 1 data feasibility report',
+    f'\nGenerated {utc_now()}. Collection dates and checksums are recorded per file; this is a saved evidence audit, not a live dashboard.',
+    '\n## Decision',
+    '**A national weekly dengue training set is feasible. No usable historical planning-area or other subnational case panel was found in the requested public catalogue and inspected datasets.** The five regional dengue datasets are real, but contain spatial snapshots with undocumented case periods. Their feature update dates do not form a longitudinal outcome series.',
+    'Recommend a national two-week-ahead forecast with a separately labelled **heuristic planning-area prioritisation score**, based on cluster intensity and local weather. This is not a validated local incidence forecast. The user selected this fallback. Start with the 2017–2022 candidate overlap after weather coverage checks; the first eight lag weeks and final two target weeks reduce the usable examples. Rainfall has substantial gaps: 2018 alone has 39 entirely unobserved dates, so this is a candidate overlap rather than a ready-to-train complete panel.',
+    '**Current-forecast blocker:** the strongest verified national weekly label source ends in 2022. A current 2026 model using recent case trends requires verified recent weekly case labels and their reporting lag. Until those are obtained, present a historical backtest plus a separately dated current situational map. Do not describe a backtest as a current forecast.',
+    'No synthetic data, fitted model, forecast, medallion pipeline, map, or scheduled snapshot automation was created in Phase 1. Proposed risk allocation, thresholds, and weather imputation are assumptions awaiting Phase 2 design and confirmation.',
+    '\n## Acquisition and audit scope',
+    f'All **19** requested CSV/GeoJSON files were saved completely: three national dengue datasets, five regional datasets, active clusters, 2025 boundaries, and nine rainfall years. Original bytes total **{n(archive_raw)}**; their lossless gzip copies occupy **{n(archive_stored)} bytes**. The rainfall archives contain **{n(total_rain)} rows** and every annual downloaded count matches its published API total.',
+    f'Weather evidence includes all pages for six metric/day combinations ({sum(w["page_count"] for w in weather)} pages) and 18 historical existence probes. A weather “row” below means one station measurement; timestamp counts and page counts are reported separately. All rows in the retained files were profiled. Historical probes examine only the first page and establish availability, not full-day coverage.',
+    'Raw files and receipts are in `data/raw/`; `data/profiles/manifest.json` indexes source URLs, retrieval timestamps, stored/original byte counts and SHA-256 checksums. `data/profiles/verification.json` records the final integrity check. Metadata and dengue/geospatial profiles are in `data/evidence/`; rainfall/weather profiles and full station-day coverage audits are in `data/profiles/`.',
+    'Stable source links appear below. Every CSV/GeoJSON uses `GET https://api-open.data.gov.sg/v1/public/api/datasets/{dataset_id}/poll-download`, followed by the returned temporary `data.url`. Public row-count evidence uses `GET https://data.gov.sg/api/action/datastore_search?resource_id={dataset_id}&limit=1`. Source metadata uses `GET https://api-open.data.gov.sg/v2/public/api/datasets/{dataset_id}/metadata`. Dataset IDs are embedded in the linked source pages and persisted in the profiles. Temporary signed URLs are not stored as provenance.',
+    'No API key was needed. The collectors throttle shared requests and retry HTTP 429/API code 24 and transient failures. The public API client uses `curl` with a descriptive User-Agent after default Python HTTP requests encountered HTTP 403 and repeated throttling responses. Catalogue sizes/ranges are treated as metadata, not proof of downloaded coverage.',
+    '\n## Dengue outcome sources',
+    table(['Dataset / format','Measured coverage','Temporal / spatial granularity','Saved rows','Quality and use'],[
+       [ds('Weekly Infectious Disease Bulletin Cases',dengue['national_bulletin'])+' — CSV','2012-W01–2022-W52','Weekly disease counts; national',n(dengue['national_bulletin']['row_count']),'574 unique weeks; 1,148 dengue rows (574 Fever + 574 Haemorrhagic). No null cells or duplicate dengue week/disease keys. Preferred target.'],
+       [ds('Weekly Dengue and DHF Cases',dengue['national_weekly'])+' — CSV','2014–2018','Weekly; national',n(dengue['national_weekly']['row_count']),'522 numeric rows / 261 valid weeks; eight NA values are W53 placeholders for 2015–2018. Not zeros.'],
+       [ds('Dengue Outbreak Statistics',dengue['national_annual'])+' — CSV','2007–2015','Annual incidence rate; national',n(dengue['national_annual']['row_count']),'No nulls. Column metadata defines local DF/DHF cases per 100,000 population. Annual rate, too coarse for a two-week target.']]),
+    '**Week definition:** the bulletin metadata explicitly defines epidemiological weeks as Sunday–Saturday. Do not parse these labels using an ISO Monday–Sunday week function. Week 53 occurs in 2014 and 2020. Derive and validate the year-boundary mapping before joining daily weather to labels. The prototype target should use Dengue Fever plus Dengue Haemorrhagic Fever consistently, without double-counting or silently mixing another source.',
+    'The national sources disagree on 54 of 522 comparable disease/week pairs; they may reflect different revisions or definitions. Use one consistently. Summed Dengue + DHF annual totals are:',
+    table(['Year','Dengue-specific weekly CSV','Weekly bulletin'],[[2014,'18,326','18,326'],[2015,'11,294','11,303'],[2016,'13,085','13,179'],[2017,'2,767','2,776'],[2018,'3,283','3,285']]),
+    'The bulletin contains other diseases and some changing disease labels. Filter the two exact dengue disease names. Catalogue ingestion dates (including June 2024) do not extend the actual case-history endpoint beyond 2022.',
+    '\n### Regional files: spatial snapshots, not training labels',
+    ]
+    region_rows=[]
+    for slug,name in [('region_central','Central'),('region_north_west','North West'),('region_south_east','South East'),('region_south_west','South West'),('region_north_east','North East')]:
+        p=dengue[slug];props=p['property_summaries'];date=props.get('html_FMEL_UPD_D',{})
+        ck=next(k for k in props if k.endswith('JOIN_COUNT'))
+        region_rows.append([ds(name,p),n(p['feature_count']),int(props[ck]['numeric_sum']),feature_date(date.get('min')),feature_date(date.get('max')),len(p['invalid_geometries'])])
+    lines += [table(['GeoJSON dataset','Polygon features','Sum of JOIN_COUNT','Earliest feature update','Latest feature update','Invalid geometries'],region_rows),
+    'All five files were downloaded completely. They contain 150 positive-count spatial features in total, with 167 summed `JOIN_COUNT` values. There are only **146 distinct exact geometries**: four excess duplicate geometry rows, including a cross-region duplicate; some duplicate footprints have conflicting counts. This raw sum is neither deduplicated nor associated with a documented observation window and must not be presented as weekly incidence. There are no missing parsed attributes. Source properties are `Name` and an HTML `Description` table containing `JOIN_COUNT`, `AREANAME`, `DETAIL`, `INC_CRC`, and `FMEL_UPD_D`.',
+    'These are subregional spatial cells, not URA planning areas. There is no planning-area identifier, case onset/reporting date, epidemiological week, documented case-count interval, or explicit complete zero-case grid. `FMEL_UPD_D` is a feature update timestamp, not a case date. The supplied guide describes regional historical counts; the inspected files do not substantiate that claim.',
+    'Discovery examined the catalogue dengue results, the five regional datasets and their available history UI, and the weekly infectious-disease bulletin. The regional history inspection exposed one ingestion version per file. The live cluster history UI exposed daily ingestion timestamps, but retrievable archived GeoJSON snapshots were not established. Update history metadata is not a download archive or a case panel. This is a qualified catalogue finding, not a claim that granular case data does not exist anywhere.',
+    '\n## Active clusters and planning-area geography']
+    p=dengue['active_clusters'];b=dengue['planning_areas_2025']
+    case=p['property_summaries']['CASE_SIZE'];updates=p['property_summaries']['FMEL_UPD_D']
+    lines += [table(['Dataset / format','Measured content','Date meaning','Quality'],[
+       [ds('NEA Dengue Clusters',p)+' — GeoJSON',f'{p["feature_count"]} polygons; CASE_SIZE sum {int(case["numeric_sum"])}',f'Feature updates {feature_date(updates["min"])}–{feature_date(updates["max"])}; catalogue ingestion {p["catalogue_metadata"]["lastUpdatedAt"]}',f'{len(p["invalid_geometries"])} invalid geometries; optional property missingness below.'],
+       [ds('URA Master Plan 2025 Planning Area Boundary (No Sea)',b)+' — GeoJSON',f'{b["feature_count"]} areas; 48 Polygon + 7 MultiPolygon; 55 unique names/codes','Static 2025 edition; feature updates 29 December 2025; catalogue ingestion 27 February 2026',f'{len(b["invalid_geometries"])} invalid geometries; no missing properties or geometries.']]),
+    'Cluster properties are direct JSON fields, including `OBJECTID`, `LOCALITY`, `CASE_SIZE`, `NAME`, `HOMES`, `PUBLIC_PLACES`, `CONSTRUCTION_SITES`, and `FMEL_UPD_D`. Missing optional property counts: '+', '.join(f'`{k}` {p["missing_counts"].get(k,0)}/{p["feature_count"]}' for k in ['HOMES','PUBLIC_PLACES','CONSTRUCTION_SITES'])+'. Some locality strings have trailing spaces. The optional fields contain text where populated despite catalogue Numeric types; retain their actual source types. Case sizes are positive integers and identifiers are unique.',
+    '**Cluster counts are not incident weekly counts.** Do not sum the same cluster across daily snapshots, equate no active cluster with zero dengue incidence, or copy current cluster intensity into historical training weeks. Daily ingestion does not establish a matching case-observation cutoff; display both ingestion and feature dates. A later daily snapshot collector would start prospective history, not manufacture retrospective labels.',
+    'Boundary properties include `PLN_AREA_C`, `PLN_AREA_N`, `REGION_C`, and `REGION_N`; use the stable area code, not free-text locality names, for spatial results. The 2025 map has five URA regions. These regions are not automatically equivalent to the five dengue regional files. Save the chosen edition and hash. A current map can use fixed 2025 geography; disclose this if applying it to older observations.',
+    'Coordinates are GeoJSON longitude/latitude consistent with WGS84 (regional files explicitly identify CRS84). Do not confuse this with projected metre-based `SHAPE.AREA`/`SHAPE.LEN`. Shapely validity, missing/empty geometries and identifiers were checked on every downloaded feature. Valid polygon topology does not prove cartographic accuracy, lack of inter-area overlaps, or epidemiological completeness. URA calls these boundaries indicative and notes they may differ from existing development.',
+    '\n## Weather APIs: historical access verified',
+    table(['Metric','API / JSON','Units','Observed nominal granularity','Spatial granularity'],[
+       ['Rainfall','[V2 rainfall](https://api-open.data.gov.sg/v2/real-time/api/rainfall)','mm per five-minute accumulation','5 minutes','Station point with ID/name/coordinates'],
+       ['Air temperature','[V2 temperature](https://api-open.data.gov.sg/v2/real-time/api/air-temperature)','°C','1 minute','Station point with ID/name/coordinates'],
+       ['Relative humidity','[V2 humidity](https://api-open.data.gov.sg/v2/real-time/api/relative-humidity)','%','1 minute','Station point with ID/name/coordinates']]),
+    'Append `?date=YYYY-MM-DD`. Responses contain station metadata and timestamped readings in Singapore time (`+08:00`). V2 pages contain up to 25 timestamps, newest first. Continue with `paginationToken` while preserving the date; stop only when the token is absent. The `/api/` segment is required in these V2 paths.',
+    table(['Metric','Earliest successful date verified','Prior-day result','Qualification'],[
+       ['Rainfall','2016-12-02','2016-12-01: no data','First-page evidence; not continuous historical coverage'],
+       ['Temperature','2016-05-05','2016-05-04: no data','Earliest day is sparse'],
+       ['Humidity','2016-11-16','2016-11-15: no data','Earliest day is sparse']]),
+    'All three also returned matching-date readings for 14 December 2016, 1 January 2017, 1 January 2020, 1 January 2024 and 23 September 2026. The retained probes include 1 January 2016 no-data responses. These earliest verified dates are not a proof that no isolated earlier observations exist, nor that intervening days are complete. No-data responses are retained as evidence, not treated as zero rainfall.',
+    '\n### Complete saved V2 days',
+    table(['Metric','Date','Pages','Timestamps','Station measurements','Stations','Per-station observations','Observed value range'],[
+       [w['metric'],w['requested_date'],w['page_count'],n(w['distinct_timestamps']),n(w['station_measurements']),w['stations_with_readings'],f'{min(s["measurements"] for s in w["station_coverage"])}–{max(s["measurements"] for s in w["station_coverage"])}',f'{w["min_value"]}–{w["max_value"]}'] for w in weather]),
+    f'Across these six complete responses: {sum(w["null_readings"] for w in weather)} explicit null readings, {sum(w["invalid_numeric_readings"] for w in weather)} invalid numeric readings, {sum(w["duplicate_station_timestamp_excess"] for w in weather)} duplicate station/timestamp measurements, and {sum(w["wrong_requested_date_timestamps"] for w in weather)} wrong-date timestamps. Missing rows still occur: nominal counts are 288/day for rainfall and 1,440/day for temperature/humidity. The 2024 temperature/humidity days each have 1,439 timestamps; the 2026 days each have 1,437. Station-day counts must accompany aggregates.',
+    'The station network changes: the saved rainfall days contain 64 stations in 2024 versus 89 in 2026, and temperature/humidity coverage changes too. Preserve dated station coordinates. Sum rainfall accumulation intervals within a station; aggregate temperature/humidity by means or other stated summaries. Average/weight station summaries rather than summing rainfall across stations. Never silently fill absent readings with zeros.',
+    'Temperature/humidity historical CSV archives also exist: [temperature collection 2246](https://data.gov.sg/collections/2246/view) and [humidity collection 2278](https://data.gov.sg/collections/2278/view). Their full annual files were not part of this download plan and were not profiled here. They are a practical Phase 2 backfill option, subject to the same completeness audit. Legacy weather endpoints are not used in the saved evidence; they can omit midnight observations and should not be mixed silently with V2.',
+    '\n## Historical rainfall: all nine files fully profiled',
+    '[Collection 2279](https://data.gov.sg/collections/2279/view) contains annual station-level CSVs. Schema: `date,timestamp,update_timestamp,station_id,station_name,station_device_id,location_longitude,location_latitude,reading_update_timestamp,reading_value,reading_type,reading_unit`. All downloaded rows were parsed with an explicit Singapore timezone, including uniqueness, numerical, coordinate, unit, date and station-day checks.',
+    table(['CSV dataset','Downloaded / published rows','Actual first timestamp (SGT)','Actual last timestamp (SGT)','Stations','Observed dates'],[
+       [f'[{r["year"]}]({source(r["dataset_id"])})',n(r['summary']['row_count']),r['summary']['start'],r['summary']['end'],r['summary']['stations'],r['summary']['observed_dates']] for r in rain]),
+    '**2016 is not a year of training data:** the saved CSV has only 5,543 readings, 102 timestamps and two dates, from 2 December evening to 3 December morning. Catalogue and collection ranges disagree with the actual file. Later December 2016 readings exist in the historical API but are absent from that CSV. The 2017 file begins after 08:00 on 1 January. Start the candidate training window in 2017 and explicitly trim or reject incomplete feature weeks.',
+    table(['Year','Null cells / sentinel cells','Duplicate key excess','Invalid / negative readings','Station-days below 288','Station-days above 288','Longest network timestamp gap (hours)'],[
+       [r['year'],f'{sum(r["null_counts"].values())} / {sum(r["sentinel_counts"].values())}',r['duplicate_keys']['duplicate_excess_rows'],f'{r["summary"]["invalid_reading_values"]} / {r["summary"]["negative_readings"]}',n(r['daily_coverage']['station_days_below_288']),n(r['daily_coverage']['station_days_above_288']),round(r['network_gaps']['max_network_timestamp_gap_seconds']/3600,3)] for r in rain]),
+    '**Whole-network gaps:** 2018 has 39 entirely unobserved dates and a longest gap of about 29 days. Other years with entirely unobserved dates are 2019 (11), 2020 (2), 2021 (3), and 2023 (8). These gaps can invalidate multiple weeks of lagged features. In Phase 2, attempt a bounded historical-API backfill for affected dates and verify the returned data; otherwise exclude incomplete feature windows or apply an explicitly evaluated missing-data policy. Do not silently interpolate a month of rainfall or call the archive complete because its first and last dates span a year.',
+    '“Below 288” counts only observed station-days and includes station activation/deactivation, partial days and outages; it is not an estimate of uptime without an operational station calendar. Entirely unobserved station-days cannot be distinguished from inactive stations. Counts above 288 and timestamp gaps flag irregular sampling and timing shifts. Small gaps over 300 seconds can include clock/cadence changes; consult the full station-day audit rather than assuming every flag is a missing accumulation.',
+    'NEA explicitly warns that the archives may have missing records and have not undergone climate-data quality control. Zero explicit nulls does not imply complete or scientifically validated measurements. Weather availability and national label availability are not the same: station-to-area joins create historical area features, not historical area dengue outcomes.',
+    '\n## Phase 2 feasibility recommendation — not implemented',
+    '1. Use one national weekly label source and audit a Sunday–Saturday weather join. Engineer 1–8 week weather lags and recent national case trends using only data available at the forecast origin. Historical files are retrospective releases; a backtest is not proof of contemporaneous publication availability.',
+    '2. Define the two-week horizon explicitly before modelling, then use chronological/rolling-origin evaluation against the same last-four-week-average baseline on the same target and folds. Report national MAE; any national classification metric needs defined observed labels and thresholds fitted without test leakage.',
+    '3. Show planning-area Low/Medium/High only as an assumed relative prioritisation score. Explain the cluster and local-weather contributions separately from national model explanations. Do not claim local forecast MAE, calibrated disease probability, or local classification accuracy without historical local outcomes. Numeric area allocations, if later chosen, must be labelled assumed allocations rather than observed or independently validated case predictions.',
+    '4. Obtain recent national labels before claiming a current two-week forecast. Begin daily cluster snapshots only in the confirmed next phase; define cluster lifecycle and case-count window semantics before using snapshot differences as outcomes.',
+    '5. Retain real-data provenance and missingness flags in a small Databricks-portable prototype. Use PySpark/Delta stages and MLflow later; the DuckDB audit here is local validation only. No Databricks credentials or deployment were needed for Phase 1.',
+    '\n## Reproduction and stopping point',
+    'See [README.md](README.md) for exact commands and dependency versions. Collectors reuse completed files after checksum validation; this protects the as-of evidence from a silent refresh. `scripts/verify_evidence.py` verifies gzip original bytes, stored bytes, published rainfall totals, and terminating weather pagination chains. Source quality findings remain findings even when acquisition integrity passes.',
+    '**Phase 1 stops here. Phase 2 requires user confirmation.**']
+    report_path=ROOT/'DATA_REPORT.md'
+    # The later inspection audit has its own dated evidence and must survive a
+    # refresh of this original Phase 1 report.
+    previous=report_path.read_text() if report_path.exists() else ''
+    marker='# DengueRadar — Phase 1 data feasibility report'
+    prefix=previous.split(marker,1)[0] if previous.startswith('# DengueSUX inspection feasibility audit') and marker in previous else ''
+    report_path.write_text(prefix+'\n\n'.join(line.lstrip('\n') for line in lines)+'\n')
+    print('Wrote DATA_REPORT.md')
+if __name__=='__main__':main()

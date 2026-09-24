@@ -1,0 +1,65 @@
+{
+  "code": 0,
+  "data": {
+    "datasetId": "d_4180067b350bc9839a4cea487841d5d1",
+    "createdAt": "2021-10-25T20:25:43+08:00",
+    "name": "HDB Elderly and Future Elderly Resident Population by Geographical Distribution",
+    "collectionIds": [
+      "191"
+    ],
+    "format": "CSV",
+    "lastUpdatedAt": "2024-06-06T14:32:52+08:00",
+    "managedBy": "Housing & Development Board",
+    "coverageStart": "2003-01-01T08:00:00+08:00",
+    "coverageEnd": "2018-12-31T08:00:00+08:00",
+    "datasetSize": 6820,
+    "columnMetadata": {
+      "order": [
+        "c_b1e52cq9wr0id1wjcq51fxxe7",
+        "c_1qr8gaa3065hyqr83ktcq37nn",
+        "c_cunhqnq4do7qi8xt2xy80n4bm",
+        "c_bvm8supv8528l63ozk7pjcyfb"
+      ],
+      "map": {
+        "c_b1e52cq9wr0id1wjcq51fxxe7": "shs_year",
+        "c_1qr8gaa3065hyqr83ktcq37nn": "elderly_pop",
+        "c_cunhqnq4do7qi8xt2xy80n4bm": "town_estate",
+        "c_bvm8supv8528l63ozk7pjcyfb": "number"
+      },
+      "metaMapping": {
+        "c_b1e52cq9wr0id1wjcq51fxxe7": {
+          "name": "shs_year",
+          "columnTitle": "SHS year",
+          "dataType": "Year (YYYY)",
+          "index": "0",
+          "isCategorical": false
+        },
+        "c_1qr8gaa3065hyqr83ktcq37nn": {
+          "description": "Elderly resident population refers to resident population aged 65 years old and above. Future elderly resident population refers to resident population aged between 55 and 64 years old.",
+          "name": "elderly_pop",
+          "columnTitle": "Elderly and future elderly resident population",
+          "dataType": "Text",
+          "index": "1",
+          "isCategorical": false
+        },
+        "c_cunhqnq4do7qi8xt2xy80n4bm": {
+          "description": "Central area covers areas such as Tanjong Pagar Plaza, Cantonment Road, Jalan Kukoh, Chin Swee Road, York Hill, Upper Cross Street, Sago Lane, Selegie Road",
+          "name": "town_estate",
+          "columnTitle": "Town/estate",
+          "dataType": "Text",
+          "index": "2",
+          "isCategorical": false
+        },
+        "c_bvm8supv8528l63ozk7pjcyfb": {
+          "unitOfMeasure": "Number",
+          "name": "number",
+          "columnTitle": "Number",
+          "dataType": "Numeric",
+          "index": "3",
+          "isCategorical": false
+        }
+      }
+    }
+  },
+  "errorMsg": ""
+}

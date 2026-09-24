@@ -1,0 +1,19 @@
+{
+  "found": 1,
+  "totalNumPages": 1,
+  "pageNum": 1,
+  "results": [
+    {
+      "SEARCHVAL": "117 HO CHING ROAD SINGAPORE 610117",
+      "BLK_NO": "117",
+      "ROAD_NAME": "HO CHING ROAD",
+      "BUILDING": "NIL",
+      "ADDRESS": "117 HO CHING ROAD SINGAPORE 610117",
+      "POSTAL": "610117",
+      "X": "15730.83684649225",
+      "Y": "35254.0289777182",
+      "LATITUDE": "1.335096949269254",
+      "LONGITUDE": "103.7230731509349"
+    }
+  ]
+}

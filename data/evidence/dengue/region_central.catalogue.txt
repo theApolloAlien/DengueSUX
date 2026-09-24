@@ -1,0 +1,149 @@
+Dengue (Cases) - Central (GEOJSON) | NEA | data.gov.sg
+A Singapore Government Agency Website
+How to identify
+Official website links end with .gov.sg
+Government agencies communicate via .gov.sg websites (e.g. go.gov.sg/open).
+Trusted websites
+Secure websites use HTTPS
+Look for a
+lock
+(
+) or https:// as an added precaution. Share sensitive information only on official, secure websites.
+Scam alert
+Government officers will never ask you to send money or share your details over the phone.
+When unsure, hang up and call Scamshield at 1799.
+Search for datasets
+Open main menu
+Datasets
+Guide
+Feedback
+Log in
+Datasets
+Agencies
+Guide
+Log in
+Feedback
+Product status
+Report card
+Open Data Licence
+Privacy & Terms
+Environment
+Geospatial
+Dengue (Cases) - Central (GEOJSON)
+NEA
+(
+National Environment Agency
+)
+Last updated
+6 Jun 2024
+See history
+Download
+GEOJSON
+(36.5 KB)
+Last updated
+6 Jun 2024
+See history
+‌
+Attribute Legend
+Attributes
+Data Type
+Description
+Name
+Text
+-
+Description
+Text
+-
+[Dataset preview omitted; full downloaded file retained]
+Sample OpenAPI query
+This code can be used to test a sample API query. It retrieves the data catalogue of this dataset. For a complete guide on query parameters and syntax, please refer to the
+API documentation
+Adding an API key gives you higher
+rate limits
+and priority support.
+Log in
+to create your API key.
+Python
+Copy
+import
+requests
+dataset_id
+=
+"d_5f90123ce50e3d323bfd0ff3c9a84601"
+url
+=
+"https://api-open.data.gov.sg/v1/public/api/datasets/"
++
+dataset_id
++
+"/poll-download"
+response
+=
+requests
+.
+get
+(url)
+json_data
+=
+response
+.
+json
+()
+if
+json_data
+[
+'code'
+]
+!=
+0
+:
+print
+(json_data[
+'errMsg'
+])
+exit
+(
+1
+)
+url
+=
+json_data
+[
+'data'
+]
+[
+'url'
+]
+response
+=
+requests
+.
+get
+(url)
+print
+(response.text)
+Citation
+This dataset can be reused and cited in research publications.
+APA
+Copy
+National Environment Agency. (2019). Dengue (Cases) - Central (GEOJSON) (2024) [Dataset]. data.gov.sg. Retrieved September 24, 2026 from https://data.gov.sg/datasets/d_5f90123ce50e3d323bfd0ff3c9a84601/view
+About this dataset
+Contact
+feedback@data.gov.sg
+Created on
+22 Jan 2019
+Licence
+Free forever for personal or commercial use, under the
+Open Data Licence
+.
+Agency
+NEA (National Environment Agency)
+Feedback
+Product status
+Report card
+Open Data Licence
+Privacy & Terms
+©
+2026
+Open Government Products
+Search for datasets

@@ -1,0 +1,440 @@
+{
+  "audited_at_utc": "2026-09-24T05:34:05.014632+00:00",
+  "snapshot": {
+    "snapshot_date_sgt": "2026-09-24",
+    "path": "data/snapshots/clusters/2026-09-24/clusters_20260924T120033+0800.geojson.gz",
+    "receipt": {
+      "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+      "source_url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+      "api_url": "https://api-open.data.gov.sg/v1/public/api/datasets/d_dbfabf16158d1b0e1c420627c0819168/poll-download",
+      "retrieved_at_utc": "2026-09-24T04:00:34.085707+00:00",
+      "completed_at_utc": "2026-09-24T04:00:34.209043+00:00",
+      "raw_bytes": 20386,
+      "raw_sha256": "5491f83d9239e182876a8c901c74b58ccbe6123945b416eb92a2075949f7c956",
+      "stored_path": "data/snapshots/clusters/2026-09-24/clusters_20260924T120033+0800.geojson.gz",
+      "stored_bytes": 6412,
+      "stored_sha256": "511de9dabff6b1b1909be8390b8430511dd706584377379e755025b6ed2951dc",
+      "compression": "gzip (original bytes after decompression)",
+      "status": "complete"
+    },
+    "note": "Snapshot of cumulative active cluster counts, not daily incident cases."
+  },
+  "cluster_count": 11,
+  "cluster_count_with_blocks": 6,
+  "segment_count": 18,
+  "block_segments": 10,
+  "parsed_block_count": 26,
+  "clusters": [
+    {
+      "cluster_id": 527702,
+      "case_size": 2,
+      "locality": "Bt Batok St 21 (Blk 207, 210)",
+      "parsed_block_count": 2,
+      "parsed_blocks": [
+        {
+          "block": "207",
+          "street": "Bt Batok St 21"
+        },
+        {
+          "block": "210",
+          "street": "Bt Batok St 21"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527703,
+      "case_size": 3,
+      "locality": "Upp Changi Rd East (Changi Ct)",
+      "parsed_block_count": 0,
+      "parsed_blocks": []
+    },
+    {
+      "cluster_id": 527704,
+      "case_size": 74,
+      "locality": "Ho Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 335) / Tah Ching Rd (Blk 321, 322, 323, 324, 326, 329, 330, 332) / Yuan Ching Rd / Yuan Ching Rd (Blk 122) / Yuan Ching Rd (Lakeside Twr)",
+      "parsed_block_count": 13,
+      "parsed_blocks": [
+        {
+          "block": "117",
+          "street": "Ho Ching Rd"
+        },
+        {
+          "block": "119",
+          "street": "Ho Ching Rd"
+        },
+        {
+          "block": "120",
+          "street": "Ho Ching Rd"
+        },
+        {
+          "block": "335",
+          "street": "Kang Ching Rd"
+        },
+        {
+          "block": "321",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "322",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "323",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "324",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "326",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "329",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "330",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "332",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "122",
+          "street": "Yuan Ching Rd"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527705,
+      "case_size": 2,
+      "locality": "Woodlands Dr 16 (Blk 573A, 573B)",
+      "parsed_block_count": 2,
+      "parsed_blocks": [
+        {
+          "block": "573A",
+          "street": "Woodlands Dr 16"
+        },
+        {
+          "block": "573B",
+          "street": "Woodlands Dr 16"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527706,
+      "case_size": 5,
+      "locality": "Bishan St 12 (Blk 110, 115, 116)",
+      "parsed_block_count": 3,
+      "parsed_blocks": [
+        {
+          "block": "110",
+          "street": "Bishan St 12"
+        },
+        {
+          "block": "115",
+          "street": "Bishan St 12"
+        },
+        {
+          "block": "116",
+          "street": "Bishan St 12"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527707,
+      "case_size": 4,
+      "locality": "Kim Tian Rd (Blk 119B, 119D, 127D, 131B)",
+      "parsed_block_count": 4,
+      "parsed_blocks": [
+        {
+          "block": "119B",
+          "street": "Kim Tian Rd"
+        },
+        {
+          "block": "119D",
+          "street": "Kim Tian Rd"
+        },
+        {
+          "block": "127D",
+          "street": "Kim Tian Rd"
+        },
+        {
+          "block": "131B",
+          "street": "Kim Tian Rd"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527708,
+      "case_size": 2,
+      "locality": "Mandai Est",
+      "parsed_block_count": 0,
+      "parsed_blocks": []
+    },
+    {
+      "cluster_id": 527698,
+      "case_size": 2,
+      "locality": "Canberra Rd (Blk 308) / Sembawang Vista (Blk 318)",
+      "parsed_block_count": 2,
+      "parsed_blocks": [
+        {
+          "block": "308",
+          "street": "Canberra Rd"
+        },
+        {
+          "block": "318",
+          "street": "Sembawang Vista"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527699,
+      "case_size": 2,
+      "locality": "Farleigh Ave / S'goon Gdn Way",
+      "parsed_block_count": 0,
+      "parsed_blocks": []
+    },
+    {
+      "cluster_id": 527700,
+      "case_size": 2,
+      "locality": "Jln Papan",
+      "parsed_block_count": 0,
+      "parsed_blocks": []
+    },
+    {
+      "cluster_id": 527701,
+      "case_size": 3,
+      "locality": "Defu South St 1",
+      "parsed_block_count": 0,
+      "parsed_blocks": []
+    }
+  ],
+  "segments": [
+    {
+      "cluster_id": 527702,
+      "locality_segment": "Bt Batok St 21 (Blk 207, 210)",
+      "has_block": true,
+      "parsed": [
+        {
+          "block": "207",
+          "street": "Bt Batok St 21"
+        },
+        {
+          "block": "210",
+          "street": "Bt Batok St 21"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527703,
+      "locality_segment": "Upp Changi Rd East (Changi Ct)",
+      "has_block": false,
+      "parsed": []
+    },
+    {
+      "cluster_id": 527704,
+      "locality_segment": "Ho Ching Rd (Blk 117, 119, 120)",
+      "has_block": true,
+      "parsed": [
+        {
+          "block": "117",
+          "street": "Ho Ching Rd"
+        },
+        {
+          "block": "119",
+          "street": "Ho Ching Rd"
+        },
+        {
+          "block": "120",
+          "street": "Ho Ching Rd"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527704,
+      "locality_segment": "Kang Ching Rd (Blk 335)",
+      "has_block": true,
+      "parsed": [
+        {
+          "block": "335",
+          "street": "Kang Ching Rd"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527704,
+      "locality_segment": "Tah Ching Rd (Blk 321, 322, 323, 324, 326, 329, 330, 332)",
+      "has_block": true,
+      "parsed": [
+        {
+          "block": "321",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "322",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "323",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "324",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "326",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "329",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "330",
+          "street": "Tah Ching Rd"
+        },
+        {
+          "block": "332",
+          "street": "Tah Ching Rd"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527704,
+      "locality_segment": "Yuan Ching Rd",
+      "has_block": false,
+      "parsed": []
+    },
+    {
+      "cluster_id": 527704,
+      "locality_segment": "Yuan Ching Rd (Blk 122)",
+      "has_block": true,
+      "parsed": [
+        {
+          "block": "122",
+          "street": "Yuan Ching Rd"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527704,
+      "locality_segment": "Yuan Ching Rd (Lakeside Twr)",
+      "has_block": false,
+      "parsed": []
+    },
+    {
+      "cluster_id": 527705,
+      "locality_segment": "Woodlands Dr 16 (Blk 573A, 573B)",
+      "has_block": true,
+      "parsed": [
+        {
+          "block": "573A",
+          "street": "Woodlands Dr 16"
+        },
+        {
+          "block": "573B",
+          "street": "Woodlands Dr 16"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527706,
+      "locality_segment": "Bishan St 12 (Blk 110, 115, 116)",
+      "has_block": true,
+      "parsed": [
+        {
+          "block": "110",
+          "street": "Bishan St 12"
+        },
+        {
+          "block": "115",
+          "street": "Bishan St 12"
+        },
+        {
+          "block": "116",
+          "street": "Bishan St 12"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527707,
+      "locality_segment": "Kim Tian Rd (Blk 119B, 119D, 127D, 131B)",
+      "has_block": true,
+      "parsed": [
+        {
+          "block": "119B",
+          "street": "Kim Tian Rd"
+        },
+        {
+          "block": "119D",
+          "street": "Kim Tian Rd"
+        },
+        {
+          "block": "127D",
+          "street": "Kim Tian Rd"
+        },
+        {
+          "block": "131B",
+          "street": "Kim Tian Rd"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527708,
+      "locality_segment": "Mandai Est",
+      "has_block": false,
+      "parsed": []
+    },
+    {
+      "cluster_id": 527698,
+      "locality_segment": "Canberra Rd (Blk 308)",
+      "has_block": true,
+      "parsed": [
+        {
+          "block": "308",
+          "street": "Canberra Rd"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527698,
+      "locality_segment": "Sembawang Vista (Blk 318)",
+      "has_block": true,
+      "parsed": [
+        {
+          "block": "318",
+          "street": "Sembawang Vista"
+        }
+      ]
+    },
+    {
+      "cluster_id": 527699,
+      "locality_segment": "Farleigh Ave",
+      "has_block": false,
+      "parsed": []
+    },
+    {
+      "cluster_id": 527699,
+      "locality_segment": "S'goon Gdn Way",
+      "has_block": false,
+      "parsed": []
+    },
+    {
+      "cluster_id": 527700,
+      "locality_segment": "Jln Papan",
+      "has_block": false,
+      "parsed": []
+    },
+    {
+      "cluster_id": 527701,
+      "locality_segment": "Defu South St 1",
+      "has_block": false,
+      "parsed": []
+    }
+  ]
+}

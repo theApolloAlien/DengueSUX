@@ -1,0 +1,29 @@
+{
+  "row_count": 208,
+  "columns": [
+    "shs_year",
+    "elderly_pop",
+    "town_estate",
+    "number"
+  ],
+  "slug": "hdb_elderly",
+  "dataset_id": "d_4180067b350bc9839a4cea487841d5d1",
+  "source_name": "HDB Elderly and Future Elderly Resident Population by Geographical Distribution",
+  "receipt": {
+    "dataset_id": "d_4180067b350bc9839a4cea487841d5d1",
+    "source_url": "https://data.gov.sg/datasets/d_4180067b350bc9839a4cea487841d5d1/view",
+    "api_url": "https://api-open.data.gov.sg/v1/public/api/datasets/d_4180067b350bc9839a4cea487841d5d1/poll-download",
+    "retrieved_at_utc": "2026-09-24T05:40:57.735182+00:00",
+    "completed_at_utc": "2026-09-24T05:40:57.843767+00:00",
+    "raw_bytes": 6820,
+    "raw_sha256": "7ea061fd5beb895b7ced3358e68b9903ada75bd6e1d5daba53be6556eeba0139",
+    "stored_path": "data/raw/inspection/hdb_elderly.csv.gz",
+    "stored_bytes": 1596,
+    "stored_sha256": "43c045044d9121ad74b11caf8061f5b406e36b1ede816eafce79e01dc04f3373",
+    "compression": "gzip (original bytes after decompression)",
+    "status": "complete"
+  },
+  "source_updated_at": "2024-06-06T14:32:52+08:00",
+  "coverage_start": "2003-01-01T08:00:00+08:00",
+  "coverage_end": "2018-12-31T08:00:00+08:00"
+}

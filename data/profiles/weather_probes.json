@@ -1,0 +1,440 @@
+[
+  {
+    "metric": "rainfall",
+    "date": "2016-12-01",
+    "api_code": 17,
+    "error": "Data not found",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 0,
+    "returned_dates": [],
+    "stations": 0,
+    "has_next_page": false,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2016-12-01",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:41:16.888519+00:00",
+      "http_status": 404,
+      "api_code": 17,
+      "requested_date": "2016-12-01",
+      "path": "data/raw/weather/rainfall/2016-12-01/page_0000000000000000.json",
+      "bytes": 89,
+      "sha256": "1c5b54796d2497af724d1d0b2885bf1444e4ae33b6878b3c4ad49071e943d514",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "rainfall",
+    "date": "2016-12-02",
+    "api_code": 0,
+    "error": "",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 25,
+    "returned_dates": [
+      "2016-12-02"
+    ],
+    "stations": 55,
+    "has_next_page": true,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2016-12-02",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:41:17.139802+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2016-12-02",
+      "path": "data/raw/weather/rainfall/2016-12-02/page_0000000000000000.json",
+      "bytes": 48780,
+      "sha256": "9380a19e792e5073b757d9f83d1fad435f70d9cf179caf76a216b80a948043dd",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "rainfall",
+    "date": "2016-01-01",
+    "api_code": 17,
+    "error": "Data not found",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 0,
+    "returned_dates": [],
+    "stations": 0,
+    "has_next_page": false,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2016-01-01",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:41:19.758033+00:00",
+      "http_status": 404,
+      "api_code": 17,
+      "requested_date": "2016-01-01",
+      "path": "data/raw/weather/rainfall/2016-01-01/page_0000000000000000.json",
+      "bytes": 89,
+      "sha256": "1c5b54796d2497af724d1d0b2885bf1444e4ae33b6878b3c4ad49071e943d514",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "rainfall",
+    "date": "2016-12-14",
+    "api_code": 0,
+    "error": "",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 25,
+    "returned_dates": [
+      "2016-12-14"
+    ],
+    "stations": 55,
+    "has_next_page": true,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2016-12-14",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:41:22.337581+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2016-12-14",
+      "path": "data/raw/weather/rainfall/2016-12-14/page_0000000000000000.json",
+      "bytes": 49121,
+      "sha256": "d79f786577d330b8947b281129ae04a673ab2aa3ca5afd526941c1953d27f694",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "rainfall",
+    "date": "2017-01-01",
+    "api_code": 0,
+    "error": "",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 25,
+    "returned_dates": [
+      "2017-01-01"
+    ],
+    "stations": 56,
+    "has_next_page": true,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2017-01-01",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:41:24.988905+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2017-01-01",
+      "path": "data/raw/weather/rainfall/2017-01-01/page_0000000000000000.json",
+      "bytes": 49286,
+      "sha256": "c40266edb75bf91bfa08bb5290803468cd3c0e5dc39bb0c301948eecc3c56b63",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "rainfall",
+    "date": "2020-01-01",
+    "api_code": 0,
+    "error": "",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 25,
+    "returned_dates": [
+      "2020-01-01"
+    ],
+    "stations": 52,
+    "has_next_page": true,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/rainfall?date=2020-01-01",
+      "dataset_id": "d_6580738cdd7db79374ed3152159fbd69",
+      "retrieved_at_utc": "2026-09-24T03:41:27.587291+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2020-01-01",
+      "path": "data/raw/weather/rainfall/2020-01-01/page_0000000000000000.json",
+      "bytes": 46162,
+      "sha256": "88cacd7ff9be92c303cc9cb1e8afc6b973208875106c0946ae2c6104d41a0916",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "air-temperature",
+    "date": "2016-05-04",
+    "api_code": 17,
+    "error": "Data not found",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 0,
+    "returned_dates": [],
+    "stations": 0,
+    "has_next_page": false,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2016-05-04",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:41:30.210073+00:00",
+      "http_status": 404,
+      "api_code": 17,
+      "requested_date": "2016-05-04",
+      "path": "data/raw/weather/air-temperature/2016-05-04/page_0000000000000000.json",
+      "bytes": 89,
+      "sha256": "1c5b54796d2497af724d1d0b2885bf1444e4ae33b6878b3c4ad49071e943d514",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "air-temperature",
+    "date": "2016-05-05",
+    "api_code": 0,
+    "error": "",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 1,
+    "returned_dates": [
+      "2016-05-05"
+    ],
+    "stations": 20,
+    "has_next_page": false,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2016-05-05",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:41:32.775684+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2016-05-05",
+      "path": "data/raw/weather/air-temperature/2016-05-05/page_0000000000000000.json",
+      "bytes": 3009,
+      "sha256": "83a657fd471e90e32a69e8b74e6dc08fb5a981e7820a47a1b55bd3100cf9f72f",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "air-temperature",
+    "date": "2016-01-01",
+    "api_code": 17,
+    "error": "Data not found",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 0,
+    "returned_dates": [],
+    "stations": 0,
+    "has_next_page": false,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2016-01-01",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:41:35.385385+00:00",
+      "http_status": 404,
+      "api_code": 17,
+      "requested_date": "2016-01-01",
+      "path": "data/raw/weather/air-temperature/2016-01-01/page_0000000000000000.json",
+      "bytes": 89,
+      "sha256": "1c5b54796d2497af724d1d0b2885bf1444e4ae33b6878b3c4ad49071e943d514",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "air-temperature",
+    "date": "2016-12-14",
+    "api_code": 0,
+    "error": "",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 25,
+    "returned_dates": [
+      "2016-12-14"
+    ],
+    "stations": 19,
+    "has_next_page": true,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2016-12-14",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:41:37.998123+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2016-12-14",
+      "path": "data/raw/weather/air-temperature/2016-12-14/page_0000000000000000.json",
+      "bytes": 19426,
+      "sha256": "314a2e231e3448e02f17e270959e6b7964e4e4bafc0b3e13b5c958569df3ebe5",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "air-temperature",
+    "date": "2017-01-01",
+    "api_code": 0,
+    "error": "",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 25,
+    "returned_dates": [
+      "2017-01-01"
+    ],
+    "stations": 17,
+    "has_next_page": true,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2017-01-01",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:41:40.573900+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2017-01-01",
+      "path": "data/raw/weather/air-temperature/2017-01-01/page_0000000000000000.json",
+      "bytes": 17604,
+      "sha256": "3ab5ba1ab0cfd62caa50ef253a96cdb9541f6ea8d23d5e7d0a41eff83fcf5d38",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "air-temperature",
+    "date": "2020-01-01",
+    "api_code": 0,
+    "error": "",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 25,
+    "returned_dates": [
+      "2020-01-01"
+    ],
+    "stations": 17,
+    "has_next_page": true,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/air-temperature?date=2020-01-01",
+      "dataset_id": "d_66b77726bbae1b33f218db60ff5861f0",
+      "retrieved_at_utc": "2026-09-24T03:41:46.364765+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2020-01-01",
+      "path": "data/raw/weather/air-temperature/2020-01-01/page_0000000000000000.json",
+      "bytes": 17553,
+      "sha256": "f2f62facdc8b5b1a9571fe697b44d826047fdd7adda2ddc5cf4e71d613f619ae",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "relative-humidity",
+    "date": "2016-11-15",
+    "api_code": 17,
+    "error": "Data not found",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 0,
+    "returned_dates": [],
+    "stations": 0,
+    "has_next_page": false,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2016-11-15",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:41:46.577271+00:00",
+      "http_status": 404,
+      "api_code": 17,
+      "requested_date": "2016-11-15",
+      "path": "data/raw/weather/relative-humidity/2016-11-15/page_0000000000000000.json",
+      "bytes": 89,
+      "sha256": "1c5b54796d2497af724d1d0b2885bf1444e4ae33b6878b3c4ad49071e943d514",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "relative-humidity",
+    "date": "2016-11-16",
+    "api_code": 0,
+    "error": "",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 1,
+    "returned_dates": [
+      "2016-11-16"
+    ],
+    "stations": 17,
+    "has_next_page": false,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2016-11-16",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:41:49.203169+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2016-11-16",
+      "path": "data/raw/weather/relative-humidity/2016-11-16/page_0000000000000000.json",
+      "bytes": 2567,
+      "sha256": "8fa913811cead3ea1623ce0e87fd7cf327b62fdaac05270f9472bb638bdaed77",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "relative-humidity",
+    "date": "2016-01-01",
+    "api_code": 17,
+    "error": "Data not found",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 0,
+    "returned_dates": [],
+    "stations": 0,
+    "has_next_page": false,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2016-01-01",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:41:51.780758+00:00",
+      "http_status": 404,
+      "api_code": 17,
+      "requested_date": "2016-01-01",
+      "path": "data/raw/weather/relative-humidity/2016-01-01/page_0000000000000000.json",
+      "bytes": 89,
+      "sha256": "1c5b54796d2497af724d1d0b2885bf1444e4ae33b6878b3c4ad49071e943d514",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "relative-humidity",
+    "date": "2016-12-14",
+    "api_code": 0,
+    "error": "",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 25,
+    "returned_dates": [
+      "2016-12-14"
+    ],
+    "stations": 18,
+    "has_next_page": true,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2016-12-14",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:41:54.384553+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2016-12-14",
+      "path": "data/raw/weather/relative-humidity/2016-12-14/page_0000000000000000.json",
+      "bytes": 18398,
+      "sha256": "10da28372144598afef0b1cd7ce5a7bb775957af85d8c596fc3546fa7ca1fd1b",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "relative-humidity",
+    "date": "2017-01-01",
+    "api_code": 0,
+    "error": "",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 25,
+    "returned_dates": [
+      "2017-01-01"
+    ],
+    "stations": 13,
+    "has_next_page": true,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2017-01-01",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:41:57.085348+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2017-01-01",
+      "path": "data/raw/weather/relative-humidity/2017-01-01/page_0000000000000000.json",
+      "bytes": 13702,
+      "sha256": "c3a9919272feb6ce0155cf0504ab6c03663d95faaf6b89ec39eb45e311bf2546",
+      "pagination_token": null
+    }
+  },
+  {
+    "metric": "relative-humidity",
+    "date": "2020-01-01",
+    "api_code": 0,
+    "error": "",
+    "scope": "first page only; historical existence probe",
+    "timestamps_on_page": 25,
+    "returned_dates": [
+      "2020-01-01"
+    ],
+    "stations": 17,
+    "has_next_page": true,
+    "receipt": {
+      "source_url": "https://api-open.data.gov.sg/v2/real-time/api/relative-humidity?date=2020-01-01",
+      "dataset_id": "d_2d3b0c4da128a9a59efca806441e1429",
+      "retrieved_at_utc": "2026-09-24T03:41:59.651870+00:00",
+      "http_status": 200,
+      "api_code": 0,
+      "requested_date": "2020-01-01",
+      "path": "data/raw/weather/relative-humidity/2020-01-01/page_0000000000000000.json",
+      "bytes": 17428,
+      "sha256": "918f7c2d3215d63e82e5dee0bfcf74a0a900d1aff7a364c07a96ba461e0bcb97",
+      "pagination_token": null
+    }
+  }
+]

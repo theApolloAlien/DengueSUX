@@ -1,0 +1,21 @@
+{
+  "verified_at_utc": "2026-09-24T03:46:28.233907+00:00",
+  "status": "passed",
+  "errors": [],
+  "archive_files": 19,
+  "weather_response_files": 274,
+  "raw_files_verified": 293,
+  "original_bytes": 8056407880,
+  "stored_bytes": 239162666,
+  "rainfall_rows": 48544256,
+  "checks": [
+    "Every saved raw file checksum and byte count",
+    "Every gzip original-byte checksum and CRC",
+    "All nine rainfall downloaded counts match published totals",
+    "All six weather pagination chains terminate",
+    "Weather profile counts agree with saved responses",
+    "All returned weather dates match requested dates",
+    "All 18 historical probes retained"
+  ],
+  "interpretation": "Passed means acquisition and integrity checks pass; source gaps, missing fields and invalid geometries remain documented data-quality issues."
+}
