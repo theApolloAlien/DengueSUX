@@ -10,7 +10,7 @@ I've had dengue three times, and the third time nearly killed me. DengueSUX tell
 databricks, delta-lake, unity-catalog, mlflow, pyspark, genie, python, scikit-learn, shap, fastapi, leaflet, onemap, duckdb, data.gov.sg, geojson
 
 ## "Try it out" links
-(your GitHub repo link, if public — make sure .env and data/private are not committed)
+https://github.com/theApolloAlien/DengueSUX
 
 ## Image gallery (upload in this order)
 1. deck/gallery/real/1_area_signals.png — map of 55 areas, largest cluster first
