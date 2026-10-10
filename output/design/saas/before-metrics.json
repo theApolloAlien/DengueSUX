@@ -1,0 +1,135 @@
+{
+  "signals-1440": {
+    "words": 352,
+    "overflow": false,
+    "cls": 0.019706252386148086,
+    "lcp": 252,
+    "fcp": 52
+  },
+  "forecast-1440": {
+    "words": 390,
+    "overflow": false,
+    "cls": 0.019706252386148086,
+    "lcp": 252,
+    "fcp": 52
+  },
+  "plan-1440": {
+    "words": 444,
+    "overflow": false,
+    "cls": 0.019706252386148086,
+    "lcp": 252,
+    "fcp": 52
+  },
+  "notice-1440": {
+    "words": 491,
+    "overflow": false,
+    "cls": 0.019706252386148086,
+    "lcp": 252,
+    "fcp": 52
+  },
+  "resident-1440": {
+    "words": 448,
+    "overflow": false,
+    "cls": 0.019706252386148086,
+    "lcp": 252,
+    "fcp": 52
+  },
+  "ask-1440": {
+    "words": 428,
+    "overflow": false,
+    "cls": 0.019706252386148086,
+    "lcp": 252,
+    "fcp": 52
+  },
+  "signals-1024": {
+    "words": 331,
+    "overflow": false,
+    "cls": 0.03466030533115069,
+    "lcp": 312,
+    "fcp": 32
+  },
+  "forecast-1024": {
+    "words": 387,
+    "overflow": false,
+    "cls": 0.03466030533115069,
+    "lcp": 312,
+    "fcp": 32
+  },
+  "plan-1024": {
+    "words": 441,
+    "overflow": false,
+    "cls": 0.03466030533115069,
+    "lcp": 312,
+    "fcp": 32
+  },
+  "notice-1024": {
+    "words": 485,
+    "overflow": false,
+    "cls": 0.03466030533115069,
+    "lcp": 312,
+    "fcp": 32
+  },
+  "resident-1024": {
+    "words": 427,
+    "overflow": false,
+    "cls": 0.03466030533115069,
+    "lcp": 312,
+    "fcp": 32
+  },
+  "ask-1024": {
+    "words": 483,
+    "overflow": false,
+    "cls": 0.03466030533115069,
+    "lcp": 312,
+    "fcp": 32
+  },
+  "signals-390": {
+    "words": 248,
+    "overflow": false,
+    "cls": 0.13157576729132148,
+    "lcp": 292,
+    "fcp": 36
+  },
+  "forecast-390": {
+    "words": 380,
+    "overflow": false,
+    "cls": 0.13157576729132148,
+    "lcp": 292,
+    "fcp": 36
+  },
+  "plan-390": {
+    "words": 425,
+    "overflow": false,
+    "cls": 0.13157576729132148,
+    "lcp": 292,
+    "fcp": 36
+  },
+  "notice-390": {
+    "words": 461,
+    "overflow": false,
+    "cls": 0.13157576729132148,
+    "lcp": 292,
+    "fcp": 36
+  },
+  "resident-390": {
+    "words": 344,
+    "overflow": false,
+    "cls": 0.13157576729132148,
+    "lcp": 292,
+    "fcp": 36
+  },
+  "ask-390": {
+    "words": 402,
+    "overflow": false,
+    "cls": 0.13157576729132148,
+    "lcp": 292,
+    "fcp": 36
+  },
+  "fast4g": [
+    {
+      "name": "http://127.0.0.1:8787/data/dashboard.json",
+      "duration": 5110.79999999702,
+      "bytes": 914342
+    }
+  ]
+}

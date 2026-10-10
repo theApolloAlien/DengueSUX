@@ -426,6 +426,7 @@
         showWeek:index=>{switchView('forecast');setMode('replay');state.index=index;$('#forecast-week').value=index;renderPrediction();$('.forecast-chart-card').scrollIntoView({block:'center',behavior:reducedMotion()?'instant':'smooth'});},
         showLive:()=>{switchView('forecast');setMode('live');$('#live-outlook').scrollIntoView({block:'start',behavior:reducedMotion()?'instant':'smooth'});}
       });
+      window.Product?.init({state,selectArea,switchView,liveForecast,number,date,toast,drawChart});
     }catch(error){ready=false;$('#loading-state').hidden=true;$('#signals-view').hidden=true;$('#forecast-view').hidden=true;$('#error-state').hidden=false;$('#error-message').textContent=error.name==='TimeoutError'?'The saved evidence is taking too long to load. Please try again.':'We couldn’t load the saved evidence. Please try again in a moment.';$('#data-timestamp').textContent='Evidence unavailable';$('#main').setAttribute('aria-busy','false');document.body.classList.remove('is-loading');document.body.classList.add('is-error');console.error('DengueSUX:',error);}finally{clearTimeout(slowLoad);}
   }
   init();

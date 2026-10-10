@@ -1,0 +1,16 @@
+/* Product shell: routing and interactions around the unchanged data dashboard. */
+(() => {
+ 'use strict';
+ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function styleguide(){
+  const colors=['surface-1','surface-2','surface-3','text-1','text-2','text-3','border-subtle','border-strong','accent','priority-low','priority-medium','priority-high','success','warning','danger'];
+  return `<h1 class="styleguide-title">Design system</h1><div class="component-grid"><section class="component-sample"><h2>Semantic colours</h2><div class="token-swatches">${colors.map(c=>`<div class="token-swatch"><b style="background:var(--${c})"></b>${c}</div>`).join('')}</div></section><section class="component-sample"><h2>Type & figures</h2>${['xs','sm','md','lg','xl','hero'].map(s=>`<p style="font-size:var(--font-${s})">${s} · 68</p>`).join('')}</section><section class="component-sample"><h2>Buttons</h2><button class="solid-button">Plan a check</button> <button class="outline-button">Copy link</button> <button class="text-button">View map</button> <button class="icon-button" aria-label="Close"><i class="ph ph-x"></i></button><button class="solid-button" disabled>Unavailable</button><button class="outline-button" aria-busy="true">Loading…</button></section><section class="component-sample"><h2>Inputs & controls</h2><label class="search-box">Area <input placeholder="Find an area"></label><div class="segmented"><button class="active" aria-pressed="true">List</button><button aria-pressed="false">Table</button></div><label><input type="checkbox" checked> Stop checked</label><p><kbd>⌘</kbd> <kbd>K</kbd> Search</p></section><section class="component-sample"><h2>Priority & status</h2><span class="badge low">Low</span> <span class="badge medium">Medium</span> <span class="badge high">High</span><div class="inline-banner">Saved snapshot · 10 Oct</div><div class="inline-banner error" role="status">Data unavailable <button class="text-button" onclick="this.closest('div').remove()">Dismiss</button></div></section><section class="component-sample"><h2>Loading & progress</h2><div class="skeleton" style="height:64px" aria-label="Loading"></div><progress aria-label="Checklist progress" value="2" max="8"></progress><progress aria-label="Loading data"></progress><p>Missing stays missing: —</p></section><section class="component-sample"><h2>Layers</h2><button class="outline-button" data-methodology>Open dialog</button><details><summary>Sources</summary>NEA, MOH and URA</details><p title="Source dates are always retained">Tooltip: saved data</p></section></div>`;
+ }
+ function init(api){
+  const guide=document.createElement('section');guide.id='styleguide-view';guide.className='view-content';guide.hidden=true;guide.innerHTML=styleguide();$('#main').insertBefore(guide,$('footer'));
+  const render=()=>{if(location.hash==='#styleguide'){$$('.view-content').forEach(n=>n.hidden=n!==guide);$('.page-heading').hidden=true;}};
+  window.addEventListener('hashchange',render);render();guide.querySelector('[data-methodology]').onclick=()=>$('#methodology-dialog').showModal();
+ }
+ window.Product={init};
+})();
