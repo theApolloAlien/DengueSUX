@@ -1,34 +1,59 @@
+# DengueSUX jobs for Databricks Free Edition (serverless only: no cluster is configured).
+# Deploy:  databricks bundle deploy -p <profile>      Run:  databricks bundle run pipeline -p <profile>
 bundle:
-  name: denguesux-inspection
+  name: denguesux
 
 variables:
-  existing_cluster_id:
-    description: Existing job-compatible cluster with repository requirements installed
   data_root:
-    description: Persistent Unity Catalog Volume path containing the genuine data archives
+    description: Unity Catalog Volume folder holding the source data (see docs/DATABRICKS_SETUP.md)
+    default: /Volumes/workspace/denguesux/files/denguesux
   table_prefix:
-    description: Writable catalog.schema for Delta output tables
+    description: Writable catalog.schema for the Delta tables
+    default: workspace.denguesux
 
 resources:
   jobs:
+    pipeline:
+      name: DengueSUX pipeline (bronze, silver, gold)
+      max_concurrent_runs: 1
+      tasks:
+        - task_key: bronze
+          notebook_task:
+            notebook_path: ./notebooks/run_stage.py
+            base_parameters: {stage: bronze, repo_root: "${workspace.file_path}", data_root: "${var.data_root}", table_prefix: "${var.table_prefix}"}
+          timeout_seconds: 1800
+        - task_key: silver
+          depends_on: [{task_key: bronze}]
+          notebook_task:
+            notebook_path: ./notebooks/run_stage.py
+            base_parameters: {stage: silver, repo_root: "${workspace.file_path}", data_root: "${var.data_root}", table_prefix: "${var.table_prefix}"}
+          timeout_seconds: 1800
+        - task_key: gold
+          depends_on: [{task_key: silver}]
+          notebook_task:
+            notebook_path: ./notebooks/run_stage.py
+            base_parameters: {stage: gold, repo_root: "${workspace.file_path}", data_root: "${var.data_root}", table_prefix: "${var.table_prefix}"}
+          timeout_seconds: 3600
+
     daily_inspection:
-      name: DengueSUX prospective daily inspection refresh
+      name: DengueSUX daily inspection refresh
       max_concurrent_runs: 1
       schedule:
         quartz_cron_expression: "0 15 8 * * ?"
         timezone_id: Asia/Singapore
-        pause_status: PAUSED
+        pause_status: PAUSED  # unpause when you want daily NEA snapshots; each run uses serverless quota
       tasks:
         - task_key: snapshot_growth_inspection_notices
-          existing_cluster_id: ${var.existing_cluster_id}
           notebook_task:
             notebook_path: ./notebooks/05_daily_inspection.py
-            base_parameters:
-              data_root: ${var.data_root}
-              table_prefix: ${var.table_prefix}
+            base_parameters: {data_root: "${var.data_root}", table_prefix: "${var.table_prefix}"}
           timeout_seconds: 1800
           max_retries: 1
           min_retry_interval_millis: 60000
+
+targets:
+  dev:
+    default: true
 
 sync:
   include:
@@ -43,4 +68,10 @@ sync:
     - .venv/**
     - .venv-prototype/**
     - mlruns/**
-    - deck/node_modules/**
+    - deck/**
+    - demo/**
+    - docs/**
+    - app/**
+    - databricks_app/**
+    - tests/**
+    - "*.pdf"

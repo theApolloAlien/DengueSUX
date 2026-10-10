@@ -1,4 +1,10 @@
 # Databricks notebook source
+# MAGIC %pip install shapely epiweeks requests --quiet
+
+# COMMAND ----------
+dbutils.library.restartPython()
+
+# COMMAND ----------
 # MAGIC %md
 # MAGIC # Daily inspection refresh
 # MAGIC Takes one immutable daily NEA snapshot, then publishes growth, inspection

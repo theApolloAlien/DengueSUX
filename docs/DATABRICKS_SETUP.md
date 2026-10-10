@@ -112,8 +112,18 @@ databricks apps deploy denguesux --source-code-path /Workspace/Users/<you>/dengu
   `workspace.denguesux`. The "Ask the data" tab then answers live through Genie, and falls back
   to saved-data answers if Genie is unavailable. Free Edition stops an app after 24 hours;
   restart it before a demo with `databricks apps start denguesux`.
-- [ ] **Job:** `databricks.yml` still points at `existing_cluster_id`, which Free Edition does
-      not have. It needs serverless tasks before it can be deployed.
+- [x] **Jobs (serverless):** `databricks.yml` defines two jobs with no cluster, so they run on
+      serverless compute: `pipeline` (bronze, silver, gold) and `daily_inspection` (live NEA
+      snapshot, growth, inspection plans, resident notices; schedule is PAUSED to save quota).
+
+```bash
+databricks bundle deploy -p <profile>
+databricks bundle run pipeline -p <profile>
+databricks bundle run daily_inspection -p <profile>
+```
+
+  Both were run end to end on Databricks Free Edition. The daily job's live fetch from data.gov.sg
+  works within Free Edition's outbound-internet allowlist.
 
 ## Day-to-day loop after setup
 
