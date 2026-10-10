@@ -11,7 +11,7 @@ import shutil
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-MODULES = ["__init__.py", "notices.py", "growth.py", "runtime.py", "assistant.py", "chat_cards.py", "field_reports.py", "onemap.py", "alerts.py", "app_snapshot.py"]  # all the app imports at request time
+MODULES = ["__init__.py", "notices.py", "growth.py", "runtime.py", "assistant.py", "chat_cards.py", "care.py", "field_reports.py", "onemap.py", "alerts.py", "app_snapshot.py"]  # all the app imports at request time
 
 def main():
     ap = argparse.ArgumentParser()

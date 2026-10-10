@@ -376,6 +376,10 @@ def _text(message: dict) -> str:
 
 def run_chat(messages, llm, root: Path, genie=None, now: datetime | None = None, max_steps: int = MAX_STEPS, on_event=None, stream_final=None, language="en") -> dict:
     """llm(messages, tools) -> assistant message dict (OpenAI chat format)."""
+    from .care import symptom_question, fixed_response
+    cleaned = clean_messages(messages)
+    if symptom_question(cleaned[-1]['content']):
+        return fixed_response(root, cleaned[-1]['content'], language)
     from .chat_cards import build_cards
     data = load_data(root)
     registry = _sources(data)

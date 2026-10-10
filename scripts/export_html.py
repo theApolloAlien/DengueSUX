@@ -40,7 +40,8 @@ def build():
         path=ROOT/'output/web'/f'{name}.json'
         if path.exists(): payload[name]=json.loads(path.read_text())
     data=json.dumps(payload,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
-    html=html.replace('<head>','<head><script>window.DENGUESUX_DATA = '+data+';</script>',1)
+    care=json.dumps(json.loads((WEB/'care-copy.json').read_text()),ensure_ascii=False).replace('<','\\u003c')
+    html=html.replace('<head>','<head><script>window.DENGUESUX_DATA = '+data+';window.DENGUESUX_CARE = '+care+';</script>',1)
     target=ROOT/'output/denguesux.html';target.write_text(html)
     print(f'{target} ({target.stat().st_size:,} bytes)')
     return target
