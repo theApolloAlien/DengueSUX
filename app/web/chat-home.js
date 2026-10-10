@@ -6,7 +6,7 @@
  const date=v=>v?new Date(v.length===10?v+'T12:00:00+08:00':v).toLocaleDateString('en-SG',{day:'numeric',month:'short',year:'numeric',timeZone:'Asia/Singapore'}):'Date unavailable';
  const number=v=>Number.isFinite(v)?Math.round(v).toLocaleString('en-SG'):'—';
  const safeUrl=v=>{try{const u=new URL(v);return u.protocol==='https:'?esc(u.href):'#';}catch{return '#';}};
- const scrub=t=>String(t).replace(/\b\d{6}\b/g,'[private postal code]').replace(/\b1\.\d+\s*[, /]\s*103\.\d+\b/g,'[private coordinates]');
+ const scrub=t=>String(t).replace(/(?<!\d)\d{6}(?!\d)/g,'[private postal code]').replace(/\b1\.\d+\s*[, /]\s*103\.\d+\b/g,'[private coordinates]');
  const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
  let data,hooks,engine,root,home,turns=[],history=[],controller=null,language='en',panelOpen=false,lastQuestion='',context='';
  const TEXT={
@@ -52,7 +52,7 @@
  function finish(t,el){el.remove();const answer=renderTurn(t);setConversation();save();answer.querySelector('h2').focus({preventScroll:true});answer.scrollIntoView({block:'nearest',behavior:reduced()?'instant':'smooth'});}
  async function ask(question){
   if(controller||!question.trim())return;lastQuestion=question;
-  const postal=question.match(/\b\d{6}\b/);if(postal&&window.LocationCheck)return window.LocationCheck.lookup(postal[0],question);
+  const postal=question.match(/(?<!\d)\d{6}(?!\d)/);if(postal&&window.LocationCheck)return window.LocationCheck.lookup(postal[0],question);
   // Do not forward coordinates or a postal code in any branch, even if lookup is unavailable.
   if(postal||/\b1\.\d+\s*[, /]\s*103\.\d+\b/.test(question))return privateAnswer('Location check',{answer:'Use a six-digit postal code or “Use my location”. Precise location stays in your browser.'});
   if(window.CareActions?.handle(question))return;
