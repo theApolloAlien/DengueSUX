@@ -425,7 +425,6 @@
       $('#main').setAttribute('aria-busy','false');
 
       const areaFor=code=>state.areas.find(a=>a.code===code);
-      window.CheckBlock?.init(state.data,{selectArea:code=>{switchView('signals');selectArea(code,true);$('.explorer').scrollIntoView({block:'start',behavior:reducedMotion()?'instant':'smooth'});}});
       window.Assistant?.init(state.data,{
         selectArea:code=>{switchView('signals');selectArea(code,true);$('.explorer').scrollIntoView({block:'start',behavior:reducedMotion()?'instant':'smooth'});},
         openPlan:code=>{const area=areaFor(code);if(!area)return;switchView('signals');selectArea(code);window.Fieldwork.openPlan(area);},

@@ -27,7 +27,7 @@
   if(!api)return;const parts=location.hash.slice(1).split('/');let next=parts[0]||'week';if(next==='signals')next='map';if(!names[next])next='week';const area=areaFor(parts[1]||'');
   const apply=()=>{
    routing=true;api.stopReplay();window.Fieldwork.closePlan();$$('.view-content').forEach(n=>n.hidden=true);section=next;api.state.view=next==='plan'?'inspection':next;
-   $('.page-heading').hidden=next==='styleguide';$('#breadcrumb').innerHTML=`${names[next]}${area?'<span>/</span>'+esc(area.name):''}`;
+   $('.page-heading').hidden=next==='styleguide'||next==='week';$('#breadcrumb').innerHTML=`${names[next]}${area?'<span>/</span>'+esc(area.name):''}`;
    $$('.rail-button').forEach((b,i)=>{const active=b.dataset.section===next;b.classList.toggle('active',active);if(active){b.setAttribute('aria-current','page');$('.nav-indicator').style.transform=`translateY(${i*50}px)`;}else b.removeAttribute('aria-current');});
    const high=api.state.areas.filter(a=>a.risk==='High').length,h=api.liveForecast()?.headline;
    $('#page-title').textContent=next==='week'?`${high} ${high===1?'area needs':'areas need'} checking this week`:next==='map'?`${api.state.areas.length} areas, one view`:next==='plan'?'Plan your next check':h?`About ${api.number(h.prediction)} people expected`:'Current outlook unavailable';
@@ -57,7 +57,7 @@
  function commands(){
   const query=$('#command-search').value.trim(),recent=store.get('recent',[]);
   let items=Object.entries(names).filter(([id])=>id!=='styleguide').map(([id,label])=>({id,label,kind:'Section',run:()=>go(id)}));
-  items.push({id:'postal',label:'Check my postal code',kind:'Action',run:()=>{go('week');requestAnimationFrame(()=>{const input=$('#check-postal');if(input&&!$('#check-postal-form').hidden)input.focus();else{$('#check-example').focus();api.toast('Use your location or the public example here.');}});}}, {id:'copy',label:'Copy link',kind:'Action',run:copyLink});
+  items.push({id:'postal',label:'Check my postal code',kind:'Action',run:()=>{go('week');requestAnimationFrame(()=>{$('#ask-input')?.focus();});}}, {id:'copy',label:'Copy link',kind:'Action',run:copyLink});
   api.state.areas.forEach(a=>{items.push({id:'map:'+a.code,label:a.name,kind:'Area',run:()=>go('map',a.code)});items.push({id:'plan:'+a.code,label:'Plan a check in '+a.name,kind:'Field plan',run:()=>go('plan',a.code)});});
   items=items.filter(item=>!query||fuzzy(item.label,query)).sort((a,b)=>{const ai=recent.indexOf(a.id),bi=recent.indexOf(b.id);return (ai<0?999:ai)-(bi<0?999:bi);});
   if(query)items.push({id:'ask',label:'Ask: '+query,kind:'Question',run:()=>{$('#ask-fab').click();const input=$('#ask-input');if(input){input.value=query;input.focus();}}});
@@ -103,7 +103,7 @@
   if(!api.liveForecast())forecast.insertAdjacentHTML('afterbegin','<p class="forecast-empty">No current forecast is available from the saved official reports.</p>');
   const banner=document.createElement('div');banner.id='route-error';banner.className='inline-banner';banner.hidden=true;banner.textContent='Area not found. Choose one from the list.';$('#main').prepend(banner);
   $('#sidebar-collapse').onclick=()=>{const collapsed=document.body.classList.toggle('sidebar-collapsed');$('#sidebar-collapse').setAttribute('aria-expanded',!collapsed);$('#sidebar-collapse').setAttribute('aria-label',collapsed?'Expand sidebar':'Collapse sidebar');store.set('sidebar',collapsed);requestAnimationFrame(()=>api.state.map?.invalidateSize());};if(store.get('sidebar',false))$('#sidebar-collapse').click();
-  layers();$('#guide-toast').onclick=()=>api.toast('Copied');$('#guide-ask').onclick=()=>$('#ask-fab').click();$('#guide-palette').onclick=openCommand;freshness();connectivity();$('#tour-replay').onclick=tour;$('#styleguide-view [data-methodology]').onclick=()=>$('#methodology-dialog').showModal();window.Product.ready=true;window.addEventListener('hashchange',route);route();
+  layers();$('#guide-toast').onclick=()=>api.toast('Copied');$('#guide-ask').onclick=()=>$('#ask-fab').click();$('#guide-palette').onclick=openCommand;freshness();connectivity();$('#tour-replay').onclick=tour;$('#styleguide-view [data-methodology]').onclick=()=>$('#methodology-dialog').showModal();window.ChatHome?.mount(api);window.Product.ready=true;window.addEventListener('hashchange',route);route();
  }
  window.Product={init,go,selected,copyLink,busy,onReady,ready:false,openingPlan:false};
 })();
