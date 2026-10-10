@@ -9,9 +9,9 @@
     if(!box||days.length<2)return;
     const historical=L.layerGroup();let index=days.length-1,timer=null,restorePriority=null;
     box.hidden=false;
-    box.innerHTML='<div class="cluster-timeline-controls"><button type="button" class="map-chip" id="cluster-play" aria-label="Play saved cluster snapshots">Play snapshots</button><label for="cluster-date">Snapshot <output id="cluster-date-label"></output></label><input id="cluster-date" type="range" min="0" max="'+(days.length-1)+'" value="'+index+'" aria-label="Choose saved cluster snapshot"><button type="button" class="text-button" id="cluster-latest">Latest</button></div><p id="cluster-timeline-note" role="status"></p>';
+    box.innerHTML='<div class="cluster-timeline-controls"><button type="button" class="map-chip" id="cluster-play" aria-label="Play saved cluster snapshots">Play</button><label for="cluster-date">Snapshot <output id="cluster-date-label"></output></label><input id="cluster-date" type="range" min="0" max="'+(days.length-1)+'" value="'+index+'" aria-label="Choose saved cluster snapshot"><button type="button" class="text-button" id="cluster-latest">Latest</button></div><p id="cluster-timeline-note" role="status"></p>';
     const slider=box.querySelector('input'),play=box.querySelector('#cluster-play'),note=box.querySelector('p');
-    const stop=()=>{clearInterval(timer);timer=null;play.textContent='Play snapshots';play.setAttribute('aria-label','Play saved cluster snapshots');};
+    const stop=()=>{clearInterval(timer);timer=null;play.textContent='Play';play.setAttribute('aria-label','Play saved cluster snapshots');};
     const draw=()=>{
       const day=days[index],latest=index===days.length-1;
       slider.value=index;box.querySelector('output').textContent=window.ClusterTimeline.label(day.date);slider.setAttribute('aria-valuetext',`Saved ${window.ClusterTimeline.label(day.date)}`);
@@ -28,7 +28,7 @@
         });if(show)historical.addTo(map);
       }
       const gap=index?Math.round((Date.parse(day.date)-Date.parse(days[index-1].date))/86400000):null;
-      note.textContent=(latest?'Latest map. ':'Historical cluster pins; area cards retain the latest snapshot. ')+(gap?gap+' days since previous saved snapshot. ':'')+'Missing dates are not filled.';
+      note.textContent=(latest?'Saved map. ':'Historical pins; area cards use latest data. ')+(gap?gap+'-day gap. ':'')+'Missing dates stay missing.';
     };
     slider.addEventListener('input',()=>{stop();index=Number(slider.value);draw();});
     play.addEventListener('click',()=>{if(timer){stop();return;}if(index===days.length-1)index=0;draw();
@@ -39,7 +39,7 @@
     box.querySelector('#cluster-latest').addEventListener('click',()=>{stop();index=days.length-1;draw();});
     document.querySelector('#show-clusters').addEventListener('change',draw);
     document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
-    document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',stop));
+    document.querySelectorAll('[data-view],[data-section]').forEach(b=>b.addEventListener('click',stop));
     draw();
   }};
 })();

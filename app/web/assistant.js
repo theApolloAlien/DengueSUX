@@ -364,12 +364,12 @@
     $('#ask-input').placeholder = mode === 'sql' ? 'Ask a question about the gold tables' : 'Ask about areas, routes or the forecast';
     const log = $('#ask-log'); log.innerHTML = '';
     const examples = mode === 'sql' ? SQL_EXAMPLES : suggestions();
-    log.innerHTML = `<div class="ask-welcome"><p>${mode === 'sql' ? `Ask in plain English. I'll write SQL over the gold Delta tables and show the result.` : `Ask in your own words. Answers come from the saved cluster, weather, route and forecast data, can use live Databricks SQL, and cite a dated source for every number.`}</p><div class="ask-suggestions">${examples.map(q => `<button class="ask-chip">${esc(q)}</button>`).join('')}</div></div>`;
+    log.innerHTML = `<div class="ask-welcome"><p>${mode === 'sql' ? `Ask about the data. Answers include SQL and sources.` : `Ask about areas, routes or forecasts. Answers include dated sources.`}</p><div class="ask-suggestions">${examples.map(q => `<button class="ask-chip">${esc(q)}</button>`).join('')}</div></div>`;
     log.querySelectorAll('.ask-chip').forEach(b => b.addEventListener('click', () => ask(b.textContent)));
   }
   function bubble(role, html) {
     const el = document.createElement('div'); el.className = `ask-msg ask-${role}`; el.innerHTML = html;
-    $('#ask-log').append(el); el.scrollIntoView({block:'end', behavior:'smooth'}); return el;
+    $('#ask-log').append(el); el.scrollIntoView({block:'end', behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}); return el;
   }
   async function ask(question) {
     if (busy) return; busy = true; $('.ask-send').disabled = true; $$('.ask-modes [data-mode]').forEach(b => b.disabled = true);
