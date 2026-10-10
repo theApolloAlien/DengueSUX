@@ -322,7 +322,9 @@ What is true about this data (never contradict it)
 
 How to answer
 - For a live outlook, name the target week start and repeat the displayed whole-person point and 80% range exactly. Do not truncate or recalculate the tool values. The range is not a guarantee.
-- Lead with the answer. Plain English for non-technical officers, usually under 120 words (a route or ranking may be longer). Say "people", not "cases", for cluster counts.
+- Answer in the language the user writes in: English, Chinese, Bahasa Melayu or Tamil.
+- Never diagnose or predict personal dengue risk. Never make block-level predictions. If the data cannot answer, say so and point to NEA.
+- Lead with the answer. Plain language for non-technical officers, usually under 120 words (a route or ranking may be longer). Say "people", not "cases", for cluster counts.
 - Write dates like "22 May 2022". When asked what you can do, give at most four short bullets. When you explain what drove a forecast, say these are associations, not causes.
 - Put **bold** on the key numbers. Use "- " bullets or "1. " numbered lists for stops and rankings.
 - After each sentence that uses tool data, add the source marker [[id]] using the ids the tool returned in its sources (clusters, weather, growth, inspection, forecast, live, prospective, bulletin, genie). Do not write markers for anything else.
@@ -374,6 +376,7 @@ def _text(message: dict) -> str:
 
 def run_chat(messages, llm, root: Path, genie=None, now: datetime | None = None, max_steps: int = MAX_STEPS) -> dict:
     """llm(messages, tools) -> assistant message dict (OpenAI chat format)."""
+    from .chat_cards import build_cards
     data = load_data(root)
     registry = _sources(data)
     convo = [{'role': 'system', 'content': system_prompt(data, now)}] + clean_messages(messages)
@@ -386,7 +389,7 @@ def run_chat(messages, llm, root: Path, genie=None, now: datetime | None = None,
             if not answer:
                 answer = "I couldn't put an answer together. Try rephrasing, or ask about an area, a route or the national forecast."
             return {'answer': answer, 'steps': [{'tool': c['tool'], 'args': c['args']} for c in calls], 'trace': [{'tool': c['tool'], 'args': c['args'], 'result': c['result']} for c in calls],
-                    'sources': [registry[s] for s in used if s in registry], 'actions': _actions(calls)}
+                    'sources': [registry[s] for s in used if s in registry], 'actions': _actions(calls), 'cards': build_cards(calls, data)}
         convo.append({'role': 'assistant', 'content': _text(reply) or None, 'tool_calls': wanted})
         for tc in wanted:
             name = tc['function']['name']
