@@ -140,6 +140,14 @@
     return areas().filter(x => x.cluster_count && x.code !== a.code && x.centroid).map(x => ({x, d:Math.hypot(x.centroid[0]-lat, (x.centroid[1]-lng)*Math.cos(lat*Math.PI/180))*111})).sort((p,q) => p.d-q.d).slice(0,2);
   };
 
+  // Starter questions follow the current snapshot, so they never point at an area without clusters or a plan.
+  function suggestions() {
+    const areas = [...(data.current?.areas || [])].sort((a, b) => (b.cluster_cases || 0) - (a.cluster_cases || 0));
+    const top = areas.find(a => a.risk === 'High') || areas[0];
+    const planned = areas.find(a => data.inspection?.areas?.[a.code]?.stops?.length);
+    return ['What’s expected next week?', top && `Why is ${top.name} ${top.risk}?`, planned && `Plan a Saturday volunteer route in ${planned.name}.`,
+      'Which areas should we check first?'].filter(Boolean).slice(0, 4);
+  }
   function compose(plan, results, question) {
     const sources = [], out = {paragraphs:[], actions:[], sources};
     const R = name => results.find(r => r.name === name);

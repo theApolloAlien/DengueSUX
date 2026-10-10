@@ -81,7 +81,7 @@ footer{font-size:11px;color:#627367;padding-bottom:90px}footer button{font-size:
 .forecast-intro.compact{flex-wrap:wrap}.forecast-intro.compact #forecast-subtitle{flex:1;min-width:220px;margin-top:0}
 .line-swatch.range{height:8px;border-radius:2px;background:#cfdfc6}.line-swatch.normal{height:0;border-bottom:2px dotted #b7b29d}
 .driver-sentence{font-size:12px;color:#4f6552;line-height:1.55;margin:4px 0 10px}
-.signal-value small{font-size:11px;color:#8a947f;font-weight:500}
+.signal-value small{font-size:11px;color:#6e7665;font-weight:500}
 @media(max-width:1000px){.live-outlook{grid-template-columns:1fr}.outlook-facts{border-left:0;padding-left:0;border-top:1px solid #dbe4d6;padding-top:16px;grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:720px){.live-outlook{padding:18px 16px;gap:18px}.outlook-main h2{font-size:21px}.outlook-facts{grid-template-columns:1fr}.mode-switch{display:flex;width:100%}.mode-button{flex:1;justify-content:center;padding:7px 8px;font-size:11px;white-space:normal}}
 .usual-chip{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;border:1px solid}.usual-chip.quieter{background:#e5f0e2;color:#2f6a46;border-color:#c9dfc4}.usual-chip.usual{background:#f3efe2;color:#7a6838;border-color:#e3dbc1}.usual-chip.busier{background:#fae3db;color:#a33626;border-color:#efc2b4}
@@ -89,7 +89,7 @@ footer{font-size:11px;color:#627367;padding-bottom:90px}footer button{font-size:
 .change-feed summary{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;list-style:none}.change-feed summary::-webkit-details-marker{display:none}
 .change-feed summary>span{flex:1}.change-feed summary>i:first-child{font-size:18px;color:#5c8c73}.change-feed[open] summary>i:last-child{transform:rotate(180deg)}
 .change-feed ul{list-style:none;margin:0;padding:4px 16px 8px 46px;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px 18px}
-.change-feed li{display:flex;gap:8px;align-items:baseline;font-size:12px}.change-feed li i{font-size:15px;color:#8a947f;transform:translateY(2px)}
+.change-feed li{display:flex;gap:8px;align-items:baseline;font-size:12px}.change-feed li i{font-size:15px;color:#6e7665;transform:translateY(2px)}
 .change-feed li.is-new i,.change-feed li.is-growing i{color:var(--red)}.change-feed li.is-closed i{color:#4f7d5f}
 .change-feed>p{padding:0 16px 12px 46px;font-size:11px;color:#7d8a80}
 @media(max-width:720px){.change-feed ul,.change-feed>p{padding-left:16px}}

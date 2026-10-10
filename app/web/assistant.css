@@ -32,12 +32,12 @@
 .ask-step{display:flex;align-items:center;gap:6px;font-size:11px;color:#7b887e;animation:ask-in .2s ease both}
 .ask-step i{color:#8aa274}
 .ask-step code,.ask-trace code{font:11px ui-monospace,SFMono-Regular,Menlo,monospace;color:#476451}
-.ask-thinking{display:flex;align-items:center;gap:6px;font-size:11px;color:#8b948b}
+.ask-thinking{display:flex;align-items:center;gap:6px;font-size:11px;color:#697069}
 .ask-thinking i,.growth-pill i{animation:ask-spin 1s linear infinite}
 @keyframes ask-spin{to{transform:rotate(360deg)}}
-.ask-sources{display:flex;flex-direction:column;gap:2px;font-size:10px;color:#8b948b;border-top:1px solid var(--line);padding-top:8px;margin-top:2px}
+.ask-sources{display:flex;flex-direction:column;gap:2px;font-size:10px;color:#697069;border-top:1px solid var(--line);padding-top:8px;margin-top:2px}
 .ask-sources a{color:#57744a;text-decoration:underline;text-underline-offset:2px}
-.ask-trace{font-size:10px;color:#8b948b}
+.ask-trace{font-size:10px;color:#697069}
 .ask-trace summary{cursor:pointer}
 .ask-trace>div{margin-top:7px}
 .ask-trace pre,.ask-sql pre{margin:4px 0 0;padding:8px 10px;background:#f1f4ee;border-radius:6px;font:10.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:#4f6356;white-space:pre-wrap;overflow-wrap:anywhere}
@@ -77,6 +77,6 @@
 .growth-pill{justify-self:start;display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:#6a5a2c;background:#f6ecd2;border-radius:999px;padding:3px 9px}
 .growth-bar{height:6px;background:#e8ede3;border-radius:99px;overflow:hidden}
 .growth-bar b{display:block;height:100%;background:#8aa274;border-radius:99px}
-.growth-model small{font-size:10px;color:#8b948b}
+.growth-model small{font-size:10px;color:#697069}
 .notice-tools{flex-wrap:wrap}
 .notice-tools button{white-space:nowrap}

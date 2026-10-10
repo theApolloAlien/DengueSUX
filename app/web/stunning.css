@@ -84,10 +84,10 @@ html body .week-outlook .hero-value small{color:#a9d1b9}
 html body .week-outlook .range-copy{color:#d7e8dd}
 html body .week-outlook .range-caveat{color:#8fb4a0}
 html body .week-outlook .text-button{color:var(--gold-400)!important}
-html body .week-outlook .sparkline{filter:drop-shadow(0 6px 10px #0006)}
+html body .week-outlook .sparkline{color:#8fd1ab;filter:drop-shadow(0 6px 10px #0006)}
 html body .priority-row{border-radius:10px;padding-left:8px;padding-right:6px;transition:background .15s ease}
 html body .priority-row:hover{background:#f3f5ee}
-html body .priority-rank{font-variant-numeric:tabular-nums;color:#9aa69c;font-weight:600}
+html body .priority-rank{font-variant-numeric:tabular-nums;color:#676f68;font-weight:600}
 /* Composer */
 html body .home-composer{border-radius:22px;border:1px solid #dfe3d8;box-shadow:0 1px 0 #fff inset,0 18px 40px -24px #13302666;background:#ffffffee;backdrop-filter:blur(8px)}
 html body .home-composer:focus-within{border-color:#2f6f58;box-shadow:0 0 0 4px #2f6f581f,0 18px 40px -24px #13302666}

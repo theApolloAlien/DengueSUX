@@ -17,7 +17,7 @@ async def main():
   await page.pdf(path=str(OUT/'field-sheet-bukit-batok.pdf'),print_background=True,prefer_css_page_size=True)
   await page.goto(BASE+'/#plan/unknown-area');checks['invalid-area']=await page.locator('#route-error').is_visible()
   await page.goto(BASE+'/#map/%ZZ');checks['malformed-link-safe']=await page.locator('#route-error').is_visible()
-  await page.goto(BASE+'/#week');await page.keyboard.press('Control+k');await page.locator('#command-search').fill('Ask: current outlook');await page.keyboard.press('ArrowUp');await page.keyboard.press('Enter');checks['ask-prefill']='current outlook' in await page.locator('#ask-input').input_value();await page.locator('.ask-close').click()
+  await page.goto(BASE+'/#week');await page.keyboard.press('Control+k');await page.locator('#command-search').fill('Ask: current outlook');await page.keyboard.press('ArrowUp');await page.keyboard.press('Enter');checks['ask-prefill']='current outlook' in await page.locator('#ask-input').input_value()
   await page.locator('.help-menu>summary').click();await page.locator('#shortcuts-open').click();checks['shortcuts']=await page.locator('#shortcuts-dialog').is_visible();await page.keyboard.press('Escape');checks['dialog-escape']=not await page.locator('#shortcuts-dialog').is_visible()
   await page.locator('#sidebar-collapse').click();checks['sidebar-collapse']=await page.locator('body.sidebar-collapsed').count()==1;await page.locator('#sidebar-collapse').click()
   # Postal network capabilities withheld exactly as on Databricks.

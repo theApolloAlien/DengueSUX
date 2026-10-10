@@ -1,0 +1,50 @@
+/* Readability floor (loaded last): informational text never drops below 11px.
+   Earlier layers set several labels, sources and legends at 8–10px; this lifts only those. */
+.command-trigger kbd,.landscape-legend small,.feed-status,.feed-empty,.map-legend span,.aedes-toggle small,
+.area-cluster-history small,.area-weather summary span,#area-list-count,.cluster-timeline-controls label,#cluster-date-label,
+.population-context small,.inspection-legend span,#fit-inspection,.chat-answer h2 small,.map-date,.location-privacy,.nav-rail .rail-button span,
+#data-timestamp,.composer-privacy,#brief-language,#cluster-timeline-note,.notice-facts dt,.notice-facts dd{font-size:11px!important}
+.chat-home .priority-row .badge,#area-list .badge,.area-row .badge{font-size:11px!important}
+.chat-home .priority-name small,.feed-item small,.feed-news small,.feed-item,.chat-home .week-priorities header>a,
+.route-disclaimer,.coverage-note,.plan-sources .source-content p,.plan-sources .source-content li,.source-links a,.source-links span,
+.score-details dt,.score-details dd,.score-details dd span,.score-details dt small,.formula-rules dt,.formula-rules dd,
+#replay-note,.stat-item p,.growth-model small,.growth-pill,.notice-facts a,.notice-facts p,.chat-answer-body .ask-sources{font-size:11.5px!important}
+.score-details p,.stop-reason{font-size:12px!important;line-height:1.5}
+.feed-item small{margin-top:3px}
+
+/* Map list: whole area names, wrapping onto a second line rather than truncating. */
+html body .area-row:not(.area-more){display:grid;grid-template-columns:10px minmax(0,1fr) auto;column-gap:10px;row-gap:3px;align-items:center}
+html body .area-row:not(.area-more)>.area-row-text{display:contents}
+html body .area-row:not(.area-more)>.area-dot{grid-row:1/3}
+html body .area-row:not(.area-more) .area-row-name{grid-column:2;grid-row:1;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35}
+html body .area-row:not(.area-more) .area-row-meta{grid-column:2/4;grid-row:2;margin-top:0}
+html body .area-row:not(.area-more)>.badge{grid-column:3;grid-row:1}
+
+/* Field plan: the map stays in view below the sticky top bar; each stop's controls share one row. */
+html body .inspection-map-column{top:88px}
+html body .inspection-stops .inspection-stop{display:flex;flex-wrap:wrap;align-items:center;column-gap:20px}
+html body .inspection-stops .inspection-stop>.stop-top{flex:1 1 100%}
+html body .inspection-stops .inspection-stop>.stop-report{flex:0 0 auto;margin:4px 0 0 48px}
+html body .inspection-stops .inspection-stop>.stop-foot{flex:1 1 auto;margin-top:4px}
+html body .inspection-stops .inspection-stop>.stop-report[open],html body .inspection-stops .inspection-stop>.stop-foot:has(.score-details[open]){flex-basis:100%;margin-left:48px}
+html body .inspection-stops .stop-foot .stop-map-link{margin-left:auto}
+
+/* Chat: the asker's bubble keeps a balanced shape even for very short questions. */
+html body .chat-question{min-width:48px;padding:11px 18px;border-radius:20px 20px 6px 20px;line-height:1.45;text-align:left;background:#e5eee6;color:var(--ink-1,#132f27)}
+
+/* Phones: the forecast chip sits above its headline, chart labels stay legible, map tools stack cleanly. */
+@media(max-width:720px){
+ html body .live-outlook .outlook-main .detail-top{float:none;flex-direction:row;justify-content:flex-start;margin-bottom:6px}
+ html body .live-outlook .outlook-main h2{font-size:24px;line-height:1.3}
+ html body .oc-axis{font-size:19px}
+ html body .oc-now-label{font-size:17px}
+ html body .oc-value{font-size:30px}
+ html body .outlook-chart figcaption{font-size:12px}
+ html body .map-tools{flex-wrap:wrap;align-items:center}
+ html body .map-tools>p{order:3;flex-basis:100%;max-width:none;margin:0}
+ html body .map-tools .segmented{margin-left:auto;flex-wrap:nowrap}
+ html body .map-tools .segmented button{white-space:nowrap}
+}
+
+/* Narrow side column on the home: the card header wraps instead of colliding. */
+html body .chat-home .week-priorities header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px}
