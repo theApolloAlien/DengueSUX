@@ -254,7 +254,7 @@
         ${n?`<span class="normal-span" style="left:${pos(n.low)};width:calc(${pos(n.high)} - ${pos(n.low)})"></span><span class="normal-mark" style="left:${pos(n.median)}"><small>Typical ${number(n.median)}</small></span>`:''}
         <span class="range-span" style="left:${pos(p.lower)};width:calc(${pos(p.upper)} - ${pos(p.lower)})"></span><span class="range-mark" style="left:${pos(p.predicted)}"></span></div>
       <p><strong>${number(p.lower)}–${number(p.upper)}</strong> people · 80% range. Past error, not a guarantee.</p><details class="outlook-explanation"><summary>What shapes it</summary><p>${normalSentence(p)} ${escape(driverSentence(groupedFeatures(p.top_features)))}</p></details>${weatherNote}</div>
-      <div class="outlook-facts"><div><span>Last reported</span><strong>${number(live.latest_reported_people)} people</strong><small>Week to ${date(live.issued_from_week_end)} · ${escape(live.latest_epi_week)}</small></div>
+      <div class="outlook-facts"><img class="forecast-art" src="/brand/weekly-outlook.webp" width="112" height="112" alt=""><div><span>Last reported</span><strong>${number(live.latest_reported_people)} people</strong><small>Week to ${date(live.issued_from_week_end)} · ${escape(live.latest_epi_week)}</small></div>
       <div><span>Earlier unreported week</span><strong>about ${number(live.forecasts[0]?.prediction)}</strong><small>Week of ${date(live.forecasts[0]?.target_date,{day:'numeric',month:'short'})}</small></div>
       <div><span>Source</span><strong>Official weekly bulletin</strong><small>MOH / Communicable Diseases Agency</small></div></div>`;
   }
@@ -381,7 +381,7 @@
   function bindEvents(){
     $('#replay-button').addEventListener('click',toggleReplay);
     $$('.mode-button').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
-    $$('[data-about]').forEach(b=>b.addEventListener('click',()=>$('#about-dialog').showModal()));
+    $$('[data-about]').forEach(b=>b.addEventListener('click',()=>{$('.help-menu').open=false;$('#about-dialog').showModal();}));
     $('#close-about').addEventListener('click',()=>$('#about-dialog').close());
     $('#about-done').addEventListener('click',()=>{$('#about-dialog').close();switchView('signals');});
 

@@ -1,0 +1,56 @@
+{
+  "endpoint": "/v1/images/generations",
+  "job": 1,
+  "model": "gpt-image-2",
+  "n": 1,
+  "output_format": "png",
+  "outputs": [
+    "output/imagegen/denguesux/sources/field-kit.png"
+  ],
+  "outputs_downscaled": null,
+  "prompt": "Brand illustration for DengueSUX, a civic dengue prevention tool in Singapore. Restrained editorial cut-paper illustration with clean broad contours and a very subtle paper texture. Forest green #193e33, sage #a9c799, warm ivory #f7f8f4, small muted ochre accents. Style consistent with a minimal editorial illustration of Singapore apartment courtyard and planter pots. No text, letters, words, numbers, labels, maps, charts, people, logos, decorative blobs, sparkles, gradients, glass or glow. A compact volunteer field-check kit: an unmarked clipboard with blank checklist lines and checkmarks, a simple pair of work gloves, a small flashlight, and a healthy leaf. Tactile but flat, not photorealistic or 3D. Objects arranged on the right half, entirely within the canvas, generous empty ivory space on the left. Elegant calm composition for an app field-planning landing page.",
+  "quality": "high",
+  "size": "1536x1024"
+}
+{
+  "endpoint": "/v1/images/generations",
+  "job": 2,
+  "model": "gpt-image-2",
+  "n": 1,
+  "output_format": "png",
+  "outputs": [
+    "output/imagegen/denguesux/sources/weekly-outlook.png"
+  ],
+  "outputs_downscaled": null,
+  "prompt": "Brand illustration for DengueSUX, a civic dengue prevention tool in Singapore. Restrained editorial cut-paper illustration with clean broad contours and a very subtle paper texture. Forest green #193e33, sage #a9c799, warm ivory #f7f8f4, small muted ochre accents. Style consistent with a minimal editorial illustration of Singapore apartment courtyard and planter pots. No text, letters, words, numbers, labels, maps, charts, people, logos, decorative blobs, sparkles, gradients, glass or glow. A single elegant desk calendar with blank date cells (absolutely no digits) and a subtle forest leaf beside it. A small eye-like focus circle suggests paying attention over time. Compact centred composition within middle 60 percent, for a national outlook illustration. No graph, no invented data.",
+  "quality": "high",
+  "size": "1024x1024"
+}
+{
+  "endpoint": "/v1/images/generations",
+  "job": 3,
+  "model": "gpt-image-2",
+  "n": 1,
+  "output_format": "png",
+  "outputs": [
+    "output/imagegen/denguesux/sources/community-care.png"
+  ],
+  "outputs_downscaled": null,
+  "prompt": "Brand illustration for DengueSUX, a civic dengue prevention tool in Singapore. Restrained editorial cut-paper illustration with clean broad contours and a very subtle paper texture. Forest green #193e33, sage #a9c799, warm ivory #f7f8f4, small muted ochre accents. Style consistent with a minimal editorial illustration of Singapore apartment courtyard and planter pots. No text, letters, words, numbers, labels, maps, charts, people, logos, decorative blobs, sparkles, gradients, glass or glow. An inviting Singapore apartment corridor with a simple open window, two clean planter pots, an overturned pail and a watering can stored upside down. No standing water. Quiet strong geometric architecture on the right half; empty warm ivory space on the left half. No people. A civic wellbeing illustration for a founder story and resident prevention guide, not a representation of a particular building.",
+  "quality": "high",
+  "size": "1536x1024"
+}
+{
+  "endpoint": "/v1/images/generations",
+  "job": 4,
+  "model": "gpt-image-2",
+  "n": 1,
+  "output_format": "png",
+  "outputs": [
+    "output/imagegen/denguesux/sources/night-courtyard.png"
+  ],
+  "outputs_downscaled": null,
+  "prompt": "A minimal editorial illustration for a forest-green product dashboard. An abstract Singapore apartment courtyard: two understated apartment blocks, a small tree and three tidy planter pots, clustered strictly in the RIGHTMOST THIRD and LOWER HALF of the image. The left two thirds is uninterrupted solid deep forest green #193e33. Background is the same solid #193e33. Buildings and tree use muted sage #486856 and #66816c with a few ivory #c6d2c0 window shapes. Clean flat broad shapes and fine paper texture. Quiet, almost monochrome. No gradients, glow, glass, people, text, letters, numbers, signs, maps, data, decorative blobs, sparkles or logos. This must remain a low-contrast background for foreground data labels.",
+  "quality": "high",
+  "size": "1536x1024"
+}

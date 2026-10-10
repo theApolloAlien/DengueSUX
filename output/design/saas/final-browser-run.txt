@@ -1,0 +1,39 @@
+{
+  "checks": 61,
+  "failed": [],
+  "page_errors": [],
+  "metrics": {
+    "before-1440": {
+      "words": 352,
+      "overflow": false,
+      "cls": 0.019685420925627032,
+      "lcp": 624,
+      "fcp": 624,
+      "interaction_proxy": 104
+    },
+    "before-390": {
+      "words": 248,
+      "overflow": false,
+      "cls": 0.13709227783478295,
+      "lcp": 644,
+      "fcp": 644,
+      "interaction_proxy": 88
+    },
+    "after-1440": {
+      "words": 146,
+      "overflow": false,
+      "cls": 0.003430447525840728,
+      "lcp": 8112,
+      "fcp": 1048,
+      "interaction_proxy": 88
+    },
+    "after-390": {
+      "words": 131,
+      "overflow": false,
+      "cls": 0.0028085951875778583,
+      "lcp": 8080,
+      "fcp": 1044,
+      "interaction_proxy": 88
+    }
+  }
+}

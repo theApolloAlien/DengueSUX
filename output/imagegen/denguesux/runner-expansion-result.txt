@@ -1,0 +1,14 @@
+Wrote output/imagegen/denguesux/sources/field-kit.png
+Wrote output/imagegen/denguesux/sources/weekly-outlook.png
+Wrote output/imagegen/denguesux/sources/community-care.png
+Wrote output/imagegen/denguesux/sources/night-courtyard.png
+
+OPENAI_API_KEY is set.
+[job 1/4] starting
+[job 2/4] starting
+[job 1/4] completed in 30.3s
+[job 3/4] starting
+[job 2/4] completed in 35.6s
+[job 4/4] starting
+[job 3/4] completed in 30.0s
+[job 4/4] completed in 36.0s

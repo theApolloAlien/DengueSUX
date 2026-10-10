@@ -1,0 +1,26 @@
+{
+  "checks": {
+    "shared-area-preserved": true,
+    "empty-search": true,
+    "empty-reset": true,
+    "replay-slider": true,
+    "replay-pauses": true,
+    "print-all-stops": true,
+    "plan-picker": true,
+    "invalid-area": true,
+    "malformed-link-safe": true,
+    "ask-prefill": true,
+    "shortcuts": true,
+    "dialog-escape": true,
+    "sidebar-collapse": true,
+    "hosted-postal-hidden": true,
+    "missing-forecast": true,
+    "storage-denied": true,
+    "first-time-deep-link": true,
+    "portable-ready": true,
+    "portable-logo": true,
+    "portable-map": true,
+    "portable-empty-art": true
+  },
+  "console_and_page_errors": []
+}

@@ -1,0 +1,17 @@
+Wrote output/imagegen/denguesux/sources/empty-search.png
+Wrote output/imagegen/denguesux/sources/logo-concepts.png
+Wrote output/imagegen/denguesux/sources/no-clusters.png
+Wrote output/imagegen/denguesux/sources/offline.png
+Wrote output/imagegen/denguesux/sources/neighbourhood-hero.png
+
+OPENAI_API_KEY is set.
+[job 1/5] starting
+[job 2/5] starting
+[job 2/5] completed in 27.2s
+[job 3/5] starting
+[job 1/5] completed in 28.4s
+[job 4/5] starting
+[job 4/5] completed in 28.5s
+[job 5/5] starting
+[job 3/5] completed in 51.3s
+[job 5/5] completed in 39.0s

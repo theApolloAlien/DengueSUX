@@ -1,0 +1,142 @@
+[
+  {
+    "width": 1440,
+    "route": "week",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "route": "map",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "route": "plan",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "route": "plan/jurong-west",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "route": "forecast",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "week",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "map",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "plan",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "plan/jurong-west",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "forecast",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 1024,
+    "route": "week",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 1024,
+    "route": "map",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 1024,
+    "route": "plan",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 1024,
+    "route": "plan/jurong-west",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 1024,
+    "route": "forecast",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "week",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "map",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "plan",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "plan/jurong-west",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "forecast",
+    "overflow": false,
+    "broken_images": [],
+    "errors": []
+  }
+]

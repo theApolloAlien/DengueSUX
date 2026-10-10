@@ -20,13 +20,16 @@ ROOT = Path(__file__).resolve().parents[1]
 GL = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader']
 
 
-async def ready(page, base, hash_='#signals'):
+async def ready(page, base, hash_='#week'):
+    await page.add_init_script("try{localStorage.setItem('denguesux:toured','true')}catch{}")
     await page.goto(base + '/' + hash_, wait_until='domcontentloaded')
     await page.wait_for_selector('body.is-ready, body.is-error', timeout=45000)
     await page.wait_for_timeout(600)
 
 
 async def open_plan(page, area='Jurong West'):
+    await page.goto(page.url.split('#')[0]+'#map')
+    await page.wait_for_selector('#signals-view:not([hidden])')
     await page.evaluate("name => [...document.querySelectorAll('#area-list [data-area]')].find(b => b.getAttribute('aria-label').startsWith(name + ','))?.click()", area)
     await page.locator('#area-detail .plan-button').first.click()
     await page.wait_for_selector('#inspection-view:not([hidden]) .stop-list')
@@ -79,6 +82,8 @@ async def main(base, out):
         await page.screenshot(path=str(out / 'state-check-example.png'))
 
         # 3. Keyboard: choose an area from the list and keep focus on it; Escape closes the layers menu.
+        await page.locator('[data-section=map]').click()
+        await page.wait_for_selector('#signals-view:not([hidden])')
         await page.focus('#area-list [data-area]:nth-child(2)')
         await page.keyboard.press('Enter')
         focused = await page.evaluate("document.activeElement?.dataset?.area || document.activeElement?.className")

@@ -1,134 +1,134 @@
 {
   "signals-1440": {
-    "words": 352,
+    "words": 351,
     "overflow": false,
     "cls": 0.019706252386148086,
     "lcp": 252,
-    "fcp": 52
+    "fcp": 72
   },
   "forecast-1440": {
     "words": 390,
     "overflow": false,
     "cls": 0.019706252386148086,
     "lcp": 252,
-    "fcp": 52
+    "fcp": 72
   },
   "plan-1440": {
     "words": 444,
     "overflow": false,
     "cls": 0.019706252386148086,
     "lcp": 252,
-    "fcp": 52
+    "fcp": 72
   },
   "notice-1440": {
-    "words": 491,
+    "words": 485,
     "overflow": false,
     "cls": 0.019706252386148086,
     "lcp": 252,
-    "fcp": 52
+    "fcp": 72
   },
   "resident-1440": {
     "words": 448,
     "overflow": false,
     "cls": 0.019706252386148086,
     "lcp": 252,
-    "fcp": 52
+    "fcp": 72
   },
   "ask-1440": {
     "words": 428,
     "overflow": false,
     "cls": 0.019706252386148086,
     "lcp": 252,
-    "fcp": 52
+    "fcp": 72
   },
   "signals-1024": {
     "words": 331,
     "overflow": false,
-    "cls": 0.03466030533115069,
-    "lcp": 312,
-    "fcp": 32
+    "cls": 0.0346605300406615,
+    "lcp": 180,
+    "fcp": 24
   },
   "forecast-1024": {
     "words": 387,
     "overflow": false,
-    "cls": 0.03466030533115069,
-    "lcp": 312,
-    "fcp": 32
+    "cls": 0.0346605300406615,
+    "lcp": 180,
+    "fcp": 24
   },
   "plan-1024": {
     "words": 441,
     "overflow": false,
-    "cls": 0.03466030533115069,
-    "lcp": 312,
-    "fcp": 32
+    "cls": 0.0346605300406615,
+    "lcp": 180,
+    "fcp": 24
   },
   "notice-1024": {
-    "words": 485,
+    "words": 479,
     "overflow": false,
-    "cls": 0.03466030533115069,
-    "lcp": 312,
-    "fcp": 32
+    "cls": 0.0346605300406615,
+    "lcp": 180,
+    "fcp": 24
   },
   "resident-1024": {
     "words": 427,
     "overflow": false,
-    "cls": 0.03466030533115069,
-    "lcp": 312,
-    "fcp": 32
+    "cls": 0.0346605300406615,
+    "lcp": 180,
+    "fcp": 24
   },
   "ask-1024": {
     "words": 483,
     "overflow": false,
-    "cls": 0.03466030533115069,
-    "lcp": 312,
-    "fcp": 32
+    "cls": 0.0346605300406615,
+    "lcp": 180,
+    "fcp": 24
   },
   "signals-390": {
     "words": 248,
     "overflow": false,
     "cls": 0.13157576729132148,
-    "lcp": 292,
-    "fcp": 36
+    "lcp": 168,
+    "fcp": 24
   },
   "forecast-390": {
     "words": 380,
     "overflow": false,
     "cls": 0.13157576729132148,
-    "lcp": 292,
-    "fcp": 36
+    "lcp": 168,
+    "fcp": 24
   },
   "plan-390": {
     "words": 425,
     "overflow": false,
     "cls": 0.13157576729132148,
-    "lcp": 292,
-    "fcp": 36
+    "lcp": 168,
+    "fcp": 24
   },
   "notice-390": {
-    "words": 461,
+    "words": 458,
     "overflow": false,
     "cls": 0.13157576729132148,
-    "lcp": 292,
-    "fcp": 36
+    "lcp": 168,
+    "fcp": 24
   },
   "resident-390": {
     "words": 344,
     "overflow": false,
     "cls": 0.13157576729132148,
-    "lcp": 292,
-    "fcp": 36
+    "lcp": 168,
+    "fcp": 24
   },
   "ask-390": {
     "words": 402,
     "overflow": false,
     "cls": 0.13157576729132148,
-    "lcp": 292,
-    "fcp": 36
+    "lcp": 168,
+    "fcp": 24
   },
   "fast4g": [
     {
-      "name": "http://127.0.0.1:8787/data/dashboard.json",
-      "duration": 5110.79999999702,
+      "name": "http://127.0.0.1:8788/data/dashboard.json",
+      "duration": 5108.800000011921,
       "bytes": 914342
     }
   ]

@@ -1,0 +1,70 @@
+{
+  "endpoint": "/v1/images/generations",
+  "job": 1,
+  "model": "gpt-image-2",
+  "n": 1,
+  "output_format": "png",
+  "outputs": [
+    "output/imagegen/denguesux/sources/logo-concepts.png"
+  ],
+  "outputs_downscaled": null,
+  "prompt": "Three distinct minimal geometric brand-mark concepts, evenly spaced on warm ivory #f7f8f4. Forest green #193e33 and sage #c6ddad. Explore a clear abstract aperture / focus mark that suggests paying attention to a neighbourhood; also a simple rounded D-shaped abstract mark with a small observation point. Strong small-size silhouette. Flat vector-like concept sheet, no text, no wordmarks, no numbers, no maps, no gradients, no sparkles, no medical symbols.",
+  "quality": "high",
+  "size": "1536x1024"
+}
+{
+  "endpoint": "/v1/images/generations",
+  "job": 2,
+  "model": "gpt-image-2",
+  "n": 1,
+  "output_format": "png",
+  "outputs": [
+    "output/imagegen/denguesux/sources/empty-search.png"
+  ],
+  "outputs_downscaled": null,
+  "prompt": "Coherent brand illustration for DengueSUX, a Singapore dengue field-planning tool. Restrained editorial flat illustration, precise broad contours, warm ivory #f7f8f4 background, forest green #193e33 and sage #c6ddad only, occasional muted ochre. Sparse composition, generous negative space. No gradient, glass, glow, decorative blobs, sparkles or 3D. No letters, words, numbers, labels, maps, charts, logos, people, medical imagery or mosquitoes on skin. A small magnifying lens inspecting a single leaf and empty space. Main motif centred in the middle 55 percent, simple and readable at 80 pixels. Communicates a search with no results, without seeming alarming.",
+  "quality": "high",
+  "size": "1024x1024"
+}
+{
+  "endpoint": "/v1/images/generations",
+  "job": 3,
+  "model": "gpt-image-2",
+  "n": 1,
+  "output_format": "png",
+  "outputs": [
+    "output/imagegen/denguesux/sources/offline.png"
+  ],
+  "outputs_downscaled": null,
+  "prompt": "Coherent brand illustration for DengueSUX, a Singapore dengue field-planning tool. Restrained editorial flat illustration, precise broad contours, warm ivory #f7f8f4 background, forest green #193e33 and sage #c6ddad only, occasional muted ochre. Sparse composition, generous negative space. No gradient, glass, glow, decorative blobs, sparkles or 3D. No letters, words, numbers, labels, maps, charts, logos, people, medical imagery or mosquitoes on skin. A simple cloud and a detached short connection line, with a small folded paper sheet safely resting below. Centred motif within middle 55 percent, readable at 80 pixels. Communicates unavailable connection with a saved copy, quiet and reassuring.",
+  "quality": "high",
+  "size": "1024x1024"
+}
+{
+  "endpoint": "/v1/images/generations",
+  "job": 4,
+  "model": "gpt-image-2",
+  "n": 1,
+  "output_format": "png",
+  "outputs": [
+    "output/imagegen/denguesux/sources/no-clusters.png"
+  ],
+  "outputs_downscaled": null,
+  "prompt": "Coherent brand illustration for DengueSUX, a Singapore dengue field-planning tool. Restrained editorial flat illustration, precise broad contours, warm ivory #f7f8f4 background, forest green #193e33 and sage #c6ddad only, occasional muted ochre. Sparse composition, generous negative space. No gradient, glass, glow, decorative blobs, sparkles or 3D. No letters, words, numbers, labels, maps, charts, logos, people, medical imagery or mosquitoes on skin. A clean overturned plant saucer beside a healthy potted plant, with a simple small check stroke. Centred motif within middle 55 percent, readable at 80 pixels. Communicates keeping a home free from standing water; not a claim of guaranteed safety.",
+  "quality": "high",
+  "size": "1024x1024"
+}
+{
+  "endpoint": "/v1/images/generations",
+  "job": 5,
+  "model": "gpt-image-2",
+  "n": 1,
+  "output_format": "png",
+  "outputs": [
+    "output/imagegen/denguesux/sources/neighbourhood-hero.png"
+  ],
+  "outputs_downscaled": null,
+  "prompt": "Coherent brand illustration for DengueSUX, a Singapore dengue field-planning tool. Restrained editorial flat illustration, precise broad contours, warm ivory #f7f8f4 background, forest green #193e33 and sage #c6ddad only, occasional muted ochre. Sparse composition, generous negative space. No gradient, glass, glow, decorative blobs, sparkles or 3D. No letters, words, numbers, labels, maps, charts, logos, people, medical imagery or mosquitoes on skin. A wide, quiet editorial illustration of a generic Singapore apartment courtyard with two modest HDB-like blocks and an orderly row of planter pots with overturned saucers. An abstract architectural scene, not a real estate or location depiction. No people, no street names, no plot boundaries. Architecture primarily on the right two-thirds, empty ivory space on the left. Restrained civic-publication quality, no fake data, no maps.",
+  "quality": "high",
+  "size": "1536x1024"
+}

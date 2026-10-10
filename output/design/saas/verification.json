@@ -1,0 +1,262 @@
+{
+  "checks": {
+    "table-filter-1440": true,
+    "table-sort-1440": true,
+    "fuzzy-1440": "Jurong West\nArea\nPlan a check in Jurong West\nField plan\nAsk: jrngwst\nQuestion",
+    "palette-route-1440": true,
+    "back-forward-1440": true,
+    "checklist-1440": true,
+    "share-1440": true,
+    "notice-en-1440": true,
+    "notice-zh-1440": true,
+    "notice-ms-1440": true,
+    "notice-ta-1440": true,
+    "resident-1440": true,
+    "ask-1440": true,
+    "table-filter-1280": true,
+    "table-sort-1280": true,
+    "fuzzy-1280": "Jurong West\nArea\nPlan a check in Jurong West\nField plan\nAsk: jrngwst\nQuestion",
+    "palette-route-1280": true,
+    "back-forward-1280": true,
+    "checklist-1280": true,
+    "share-1280": true,
+    "notice-en-1280": true,
+    "notice-zh-1280": true,
+    "notice-ms-1280": true,
+    "notice-ta-1280": true,
+    "resident-1280": true,
+    "ask-1280": true,
+    "table-filter-1024": true,
+    "table-sort-1024": true,
+    "fuzzy-1024": "Jurong West\nArea\nPlan a check in Jurong West\nField plan\nAsk: jrngwst\nQuestion",
+    "palette-route-1024": true,
+    "back-forward-1024": true,
+    "checklist-1024": true,
+    "share-1024": true,
+    "notice-en-1024": true,
+    "notice-zh-1024": true,
+    "notice-ms-1024": true,
+    "notice-ta-1024": true,
+    "resident-1024": true,
+    "ask-1024": true,
+    "table-filter-390": true,
+    "table-sort-390": true,
+    "fuzzy-390": "Jurong West\nArea\nPlan a check in Jurong West\nField plan\nAsk: jrngwst\nQuestion",
+    "palette-route-390": true,
+    "back-forward-390": true,
+    "checklist-390": true,
+    "share-390": true,
+    "notice-en-390": true,
+    "notice-zh-390": true,
+    "notice-ms-390": true,
+    "notice-ta-390": true,
+    "resident-390": true,
+    "ask-390": true,
+    "first-run-tour": true,
+    "tour-opens-ask": true,
+    "tour-once": true,
+    "forced-tour": true,
+    "error-week": true,
+    "error-map": true,
+    "error-plan/jurong-west": true,
+    "error-forecast": true,
+    "offline": true
+  },
+  "screens": {
+    "week-1440": {
+      "words": 146,
+      "overflow": false,
+      "cls": 0,
+      "lcp": 472,
+      "fcp": 472,
+      "interaction_proxy": 0
+    },
+    "map-1440": {
+      "words": 210,
+      "overflow": false,
+      "cls": 0,
+      "lcp": 1756,
+      "fcp": 472,
+      "interaction_proxy": 0
+    },
+    "plan/jurong-west-1440": {
+      "words": 251,
+      "overflow": false,
+      "cls": 0,
+      "lcp": 2556,
+      "fcp": 472,
+      "interaction_proxy": 0
+    },
+    "forecast-1440": {
+      "words": 99,
+      "overflow": false,
+      "cls": 0,
+      "lcp": 2556,
+      "fcp": 472,
+      "interaction_proxy": 0
+    },
+    "styleguide-1440": {
+      "words": 205,
+      "overflow": false,
+      "cls": 0,
+      "lcp": 3720,
+      "fcp": 472,
+      "interaction_proxy": 0
+    },
+    "week-1280": {
+      "words": 146,
+      "overflow": false,
+      "cls": 0.002335421890682644,
+      "lcp": 240,
+      "fcp": 108,
+      "interaction_proxy": 0
+    },
+    "map-1280": {
+      "words": 192,
+      "overflow": false,
+      "cls": 0.002335421890682644,
+      "lcp": 240,
+      "fcp": 108,
+      "interaction_proxy": 0
+    },
+    "plan/jurong-west-1280": {
+      "words": 251,
+      "overflow": false,
+      "cls": 0.002335421890682644,
+      "lcp": 240,
+      "fcp": 108,
+      "interaction_proxy": 0
+    },
+    "forecast-1280": {
+      "words": 99,
+      "overflow": false,
+      "cls": 0.002335421890682644,
+      "lcp": 240,
+      "fcp": 108,
+      "interaction_proxy": 0
+    },
+    "styleguide-1280": {
+      "words": 205,
+      "overflow": false,
+      "cls": 0.002335421890682644,
+      "lcp": 240,
+      "fcp": 108,
+      "interaction_proxy": 0
+    },
+    "week-1024": {
+      "words": 144,
+      "overflow": false,
+      "cls": 0.0031906000276406606,
+      "lcp": 228,
+      "fcp": 76,
+      "interaction_proxy": 0
+    },
+    "map-1024": {
+      "words": 208,
+      "overflow": false,
+      "cls": 0.0031906000276406606,
+      "lcp": 244,
+      "fcp": 76,
+      "interaction_proxy": 0
+    },
+    "plan/jurong-west-1024": {
+      "words": 249,
+      "overflow": false,
+      "cls": 0.0031906000276406606,
+      "lcp": 244,
+      "fcp": 76,
+      "interaction_proxy": 0
+    },
+    "forecast-1024": {
+      "words": 97,
+      "overflow": false,
+      "cls": 0.0031906000276406606,
+      "lcp": 244,
+      "fcp": 76,
+      "interaction_proxy": 0
+    },
+    "styleguide-1024": {
+      "words": 203,
+      "overflow": false,
+      "cls": 0.0031906000276406606,
+      "lcp": 244,
+      "fcp": 76,
+      "interaction_proxy": 0
+    },
+    "week-390": {
+      "words": 131,
+      "overflow": false,
+      "cls": 0.002690349346807816,
+      "lcp": 188,
+      "fcp": 76,
+      "interaction_proxy": 0
+    },
+    "map-390": {
+      "words": 107,
+      "overflow": false,
+      "cls": 0.002690349346807816,
+      "lcp": 228,
+      "fcp": 76,
+      "interaction_proxy": 0
+    },
+    "plan/jurong-west-390": {
+      "words": 238,
+      "overflow": false,
+      "cls": 0.002690349346807816,
+      "lcp": 228,
+      "fcp": 76,
+      "interaction_proxy": 0
+    },
+    "forecast-390": {
+      "words": 86,
+      "overflow": false,
+      "cls": 0.002690349346807816,
+      "lcp": 228,
+      "fcp": 76,
+      "interaction_proxy": 0
+    },
+    "styleguide-390": {
+      "words": 192,
+      "overflow": false,
+      "cls": 0.002690349346807816,
+      "lcp": 228,
+      "fcp": 76,
+      "interaction_proxy": 0
+    }
+  },
+  "metrics_slow4g_cpu4": {
+    "before-1440": {
+      "words": 352,
+      "overflow": false,
+      "cls": 0.019685420925627032,
+      "lcp": 624,
+      "fcp": 624,
+      "interaction_proxy": 104
+    },
+    "before-390": {
+      "words": 248,
+      "overflow": false,
+      "cls": 0.13709227783478295,
+      "lcp": 644,
+      "fcp": 644,
+      "interaction_proxy": 88
+    },
+    "after-1440": {
+      "words": 146,
+      "overflow": false,
+      "cls": 0.003430447525840728,
+      "lcp": 8112,
+      "fcp": 1048,
+      "interaction_proxy": 88
+    },
+    "after-390": {
+      "words": 131,
+      "overflow": false,
+      "cls": 0.0028085951875778583,
+      "lcp": 8080,
+      "fcp": 1044,
+      "interaction_proxy": 88
+    }
+  },
+  "page_errors": []
+}

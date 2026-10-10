@@ -1,0 +1,162 @@
+[
+  {
+    "width": 1440,
+    "route": "week",
+    "title": "This week \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 146,
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "route": "map",
+    "title": "Map \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 216,
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "route": "plan/jurong-west",
+    "title": "Field plan / Jurong West \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 307,
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "route": "forecast",
+    "title": "Forecast \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 99,
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "route": "styleguide",
+    "title": "Design system \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 123,
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "week",
+    "title": "This week \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 146,
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "map",
+    "title": "Map \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 198,
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "plan/jurong-west",
+    "title": "Field plan / Jurong West \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 307,
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "forecast",
+    "title": "Forecast \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 99,
+    "errors": []
+  },
+  {
+    "width": 1280,
+    "route": "styleguide",
+    "title": "Design system \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 123,
+    "errors": []
+  },
+  {
+    "width": 1024,
+    "route": "week",
+    "title": "This week \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 144,
+    "errors": []
+  },
+  {
+    "width": 1024,
+    "route": "map",
+    "title": "Map \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 214,
+    "errors": []
+  },
+  {
+    "width": 1024,
+    "route": "plan/jurong-west",
+    "title": "Field plan / Jurong West \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 305,
+    "errors": []
+  },
+  {
+    "width": 1024,
+    "route": "forecast",
+    "title": "Forecast \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 97,
+    "errors": []
+  },
+  {
+    "width": 1024,
+    "route": "styleguide",
+    "title": "Design system \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 121,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "week",
+    "title": "This week \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 131,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "map",
+    "title": "Map \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 112,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "plan/jurong-west",
+    "title": "Field plan / Jurong West \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 294,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "forecast",
+    "title": "Forecast \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 86,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "route": "styleguide",
+    "title": "Design system \u00b7 DengueSUX",
+    "overflow": false,
+    "words": 110,
+    "errors": []
+  }
+]

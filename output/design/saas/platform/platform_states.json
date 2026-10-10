@@ -1,0 +1,84 @@
+{
+  "base_url": "http://127.0.0.1:8787",
+  "checks": {
+    "geolocation_denied_message": {
+      "ok": true,
+      "detail": "Location permission was not given. Try the example or the area list instead."
+    },
+    "geolocation_not_sent": {
+      "ok": true,
+      "detail": ""
+    },
+    "postal_unavailable_message": {
+      "ok": true,
+      "detail": "Postal lookup is unavailable right now. Try “Use my location” or the example."
+    },
+    "postal_validation_message": {
+      "ok": true,
+      "detail": ""
+    },
+    "example_block_result": {
+      "ok": true,
+      "detail": ""
+    },
+    "area_selection_keeps_focus": {
+      "ok": true,
+      "detail": "JE"
+    },
+    "escape_closes_layers": {
+      "ok": true,
+      "detail": ""
+    },
+    "print_hides_report_buttons": {
+      "ok": true,
+      "detail": "none"
+    },
+    "missing_footprints_or_tiles_labelled": {
+      "ok": true,
+      "detail": "Building shapes are unavailable for this area. The verified stops and saved route remain visible. Walk: 1.6 km, about 19 min on foot."
+    },
+    "reduced_motion_play_disabled": {
+      "ok": true,
+      "detail": ""
+    },
+    "stop_and_checklist_in_sync": {
+      "ok": true,
+      "detail": "Stop 3 of 8 · Blk 122 Yuan Ching Road · 10 storeys | Blk 122 Yuan Ching Road"
+    },
+    "phone_no_horizontal_overflow": {
+      "ok": true,
+      "detail": ""
+    },
+    "walk_reaches_end_of_route": {
+      "ok": true,
+      "detail": "Route complete · 0.85 km, 8 stops"
+    },
+    "walk_turn_rate_bounded": {
+      "ok": true,
+      "detail": "max 25.8 deg/s over 161 samples"
+    },
+    "walk_slider_at_end": {
+      "ok": true,
+      "detail": ""
+    },
+    "scrub_moves_view_and_checklist": {
+      "ok": true,
+      "detail": "0.43 km of 0.85 km · next: stop 6 | Blk 110 Bishan Street 12"
+    },
+    "no_webgl_fallback": {
+      "ok": true,
+      "detail": "3D is unavailable on this device. Continue with the 2D map and numbered checklist."
+    },
+    "stale_forecast_labelled_unavailable": {
+      "ok": true,
+      "detail": "Unavailable"
+    },
+    "api_failure_error_state": {
+      "ok": true,
+      "detail": "We couldn’t load the saved evidence. Please try again in a moment."
+    }
+  },
+  "failed": [],
+  "passed": 19,
+  "total": 19
+}

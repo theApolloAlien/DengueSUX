@@ -1,5 +1,7 @@
 # DengueSUX: Surveillance Using eXplainable AI
 
+![DengueSUX — neighbourhood care](app/web/brand/neighbourhood-hero.webp)
+
 ![DengueSUX application: This week](app/web/brand/hero.webp)
 
 **Where should we look for mosquitoes this week?** DengueSUX turns Singapore's open data into a weekly dengue plan: which areas to check first, which blocks to walk, and what to tell residents, backed by a live national forecast with ranges and a retrospective check through 2026.
@@ -12,11 +14,11 @@ Built for the Databricks AI Social Impact (DAISI) Challenge Singapore 2026 · Pr
 
 | Where to check first | Street-level inspection plan |
 |---|---|
-| ![Area signals map of Singapore's 55 planning areas](docs/screenshots/1_area_signals.png) | ![Inspection plan: 8 places to check on a 1.2 km OneMap walking route](docs/screenshots/2_inspection_plan.png) |
+| ![This week: national outlook and areas to check](output/design/saas/branded-week-1440.png) | ![Field plan with the saved route and checklist](output/design/saas/branded-plan-jurong-west-1440.png) |
 | **Resident notice in 4 languages** | **Ask DengueSUX** |
-| ![Resident notice in Chinese with 5/5 automatic checks passed](docs/screenshots/3_resident_notice.png) | ![Assistant explaining why Jurong East is High, with dated sources](docs/screenshots/4_ask_denguesux.png) |
+| ![Resident notice in Chinese with 5/5 automatic checks passed](output/design/saas/after-notice-1440.png) | ![Assistant answer with dated sources](output/design/saas/after-ask-1440.png) |
 
-![2022 forecast replay: forecast off by ~83 people a week vs ~172 for a simple average](docs/screenshots/5_forecast_replay.png)
+![National outlook and retrospective checks](output/design/saas/branded-forecast-1440.png)
 
 ## What it does
 

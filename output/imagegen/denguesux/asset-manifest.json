@@ -1,42 +1,200 @@
 {
-  "generation_status": "Built-in image generation unavailable. Third-party credential fallback not authorized; no key read or transmitted.",
-  "deviations": [
-    "Spot assets are existing, locally vendored Phosphor icons, rasterized without invented artwork.",
-    "Hero and social card use the real application screenshot.",
-    "Logo is an original, hand-built SVG as requested."
-  ],
+  "generation_status": "Completed using user-authorized codex-easy.ai CLI fallback. Built-in image generator unavailable.",
+  "model": "gpt-image-2",
+  "quality": "high",
+  "provider": "https://codex-easy.ai/v1",
+  "source_jobs": 9,
   "files": [
     {
+      "file": "output/imagegen/denguesux/sources/community-care.png",
+      "source": "output/imagegen/denguesux/sources/community-care.png",
+      "prompt": "Brand illustration for DengueSUX, a civic dengue prevention tool in Singapore. Restrained editorial cut-paper illustration with clean broad contours and a very subtle paper texture. Forest green #193e33, sage #a9c799, warm ivory #f7f8f4, small muted ochre accents. Style consistent with a minimal editorial illustration of Singapore apartment courtyard and planter pots. No text, letters, words, numbers, labels, maps, charts, people, logos, decorative blobs, sparkles, gradients, glass or glow. An inviting Singapore apartment corridor with a simple open window, two clean planter pots, an overturned pail and a watering can stored upside down. No standing water. Quiet strong geometric architecture on the right half; empty warm ivory space on the left half. No people. A civic wellbeing illustration for a founder story and resident prevention guide, not a representation of a particular building.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 2068803,
+      "sha256": "23f06c3dcb4d16759388bcc4beb98bee6e7b672cd2b653ccffef16c347225c14",
+      "dimensions": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "file": "output/imagegen/denguesux/sources/empty-search.png",
+      "source": "output/imagegen/denguesux/sources/empty-search.png",
+      "prompt": "Coherent brand illustration for DengueSUX, a Singapore dengue field-planning tool. Restrained editorial flat illustration, precise broad contours, warm ivory #f7f8f4 background, forest green #193e33 and sage #c6ddad only, occasional muted ochre. Sparse composition, generous negative space. No gradient, glass, glow, decorative blobs, sparkles or 3D. No letters, words, numbers, labels, maps, charts, logos, people, medical imagery or mosquitoes on skin. A small magnifying lens inspecting a single leaf and empty space. Main motif centred in the middle 55 percent, simple and readable at 80 pixels. Communicates a search with no results, without seeming alarming.",
+      "model": "gpt-image-2",
+      "requested_size": "1024x1024",
+      "size_bytes": 1092926,
+      "sha256": "a98543fe0883efb31f3df6fd6a9a5dab3a2ff4bfb384b27073001fc3b1ae550b",
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "file": "output/imagegen/denguesux/sources/field-kit.png",
+      "source": "output/imagegen/denguesux/sources/field-kit.png",
+      "prompt": "Brand illustration for DengueSUX, a civic dengue prevention tool in Singapore. Restrained editorial cut-paper illustration with clean broad contours and a very subtle paper texture. Forest green #193e33, sage #a9c799, warm ivory #f7f8f4, small muted ochre accents. Style consistent with a minimal editorial illustration of Singapore apartment courtyard and planter pots. No text, letters, words, numbers, labels, maps, charts, people, logos, decorative blobs, sparkles, gradients, glass or glow. A compact volunteer field-check kit: an unmarked clipboard with blank checklist lines and checkmarks, a simple pair of work gloves, a small flashlight, and a healthy leaf. Tactile but flat, not photorealistic or 3D. Objects arranged on the right half, entirely within the canvas, generous empty ivory space on the left. Elegant calm composition for an app field-planning landing page.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 1882877,
+      "sha256": "4d52c2f63eab27116f6b7c3c8675370992f96c509e7288ff92218816f94c9393",
+      "dimensions": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "file": "output/imagegen/denguesux/sources/logo-concepts.png",
+      "source": "output/imagegen/denguesux/sources/logo-concepts.png",
+      "prompt": "Three distinct minimal geometric brand-mark concepts, evenly spaced on warm ivory #f7f8f4. Forest green #193e33 and sage #c6ddad. Explore a clear abstract aperture / focus mark that suggests paying attention to a neighbourhood; also a simple rounded D-shaped abstract mark with a small observation point. Strong small-size silhouette. Flat vector-like concept sheet, no text, no wordmarks, no numbers, no maps, no gradients, no sparkles, no medical symbols.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 1100580,
+      "sha256": "eab17c07ad495db726bf444ebbea2a7401994e86d11b49a8fab21f344bf27800",
+      "dimensions": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "file": "output/imagegen/denguesux/sources/neighbourhood-hero.png",
+      "source": "output/imagegen/denguesux/sources/neighbourhood-hero.png",
+      "prompt": "Coherent brand illustration for DengueSUX, a Singapore dengue field-planning tool. Restrained editorial flat illustration, precise broad contours, warm ivory #f7f8f4 background, forest green #193e33 and sage #c6ddad only, occasional muted ochre. Sparse composition, generous negative space. No gradient, glass, glow, decorative blobs, sparkles or 3D. No letters, words, numbers, labels, maps, charts, logos, people, medical imagery or mosquitoes on skin. A wide, quiet editorial illustration of a generic Singapore apartment courtyard with two modest HDB-like blocks and an orderly row of planter pots with overturned saucers. An abstract architectural scene, not a real estate or location depiction. No people, no street names, no plot boundaries. Architecture primarily on the right two-thirds, empty ivory space on the left. Restrained civic-publication quality, no fake data, no maps.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 1308930,
+      "sha256": "763a6f03eacdd5fc75654c463359fd2c6d7f961f51f1bbb9f0298b5ab9ffa4a3",
+      "dimensions": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "file": "output/imagegen/denguesux/sources/night-courtyard.png",
+      "source": "output/imagegen/denguesux/sources/night-courtyard.png",
+      "prompt": "A minimal editorial illustration for a forest-green product dashboard. An abstract Singapore apartment courtyard: two understated apartment blocks, a small tree and three tidy planter pots, clustered strictly in the RIGHTMOST THIRD and LOWER HALF of the image. The left two thirds is uninterrupted solid deep forest green #193e33. Background is the same solid #193e33. Buildings and tree use muted sage #486856 and #66816c with a few ivory #c6d2c0 window shapes. Clean flat broad shapes and fine paper texture. Quiet, almost monochrome. No gradients, glow, glass, people, text, letters, numbers, signs, maps, data, decorative blobs, sparkles or logos. This must remain a low-contrast background for foreground data labels.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 1547238,
+      "sha256": "c6a221724a3da0e64f64cec91fa0d0e86e5034bf960d81fae27b715da47b753c",
+      "dimensions": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "file": "output/imagegen/denguesux/sources/no-clusters.png",
+      "source": "output/imagegen/denguesux/sources/no-clusters.png",
+      "prompt": "Coherent brand illustration for DengueSUX, a Singapore dengue field-planning tool. Restrained editorial flat illustration, precise broad contours, warm ivory #f7f8f4 background, forest green #193e33 and sage #c6ddad only, occasional muted ochre. Sparse composition, generous negative space. No gradient, glass, glow, decorative blobs, sparkles or 3D. No letters, words, numbers, labels, maps, charts, logos, people, medical imagery or mosquitoes on skin. A clean overturned plant saucer beside a healthy potted plant, with a simple small check stroke. Centred motif within middle 55 percent, readable at 80 pixels. Communicates keeping a home free from standing water; not a claim of guaranteed safety.",
+      "model": "gpt-image-2",
+      "requested_size": "1024x1024",
+      "size_bytes": 1232549,
+      "sha256": "b97d2268b05ca9b6f49ae8f997ccee3d1cecc7c0fcc8062e727b30758532ed72",
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "file": "output/imagegen/denguesux/sources/offline.png",
+      "source": "output/imagegen/denguesux/sources/offline.png",
+      "prompt": "Coherent brand illustration for DengueSUX, a Singapore dengue field-planning tool. Restrained editorial flat illustration, precise broad contours, warm ivory #f7f8f4 background, forest green #193e33 and sage #c6ddad only, occasional muted ochre. Sparse composition, generous negative space. No gradient, glass, glow, decorative blobs, sparkles or 3D. No letters, words, numbers, labels, maps, charts, logos, people, medical imagery or mosquitoes on skin. A simple cloud and a detached short connection line, with a small folded paper sheet safely resting below. Centred motif within middle 55 percent, readable at 80 pixels. Communicates unavailable connection with a saved copy, quiet and reassuring.",
+      "model": "gpt-image-2",
+      "requested_size": "1024x1024",
+      "size_bytes": 1146453,
+      "sha256": "6f888a58301822a7ab8fe768278dfe7c66f03ceb6de71f7c75da70c47862f439",
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "file": "output/imagegen/denguesux/sources/weekly-outlook.png",
+      "source": "output/imagegen/denguesux/sources/weekly-outlook.png",
+      "prompt": "Brand illustration for DengueSUX, a civic dengue prevention tool in Singapore. Restrained editorial cut-paper illustration with clean broad contours and a very subtle paper texture. Forest green #193e33, sage #a9c799, warm ivory #f7f8f4, small muted ochre accents. Style consistent with a minimal editorial illustration of Singapore apartment courtyard and planter pots. No text, letters, words, numbers, labels, maps, charts, people, logos, decorative blobs, sparkles, gradients, glass or glow. A single elegant desk calendar with blank date cells (absolutely no digits) and a subtle forest leaf beside it. A small eye-like focus circle suggests paying attention over time. Compact centred composition within middle 60 percent, for a national outlook illustration. No graph, no invented data.",
+      "model": "gpt-image-2",
+      "requested_size": "1024x1024",
+      "size_bytes": 1890553,
+      "sha256": "b162d79a96c33f18bc3a06d2316a2b2c10ebc0ad6670f9e9fdf8181b57590ed6",
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
       "file": "app/web/brand/apple-touch-icon.png",
-      "source": "Original SVG mark and locally vendored DM Sans",
-      "prompt": null,
-      "model": "none",
-      "size_bytes": 4490,
-      "sha256": "e3dc3280e0a56f28362457f4747f15f3c26fa5c06df61bac2ded711440a1a616",
+      "source": "output/imagegen/denguesux/sources/logo-concepts.png",
+      "prompt": "Three distinct minimal geometric brand-mark concepts, evenly spaced on warm ivory #f7f8f4. Forest green #193e33 and sage #c6ddad. Explore a clear abstract aperture / focus mark that suggests paying attention to a neighbourhood; also a simple rounded D-shaped abstract mark with a small observation point. Strong small-size silhouette. Flat vector-like concept sheet, no text, no wordmarks, no numbers, no maps, no gradients, no sparkles, no medical symbols.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 5643,
+      "sha256": "cf3a75f5395c2e0931059ba8187690238efde8351500d4c70e1ac9a691c20f10",
       "dimensions": [
         180,
         180
       ]
     },
     {
-      "file": "app/web/brand/empty-search.png",
-      "source": "Vendored Phosphor icon font; app/web/vendor/icons/LICENSE",
+      "file": "app/web/brand/brand-sheet.png",
+      "source": "Composition of generated artwork and hand-built SVG brand assets",
       "prompt": null,
-      "model": "none",
-      "size_bytes": 2777,
-      "sha256": "3980a3a4221faa8bc7b091089340f34242e8a1b51d5aa0c2623b82378f741796",
+      "model": "local composition",
+      "requested_size": null,
+      "size_bytes": 659896,
+      "sha256": "b07ba7c82518069485c3b492d50d9e43fdfe8363f45c59d7fd75305b2cd3d55e",
       "dimensions": [
-        160,
-        160
+        1600,
+        1500
+      ]
+    },
+    {
+      "file": "app/web/brand/community-care.webp",
+      "source": "output/imagegen/denguesux/sources/community-care.png",
+      "prompt": "Brand illustration for DengueSUX, a civic dengue prevention tool in Singapore. Restrained editorial cut-paper illustration with clean broad contours and a very subtle paper texture. Forest green #193e33, sage #a9c799, warm ivory #f7f8f4, small muted ochre accents. Style consistent with a minimal editorial illustration of Singapore apartment courtyard and planter pots. No text, letters, words, numbers, labels, maps, charts, people, logos, decorative blobs, sparkles, gradients, glass or glow. An inviting Singapore apartment corridor with a simple open window, two clean planter pots, an overturned pail and a watering can stored upside down. No standing water. Quiet strong geometric architecture on the right half; empty warm ivory space on the left half. No people. A civic wellbeing illustration for a founder story and resident prevention guide, not a representation of a particular building.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 28472,
+      "sha256": "f3c81eec757cb3d4a996b8a9a94126780cf4696d3f701437f8c443510dfc7d0d",
+      "dimensions": [
+        1000,
+        667
+      ]
+    },
+    {
+      "file": "app/web/brand/cover.png",
+      "source": "Composition of generated artwork and hand-built SVG brand assets",
+      "prompt": null,
+      "model": "local composition",
+      "requested_size": null,
+      "size_bytes": 585411,
+      "sha256": "3fdbc2a96c2950101e3535ca1b7f7c650ecb5cc8f8041df5ee9ba44604ca3f1a",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "app/web/brand/empty-search.png",
+      "source": "output/imagegen/denguesux/sources/empty-search.png",
+      "prompt": "Coherent brand illustration for DengueSUX, a Singapore dengue field-planning tool. Restrained editorial flat illustration, precise broad contours, warm ivory #f7f8f4 background, forest green #193e33 and sage #c6ddad only, occasional muted ochre. Sparse composition, generous negative space. No gradient, glass, glow, decorative blobs, sparkles or 3D. No letters, words, numbers, labels, maps, charts, logos, people, medical imagery or mosquitoes on skin. A small magnifying lens inspecting a single leaf and empty space. Main motif centred in the middle 55 percent, simple and readable at 80 pixels. Communicates a search with no results, without seeming alarming.",
+      "model": "gpt-image-2",
+      "requested_size": "1024x1024",
+      "size_bytes": 46215,
+      "sha256": "c631dd8c4280d53becf2a79410c352c01654d00bf7d9b51119190f922b41b98e",
+      "dimensions": [
+        256,
+        256
       ]
     },
     {
       "file": "app/web/brand/favicon-32.png",
-      "source": "Original SVG mark and locally vendored DM Sans",
-      "prompt": null,
-      "model": "none",
-      "size_bytes": 820,
-      "sha256": "d817f5384ad69692137e0e45e61b5838ab97c1030b36206f7baa2c7c1aedf752",
+      "source": "output/imagegen/denguesux/sources/logo-concepts.png",
+      "prompt": "Three distinct minimal geometric brand-mark concepts, evenly spaced on warm ivory #f7f8f4. Forest green #193e33 and sage #c6ddad. Explore a clear abstract aperture / focus mark that suggests paying attention to a neighbourhood; also a simple rounded D-shaped abstract mark with a small observation point. Strong small-size silhouette. Flat vector-like concept sheet, no text, no wordmarks, no numbers, no maps, no gradients, no sparkles, no medical symbols.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 978,
+      "sha256": "d496938f9daefdfb48fa3c7f446249f91736bbb09cea35b8bacbcb5d64c79ac2",
       "dimensions": [
         32,
         32
@@ -44,83 +202,209 @@
     },
     {
       "file": "app/web/brand/favicon.svg",
-      "source": "Original SVG mark and locally vendored DM Sans",
-      "prompt": null,
-      "model": "none",
-      "size_bytes": 274,
-      "sha256": "462b78a7d89a2faa199ac6728ea0613836ca33b846cf093c2ee1d0ff505884ec"
+      "source": "output/imagegen/denguesux/sources/logo-concepts.png",
+      "prompt": "Three distinct minimal geometric brand-mark concepts, evenly spaced on warm ivory #f7f8f4. Forest green #193e33 and sage #c6ddad. Explore a clear abstract aperture / focus mark that suggests paying attention to a neighbourhood; also a simple rounded D-shaped abstract mark with a small observation point. Strong small-size silhouette. Flat vector-like concept sheet, no text, no wordmarks, no numbers, no maps, no gradients, no sparkles, no medical symbols.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 335,
+      "sha256": "a735403ed676121c8866ba22601422aa75efac68c21cfd5f1a856fa680a4f2c5",
+      "method": "Hand-built vector final, simplified from the generated middle D/house concept"
+    },
+    {
+      "file": "app/web/brand/field-kit.webp",
+      "source": "output/imagegen/denguesux/sources/field-kit.png",
+      "prompt": "Brand illustration for DengueSUX, a civic dengue prevention tool in Singapore. Restrained editorial cut-paper illustration with clean broad contours and a very subtle paper texture. Forest green #193e33, sage #a9c799, warm ivory #f7f8f4, small muted ochre accents. Style consistent with a minimal editorial illustration of Singapore apartment courtyard and planter pots. No text, letters, words, numbers, labels, maps, charts, people, logos, decorative blobs, sparkles, gradients, glass or glow. A compact volunteer field-check kit: an unmarked clipboard with blank checklist lines and checkmarks, a simple pair of work gloves, a small flashlight, and a healthy leaf. Tactile but flat, not photorealistic or 3D. Objects arranged on the right half, entirely within the canvas, generous empty ivory space on the left. Elegant calm composition for an app field-planning landing page.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 28588,
+      "sha256": "66f7dcd86aaf67122c904cda3970481652fd94921289d818df2cd96fb6f55ede",
+      "dimensions": [
+        1000,
+        667
+      ]
     },
     {
       "file": "app/web/brand/hero.webp",
-      "source": "output/design/saas/after-week-1440.png",
+      "source": "output/design/saas/branded-week-1440.png",
       "prompt": null,
-      "model": "none",
-      "size_bytes": 31278,
-      "sha256": "b0b5d42e38d00f32b630518b2781a23f99a1441f4ff6489b1965539ef89035ab",
+      "model": "local composition",
+      "requested_size": null,
+      "size_bytes": 36786,
+      "sha256": "3c933a0018dce51d78294a81526eff82e5a7bccf076c646da01f3bcd2654b34f",
       "dimensions": [
         1200,
         750
       ]
     },
     {
+      "file": "app/web/brand/logo-mark-dark.png",
+      "source": "output/imagegen/denguesux/sources/logo-concepts.png",
+      "prompt": "Three distinct minimal geometric brand-mark concepts, evenly spaced on warm ivory #f7f8f4. Forest green #193e33 and sage #c6ddad. Explore a clear abstract aperture / focus mark that suggests paying attention to a neighbourhood; also a simple rounded D-shaped abstract mark with a small observation point. Strong small-size silhouette. Flat vector-like concept sheet, no text, no wordmarks, no numbers, no maps, no gradients, no sparkles, no medical symbols.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 6022,
+      "sha256": "80e103b57225faf95c50dc7fa5b2e3a977af9b30c2c6850809771bda6378876e",
+      "dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "file": "app/web/brand/logo-mark-dark.svg",
+      "source": "output/imagegen/denguesux/sources/logo-concepts.png",
+      "prompt": "Three distinct minimal geometric brand-mark concepts, evenly spaced on warm ivory #f7f8f4. Forest green #193e33 and sage #c6ddad. Explore a clear abstract aperture / focus mark that suggests paying attention to a neighbourhood; also a simple rounded D-shaped abstract mark with a small observation point. Strong small-size silhouette. Flat vector-like concept sheet, no text, no wordmarks, no numbers, no maps, no gradients, no sparkles, no medical symbols.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 335,
+      "sha256": "1bb7a1e0080880874385afa3cd9e34f07624bd8613fd2498234b792bd536b347",
+      "method": "Hand-built vector final, simplified from the generated middle D/house concept"
+    },
+    {
+      "file": "app/web/brand/logo-mark.png",
+      "source": "output/imagegen/denguesux/sources/logo-concepts.png",
+      "prompt": "Three distinct minimal geometric brand-mark concepts, evenly spaced on warm ivory #f7f8f4. Forest green #193e33 and sage #c6ddad. Explore a clear abstract aperture / focus mark that suggests paying attention to a neighbourhood; also a simple rounded D-shaped abstract mark with a small observation point. Strong small-size silhouette. Flat vector-like concept sheet, no text, no wordmarks, no numbers, no maps, no gradients, no sparkles, no medical symbols.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 5081,
+      "sha256": "b4a783f74ee89d7bc6b881239cd4548fb746dcb743e16b28d2669df8633f2cdb",
+      "dimensions": [
+        256,
+        256
+      ]
+    },
+    {
       "file": "app/web/brand/logo-mark.svg",
-      "source": "Original SVG mark and locally vendored DM Sans",
-      "prompt": null,
-      "model": "none",
-      "size_bytes": 274,
-      "sha256": "462b78a7d89a2faa199ac6728ea0613836ca33b846cf093c2ee1d0ff505884ec"
+      "source": "output/imagegen/denguesux/sources/logo-concepts.png",
+      "prompt": "Three distinct minimal geometric brand-mark concepts, evenly spaced on warm ivory #f7f8f4. Forest green #193e33 and sage #c6ddad. Explore a clear abstract aperture / focus mark that suggests paying attention to a neighbourhood; also a simple rounded D-shaped abstract mark with a small observation point. Strong small-size silhouette. Flat vector-like concept sheet, no text, no wordmarks, no numbers, no maps, no gradients, no sparkles, no medical symbols.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 335,
+      "sha256": "a735403ed676121c8866ba22601422aa75efac68c21cfd5f1a856fa680a4f2c5",
+      "method": "Hand-built vector final, simplified from the generated middle D/house concept"
+    },
+    {
+      "file": "app/web/brand/neighbourhood-hero.webp",
+      "source": "output/imagegen/denguesux/sources/neighbourhood-hero.png",
+      "prompt": "Coherent brand illustration for DengueSUX, a Singapore dengue field-planning tool. Restrained editorial flat illustration, precise broad contours, warm ivory #f7f8f4 background, forest green #193e33 and sage #c6ddad only, occasional muted ochre. Sparse composition, generous negative space. No gradient, glass, glow, decorative blobs, sparkles or 3D. No letters, words, numbers, labels, maps, charts, logos, people, medical imagery or mosquitoes on skin. A wide, quiet editorial illustration of a generic Singapore apartment courtyard with two modest HDB-like blocks and an orderly row of planter pots with overturned saucers. An abstract architectural scene, not a real estate or location depiction. No people, no street names, no plot boundaries. Architecture primarily on the right two-thirds, empty ivory space on the left. Restrained civic-publication quality, no fake data, no maps.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 59470,
+      "sha256": "1a8af7968f14322dc1d9af65bc838af33fa1f0987ecbb8ac900a7166a333f863",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "app/web/brand/night-courtyard.webp",
+      "source": "output/imagegen/denguesux/sources/night-courtyard.png",
+      "prompt": "A minimal editorial illustration for a forest-green product dashboard. An abstract Singapore apartment courtyard: two understated apartment blocks, a small tree and three tidy planter pots, clustered strictly in the RIGHTMOST THIRD and LOWER HALF of the image. The left two thirds is uninterrupted solid deep forest green #193e33. Background is the same solid #193e33. Buildings and tree use muted sage #486856 and #66816c with a few ivory #c6d2c0 window shapes. Clean flat broad shapes and fine paper texture. Quiet, almost monochrome. No gradients, glow, glass, people, text, letters, numbers, signs, maps, data, decorative blobs, sparkles or logos. This must remain a low-contrast background for foreground data labels.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 16558,
+      "sha256": "a1cce6ceab42c0fc2764939b68d34540c0f888b40cd2da5ace5d7a5620f1e902",
+      "dimensions": [
+        1000,
+        667
+      ]
     },
     {
       "file": "app/web/brand/no-clusters.png",
-      "source": "Vendored Phosphor icon font; app/web/vendor/icons/LICENSE",
-      "prompt": null,
-      "model": "none",
-      "size_bytes": 2549,
-      "sha256": "be6dbafaa95cb80cd4f88cfbef668d4b749c76f42262bf37467c04bfffb8e81f",
+      "source": "output/imagegen/denguesux/sources/no-clusters.png",
+      "prompt": "Coherent brand illustration for DengueSUX, a Singapore dengue field-planning tool. Restrained editorial flat illustration, precise broad contours, warm ivory #f7f8f4 background, forest green #193e33 and sage #c6ddad only, occasional muted ochre. Sparse composition, generous negative space. No gradient, glass, glow, decorative blobs, sparkles or 3D. No letters, words, numbers, labels, maps, charts, logos, people, medical imagery or mosquitoes on skin. A clean overturned plant saucer beside a healthy potted plant, with a simple small check stroke. Centred motif within middle 55 percent, readable at 80 pixels. Communicates keeping a home free from standing water; not a claim of guaranteed safety.",
+      "model": "gpt-image-2",
+      "requested_size": "1024x1024",
+      "size_bytes": 63836,
+      "sha256": "19af0856a8d85a5701e2b8c0b318bf6eb8947e499b719c2ca91d66effd72ddce",
       "dimensions": [
-        160,
-        160
+        256,
+        256
       ]
     },
     {
       "file": "app/web/brand/offline.png",
-      "source": "Vendored Phosphor icon font; app/web/vendor/icons/LICENSE",
-      "prompt": null,
-      "model": "none",
-      "size_bytes": 2933,
-      "sha256": "6984f78093e6c516a519861e88e62466501fbd39944361003e4f3e99c62d453e",
+      "source": "output/imagegen/denguesux/sources/offline.png",
+      "prompt": "Coherent brand illustration for DengueSUX, a Singapore dengue field-planning tool. Restrained editorial flat illustration, precise broad contours, warm ivory #f7f8f4 background, forest green #193e33 and sage #c6ddad only, occasional muted ochre. Sparse composition, generous negative space. No gradient, glass, glow, decorative blobs, sparkles or 3D. No letters, words, numbers, labels, maps, charts, logos, people, medical imagery or mosquitoes on skin. A simple cloud and a detached short connection line, with a small folded paper sheet safely resting below. Centred motif within middle 55 percent, readable at 80 pixels. Communicates unavailable connection with a saved copy, quiet and reassuring.",
+      "model": "gpt-image-2",
+      "requested_size": "1024x1024",
+      "size_bytes": 49910,
+      "sha256": "e5319940dbd13f2809efe8e6d261efd79182694020e151315cf552709f9b6448",
       "dimensions": [
-        160,
-        160
+        256,
+        256
       ]
     },
     {
       "file": "app/web/brand/og-card.png",
-      "source": "output/design/saas/after-week-1440.png",
+      "source": "Composition of generated artwork and hand-built SVG brand assets",
       "prompt": null,
-      "model": "none",
-      "size_bytes": 95908,
-      "sha256": "d7034326b74c2e8261de43f0d99a0d7cae27b4f62c3c4ebe6a7a557ef29715d2",
+      "model": "local composition",
+      "requested_size": null,
+      "size_bytes": 406860,
+      "sha256": "3cdeb246fc26e69e7bf997e50b7b1c34c2f72af13c9bf2783aab8bacd5b20bf4",
       "dimensions": [
         1200,
         630
       ]
     },
     {
-      "file": "app/web/brand/site.webmanifest",
-      "source": "Original SVG mark and locally vendored DM Sans",
-      "prompt": null,
-      "model": "none",
-      "size_bytes": 367,
-      "sha256": "9b8039dac2b4eced52d5d2b2ab2481736dd97085204483e909614f1bd27e9eea"
+      "file": "app/web/brand/weekly-outlook.webp",
+      "source": "output/imagegen/denguesux/sources/weekly-outlook.png",
+      "prompt": "Brand illustration for DengueSUX, a civic dengue prevention tool in Singapore. Restrained editorial cut-paper illustration with clean broad contours and a very subtle paper texture. Forest green #193e33, sage #a9c799, warm ivory #f7f8f4, small muted ochre accents. Style consistent with a minimal editorial illustration of Singapore apartment courtyard and planter pots. No text, letters, words, numbers, labels, maps, charts, people, logos, decorative blobs, sparkles, gradients, glass or glow. A single elegant desk calendar with blank date cells (absolutely no digits) and a subtle forest leaf beside it. A small eye-like focus circle suggests paying attention over time. Compact centred composition within middle 60 percent, for a national outlook illustration. No graph, no invented data.",
+      "model": "gpt-image-2",
+      "requested_size": "1024x1024",
+      "size_bytes": 7352,
+      "sha256": "5623b7973488734a5dc86dd23d85814b54d3ba54462f67b0df3d631053eb523c",
+      "dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "file": "app/web/brand/wordmark-dark.png",
+      "source": "output/imagegen/denguesux/sources/logo-concepts.png",
+      "prompt": "Three distinct minimal geometric brand-mark concepts, evenly spaced on warm ivory #f7f8f4. Forest green #193e33 and sage #c6ddad. Explore a clear abstract aperture / focus mark that suggests paying attention to a neighbourhood; also a simple rounded D-shaped abstract mark with a small observation point. Strong small-size silhouette. Flat vector-like concept sheet, no text, no wordmarks, no numbers, no maps, no gradients, no sparkles, no medical symbols.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 11276,
+      "sha256": "b383c0e7f84f88241a34714e44bc9e9a5c9540e123d477cce63219563d7569de",
+      "dimensions": [
+        592,
+        128
+      ]
+    },
+    {
+      "file": "app/web/brand/wordmark-dark.svg",
+      "source": "output/imagegen/denguesux/sources/logo-concepts.png",
+      "prompt": "Three distinct minimal geometric brand-mark concepts, evenly spaced on warm ivory #f7f8f4. Forest green #193e33 and sage #c6ddad. Explore a clear abstract aperture / focus mark that suggests paying attention to a neighbourhood; also a simple rounded D-shaped abstract mark with a small observation point. Strong small-size silhouette. Flat vector-like concept sheet, no text, no wordmarks, no numbers, no maps, no gradients, no sparkles, no medical symbols.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 4762,
+      "sha256": "908674bae723159a64a15cdd06ce330e915476f3fdc9c545f70e361d9ead04a8",
+      "method": "Hand-built vector final, simplified from the generated middle D/house concept"
+    },
+    {
+      "file": "app/web/brand/wordmark.png",
+      "source": "output/imagegen/denguesux/sources/logo-concepts.png",
+      "prompt": "Three distinct minimal geometric brand-mark concepts, evenly spaced on warm ivory #f7f8f4. Forest green #193e33 and sage #c6ddad. Explore a clear abstract aperture / focus mark that suggests paying attention to a neighbourhood; also a simple rounded D-shaped abstract mark with a small observation point. Strong small-size silhouette. Flat vector-like concept sheet, no text, no wordmarks, no numbers, no maps, no gradients, no sparkles, no medical symbols.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 10860,
+      "sha256": "37ad0eff8bb940f0296700e759082f28783e91f0617d47eab7fddcd664853a46",
+      "dimensions": [
+        592,
+        128
+      ]
     },
     {
       "file": "app/web/brand/wordmark.svg",
-      "source": "Original SVG mark and locally vendored DM Sans",
-      "prompt": null,
-      "model": "none",
-      "size_bytes": 470,
-      "sha256": "60f823f39c706ac5f9ed1f348834e45090cb5c364045c88f7f547c747d42aca5"
+      "source": "output/imagegen/denguesux/sources/logo-concepts.png",
+      "prompt": "Three distinct minimal geometric brand-mark concepts, evenly spaced on warm ivory #f7f8f4. Forest green #193e33 and sage #c6ddad. Explore a clear abstract aperture / focus mark that suggests paying attention to a neighbourhood; also a simple rounded D-shaped abstract mark with a small observation point. Strong small-size silhouette. Flat vector-like concept sheet, no text, no wordmarks, no numbers, no maps, no gradients, no sparkles, no medical symbols.",
+      "model": "gpt-image-2",
+      "requested_size": "1536x1024",
+      "size_bytes": 4762,
+      "sha256": "dd6ef9ad191af4045bad4337fe3489a120404fac77962d988ba24b73ba90452d",
+      "method": "Hand-built vector final, simplified from the generated middle D/house concept"
     }
   ]
 }

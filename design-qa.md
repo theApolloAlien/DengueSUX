@@ -1,3 +1,27 @@
+# SaaS overhaul — 10 October 2026
+
+final result: passed
+
+Scope: local product overhaul using the Product Design workflow, with the documented exceptions in [the implementation report](output/design/saas/REPORT.md). This result covers the verified implementation, not a claim that every optional requirement was met.
+
+The source target is `output/design/saas/mock-this-week.html`, captured as `mock-this-week.png`. The final implementation is `branded-week-1440.png`; both use a 1440×900 CSS viewport at DPR 1. `mock-comparison.jpg` combines them in one comparison. The implementation preserves the asymmetric forecast/priority layout, forest/ivory palette and hierarchy, adding the functional source chip, command entry, area links, change feed and resident lookup. This is an original redesign, not a pixel-exact clone. Whole-page comparisons resolve the structural differences; native-size map, phone plan, forecast, loading, and print captures provide focused evidence.
+
+Comparison iterations: (1) removed faint mid-animation baseline captures by recapturing the pre-overhaul app with motion disabled; (2) repaired route teardown errors on rapid navigation; (3) made first-time shared links preserve their destination; (4) reduced field-plan repetition and changed identical stop cards to divided rows; (5) repaired cropped print maps using exact saved route geometry; (6) embedded dynamically rendered images in the portable HTML. Post-fix captures and browser checks are in `output/design/saas/`.
+
+Verified flows:
+1. Home and loading: meaningful skeleton, genuine loading/error/offline states; CLS below 0.05 in the measured throttled runs.
+2. Area discovery: search, empty reset, table sorting, map selection, mobile drawer, command palette and back/forward.
+3. Field plan: dated checklist persistence, plan links, notice languages, checked notice copy, one-page A4 sheet and 3D route controls/fallbacks.
+4. Forecast: current outlook, unavailable data, retrospective disclosure, replay and keyboard slider.
+5. Accessibility and tour: focus restoration, Escape, phone modal background inertness, reduced motion, storage-denied resilience, one-time and forced tour.
+6. Portability: file:// export with network blocked; local Databricks package contains new assets and respects postal capability.
+
+Evidence: 165 Python tests; 61 main browser checks, 21 edge checks, 5 mobile checks, and 19 existing platform checks. No uncaught errors in normal journeys, no console/page errors in edge journeys; simulated HTTP/tile failures are intentional. Screenshots at 1440/1280/1024/390, six flow videos, print PDFs, per-section word counts and performance measurements are attached as local files. No personal location or field report was submitted. FCP/LCP did not improve; exact metrics and the reason are in the report. No actionable P0/P1/P2 remains in the tested implementation. No exhaustive accessibility or frame-rate certification is claimed.
+
+Expanded brand pass: the user explicitly authorized image generation through the configured fallback and asked to make the whole site more beautiful. Nine generated source assets were inspected; final assets were optimized and integrated into home, plan picker, forecast, story and empty states. The logo concept was rebuilt as a clean vector with light/dark variants. The original mock remains the structural reference; `mock-comparison.jpg` compares it to the final branded screen at 1440×900. The generated brand sheet and artwork are the visual extension. `branded-*.png` and `brand-verification.json` verify all existing sections at 1440/1280/1024/390. The first comparison found a cropped field-kit illustration; changing it to contain the full composition fixed it, and the second capture confirms the full kit is visible. Help now closes before the story dialog opens. Final result remains passed.
+
+---
+
 # UI / UX experience pass — 24 September 2026
 
 final result: passed
