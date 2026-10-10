@@ -59,3 +59,8 @@ Full record: `docs/PLATFORM_AUDIT.md`.
 - **Deployed:** bundle deploy; daily run **453000698540667** SUCCESS (no alert sent); app deployment **01f1c485236b115994b26bdf7fea47cc** RUNNING with Genie, warehouse, model endpoint and READ_VOLUME preserved; data status `current`.
 - **Fallback video:** `demo/denguesux_finishing_20261010-163531.mp4` (61.6 s).
 - **Action before Demo Day:** the live outlook targets the week ending 17 Oct and is withdrawn after it. Once CDA publishes EW40/41, refresh `scripts/collect_moh_weekly.py`, weather and the pipeline (then the `pipeline` job) so the card shows a current range on 27 Oct.
+
+## 3D follow-up (10 Oct 2026, evening)
+
+- Model audit vs OpenStreetMap: storeys equal on 109/113 independently tagged blocks; HDB outlines align with SLA's base map where OSM is offset ~5 m (Bukit Batok). Evidence `output/verification/platform/model_audit_osm.json`.
+- “Play route” replaced by **Walk the route**: whole-path follow camera at constant pace, one heading per leg (median 0.1–0.2°/s while walking, max 31°/s), camera rig that rises among tall towers, see-through blocks while walking, stop callouts with checklists, walked-track highlight, walker marker, route slider, whole-route intro/outro; reduced motion keeps slider and still views. `demo/verify_platform.py` 19/19.

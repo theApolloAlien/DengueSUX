@@ -1,0 +1,78 @@
+{
+  "method": "Each HDB footprint shown in the 3D view was matched to the OpenStreetMap building with the largest overlap (IoU >= 0.2) using an Overpass extract of the plan area on 10 Oct 2026. Storeys compared where OSM has building:levels. Audit only: OSM data is not used by the app.",
+  "attribution": "Building comparison data \u00a9 OpenStreetMap contributors (ODbL); base map \u00a9 OneMap / Singapore Land Authority.",
+  "areas": {
+    "JW": {
+      "hdb_footprints": 74,
+      "matched_osm": 73,
+      "iou_median": 0.724,
+      "iou_p10": 0.597,
+      "centroid_offset_m_median": 2.03,
+      "centroid_offset_m_p90": 4.74,
+      "storeys_compared": 48,
+      "storeys_equal": 47,
+      "storeys_within_1": 48,
+      "disagreements": []
+    },
+    "BS": {
+      "hdb_footprints": 54,
+      "matched_osm": 54,
+      "iou_median": 0.945,
+      "iou_p10": 0.787,
+      "centroid_offset_m_median": 0.34,
+      "centroid_offset_m_p90": 1.79,
+      "storeys_compared": 46,
+      "storeys_equal": 45,
+      "storeys_within_1": 46,
+      "disagreements": []
+    },
+    "BK": {
+      "hdb_footprints": 31,
+      "matched_osm": 31,
+      "iou_median": 0.565,
+      "iou_p10": 0.421,
+      "centroid_offset_m_median": 4.9,
+      "centroid_offset_m_p90": 9.63,
+      "storeys_compared": 19,
+      "storeys_equal": 17,
+      "storeys_within_1": 17,
+      "disagreements": [
+        [
+          "299",
+          25,
+          0
+        ],
+        [
+          "212",
+          10,
+          12
+        ]
+      ]
+    }
+  },
+  "bukit_batok_offset": {
+    "mean_shift_osm_minus_hdb_m": {
+      "east": 4.14,
+      "north": -2.66
+    },
+    "height_correlation": 0.24,
+    "reading": "OSM outlines are shifted ~5 m south-east of HDB in this estate with no height dependence (not satellite lean); overlaid on the OneMap base map, HDB outlines coincide with SLA building fills, so the HDB geometry is used."
+  },
+  "jurong_west_offset": {
+    "mean_shift_osm_minus_hdb_m": {
+      "east": 1.27,
+      "north": 0.05
+    }
+  },
+  "bishan_offset": {
+    "mean_shift_osm_minus_hdb_m": {
+      "east": 0.15,
+      "north": 0.4
+    }
+  },
+  "totals": {
+    "storeys_compared": 113,
+    "storeys_equal": 109,
+    "storeys_within_1": 111
+  }
+}

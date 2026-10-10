@@ -3,3 +3,23 @@
 @media print{.route-preview-toolbar,.route-tour,#route-3d{display:none!important}#inspection-map[hidden]{display:block!important}.inspection-stop.is-tour-selected{box-shadow:none}}
 .route-view-tabs button{white-space:nowrap}
 @media(max-width:720px){.route-preview-label{display:none}.route-view-tabs{width:100%}.route-view-tabs button{flex:1;justify-content:center;padding:7px 8px}}
+/* Walk preview: walker, scrubber, stop callout, quiet far pins. */
+.route-walker{width:18px;height:18px;border-radius:50%;background:#fffef7;border:4px solid #c9921f;box-shadow:0 0 0 6px #c9921f33,0 2px 6px #1d4a3c55;pointer-events:none;z-index:4}
+#route-3d.is-walking .route-walker{animation:walker-pulse 1.6s ease-in-out infinite}
+@keyframes walker-pulse{50%{box-shadow:0 0 0 11px #c9921f1f,0 2px 6px #1d4a3c55}}
+#route-3d .route-3d-pin{transition:opacity .4s ease,transform .4s ease}
+#route-3d.is-walking .route-3d-pin.is-far{opacity:.28;transform:scale(.8)}
+.route-tour-speed{font:600 12px 'DM Sans',sans-serif;min-width:42px!important}
+.route-tour-speed[hidden]{display:none!important}
+.route-scrub{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;margin-top:12px;font-size:11px;color:#4f6449}
+.route-scrub[hidden]{display:none}
+.route-scrub-label{font-weight:600;white-space:nowrap}
+.route-scrub input{width:100%;accent-color:#c9921f;cursor:pointer}
+.route-scrub-text{font-variant-numeric:tabular-nums;white-space:nowrap;color:#5f7259}
+.route-3d-legend b.is-line{height:4px;border-radius:2px;box-shadow:none}
+.route-stop-callout .maplibregl-popup-content{padding:10px 12px;border-radius:9px;font:12px/1.45 'DM Sans',sans-serif;color:#2c4235;box-shadow:0 8px 24px #13302640;border-top:3px solid #e3ad3c}
+.route-stop-callout strong{display:block;font-size:13px;color:#163f35;margin-bottom:4px}
+.route-stop-callout ul{margin:0 0 4px;padding-left:16px}
+.route-stop-callout small{color:#7d8a72;font-size:10px}
+@media(max-width:720px){.route-scrub{grid-template-columns:1fr auto}.route-scrub-label{display:none}.route-tour-controls{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){#route-3d.is-walking .route-walker{animation:none}}

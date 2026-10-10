@@ -183,11 +183,11 @@ async def record(browser, url):
     await page.locator('.inspection-map-column').scroll_into_view_if_needed()
     await scene("3D walk preview: official HDB footprints of the route and nearby blocks", 3)
     await click(page, '[data-tour="play"]')
-    await scene("Camera follows the saved OneMap walking route; checklist stays in sync", 10)
-    if await page.locator('[data-tour="play"]').get_attribute('aria-label') == 'Pause route preview':
+    await scene("Walk the route: steady follow camera on the saved OneMap path, stop callouts with checklists", 16)
+    if await page.locator('[data-tour="play"]').get_attribute('aria-label') == 'Pause the walking preview':
         await click(page, '[data-tour="play"]')
     await click(page, '[data-tour="fit"]')
-    await scene("Whole route: stops, cluster blocks and see-through nearby blocks", 3)
+    await scene("Whole route from above: walked part highlighted, stops and cluster blocks", 3)
     await click(page, '#plan-notice')
     await page.locator('#notice-text').wait_for(state="visible")
     for language, label in [("en", "English"), ("zh", "Chinese"), ("ms", "Malay"), ("ta", "Tamil")]:

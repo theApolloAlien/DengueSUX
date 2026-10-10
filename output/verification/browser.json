@@ -1,5 +1,5 @@
 {
-  "verified_at_utc": "2026-10-10T08:35:31.087806+00:00",
+  "verified_at_utc": "2026-10-10T11:45:03.102357+00:00",
   "url": "http://127.0.0.1:8787",
   "initial_tool": "agent-browser via npx; loaded app, inspected interactive snapshot, clicked the public block example",
   "contexts": [
@@ -112,7 +112,7 @@
       "example_text": "Blk 117 Ho Ching Road is inside an active dengue cluster.\n\nHo Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 333, 334, 335) · 91 people · Jurong West · Jurong East\n\nEnglish\n中文\nBahasa Melayu\nதமிழ்\nFive things to do this week\nLoosen hardened soil.\nEmpty flowerpot plates.\nOverturn pails and wipe their rims.\nReplace water in vases.\nKeep roof gutters clear and apply BTI as directed.\nShare with neighbours\nSee this area\n\nDistance to the dated NEA cluster footprint, not a measure of personal risk. The shared message contains no location.",
       "area_text": "West Region\n\nHigh\nJurong West\n97 people\n\nin 2 active clusters\n\n3.87 people in active clusters per 10,000 residents\n250,890 residents · June 2026 · context, not incidence or individual risk\n\n Plan inspection \nDraft resident notice\n2 clusters\nLocal weather\n3/3 stations",
       "plan_heading": "Jurong West\nInspection plan\nResident notice",
-      "three_d_status": "74 official HDB block shapes within about 160 m of the route · 73 raised from published storeys · 1 flat (storeys unverified). Tap a block for details.",
+      "three_d_status": "74 official HDB block shapes within about 160 m of the route · 73 raised from published storeys · 1 flat (storeys unverified). Walk: 1.6 km, about 19 min on foot. Tap a block for details.",
       "three_d_canvas": true,
       "reduced_motion_play_disabled": true,
       "notice_languages": {
@@ -267,7 +267,7 @@
       "example_text": "Blk 117 Ho Ching Road is inside an active dengue cluster.\n\nHo Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 333, 334, 335) · 91 people · Jurong West · Jurong East\n\nEnglish\n中文\nBahasa Melayu\nதமிழ்\nFive things to do this week\nLoosen hardened soil.\nEmpty flowerpot plates.\nOverturn pails and wipe their rims.\nReplace water in vases.\nKeep roof gutters clear and apply BTI as directed.\nShare with neighbours\nSee this area\n\nDistance to the dated NEA cluster footprint, not a measure of personal risk. The shared message contains no location.",
       "area_text": "West Region\n\nHigh\nJurong West\n97 people\n\nin 2 active clusters\n\n3.87 people in active clusters per 10,000 residents\n250,890 residents · June 2026 · context, not incidence or individual risk\n\n Plan inspection \nDraft resident notice\n2 clusters\nLocal weather\n3/3 stations",
       "plan_heading": "Jurong West\nInspection plan\nResident notice",
-      "three_d_status": "74 official HDB block shapes within about 160 m of the route · 73 raised from published storeys · 1 flat (storeys unverified). Tap a block for details.",
+      "three_d_status": "74 official HDB block shapes within about 160 m of the route · 73 raised from published storeys · 1 flat (storeys unverified). Walk: 1.6 km, about 19 min on foot. Tap a block for details.",
       "three_d_canvas": true,
       "reduced_motion_play_disabled": true,
       "notice_languages": {

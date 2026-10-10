@@ -27,6 +27,40 @@ End-to-end audit, polish and redeployment of DengueSUX before Demo Day (27 Oct 2
 
 Before → after: `docs/audit/before-3d-*.jpg` → `docs/audit/after-3d-*.jpg`.
 
+## Follow-up: 3D model audit and a new route walk (10 Oct, evening)
+
+### Model audit against an independent source
+
+Every HDB block shown in the Jurong West, Bishan and Bukit Batok scenes was matched to OpenStreetMap buildings (Overpass extract, audit only; OSM is not used by the app). Evidence: `output/verification/platform/model_audit_osm.json`.
+
+| Check | Jurong West | Bishan | Bukit Batok |
+|---|---|---|---|
+| HDB blocks matched to an OSM building | 73 / 74 | 54 / 54 | 31 / 31 |
+| Storeys equal (where OSM has levels) | 47 / 48 | 45 / 46 | 17 / 19 |
+| Outline overlap (median IoU) | 0.72 | 0.95 | 0.57 |
+| Centroid offset (median) | 2.0 m | 0.3 m | 4.9 m |
+
+- **Heights:** 109 of 113 independently tagged blocks have exactly the published storey count; the two Bukit Batok differences are OSM tagging errors (one block tagged “0 levels”).
+- **Positions:** Bukit Batok's lower overlap is a consistent ~5 m south-east shift of the OSM outlines, unrelated to building height (so not satellite lean). Overlaid on SLA's OneMap base map, the HDB outlines sit on the official building fills and the OSM outlines do not (`docs/audit/model-audit-bukitbatok-overlay.jpg`). The HDB geometry is the more accurate one and stays.
+- **Known model limits:** one height per block (taller and shorter wings of the same block share the published maximum); flat roofs; no terrain; non-HDB buildings not modelled.
+
+### Route walk: from dizzying to useful
+
+The old “Play route” re-aimed the camera every frame toward a point 25 m ahead, so it swung at every bend of the estate footpaths; each leg sped up and slowed down, and every stop changed zoom and tilt. It never showed the whole track or where you were on it.
+
+The new **Walk the route**:
+- starts from the whole-route view, descends to a low follow camera (80 m up, 90 m behind the walker, pitch about 59°) and walks the **entire saved OneMap path at a constant pace** (about 1 minute for 1.6 km; 2× option);
+- keeps **one steady heading per leg** (towards the next stop at least 150 m along, so clusters of close stops don't set it turning) and turns only around stops, capped at 24°/s. Measured: median 0.1–0.2°/s on Jurong West and Bukit Batok, p95 27°/s, maximum 31°/s, versus constant turning before;
+- never changes zoom mid-walk. It eases into each stop and pauses about 2 s with a **callout of that stop's checklist**, while the matching card in the list highlights;
+- shows a **walker marker**, the **walked part of the track** in amber, direction chevrons on the path, and fades far-away stop pins;
+- ends back on the whole-route view with the full track marked as walked (“Route complete · 1.6 km, 8 stops”);
+- adds a **slider to drag along the route**; Previous/Next give a still view of each stop from the street. Reduced motion disables playback but keeps the slider and still views;
+- raises the camera above any block that would otherwise sit between it and the walker, scales the whole camera rig up smoothly among 25-storey towers (same framing), and makes blocks slightly see-through while walking so the path and the next stops stay visible.
+
+Screenshots: `docs/audit/after-walk-*.jpg`. Deployed as **01f1c49fc2d21a529fbe62a3492d052c** (SUCCEEDED, same four resources); a full 2× walk of the live Bukit Batok route completed (“Route complete · 1.1 km, 8 stops”, maximum turn 26°/s, no console errors). Fallback video re-recorded: `demo/denguesux_finishing_20261010-194503.mp4` (67.8 s, sha256 `fdb51e8b…3b152ee38`).
+
+Automated checks (`demo/verify_platform.py`, now 19/19): the walk reaches the end of the route, the turn rate stays below 45°/s, the slider ends at the finish and moves the view and checklist together.
+
 ## Other usability fixes
 
 - **One “This week” card** replaces three stacked banners and a separate stats row: clusters (new/closed since the last snapshot), people in clusters (with the earlier figure and “cluster sizes, not weekly cases”), High areas, and the national outlook with its range. The map now starts ~60 px higher on desktop; tablet/phone use a 3-cell layout plus a full-width national row.

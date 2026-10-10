@@ -36,7 +36,18 @@
     {
       "deployment_id": "01f1c485236b115994b26bdf7fea47cc",
       "state": "SUCCEEDED",
-      "active": true
+      "active": false
+    },
+    {
+      "deployment_id": "01f1c49ef24912bbae1d623331450207",
+      "state": "SUCCEEDED",
+      "note": "walk the route v1"
+    },
+    {
+      "deployment_id": "01f1c49fc2d21a529fbe62a3492d052c",
+      "state": "SUCCEEDED",
+      "active": true,
+      "note": "walk tuned for tall estates"
     }
   ],
   "app_resources": [
@@ -76,8 +87,15 @@
     }
   },
   "fallback_video": {
-    "path": "demo/denguesux_finishing_20261010-163531.mp4",
-    "seconds": 61.62,
-    "sha256": "8c39e3b929236796fe3f0898d76271687d255e59cfa8090b8aac1330142ad251"
+    "path": "demo/denguesux_finishing_20261010-194503.mp4",
+    "seconds": 67.8,
+    "sha256": "fdb51e8b734eb1eb7cb4a0a9e6f0c6ee92c1312ef66cfb463e221d23b152ee38"
+  },
+  "live_walk": {
+    "area": "Bukit Batok",
+    "speed": "2x",
+    "result": "Route complete · 1.1 km, 8 stops",
+    "max_turn_deg_s": 25.9,
+    "console_errors": 0
   }
 }

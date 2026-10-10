@@ -126,6 +126,38 @@ async def main(base, out):
         await page.screenshot(path=str(out / 'state-3d-reduced-motion-phone.png'))
         await ctx.close()
 
+        # 5b. Walk the whole route at 2x: completes, camera turns stay gentle, slider and checklist follow.
+        ctx = await browser.new_context(viewport={'width': 1440, 'height': 900})
+        page = await ctx.new_page()
+        await ready(page, base)
+        await open_plan(page, 'Bishan')
+        await page.click('[data-map-mode="3d"]')
+        await page.wait_for_function("() => /block shapes|unavailable/.test(document.querySelector('.route-3d-status')?.textContent || '')", timeout=30000)
+        await page.click('[data-tour=speed]')
+        await page.click('[data-tour=play]')
+        samples, done = [], None
+        for _ in range(600):
+            await page.wait_for_timeout(200)
+            snap = await page.evaluate('window.RouteFlythrough.snapshot()')
+            samples.append((await page.evaluate('performance.now()') / 1000, snap))
+            if not snap['playing'] and snap['total'] and snap['along'] >= snap['total'] - 1:
+                done = snap
+                break
+        rates = []
+        for (t1, a), (t2, b) in zip(samples, samples[1:]):
+            if a['phase'] in ('walking', 'dwell') and b['phase'] in ('walking', 'dwell') and t2 > t1:
+                rates.append(abs(((b['bearing'] - a['bearing'] + 540) % 360) - 180) / (t2 - t1))
+        check('walk_reaches_end_of_route', done is not None and 'Route complete' in await text(page, '.route-tour-stop span'), await text(page, '.route-tour-stop span'))
+        check('walk_turn_rate_bounded', bool(rates) and max(rates) <= 45, f'max {max(rates or [0]):.1f} deg/s over {len(rates)} samples')
+        check('walk_slider_at_end', await page.input_value('#route-scrub-input') == '1000')
+        await page.fill('#route-scrub-input', '500')
+        await page.dispatch_event('#route-scrub-input', 'input')
+        scrub = await text(page, '.route-scrub-text')
+        selected = await page.evaluate("document.querySelector('.inspection-stop.is-tour-selected h3')?.textContent || ''")
+        check('scrub_moves_view_and_checklist', scrub.startswith('0.4') and selected in await text(page, '.route-tour-stop span'), f'{scrub} | {selected}')
+        await page.screenshot(path=str(out / 'state-walk-complete.png'))
+        await ctx.close()
+
         # 6. No WebGL: the 3D tab falls back to the 2D map and checklist.
         nogl = await p.chromium.launch(args=['--disable-webgl', '--disable-3d-apis'])
         ctx = await nogl.new_context(viewport={'width': 1280, 'height': 860})
