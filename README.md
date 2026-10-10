@@ -52,7 +52,7 @@ cp .env.example .env
 
 Open data from **data.gov.sg** (MOH Weekly Infectious Disease Bulletin; NEA weather archives, real-time weather APIs, dengue clusters and hawker centres; URA Master Plan 2025 planning areas; HDB Property Information; NParks parks) and **OneMap** (Singapore Land Authority) for geocoding, walking routes and base map tiles. Prevention guidance adapted from NEA's Mozzie Wipeout. Details, checksums and limitations: [DATA_REPORT.md](DATA_REPORT.md) and [MODEL_REPORT.md](MODEL_REPORT.md).
 
-**Limitations:** public weekly case data ends in December 2022, so the forecast is a replay, not a live forecast; area rankings are priorities, not local case predictions; the Databricks notebooks and job bundle have not yet been run in a live workspace.
+**Limitations:** public weekly case data ends in December 2022, so the forecast is a replay, not a live forecast; area rankings are priorities, not local case predictions; the three pipeline stages (bronze, silver, gold) have run end to end on Databricks Free Edition serverless compute via `notebooks/run_stage.py`, but the scheduled job bundle (`databricks.yml`) has not yet been run in a live workspace.
 
 ---
 
