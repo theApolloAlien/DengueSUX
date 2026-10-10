@@ -21,7 +21,7 @@
   const state={data:null,areas:[],filter:'active',search:'',selected:null,view:'signals',map:null,areaLayer:null,clusterLayer:null,labelLayer:null,layers:new Map(),predictions:[],index:0,chartGeometry:null,replayOnly:true,mode:'live',series:{live:[],replay:[]}};
   let toastTimeout, replayTimer, ready=false;
 
-  function toast(message){$('#toast').textContent=message;$('#toast').hidden=false;clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>$('#toast').hidden=true,3500);}
+  function toast(message){if(window.Motion)return window.Motion.toast(message);$('#toast').textContent=message;$('#toast').hidden=false;clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>$('#toast').hidden=true,3500);}
   function current(){return state.data.current||{};}
   function meta(){return state.data?.meta||{};}
   function liveForecast(){
@@ -321,7 +321,10 @@
     replayTimer=setInterval(()=>{if(state.index>=state.predictions.length-1){stopReplay();return;}state.index++;$('#forecast-week').value=state.index;renderPrediction();},state.mode==='live'?140:700);
   }
 
-  function drawChart(){
+  let chartAnimation=0;
+  function animateChart(){if(reducedMotion())return drawChart();const id=++chartAnimation,start=performance.now();const frame=now=>{if(id!==chartAnimation)return;const progress=Math.min(1,(now-start)/1050);drawChart(progress);if(progress<1)requestAnimationFrame(frame);};requestAnimationFrame(frame);}
+  function drawChart(progress=1){
+    if(typeof progress!=='number'||progress>1)progress=1;if(progress===1)chartAnimation++;
     const canvas=$('#forecast-chart');const rect=canvas.getBoundingClientRect();if(rect.width<10)return;
     const dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
     const width=rect.width,height=rect.height,pad={left:43,right:13,top:20,bottom:28};const chartWidth=width-pad.left-pad.right,chartHeight=height-pad.top-pad.bottom;
@@ -336,10 +339,12 @@
     if(pendingStart>0){ctx.fillStyle='#f3f1e6';ctx.fillRect(x(pendingStart)-4,pad.top,width-pad.right-x(pendingStart)+4,chartHeight);ctx.fillStyle='#9c8a5c';ctx.textAlign='right';ctx.fillText('Not yet reported',width-pad.right-2,pad.top+10);}
     // 80% range as a soft band behind the lines.
     ctx.beginPath();let open=false;const band=rows.map((p,i)=>finite(p.lower)&&finite(p.upper)?i:-1).filter(i=>i>=0);
-    if(band.length>1){band.forEach((i,k)=>{if(k===0)ctx.moveTo(x(i),y(rows[i].upper));else ctx.lineTo(x(i),y(rows[i].upper));});[...band].reverse().forEach(i=>ctx.lineTo(x(i),y(rows[i].lower)));ctx.closePath();ctx.fillStyle='rgba(139,169,124,.2)';ctx.fill();open=true;}
+    if(band.length>1){band.forEach((i,k)=>{if(k===0)ctx.moveTo(x(i),y(rows[i].upper));else ctx.lineTo(x(i),y(rows[i].upper));});[...band].reverse().forEach(i=>ctx.lineTo(x(i),y(rows[i].lower)));ctx.closePath();ctx.fillStyle=`rgba(139,169,124,${.2*Math.max(0,Math.min(1,(progress-.68)/.2))})`;ctx.fill();open=true;}
     const drawLine=(key,stroke,lineWidth,dash=[])=>{ctx.beginPath();ctx.strokeStyle=stroke;ctx.lineWidth=lineWidth;ctx.setLineDash(dash);let started=false;rows.forEach((p,i)=>{if(!finite(p[key])){started=false;return;}if(started)ctx.lineTo(x(i),y(p[key]));else{ctx.moveTo(x(i),y(p[key]));started=true;}});ctx.stroke();ctx.setLineDash([]);};
+    ctx.save();ctx.beginPath();ctx.rect(pad.left,pad.top,chartWidth*Math.min(1,progress/.68),chartHeight);ctx.clip();
     if(live)drawLine('normalMedian','#b7b29d',1.4,[2,3]);else drawLine('baseline','#cbb687',1.7,[4,4]);
     drawLine('predicted','#8ba97c',live?1.8:2.2);drawLine('actual','#244f3d',live?1.8:2.3);
+    ctx.restore();
     const annotation=(index,label,top,stroke,anchorKey='actual')=>{if(index<0)return;ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.setLineDash([2,4]);ctx.beginPath();ctx.moveTo(x(index),top+5);ctx.lineTo(x(index),y(rows[index][anchorKey]??0)-7);ctx.stroke();ctx.setLineDash([]);ctx.font='9px "DM Sans", sans-serif';ctx.textAlign='left';const textWidth=ctx.measureText(label).width;const tx=Math.max(pad.left,Math.min(width-pad.right-textWidth,x(index)+5));ctx.fillStyle='#fff';ctx.fillRect(tx-3,top-10,textWidth+6,14);ctx.fillStyle=stroke;ctx.fillText(label,tx,top);};
     if(live){
       const peak=rows.reduce((best,row,i)=>finite(row.actual)&&row.actual>(rows[best].actual??-1)?i:best,0);
@@ -351,6 +356,7 @@
       annotation(peak,'Reported peak',pad.top+12,'#6f8066');
       annotation(crossing,'First High outlook',pad.top+31,'#b08546');
     }
+    ctx.globalAlpha=Math.max(0,Math.min(1,(progress-.88)/.12));
     const p=rows[state.index];ctx.strokeStyle='#b4c0a5';ctx.lineWidth=1;ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(x(state.index),pad.top);ctx.lineTo(x(state.index),height-pad.bottom);ctx.stroke();ctx.setLineDash([]);
     [['actual','#244f3d'],['predicted','#8ba97c'],[live?'normalMedian':'baseline',live?'#b7b29d':'#cbb687']].forEach(([key,fill])=>{if(!finite(p[key]))return;ctx.beginPath();ctx.arc(x(state.index),y(p[key]),3.5,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();});
     state.chartGeometry={x,y,pad,width,height,chartWidth};
@@ -427,9 +433,9 @@
         showWeek:index=>{switchView('forecast');setMode('replay');state.index=index;$('#forecast-week').value=index;renderPrediction();$('.forecast-chart-card').scrollIntoView({block:'center',behavior:reducedMotion()?'instant':'smooth'});},
         showLive:()=>{switchView('forecast');setMode('live');$('#live-outlook').scrollIntoView({block:'start',behavior:reducedMotion()?'instant':'smooth'});}
       });
-      window.Product?.init({state,selectArea,switchView,liveForecast,number,date,toast,drawChart});
+      window.Product?.init({state,selectArea,switchView,liveForecast,number,date,toast,drawChart,animateChart,stopReplay});
       clearTimeout(showLoader);
-      const reveal=()=>{$('#loading-state').hidden=true;document.body.classList.remove('is-loading','loading-visible');document.body.classList.add('is-ready');};
+      const reveal=()=>{$('#loading-state').hidden=true;document.body.classList.remove('is-loading','loading-visible');document.body.classList.add('is-ready');window.Motion?.boot();};
       // Minimum presentation time only; data processing and input are never delayed.
       setTimeout(reveal,shownAt?Math.max(0,400-(performance.now()-shownAt)):0);
     }catch(error){ready=false;$('#loading-state').hidden=true;$('#signals-view').hidden=true;$('#forecast-view').hidden=true;$('#error-state').hidden=false;$('#error-message').textContent=error.name==='TimeoutError'?'The saved evidence is taking too long to load. Please try again.':'We couldn’t load the saved evidence. Please try again in a moment.';$('#data-timestamp').textContent='Evidence unavailable';$('#main').setAttribute('aria-busy','false');document.body.classList.remove('is-loading');document.body.classList.add('is-error');console.error('DengueSUX:',error);}finally{clearTimeout(slowLoad);clearTimeout(showLoader);}

@@ -26,7 +26,7 @@
  function route(){
   if(!api)return;const parts=location.hash.slice(1).split('/');let next=parts[0]||'week';if(next==='signals')next='map';if(!names[next])next='week';const area=areaFor(parts[1]||'');
   const apply=()=>{
-   routing=true;window.Fieldwork.closePlan();$$('.view-content').forEach(n=>n.hidden=true);section=next;api.state.view=next==='plan'?'inspection':next;
+   routing=true;api.stopReplay();window.Fieldwork.closePlan();$$('.view-content').forEach(n=>n.hidden=true);section=next;api.state.view=next==='plan'?'inspection':next;
    $('.page-heading').hidden=next==='styleguide';$('#breadcrumb').innerHTML=`${names[next]}${area?'<span>/</span>'+esc(area.name):''}`;
    $$('.rail-button').forEach((b,i)=>{const active=b.dataset.section===next;b.classList.toggle('active',active);if(active){b.setAttribute('aria-current','page');$('.nav-indicator').style.transform=`translateY(${i*50}px)`;}else b.removeAttribute('aria-current');});
    const high=api.state.areas.filter(a=>a.risk==='High').length,h=api.liveForecast()?.headline;
@@ -39,7 +39,7 @@
    }
    if(next==='forecast'){$('#forecast-view').hidden=false;requestAnimationFrame(api.drawChart);}
    if(next==='styleguide')$('#styleguide-view').hidden=false;
-   $('#route-error').hidden=!parts[1]||!!area;document.title=`${names[next]}${area?' / '+area.name:''} · DengueSUX`;routing=false;
+   $('#route-error').hidden=!parts[1]||!!area;document.title=`${names[next]}${area?' / '+area.name:''} · DengueSUX`;routing=false;requestAnimationFrame(()=>window.Motion?.section());
   };
   const previous=section;document.documentElement.style.setProperty('--travel',Object.keys(names).indexOf(next)>=Object.keys(names).indexOf(previous)?'8px':'-8px');
   if(window.Product.ready&&document.startViewTransition&&!reduced()&&next!==previous)document.startViewTransition(apply);else apply();
@@ -86,7 +86,7 @@
   $('#pick-plan-area').onchange=e=>{if(e.target.value)go('plan',e.target.value);};
   $('#signals-view').insertAdjacentHTML('afterbegin',`<div class="map-tools"><p>People in active clusters; shared clusters overlap.</p><div class="segmented" aria-label="Map display"><button class="active" data-map-view="map" aria-pressed="true">Map</button><button data-map-view="table" aria-pressed="false">Table</button></div></div><div id="map-table" hidden><label class="search-box" style="margin:0 0 16px"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input id="table-search" type="search" placeholder="Find an area" aria-label="Find an area in table"></label><div class="data-table-wrap"><table class="data-table"><caption class="sr-only">Planning areas sorted by people in active clusters</caption><thead><tr>${[['name','Area'],['risk','Priority'],['cluster_cases','People'],['cluster_count','Clusters']].map(([key,label])=>`<th scope="col" ${key==='cluster_count'?'class="table-clusters"':''}><button data-sort="${key}">${label} ↕</button></th>`).join('')}<th scope="col">Action</th></tr></thead><tbody id="area-table-body"></tbody></table></div></div>`);
   $$('[data-map-view]').forEach(b=>b.onclick=()=>showTable(b.dataset.mapView==='table'));$('#table-search').oninput=tableRows;$$('[data-sort]').forEach(b=>b.onclick=()=>{sortDirection=sortKey===b.dataset.sort?-sortDirection:1;sortKey=b.dataset.sort;tableRows();});
-  const history=document.createElement('details');history.className='forecast-history';history.innerHTML='<summary>How accurate is it? View retrospective checks</summary>';const forecast=$('#forecast-view');[...forecast.children].filter(n=>n.id!=='live-outlook').forEach(n=>history.append(n));forecast.append(history);history.ontoggle=()=>{if(history.open)requestAnimationFrame(api.drawChart);};
+  const history=document.createElement('details');history.className='forecast-history';history.innerHTML='<summary>How accurate is it? View retrospective checks</summary>';const forecast=$('#forecast-view');[...forecast.children].filter(n=>n.id!=='live-outlook').forEach(n=>history.append(n));forecast.append(history);let chartSeen=false;history.ontoggle=()=>{if(history.open){requestAnimationFrame(()=>chartSeen?api.drawChart():api.animateChart());chartSeen=true;}};
   if(!api.liveForecast())forecast.insertAdjacentHTML('afterbegin','<p class="forecast-empty">No current forecast is available from the saved official reports.</p>');
   const banner=document.createElement('div');banner.id='route-error';banner.className='inline-banner';banner.hidden=true;banner.textContent='Area not found. Choose one from the list.';$('#main').prepend(banner);
   $('#sidebar-collapse').onclick=()=>{const collapsed=document.body.classList.toggle('sidebar-collapsed');$('#sidebar-collapse').setAttribute('aria-expanded',!collapsed);$('#sidebar-collapse').setAttribute('aria-label',collapsed?'Expand sidebar':'Collapse sidebar');store.set('sidebar',collapsed);requestAnimationFrame(()=>api.state.map?.invalidateSize());};if(store.get('sidebar',false))$('#sidebar-collapse').click();

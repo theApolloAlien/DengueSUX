@@ -109,6 +109,7 @@
     const done=checks.filter(c=>c.checked).length,total=checks.length;
     const unit=$('.stop-done')?'stops':'checks';
     $('#stop-progress-label').textContent=total&&done===total?'Checklist complete · thank you for checking':`${done} of ${total} ${unit} complete`;
+    let ring=$('.progress-ring');if(!ring){meter.insertAdjacentHTML('beforebegin','<svg class="progress-ring" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12"/><circle cx="14" cy="14" r="12"/></svg>');ring=$('.progress-ring');}ring.lastElementChild.style.strokeDashoffset=76*(1-done/(total||1));
     meter.max=total||1;meter.value=done;meter.parentElement.classList.toggle('complete',total>0&&done===total);
   }
   function renderStop(s,opts={}){
