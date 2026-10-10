@@ -24,3 +24,9 @@ def test_growth_under_five_excluded_and_comparison_date_preserved():
     d={'current':{'as_of':'2026-10-10T00:00:00Z'},'growth':{'changes':{'from_date':'2026-09-24','items':[{'kind':'Growing','change':3},{'kind':'Growing','change':5}]}}}
     rows=data_events(d)
     assert len(rows)==1 and rows[0]['comparison_from']=='2026-09-24'
+
+def test_official_rss_http_links_are_upgraded_only_on_allowlisted_nea_host():
+    row={'title':'Singapore mosquito control update','source':'NEA','published_at':'09 Oct 2026 06:56','url':'http://www.nea.gov.sg/media/news/news/index/mosquito-control'}
+    result=filter_items([row],NOW)
+    assert len(result)==1 and result[0]['url'].startswith('https://www.nea.gov.sg/')
+    assert filter_items([{**row,'url':'http://evil.example/mosquito'}],NOW)==[]

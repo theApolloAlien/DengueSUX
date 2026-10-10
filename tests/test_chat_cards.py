@@ -23,3 +23,8 @@ def test_error_results_cannot_be_rendered_as_facts():
     assert build_cards([{'tool':'get_area','result':{'error':'unknown_area'}}],DATA)==[]
     with pytest.raises(ValidationError):
         CARD_SCHEMA.validate_python([{'type':'area','people':'model invented number'}])
+
+def test_fever_card_payload_schema():
+    from denguesux.care import fixed_response
+    root=Path(__file__).resolve().parents[1]
+    assert CARD_SCHEMA.validate_python(fixed_response(root,'fever')['cards'])[0].type=='unwell'

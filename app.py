@@ -5,7 +5,7 @@ import os
 from datetime import timedelta
 from typing import Literal, Optional
 from fastapi import Request, FastAPI, HTTPException, Path as PathParam, Query
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -117,6 +117,16 @@ class ChatBody(BaseModel):
     language: Literal['en','zh','ms','ta'] = 'en'
     messages: list[ChatMessage] = Field(min_length=1, max_length=20)
 
+    @field_validator('messages')
+    @classmethod
+    def privacy_boundary(cls, messages):
+        import re
+        for message in messages:
+            if re.search(r'(?<!\d)\d{6}(?!\d)|\b1\.\d+\s*[, /]\s*103\.\d+\b',message.content):
+                raise ValueError('Use the browser-only location check for postal codes or coordinates.')
+        return messages
+
+
 @app.get('/api/chat/status')
 def chat_status():
     return {'enabled': bool(_llm_endpoint()), 'model': _llm_endpoint(), 'database': bool(_genie_space())}
@@ -124,6 +134,10 @@ def chat_status():
 @app.post('/api/chat')
 def chat(body: ChatBody):
     """Tool-calling assistant: a hosted model answers from the dated gold data and can ask Genie for SQL."""
+    from denguesux.care import symptom_question, fixed_response
+    last_user = next((m.content for m in reversed(body.messages) if m.role == 'user'), '')
+    if symptom_question(last_user):
+        return fixed_response(ROOT, last_user, body.language)
     endpoint = _llm_endpoint()
     if not endpoint:
         raise HTTPException(503, 'The assistant model is not configured for this deployment.')
@@ -142,6 +156,11 @@ def chat(body: ChatBody):
 @app.post('/api/chat/stream')
 async def chat_stream(body: ChatBody, request: Request):
     """Ephemeral SSE only: no transcript storage, real tool starts and serving deltas."""
+    from denguesux.care import symptom_question, fixed_response
+    last_user = next((m.content for m in reversed(body.messages) if m.role == 'user'), '')
+    if symptom_question(last_user):
+        result = fixed_response(ROOT, last_user, body.language)
+        return StreamingResponse(iter(['data: '+json.dumps({'type':'done',**result},ensure_ascii=False)+'\n\n']),media_type='text/event-stream')
     endpoint = _llm_endpoint()
     if not endpoint:
         raise HTTPException(503, 'The assistant model is not configured for this deployment.')

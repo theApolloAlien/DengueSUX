@@ -1,8 +1,81 @@
 {
- "reviewed_at":"2026-10-10",
- "sources":[{"id":"govsg","name":"gov.sg · Dengue information","date":"2026-10-10","url":"https://www.gov.sg/"},{"id":"ncid","name":"NCID · Dengue","date":"2026-10-10","url":"https://www.ncid.sg/Health-Information/Diseases-and-Conditions/Pages/Dengue.aspx"}],
- "en":{"title":"Feeling unwell?","urgent":"Go to A&E now if you have any of these warning signs","signs":["Bleeding gums or nose","Persistent vomiting","Severe abdominal pain","Drowsiness or confusion","Breathing difficulty","Cold, clammy skin","Passing little urine"],"drop":"Danger can develop as the fever drops. Don't wait for the fever to return.","otherwise":"Otherwise, see a GP.","note":"This is not a diagnosis. Seek medical care for your symptoms."},
- "zh":{"title":"身体不舒服？","urgent":"如有以下任何警示症状，请立即前往急诊室","signs":["牙龈或鼻子出血","持续呕吐","剧烈腹痛","嗜睡或意识混乱","呼吸困难","皮肤冰冷、湿黏","尿量明显减少"],"drop":"退烧时也可能出现危险。不要等到再次发烧才求医。","otherwise":"如无上述症状，也请看家庭医生。","note":"这不是诊断。翻译需要人工审核。请就症状寻求医疗帮助。"},
- "ms":{"title":"Rasa tidak sihat?","urgent":"Pergi ke Jabatan Kecemasan sekarang jika terdapat mana-mana tanda amaran ini","signs":["Gusi atau hidung berdarah","Muntah berterusan","Sakit perut yang teruk","Mengantuk atau keliru","Sukar bernafas","Kulit sejuk dan lembap","Kurang membuang air kecil"],"drop":"Bahaya boleh berlaku apabila demam mula turun. Jangan tunggu demam kembali.","otherwise":"Jika tiada tanda ini, jumpa doktor klinik.","note":"Ini bukan diagnosis. Terjemahan memerlukan semakan manusia. Dapatkan rawatan untuk gejala anda."},
- "ta":{"title":"உடல்நிலை சரியில்லையா?","urgent":"இந்த எச்சரிக்கை அறிகுறிகளில் ஏதேனும் இருந்தால் உடனே அவசர சிகிச்சைப் பிரிவுக்குச் செல்லுங்கள்","signs":["ஈறுகள் அல்லது மூக்கில் இரத்தப்போக்கு","தொடர்ந்து வாந்தி","கடுமையான வயிற்று வலி","தூக்கக் கலக்கம் அல்லது குழப்பம்","மூச்சுவிடுவதில் சிரமம்","குளிர்ந்த, ஈரமான தோல்","சிறுநீர் குறைவாக வருதல்"],"drop":"காய்ச்சல் குறையும்போது ஆபத்து ஏற்படலாம். காய்ச்சல் மீண்டும் வரும்வரை காத்திருக்க வேண்டாம்.","otherwise":"இல்லையெனில் பொது மருத்துவரைப் பாருங்கள்.","note":"இது நோயறிதல் அல்ல. மொழிபெயர்ப்புக்கு மனித மதிப்பாய்வு தேவை. உங்கள் அறிகுறிகளுக்கு மருத்துவ உதவி பெறுங்கள்."}
+  "reviewed_at": "2026-10-10",
+  "sources": [
+    {
+      "id": "govsg",
+      "name": "gov.sg · Dengue information",
+      "date": null,
+      "url": "https://www.gov.sg/"
+    },
+    {
+      "id": "ncid",
+      "name": "NCID · Dengue",
+      "date": null,
+      "url": "https://www.ncid.sg/Health-Information/Diseases-and-Conditions/Pages/Dengue.aspx"
+    }
+  ],
+  "en": {
+    "title": "Feeling unwell?",
+    "urgent": "Go to A&E now if you have any of these warning signs",
+    "signs": [
+      "Bleeding gums or nose",
+      "Persistent vomiting",
+      "Severe abdominal pain",
+      "Drowsiness or confusion",
+      "Breathing difficulty",
+      "Cold, clammy skin",
+      "Passing little urine"
+    ],
+    "drop": "Danger can develop as the fever drops. Don't wait for the fever to return.",
+    "otherwise": "Otherwise, see a GP.",
+    "note": "This is not a diagnosis. Seek medical care for your symptoms."
+  },
+  "zh": {
+    "title": "身体不舒服？",
+    "urgent": "如有以下任何警示症状，请立即前往急诊室",
+    "signs": [
+      "牙龈或鼻子出血",
+      "持续呕吐",
+      "剧烈腹痛",
+      "嗜睡或意识混乱",
+      "呼吸困难",
+      "皮肤冰冷、湿黏",
+      "尿量明显减少"
+    ],
+    "drop": "退烧时也可能出现危险。不要等到再次发烧才求医。",
+    "otherwise": "如无上述症状，也请看家庭医生。",
+    "note": "这不是诊断。翻译需要人工审核。请就症状寻求医疗帮助。"
+  },
+  "ms": {
+    "title": "Rasa tidak sihat?",
+    "urgent": "Pergi ke Jabatan Kecemasan sekarang jika terdapat mana-mana tanda amaran ini",
+    "signs": [
+      "Gusi atau hidung berdarah",
+      "Muntah berterusan",
+      "Sakit perut yang teruk",
+      "Mengantuk atau keliru",
+      "Sukar bernafas",
+      "Kulit sejuk dan lembap",
+      "Kurang membuang air kecil"
+    ],
+    "drop": "Bahaya boleh berlaku apabila demam mula turun. Jangan tunggu demam kembali.",
+    "otherwise": "Jika tiada tanda ini, jumpa doktor klinik.",
+    "note": "Ini bukan diagnosis. Terjemahan memerlukan semakan manusia. Dapatkan rawatan untuk gejala anda."
+  },
+  "ta": {
+    "title": "உடல்நிலை சரியில்லையா?",
+    "urgent": "இந்த எச்சரிக்கை அறிகுறிகளில் ஏதேனும் இருந்தால் உடனே அவசர சிகிச்சைப் பிரிவுக்குச் செல்லுங்கள்",
+    "signs": [
+      "ஈறுகள் அல்லது மூக்கில் இரத்தப்போக்கு",
+      "தொடர்ந்து வாந்தி",
+      "கடுமையான வயிற்று வலி",
+      "தூக்கக் கலக்கம் அல்லது குழப்பம்",
+      "மூச்சுவிடுவதில் சிரமம்",
+      "குளிர்ந்த, ஈரமான தோல்",
+      "சிறுநீர் குறைவாக வருதல்"
+    ],
+    "drop": "காய்ச்சல் குறையும்போது ஆபத்து ஏற்படலாம். காய்ச்சல் மீண்டும் வரும்வரை காத்திருக்க வேண்டாம்.",
+    "otherwise": "இல்லையெனில் பொது மருத்துவரைப் பாருங்கள்.",
+    "note": "இது நோயறிதல் அல்ல. மொழிபெயர்ப்புக்கு மனித மதிப்பாய்வு தேவை. உங்கள் அறிகுறிகளுக்கு மருத்துவ உதவி பெறுங்கள்."
+  }
 }

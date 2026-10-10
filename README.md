@@ -14,7 +14,7 @@ Built for the Databricks AI Social Impact (DAISI) Challenge Singapore 2026 · Pr
 
 | Where to check first | Street-level inspection plan |
 |---|---|
-| ![This week: national outlook and areas to check](output/design/saas/branded-week-1440.png) | ![Field plan with the saved route and checklist](output/design/saas/branded-plan-jurong-west-1440.png) |
+| ![This week: conversation, national outlook and areas to check](output/verification/chat/final-home-1440.png) | ![Field plan with the saved route and checklist](output/design/saas/branded-plan-jurong-west-1440.png) |
 | **Resident notice in 4 languages** | **Ask DengueSUX** |
 | ![Resident notice in Chinese with 5/5 automatic checks passed](output/design/saas/after-notice-1440.png) | ![Assistant answer with dated sources](output/design/saas/after-ask-1440.png) |
 
@@ -25,11 +25,13 @@ Built for the Databricks AI Social Impact (DAISI) Challenge Singapore 2026 · Pr
 - **Where to check first:** all 55 URA planning areas ranked by people in active NEA dengue clusters.
 - **Inspection plan:** one click turns an area into ranked places to check (cluster HDB blocks, parks, hawker centres) on a OneMap walking route, with a checklist per stop. *Places to check, not confirmed breeding sites.*
 - **3D walk preview:** the route in 3D with every official HDB block within about 160 m, not just the stops. **Walk the route** follows the whole OneMap path at a steady pace from a low follow camera, pausing at each stop with its checklist; a slider lets you drag along the route. Shapes are HDB's published footprints; heights are estimates from published storeys (2.8 m a floor + 1.3 m roof, the NUS Urban Analytics Lab HDB 3D convention). Blocks without a verified storey count stay flat, and non-HDB buildings are not modelled.
-- **Check my block:** distance from a home to the nearest active cluster, using the browser's location (never sent to the server), a public example block, or a postal code looked up through OneMap (not stored). Postal lookup is offered only when OneMap actually answers from the server: locally with a token or public search; the Databricks-hosted app hides it because OneMap refuses public searches from that cloud network.
+- **Check a place privately:** enter a postal code in the conversational home, use the browser’s location, or try a public example. OneMap lookup and distances run in the browser; neither postal codes nor exact coordinates go to DengueSUX or its model. Four dated statuses include NEA’s high-mosquito areas. Remembered places stay on this device, with Forget controls.
 - **Resident notices:** English, 中文, Bahasa Melayu and தமிழ் drafts with NEA's Mozzie Wipeout steps; each passes 5 automatic fact checks. Drafts are for human review before sending.
 - **Live national outlook:** official MOH/CDA reports through EW39 2026 (week ending 3 October). For the week of 11 October: about **68 people**, with an **80% range of 50–93**. Across 196 evaluated weeks from 2023 onward, error is **28.7 people/week vs 31.9** for a four-week average (**10% lower**); range coverage is **76%**. The 2022 replay remains available as a separate, reused evaluation year.
 - **Explanations and sources:** grouped drivers (recent cases, time of year, rain, heat) and a dated source on every number.
 - **Ask DengueSUX:** plain-English questions and the SQL behind them. The Databricks app uses a hosted model and a live Genie space; local/offline use has an explicitly labelled saved-data fallback.
+
+See [the conversational-home build report](docs/THIS_WEEK_CHAT_BUILD.md) for local verification, privacy checks, feed filters and pending cloud validation.
 
 ## Quick start
 

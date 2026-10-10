@@ -383,6 +383,15 @@ def run_chat(messages, llm, root: Path, genie=None, now: datetime | None = None,
     from .chat_cards import build_cards
     data = load_data(root)
     registry = _sources(data)
+    if re.search(r'notice|居民通知|notis|அறிவிப்பு',cleaned[-1]['content'],re.I):
+        from .care import language_for
+        text=cleaned[-1]['content'];lang=language_for(text,language)
+        area=next((a for a in data['current']['areas'] if a['name'].lower() in text.lower()),data['current']['areas'][0])
+        notice=data.get('notices',{}).get('notices',{}).get(area['code'],{}).get(lang)
+        if notice:
+            from .chat_cards import NoticeCard
+            card=NoticeCard(code=area['code'],name=area['name'],language=lang,text=notice['text'])
+            return {'answer':'','cards':[card.model_dump()],'sources':[registry['clusters']],'steps':[],'trace':[],'actions':[],'mode':'Saved resident notice'}
     convo = [{'role': 'system', 'content': system_prompt(data, now) + f'\nPreferred response language: {language}. Follow the language of the latest question when it is explicit.'}] + clean_messages(messages)
     calls, used = [], []
     for step in range(max_steps + 1):

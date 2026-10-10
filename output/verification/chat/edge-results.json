@@ -1,0 +1,15 @@
+{
+  "checks": {
+    "real_status_amber": true,
+    "real_status_red": true,
+    "real_status_purple": true,
+    "real_status_green": true,
+    "session_restores_thread": true,
+    "up_edits_last": true,
+    "shift_enter_newline": true,
+    "brief_notice_deep_link": true,
+    "escape_stops_pending_stream": true,
+    "no_uncaught_errors": true
+  },
+  "errors": []
+}

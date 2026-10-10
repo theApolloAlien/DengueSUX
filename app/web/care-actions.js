@@ -2,7 +2,7 @@
 (() => {
  'use strict';let data,copy;
  const H=()=>window.ChatHome,esc=v=>H().esc(v),icon=n=>H().icon(n);
- const symptoms=/\b(fever|vomit(?:ing)?|bleed(?:ing)?|unwell|symptoms?|diagnos(?:e|is)|headache|abdominal|rash|drowsy|clammy|breath(?:ing)?|demam|muntah|pendarahan|sakit)\b|发烧|發燒|呕吐|嘔吐|腹痛|出血|症状|症狀|காய்ச்சல்|வாந்தி|வலி|இரத்த/i;
+ const symptoms=/\b(fever|vomit(?:ing)?|bleed(?:ing)?|unwell|symptoms?|diagnos(?:e|is)|headache|abdominal|rash|sick|ill|pain|nausea|aching|dizzy|fatigue|gejala|do i have dengue|could i have dengue|drowsy|clammy|breath(?:ing)?|demam|muntah|pendarahan|sakit)\b|发烧|發燒|呕吐|嘔吐|腹痛|出血|症状|症狀|காய்ச்சல்|வாந்தி|வலி|இரத்த/i;
  const language=q=>/[\u0b80-\u0bff]/.test(q)?'ta':/[\u4e00-\u9fff]/.test(q)?'zh':/\b(demam|muntah|denggi|bahasa melayu)\b/i.test(q)?'ms':H().language;
  const getCopy=async()=>copy||=window.DENGUESUX_CARE||await fetch('/care-copy.json').then(r=>{if(!r.ok)throw Error('Health guidance unavailable');return r.json();});
  const myenv='https://apps.apple.com/sg/app/myenv/id444435182',android='https://play.google.com/store/apps/details?id=sg.gov.nea';

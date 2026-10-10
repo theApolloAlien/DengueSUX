@@ -2,17 +2,16 @@
 from __future__ import annotations
 import datetime as dt
 from email.utils import parsedate_to_datetime
-from html.parser import HTMLParser
 import json
 import re
 from pathlib import Path
-from urllib.parse import urljoin, urlsplit, urlunsplit
+from urllib.parse import urlsplit, urlunsplit
 import xml.etree.ElementTree as ET
 import requests
 from .live_ingestion import _json
 
 SOURCES={
- 'NEA': 'https://www.nea.gov.sg/media/news/news',
+ 'NEA': 'https://www.nea.gov.sg/rss/news_update',  # linked from NEA's RSS directory
  'CNA': 'https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml&category=10416',
  'The Straits Times':'https://www.straitstimes.com/news/singapore/rss.xml',
 }
@@ -33,6 +32,7 @@ def filter_items(items,now=None):
     now=now or dt.datetime.now(dt.timezone.utc);out={}
     for item in items:
         title=str(item.get('title') or '').strip();source=item.get('source');url=urlsplit(str(item.get('url') or ''));date=timestamp(item.get('published_at'))
+        if source=='NEA' and url.hostname in DOMAINS['NEA'] and url.scheme=='http':url=url._replace(scheme='https')
         if source not in DOMAINS or url.scheme!='https' or url.hostname not in DOMAINS[source] or not TOPIC.search(title) or not date:continue
         when=dt.datetime.fromisoformat(date)
         if when>now+dt.timedelta(minutes=5) or when<now-dt.timedelta(days=90):continue
@@ -48,32 +48,6 @@ def parse_rss(body,source):
         items.append({'title':node.findtext('title'),'url':node.findtext('link'),'published_at':node.findtext('pubDate'),'source':source})
     return items
 
-class OfficialNews(HTMLParser):
-    """Read anchors and explicit date metadata; never infer a publication date."""
-    def __init__(self):
-        super().__init__();self.items=[];self.active=None;self.text=[];self.jsonld=False;self.ld=[]
-    def handle_starttag(self,tag,attrs):
-        a=dict(attrs)
-        if tag=='a' and '/media/news/news/index/' in a.get('href',''):
-            self.active=a;self.text=[]
-        if tag=='script' and a.get('type')=='application/ld+json':self.jsonld=True;self.ld=[]
-    def handle_data(self,text):
-        if self.active is not None:self.text.append(text)
-        if self.jsonld:self.ld.append(text)
-    def handle_endtag(self,tag):
-        if tag=='a' and self.active is not None:
-            a=self.active;self.items.append({'title':' '.join(''.join(self.text).split()),'url':urljoin(SOURCES['NEA'],a['href']),'published_at':a.get('data-date') or a.get('data-published'),'source':'NEA'});self.active=None
-        if tag=='script' and self.jsonld:
-            try:self.walk(json.loads(''.join(self.ld)))
-            except ValueError:pass
-            self.jsonld=False
-    def walk(self,v):
-        if isinstance(v,list):
-            for x in v:self.walk(x)
-        if isinstance(v,dict):
-            if v.get('headline') and v.get('datePublished'):self.items.append({'title':v['headline'],'url':v.get('url'),'published_at':v['datePublished'],'source':'NEA'})
-            for x in v.values():
-                if isinstance(x,(dict,list)):self.walk(x)
 
 def data_events(data):
     events=[];current=data.get('current',{});g=data.get('growth',{});changes=g.get('changes',{});stamp=current.get('as_of')
@@ -101,8 +75,7 @@ def collect(root,*,session=None,spark=None,job_completed_at=None,now=None):
         try:
             r=session.get(url,timeout=20,headers={'User-Agent':'DengueSUX public metadata collector'});r.raise_for_status()
             if len(r.content)>5*1024*1024:raise ValueError('Feed too large')
-            if source=='NEA':parser=OfficialNews();parser.feed(r.text);items=parser.items
-            else:items=parse_rss(r.content,source)
+            items=parse_rss(r.content,source)
             matches=filter_items(items,now);headlines.extend(matches);status[source]={'status':'ok','matching_items':len(matches)}
         except Exception as exc:status[source]={'status':'unavailable','error':type(exc).__name__}
     news=filter_items(headlines,now)

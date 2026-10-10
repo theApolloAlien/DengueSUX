@@ -172,3 +172,38 @@ No actionable P0/P1/P2 issues remain in the verified scope.
 ## Remaining scope limits
 
 Databricks Free Edition execution has not been performed in a live workspace; the README documents serverless configuration and that limitation. This was a browser functional/design check, not a complete screen-reader audit or epidemiological validation. Local priorities have no historical outcomes against which to validate accuracy. Publication and deployment were not part of this phase.
+
+---
+
+# Conversational home QA — 10 October 2026
+
+**final result: passed**
+
+This section covers the conversational-home build and supersedes the earlier home screenshots, without replacing earlier verification of the map, forecast model or 3D route.
+
+**Source visual truth:** `output/design/saas/branded-week-1440.png`, the existing brand kit in `app/web/brand/`, the attached conversational-home brief, and the user's explicit direction to keep brand imagery but remove the illustration from the national card. The supplied overlap screenshot was used to verify that specific correction. This is an intentional redesign, not a claim of pixel identity with the former dashboard.
+
+**Implementation:** `output/verification/chat/final-home-1440.png`, `landing-390.png`, `location-1440.png`, `location-390.png`, and `status-red.png`, `status-amber.png`, `status-purple.png`, `status-green.png`. The frozen review mock is `output/design/saas/mock-this-week-chat.html`; its landing and conversation captures at both 1440 and 390 are under `output/verification/chat/mock-*.png`.
+
+**Viewport and density:** source desktop 1440×900 pixels; implementation 1440×1219 full-page pixels from a 1440×900 CSS viewport; phone 390×844 CSS viewport with full-page capture. Chromium deviceScaleFactor 1. Full-page captures show content below the fold; fixed navigation may appear mid-image because the captured page was scrolled. No such placement is claimed for the live viewport. `design-comparison.png` normalises the desktop source and implementation to 720-pixel-wide panels, with intentional differences in content length noted.
+
+**Comparison evidence:** `output/verification/chat/design-comparison.png` puts the existing brand/layout source and final home together. `outlook-fix-comparison.png` pairs the user's reported graph obstruction with the final clear graph. Both combined images were inspected. The focused national-card comparison is necessary because the full-view thumbnails are too small to assess graph obstruction.
+
+**Findings and iteration history**
+
+- [P2, resolved] National-card illustration overlapped the graph. The first fix reserved a separate footer row; the user then requested removal. Final implementation removes the image entirely and gives the graph the full card width. Evidence: `outlook-fix-comparison.png`; browser assertion `outlook_has_no_decoration_*` at all three widths.
+- [P2, resolved] Cold loading used the old dashboard geometry and shifted the main surface as the composer appeared. Added matching hero/composer/card skeletons and reserved header/side-nav widths before data/font arrival. Throttled CLS decreased from 0.148 to 0.000056. Evidence: `loading-throttled.png`, `loaded-throttled.png`, `results.json`.
+- [P1, resolved] Public OneMap's lightweight response lacks `POSTAL`. Exact matching now reads the postal suffix from `SEARCHVAL`, while extracting a description without it. A real lookup succeeds with the server endpoint blocked. Regression covers the exact response shape.
+- [P2, resolved] Saved place/map context must survive DOM movement into the side panel. The single conversation is moved, not copied, and Leaflet map sizes are invalidated after the move. The desktop/mobile shared-thread checks pass.
+
+**Required fidelity surfaces**
+
+- Typography: existing local DM Sans retained; clear greeting/headline, 18 px desktop composer input, smaller evidence labels and tabular values. Wrapping checked at 1440, 1024 and 390.
+- Spacing/layout rhythm: the composer occupies the primary full-width surface; supporting cards have balanced borders, padding and aligned headers. Desktop conversation uses a side rail; phone context has an intentional horizontal carousel with no document overflow.
+- Colours/tokens: forest, sage, ivory and existing semantic risk colours retained. Purple denotes the mosquito layer only. No gradients or invented badges. Focus outlines and reduced-motion tokens remain active.
+- Images: actual neighbourhood artwork is used in the greeting and actual corridor artwork in prevention guidance. The wordmark remains unchanged. The national-card illustration is absent as requested. Map geometry and charts are real data; illustrations are not used as evidence layers.
+- Copy/content: every value is derived from a dated data result. The national “Medium” level is the actual tool value, not the brief's example “Low”. No “safe” result; the green caveat and incomplete mosquito coverage are visible. Local model fallback and sources remain explicit.
+
+**Interactions:** postal → map card → follow-up → field plan; first home impression; mobile flow; saved place/forget; reporting sheet; resident notice; language menu; Up/Shift+Enter/Esc; cancellation; restored transcript; map overlay; offline export. Evidence is in `results.json` and `edge-results.json` (59 boolean checks, all passing). No uncaught exceptions or console errors recorded in the main run. Videos are under `output/verification/chat/videos/`.
+
+**Known validation limits:** cloud streaming and Spark task execution await deployment; local tests cover their contracts. Medical wording is fixed from the supplied brief and translations need human review; source sites returned access restrictions during this run. These are release checks, not hidden visual failures. No additional feature exploration or deployment was performed.

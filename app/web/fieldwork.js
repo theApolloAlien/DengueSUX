@@ -151,8 +151,8 @@
     if(fromTour||window.RouteFlythrough?.focusStop(id))return;
     const marker=stopMarkers.get(String(id));if(marker){map.setView(marker.getLatLng(),18);marker.openPopup();if(matchMedia('(max-width:720px)').matches)$('#inspection-map').scrollIntoView({block:'center'});}
   }
-  async function openNotice(area){
-    selectedArea=area;language='en';noticeVariant=0;$('#notice-title').textContent=`A note for ${area.name}`;$('#notice-dialog').showModal();await showNotice();
+  async function openNotice(area,requestedLanguage='en'){
+    selectedArea=area;language=['en','zh','ms','ta'].includes(requestedLanguage)?requestedLanguage:'en';noticeVariant=0;$('#notice-title').textContent=`A note for ${area.name}`;$('#notice-dialog').showModal();await showNotice();
   }
   function savedNotice(code,lang){const n=data.notices||{};return n.areas?.[code]?.[lang]||n.notices?.[code]?.[lang]||n[code]?.[lang]||null;}
   async function showNotice(){

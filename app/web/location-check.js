@@ -15,7 +15,10 @@
   return {clusters,high,area:found,status:tier(clusters,high)};
  }
  function sourceDate(){return new Date(data.current.as_of).toLocaleString('en-SG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Singapore'});}
- function headline(status,n){return {red:"You're in a dengue cluster area",amber:`Dengue cluster ${n?.distance===0?'at this location':distance(n?.distance)+' away'}`,purple:'Mosquito numbers are high here',green:'No active cluster within 1 km'}[status];}
+ function headline(status,n){
+  const text={en:["You're in a dengue cluster area",n?.distance===0?'Dengue cluster at this location':`Dengue cluster ${distance(n?.distance)} away`,'Mosquito numbers are high here','No active cluster within 1 km'],zh:['您位于骨痛热症病例群区域',n?.distance===0?'此处有活跃病例群':`病例群距离约 ${distance(n?.distance)}`,'这里的蚊子数量高','1公里内没有活跃病例群'],ms:['Anda berada di kawasan kelompok denggi',n?.distance===0?'Kelompok denggi di lokasi ini':`Kelompok denggi ${distance(n?.distance)} dari sini`,'Populasi nyamuk tinggi di sini','Tiada kelompok aktif dalam 1 km'],ta:['நீங்கள் டெங்கி தொகுப்புப் பகுதியில் உள்ளீர்கள்',n?.distance===0?'இந்த இடத்தில் டெங்கி தொகுப்பு உள்ளது':`டெங்கி தொகுப்பு ${distance(n?.distance)} தொலைவில்`,'இங்கு கொசுக்களின் எண்ணிக்கை அதிகம்','1 கி.மீ.க்குள் செயலில் உள்ள தொகுப்பு இல்லை']};
+  return (text[H().language]||text.en)[['red','amber','purple','green'].indexOf(status)];
+ }
  function labelFor(status){return (LABELS[H().language]||LABELS.en)[['red','amber','purple','green'].indexOf(status)];}
  function storeRead(){try{const a=JSON.parse(localStorage.getItem('denguesux:places'))||[];return Array.isArray(a)?a.filter(p=>Number.isFinite(p.lat)&&Number.isFinite(p.lon)&&typeof p.label==='string').slice(0,5):[];}catch{return [];}}
  function storeWrite(places){try{localStorage.setItem('denguesux:places',JSON.stringify(places));return true;}catch{return false;}}
@@ -25,7 +28,7 @@
   const polygons=L.geoJSON({type:'FeatureCollection',features:f.clusters.slice(0,3).map(c=>c.feature)},{style:{color:'#ae4935',weight:2,fillOpacity:.14}}).addTo(map);
   if(data.aedes?.features)L.geoJSON(data.aedes,{style:{color:'#76558a',weight:2,fillOpacity:.03}}).addTo(map);
   L.circle([place.lat,place.lon],{radius:THRESHOLDS.nearbyRadiusM,color:'#66835b',weight:1,dashArray:'5 6',fillOpacity:.02}).addTo(map);
-  L.marker([place.lat,place.lon],{icon:L.divIcon({className:'home-map-pin',html:icon('house-fill'),iconSize:[28,28],iconAnchor:[14,14]})}).addTo(map);
+  L.marker([place.lat,place.lon],{icon:L.divIcon({className:'home-map-pin',html:icon('house-line'),iconSize:[28,28],iconAnchor:[14,14]})}).addTo(map);
   // Base tiles are optional. Offline export still displays the real polygons and pin.
   if(navigator.onLine)L.tileLayer('https://www.onemap.gov.sg/maps/tiles/Default/{z}/{x}/{y}.png',{attribution:'© SLA OneMap',maxZoom:19}).addTo(map);
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;requestAnimationFrame(()=>{map.invalidateSize();if(!reduced)map.flyTo([place.lat,place.lon],15,{duration:.6});else map.setView([place.lat,place.lon],15,{animate:false});});
@@ -40,11 +43,12 @@
  }
  async function lookup(postal){const id=++lookupID;const el=H().privateAnswer('Check a postal code',{answer:'Looking up OneMap directly from your browser…'}),body=el.querySelector('.chat-answer-body');try{
   const r=await fetch(`https://www.onemap.gov.sg/api/common/elastic/search?searchVal=${encodeURIComponent(postal)}&returnGeom=Y&getAddrDetails=N&pageNum=1`,{signal:AbortSignal.timeout(12000),referrerPolicy:'no-referrer'});if(!r.ok)throw Error('OneMap is unavailable. Try your location or the public example.');const response=await r.json();if(id!==lookupID)return;
-  const match=(response.results||[]).find(r=>String(r.POSTAL)===postal);if(!match)throw Error('OneMap did not find that postal code. Check all six digits and try again.');const lat=Number(match.LATITUDE),lon=Number(match.LONGITUDE);if(!(lat>1.1&&lat<1.5&&lon>103.5&&lon<104.2))throw Error('OneMap did not return a valid Singapore location.');
-  const label=[match.BLK_NO&&match.BLK_NO!=='NIL'?'Blk '+match.BLK_NO:null,match.ROAD_NAME].filter(Boolean).join(' ')||'Your place';body.textContent='OneMap lookup complete. Location stayed in this browser.';show({lat,lon,label,source:'onemap'});
+  const match=matchPostal(response,postal);if(!match)throw Error('OneMap did not find that postal code. Check all six digits and try again.');const lat=Number(match.LATITUDE),lon=Number(match.LONGITUDE);if(!(lat>1.1&&lat<1.5&&lon>103.5&&lon<104.2))throw Error('OneMap did not return a valid Singapore location.');
+  const label=[match.BLK_NO&&match.BLK_NO!=='NIL'?'Blk '+match.BLK_NO:null,match.ROAD_NAME].filter(Boolean).join(' ')||String(match.SEARCHVAL||'Your place').replace(/\s*SINGAPORE\s*\d{6}\s*$/i,'').replace(/(?<!\d)\d{6}(?!\d)/g,'').trim();body.textContent='OneMap lookup complete. Location stayed in this browser.';show({lat,lon,label,source:'onemap'});
  }catch(e){if(id===lookupID)body.textContent=e.name==='TimeoutError'?'OneMap took too long. Try your location or the public example.':e.message;} }
  function example(){const p=Object.values(data.inspection?.areas||{}).flatMap(a=>a.cluster_blocks||[])[0];if(p)show({lat:p.latitude,lon:p.longitude,label:`Blk ${p.block} ${p.street}`,source:'example'});else H().privateAnswer('Example place',{answer:'No geocoded example is available in this snapshot.'});}
  function locate(){const id=++lookupID;if(!navigator.geolocation)return H().privateAnswer('Check my location',{answer:'Location is unavailable in this browser. Enter a postal code instead.'});const el=H().privateAnswer('Check my location',{answer:'Waiting for your browser’s location permission…'});navigator.geolocation.getCurrentPosition(p=>{if(id!==lookupID)return;el.querySelector('.chat-answer-body').textContent='Location found on this device.';try{if(p.coords.latitude<1.1||p.coords.latitude>1.5||p.coords.longitude<103.5||p.coords.longitude>104.2)throw Error('This app covers Singapore only.');show({lat:p.coords.latitude,lon:p.coords.longitude,label:'Your location',source:'device'});}catch(e){el.querySelector('.chat-answer-body').textContent=e.message;}},()=>{if(id===lookupID)el.querySelector('.chat-answer-body').textContent='Location permission was not given or timed out. Enter a postal code or try the public example.';},{enableHighAccuracy:false,timeout:10000,maximumAge:300000});}
+ function matchPostal(response,postal){return (response.results||[]).find(r=>String(r.POSTAL||'')===postal||new RegExp('(?:^|\\s)SINGAPORE\\s+'+postal+'\\s*$','i').test(String(r.SEARCHVAL||'')));}
  function init(payload){data=payload;saved();}
- window.LocationCheck={init,lookup,locate,example,show,facts,tier,THRESHOLDS,get last(){return last;}};
+ window.LocationCheck={init,matchPostal,lookup,locate,example,show,facts,tier,THRESHOLDS,resize(){requestAnimationFrame(()=>maps.forEach(m=>m.invalidateSize()));},reset(){lookupID++;maps.forEach(m=>m.remove());maps=[];last=null;},get last(){return last;}};
 })();

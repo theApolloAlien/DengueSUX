@@ -2,7 +2,7 @@
 import json
 import re
 from pathlib import Path
-SYMPTOMS=re.compile(r'\b(fever|vomit(?:ing)?|bleed(?:ing)?|unwell|symptoms?|diagnos(?:e|is)|headache|abdominal|rash|drowsy|clammy|breath(?:ing)?|demam|muntah|pendarahan|sakit)\b|发烧|發燒|呕吐|嘔吐|腹痛|出血|症状|症狀|காய்ச்சல்|வாந்தி|வலி|இரத்த',re.I)
+SYMPTOMS=re.compile(r'\b(fever|vomit(?:ing)?|bleed(?:ing)?|unwell|symptoms?|diagnos(?:e|is)|headache|abdominal|rash|sick|ill|pain|nausea|aching|dizzy|fatigue|gejala|do i have dengue|could i have dengue|drowsy|clammy|breath(?:ing)?|demam|muntah|pendarahan|sakit)\b|发烧|發燒|呕吐|嘔吐|腹痛|出血|症状|症狀|காய்ச்சல்|வாந்தி|வலி|இரத்த',re.I)
 
 def symptom_question(text):
     return bool(SYMPTOMS.search(str(text)))

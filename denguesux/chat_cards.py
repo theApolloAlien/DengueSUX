@@ -50,7 +50,21 @@ class NoticeCard(BaseModel):
     text: str
     label: str = 'Draft: review before sending'
 
-Card = Annotated[Union[AreaCard, TopCard, ForecastCard, PlanCard, NoticeCard], Field(discriminator='type')]
+class CareCopy(BaseModel):
+    title: str
+    urgent: str
+    signs: list[str] = Field(min_length=7, max_length=7)
+    drop: str
+    otherwise: str
+    note: str
+
+class UnwellCard(BaseModel):
+    type: Literal['unwell'] = 'unwell'
+    language: Literal['en','zh','ms','ta']
+    copy: CareCopy
+    reviewed_at: str
+
+Card = Annotated[Union[AreaCard, TopCard, ForecastCard, PlanCard, NoticeCard, UnwellCard], Field(discriminator='type')]
 CARD_SCHEMA = TypeAdapter(list[Card])
 
 def build_cards(calls, data):

@@ -1,0 +1,26 @@
+{
+  "amber": {
+    "lat": 1.4465465724949138,
+    "lon": 103.81770943622155,
+    "label": "Public cluster map example",
+    "source": "example"
+  },
+  "red": {
+    "lat": 1.3358893591988499,
+    "lon": 103.72328673244441,
+    "label": "Public cluster map example",
+    "source": "example"
+  },
+  "purple": {
+    "lat": 1.3556708768264445,
+    "lon": 103.88676573134615,
+    "label": "Public aedes map example",
+    "source": "example"
+  },
+  "green": {
+    "lat": 1.3281170079812163,
+    "lon": 103.79336817444181,
+    "label": "Public area map example",
+    "source": "example"
+  }
+}
