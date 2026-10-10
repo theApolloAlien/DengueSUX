@@ -311,11 +311,11 @@
   /* ---------- UI ---------- */
   function render() {
     const fab = document.createElement('button');
-    fab.className = 'ask-fab'; fab.id = 'ask-fab'; fab.innerHTML = `${icon('sparkle')} <span>Ask DengueSUX</span>`;
+    fab.className = 'ask-fab'; fab.id = 'ask-fab'; fab.innerHTML = `${icon('chat-circle-text')} <span>Ask DengueSUX</span>`;
     fab.setAttribute('aria-label', 'Ask DengueSUX'); fab.setAttribute('title', 'Ask DengueSUX'); fab.setAttribute('aria-controls', 'ask-panel'); fab.setAttribute('aria-expanded', 'false');
     const panel = document.createElement('aside');
     panel.className = 'ask-panel'; panel.id = 'ask-panel'; panel.hidden = true; panel.setAttribute('aria-label', 'Ask DengueSUX');
-    panel.innerHTML = `<header class="ask-head"><div class="ask-title">${icon('sparkle')} <strong>Ask DengueSUX</strong></div><div class="ask-modes" role="tablist"><button role="tab" data-mode="ask" aria-selected="true">Assistant</button><button role="tab" data-mode="sql" aria-selected="false">Ask the data</button></div><button class="icon-button ask-close" aria-label="Close assistant">${icon('x')}</button></header>
+    panel.innerHTML = `<header class="ask-head"><div class="ask-title">${icon('chat-circle-text')} <strong>Ask DengueSUX</strong></div><div class="ask-modes" role="tablist"><button role="tab" data-mode="ask" aria-selected="true">Assistant</button><button role="tab" data-mode="sql" aria-selected="false">Ask the data</button></div><button class="icon-button ask-close" aria-label="Close assistant">${icon('x')}</button></header>
       <div class="ask-log" id="ask-log" aria-live="polite"></div>
       <form class="ask-form" id="ask-form"><textarea id="ask-input" rows="1" placeholder="Ask about areas, routes or the forecast" aria-label="Your question"></textarea><button class="solid-button ask-send" aria-label="Send">${icon('paper-plane-right')}</button></form>`;
     document.body.append(panel);$('.topbar-actions').append(fab);
@@ -415,7 +415,7 @@
   }
   const ACTIONS = {select_area: a => hooks.selectArea?.(a.area), open_plan: a => hooks.openPlan?.(a.area), open_notice: a => hooks.openNotice?.(a.area), show_week: a => hooks.showWeek?.(a.week), show_live: () => hooks.showLive?.()};
   async function answerChat(question, msg) {
-    msg.querySelector('.ask-steps').innerHTML = `<div class="ask-step">${icon('sparkle')} Checking the saved data</div>`;
+    msg.querySelector('.ask-steps').innerHTML = `<div class="ask-step">${icon('chat-circle-text')} Checking the saved data</div>`;
     let d;
     try {
       const r = await fetch('/api/chat', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({messages:[...history, {role:'user', content:question}]}), signal:AbortSignal.timeout(150000)});
@@ -479,7 +479,7 @@
     const parts = [d.answer ? richText(d.answer) : esc(d.description || 'Genie ran the query below.')];
     if (rows.length) parts.push(`<div class="ask-table-wrap"><table class="ask-table"><thead><tr>${cols.map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.slice(0, 20).map(r => `<tr>${r.map(v => `<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`);
     if (d.sql) parts.push(`<details class="ask-sql"><summary>${icon('code')} Show SQL</summary><pre>${highlightSql(d.sql)}</pre></details>`);
-    parts.push(`<div class="ask-sources"><span>${icon('sparkle')} Answered live by Databricks Genie · ${TABLE} · ${rows.length} ${rows.length === 1 ? 'row' : 'rows'}${d.truncated ? ', first 50 returned' : ''} · AI-generated: check the SQL</span></div>`);
+    parts.push(`<div class="ask-sources"><span>${icon('chat-circle-text')} Answered live by Databricks Genie · ${TABLE} · ${rows.length} ${rows.length === 1 ? 'row' : 'rows'}${d.truncated ? ', first 50 returned' : ''} · AI-generated: check the SQL</span></div>`);
     await reveal(msg, parts);
     return true;
   }

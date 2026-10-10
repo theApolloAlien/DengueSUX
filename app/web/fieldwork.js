@@ -48,7 +48,7 @@
   function areaActions(area){
     selectedArea=area;
     const box=document.createElement('section');box.className='field-actions';
-    box.innerHTML=`<button class="solid-button plan-button">${icon('footprints')} Plan inspection ${icon('arrow-up-right')}</button><button class="text-button notice-button">${icon('translate')} Draft resident notice</button>`;
+    box.innerHTML=`<button class="solid-button plan-button">${icon('footprints')} Plan a check ${icon('arrow-up-right')}</button><button class="text-button notice-button">${icon('translate')} Draft resident notice</button>`;
     $('#area-detail .priority-summary').after(box);
     box.querySelector('.plan-button').addEventListener('click',()=>openPlan(area));
     box.querySelector('.notice-button').addEventListener('click',()=>openNotice(area));
@@ -71,13 +71,14 @@
   function formulaDetails(formula){if(!formula||typeof formula==='string')return '';return `<dl class="formula-rules"><div><dt>Place type · cap 25</dt><dd>Blocks 25 · hawker centres 20 · parks 15</dd></div>${['proximity','cluster_size','growth','elderly'].map(k=>`<div><dt>${esc(k.replaceAll('_',' '))} · cap ${formula[k]?.cap}</dt><dd>${esc(formula[k]?.expression)}</dd></div>`).join('')}</dl><p>${esc(formula.missing)} This score is not a disease probability or proof of stagnant water.</p>`;}
   function closePlan(){
     window.RouteFlythrough?.dispose();
-    if(map){map.remove();map=null;}$('#inspection-view').hidden=true;document.body.classList.remove('inspection-open');
+    if(map){map.stop();map.remove();map=null;}$('#inspection-view').hidden=true;document.body.classList.remove('inspection-open');
     $('.page-heading').hidden=false;$('.view-bar').hidden=false;
   }
   function openPlan(area){
+    if(window.Product?.ready&&!window.Product.openingPlan)return window.Product.go('plan',area.code);
     window.RouteFlythrough?.dispose();
     selectedArea=area;actions.open();
-    if(map){map.remove();map=null;}
+    if(map){map.stop();map.remove();map=null;}
     const inspection=data.inspection||{};
     plan=inspection.areas?.[area.code]||{area_code:area.code,area_name:area.name,status:'unavailable',message:'Inspection data has not been built yet. Run the inspection pipeline to load verified places.',stops:[],cluster_blocks:[],search_rings:[],clusters:{type:'FeatureCollection',features:clusterFeatures(area.code)}};
     const stops=plan.stops||[],radius=inspection.radius_m||300,route=plan.route||{};
@@ -117,7 +118,7 @@
     return `<li class="inspection-stop compact-stop" id="stop-${esc(s.id)}"><div class="stop-top"><button class="stop-number" data-stop="${esc(s.id)}" aria-label="Show stop ${num(s.number)} on map" title="Priority #${num(s.rank??s.number)}">${num(s.number)}</button><div><h3>${esc(s.name)}</h3><span class="place-type">${icon(types[s.place_type]||'map-pin')} ${esc(String(s.place_type||'place').replaceAll('_',' '))}${s.max_floor_lvl?` · ${num(s.max_floor_lvl)} storeys`:''}${s.dwelling_units?` · ${num(s.dwelling_units)} homes`:''}</span></div>${opts.showScore?`<strong class="stop-score">${num(s.score,1)}<small>/ 100</small></strong>`:''}${opts.checklist?`<label class="stop-done"><input type="checkbox" data-check="${esc(s.id)}:done"><span>Done</span></label>`:''}</div>${checklist}<div class="stop-report" data-report-stop="${esc(s.id)}" data-report-name="${esc(s.name)}" data-report-type="${esc(s.place_type||'place')}"><span>What did you find?</span>${REPORT_OPTIONS.map(([key,label,ic])=>`<button type="button" data-outcome="${key}">${icon(ic)} ${label}</button>`).join('')}<small class="report-status" role="status"></small></div><div class="stop-foot"><details class="score-details"><summary>Why this place ${icon('caret-down')}</summary><p class="stop-reason">${esc(s.reason||'Reason unavailable — exclude this stop before inspection.')}</p><dl>${components.map(c=>`<div><dt>${esc(c.label||c.key)}<small>${esc(componentStatus(c.status))}${c.value!=null?` · ${typeof c.value==='number'?num(c.value,2):esc(c.value)}${c.unit?` ${esc(c.unit)}`:''}`:''}</small></dt><dd>${num(c.contribution??c.points,1)}${c.cap!=null?` <span>/ ${c.cap}</span>`:''}</dd></div>`).join('')}</dl><p>Planning points, not a disease probability. Missing inputs contribute no points.</p><p>As of ${date(s.as_of||data.inspection?.as_of)}. ${(s.sources||[]).map(src=>typeof src==='string'?esc(src):sourceLink(src)).join(' · ')}</p></details><a class="stop-map-link" href="https://www.google.com/maps/search/?api=1&query=${Number(s.latitude)},${Number(s.longitude)}" target="_blank" rel="noopener">Google Maps ${icon('arrow-up-right')}</a></div><span class="print-coordinates">${Number(s.latitude).toFixed(6)}, ${Number(s.longitude).toFixed(6)}</span></li>`;
   }
   function renderPlanMap(){
-    stopMarkers=new Map();map=L.map('inspection-map',{minZoom:11,maxZoom:20,scrollWheelZoom:false,zoomControl:false,zoomSnap:.25,zoomDelta:.5}).setView(selectedArea.centroid||[1.35,103.82],15);L.control.zoom({position:'bottomright'}).addTo(map);map.attributionControl.setPrefix(false);
+    stopMarkers=new Map();map=L.map('inspection-map',{zoomAnimation:false,fadeAnimation:false,minZoom:11,maxZoom:20,scrollWheelZoom:false,zoomControl:false,zoomSnap:.25,zoomDelta:.5}).setView(selectedArea.centroid||[1.35,103.82],15);L.control.zoom({position:'bottomright'}).addTo(map);map.attributionControl.setPrefix(false);
     const tiles=L.tileLayer('https://www.onemap.gov.sg/maps/tiles/Default/{z}/{x}/{y}.png',{maxZoom:20,minZoom:11,attribution:'<a href="https://www.onemap.gov.sg/" target="_blank" rel="noopener">OneMap</a> © Singapore Land Authority · NEA / data.gov.sg'}).addTo(map);
     tiles.on('tileerror',()=>{$('#tile-warning').hidden=false;});
     const bounds=L.featureGroup().addTo(map);
@@ -130,7 +131,7 @@
     (plan.stops||[]).forEach(s=>{const marker=L.marker([s.latitude,s.longitude],{icon:L.divIcon({className:'inspection-pin',html:esc(s.number),iconSize:[32,32],iconAnchor:[16,16]}),title:`Stop ${s.number}: ${s.name}`}).bindPopup(`<strong>${num(s.number)}. ${esc(s.name)}</strong><br>${esc(s.reason)}`).addTo(bounds);marker.on('click',()=>{$(`#stop-${CSS.escape(String(s.id))}`)?.scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});});stopMarkers.set(String(s.id),marker);});
     const fit=()=>{if(bounds.getBounds().isValid())map.fitBounds(bounds.getBounds(),{padding:[30,30],maxZoom:17});else if(selectedArea.centroid)map.setView(selectedArea.centroid,15);else map.setView([1.35,103.82],12);};
     if(visitBounds.isValid())map.fitBounds(visitBounds,{padding:[55,55],maxZoom:17.5});else fit();
-    $('#fit-inspection').addEventListener('click',fit);requestAnimationFrame(()=>map.invalidateSize());
+    $('#fit-inspection').addEventListener('click',fit);requestAnimationFrame(()=>map?.invalidateSize());
   }
   function focusStop(id,fromTour=false){
     document.querySelectorAll('.inspection-stop').forEach(card=>{const selected=card.id==='stop-'+id;card.classList.toggle('is-tour-selected',selected);const button=card.querySelector('.stop-number');if(selected)button?.setAttribute('aria-current','step');else button?.removeAttribute('aria-current');});

@@ -14,35 +14,41 @@
   <link rel="stylesheet" href="/assistant.css">
   <link rel="stylesheet" href="/experience.css">
   <link rel="stylesheet" href="/tokens.css">
+  <link rel="stylesheet" href="/product.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to dashboard</a>
   <noscript><p class="no-script">This interactive dashboard needs JavaScript to display the map and evidence.</p></noscript>
   <div class="app-shell">
     <aside class="nav-rail" aria-label="Main navigation">
-      <a class="brand-mark" href="#signals" aria-label="DengueSUX home"><i class="ph ph-aperture" aria-hidden="true"></i></a>
-      <div class="rail-line"></div>
-      <button class="rail-button active" data-view="signals" aria-label="Area signals" title="Area signals"><i class="ph ph-map-trifold" aria-hidden="true"></i></button>
-      <button class="rail-button" data-view="forecast" aria-label="Forecast lab" title="Forecast lab"><i class="ph ph-chart-line-up" aria-hidden="true"></i></button>
-      <div class="rail-bottom"><span class="rail-label">SG</span></div>
+      <a class="brand-mark" href="#week" aria-label="DengueSUX home"><i class="ph ph-aperture" aria-hidden="true"></i><span>Dengue<b>SUX</b></span></a>
+      <button class="command-trigger" id="command-open"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><span>Find anything</span><kbd>⌘ K</kbd></button>
+      <nav class="section-nav" aria-label="Sections"><span class="nav-indicator" aria-hidden="true"></span>
+        <a href="#week" class="rail-button active" data-section="week" aria-current="page" title="This week"><i class="ph ph-squares-four" aria-hidden="true"></i><span>This week</span></a>
+        <a href="#map" class="rail-button" data-section="map" title="Map"><i class="ph ph-map-trifold" aria-hidden="true"></i><span>Map</span></a>
+        <a href="#plan" class="rail-button" data-section="plan" title="Field plan"><i class="ph ph-footprints" aria-hidden="true"></i><span>Field plan</span></a>
+        <a href="#forecast" class="rail-button" data-section="forecast" title="Forecast"><i class="ph ph-chart-line-up" aria-hidden="true"></i><span>Forecast</span></a>
+      </nav>
+      <div class="rail-bottom"><button id="sidebar-collapse" class="text-button" aria-label="Collapse sidebar" aria-expanded="true"><i class="ph ph-sidebar-simple" aria-hidden="true"></i><span>Collapse</span></button><span class="sidebar-note">Singapore · Open data</span></div>
     </aside>
 
     <div class="page-shell">
       <header class="topbar">
-        <a href="#signals" class="wordmark">Dengue<span>SUX</span><span class="wordmark-divider"></span><span class="brand-caption">Dengue early warning</span></a>
+        <div class="breadcrumb" id="breadcrumb">This week</div>
         <div class="topbar-actions">
-          <button class="data-status" id="data-timestamp" data-methodology aria-label="View snapshot dates and sources"><span class="status-dot"></span> Loading</button>
-          <button class="text-button" data-methodology><i class="ph ph-book-open-text" aria-hidden="true"></i> <span>How to read this</span></button>
+          <button class="data-status" id="data-timestamp" data-methodology aria-label="View snapshot dates and sources"><span class="status-dot"></span> Saved data</button>
+          <button class="icon-button mobile-command" id="mobile-command" aria-label="Find anything"><i class="ph ph-magnifying-glass" aria-hidden="true"></i></button>
+          <details class="help-menu"><summary aria-label="Help"><i class="ph ph-question" aria-hidden="true"></i><span>Help</span></summary><div><button data-methodology>How to read this</button><button id="shortcuts-open">Keyboard shortcuts</button><button id="tour-replay">Replay tour</button><button id="help-export">Export data</button></div></details>
         </div>
       </header>
 
       <main id="main" aria-busy="true">
         <div class="page-heading compact">
-          <div><p class="workspace-kicker">SINGAPORE · DENGUE WATCH</p><h1 id="page-title">Area signals</h1><p id="page-description" class="page-description">Find an area. Understand the signals. Plan your next check.</p></div>
+          <div><h1 id="page-title">This week</h1><p id="page-description" class="page-description">Find an area. Understand the signals. Plan your next check.</p></div>
           <button class="outline-button" id="download-data" aria-label="Export dashboard data"><i class="ph ph-download-simple" aria-hidden="true"></i> Export data</button>
         </div>
 
-        <div class="view-bar">
+        <div class="view-bar" hidden>
           <nav class="view-tabs" aria-label="Dashboard views">
             <button class="view-tab active" data-view="signals" aria-pressed="true"><i class="ph ph-map-trifold" aria-hidden="true"></i> Area signals</button>
             <button class="view-tab" data-view="forecast" aria-pressed="false"><i class="ph ph-chart-line-up" aria-hidden="true"></i> Forecast lab</button>
@@ -173,7 +179,7 @@
           </div>
         </section>
 
-        <footer>
+        <footer><span class="honesty-note">Places to check, not confirmed breeding sites</span>
           <span>DengueSUX <span class="footer-dot">·</span> Research prototype <span class="footer-dot">·</span> <button data-about>Our story</button></span>
           <span>Data: NEA, MOH and URA via data.gov.sg</span>
         </footer>

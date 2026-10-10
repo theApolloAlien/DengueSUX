@@ -52,6 +52,7 @@
     return {...raw,name:raw.name||raw.PLN_AREA_N||'Unnamed area',code:raw.code||raw.PLN_AREA_C,risk:raw.risk||raw.risk_label||raw.priority_label||'Unknown',score:raw.score??raw.risk_score??raw.priority_score,components,completeness:raw.completeness??raw.weather_completeness};
   }
   function switchView(view){
+    if(window.Product?.ready)return window.Product.go(view==='signals'?'map':view);
     if(state.view==='inspection')window.Fieldwork?.closePlan();
     state.view=view==='forecast'?'forecast':'signals';
     if(state.view!=='forecast')stopReplay();
@@ -61,7 +62,7 @@
     $('#page-description').textContent=state.view==='forecast'?'The national outlook and a retrospective check using earlier reports only.':'Find an area. Understand the signals. Plan your next check.';
     if(state.view==='signals' && state.map)setTimeout(()=>{state.map.invalidateSize();state.map.fitBounds(state.areaLayer.getBounds(),{padding:[24,24],animate:false});},40);
     if(state.view==='forecast')requestAnimationFrame(drawChart);
-    if(location.hash!==`#${state.view}`)history.replaceState(null,'',`#${state.view}`);
+
   }
 
   function renderAreas(){
@@ -88,8 +89,8 @@
     // Re-rendering replaces the focused row; keep keyboard and screen-reader users where they were.
     if(fromList&&!drawerOpen)$(`#area-list [data-area="${CSS.escape(code)}"]`)?.focus({preventScroll:true});
     else if(fromList)requestAnimationFrame(()=>$('#area-detail .detail-title')?.focus({preventScroll:true}));
-    if(state.areaLayer){state.areaLayer.setStyle(styleArea);const layer=state.layers.get(code);if(layer){layer.bringToFront();if(pan){const p=area.centroid;if(p)state.map.panTo(p,{animate:!matchMedia('(prefers-reduced-motion: reduce)').matches});}}}
-    setDrawer(false);
+    if(state.areaLayer){state.areaLayer.setStyle(styleArea);const layer=state.layers.get(code);if(layer){layer.bringToFront();if(pan){const p=area.centroid;if(p)state.map.flyTo(p,Math.max(state.map.getZoom(),12),{duration:.6,animate:!reducedMotion()});}}}
+    setDrawer(false);window.Product?.selected(area);
   }
   function renderAreaDetail(area){
     const rain=metric(area,'rainfall'),temp=metric(area,'temperature'),rh=metric(area,'humidity');
@@ -399,8 +400,8 @@
     $('#forecast-chart').addEventListener('mousemove',e=>{const i=chartIndex(e);if(i===null)return;const p=state.predictions[i],tooltip=$('#chart-tooltip');tooltip.hidden=false;tooltip.innerHTML=`<strong>Week of ${date(p.target_date)}</strong><div class="tooltip-row"><span>Reported</span><strong>${finite(p.actual)?number(p.actual):'Not yet'}</strong></div><div class="tooltip-row"><span>Forecast</span><strong>${number(p.predicted)}${finite(p.lower)?` <small>(${number(p.lower)}–${number(p.upper)})</small>`:''}</strong></div><div class="tooltip-row"><span>${state.mode==='live'?'Typical':'Simple average'}</span><strong>${number(state.mode==='live'?p.normalMedian:p.baseline)}</strong></div>`;const rect=$('#forecast-chart').getBoundingClientRect();tooltip.style.left=`${Math.max(0,Math.min(rect.width-180,e.clientX-rect.left+14))}px`;tooltip.style.top=`${Math.max(0,e.clientY-rect.top-95)}px`;});
     $('#forecast-chart').addEventListener('mouseleave',()=>$('#chart-tooltip').hidden=true);
     $('#download-data').addEventListener('click',()=>{if(!state.data)return toast('The saved data is still loading.');const blob=new Blob([JSON.stringify(state.data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`denguesux-evidence-${current().weather_date||'snapshot'}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Dashboard data saved.');});
-    window.addEventListener('hashchange',()=>switchView(location.hash==='#forecast'?'forecast':'signals'));
-    window.addEventListener('resize',()=>{if(state.map&&state.view==='signals'){state.map.invalidateSize();state.map.fitBounds(state.areaLayer.getBounds(),{padding:[24,24],animate:false});}drawChart();});
+
+    window.addEventListener('resize',()=>{if(state.map&&['signals','map'].includes(state.view)){state.map.invalidateSize();state.map.fitBounds(state.areaLayer.getBounds(),{padding:[24,24],animate:false});}drawChart();});
   }
   async function init(){
     bindEvents();
