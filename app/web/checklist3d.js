@@ -27,10 +27,10 @@
   function supported() { try { const c = document.createElement('canvas'); return !!(window.WebGL2RenderingContext && c.getContext('webgl2')); } catch { return false; } }
   function load() {
     if (THREE) return Promise.resolve(THREE);
-    // The portable export embeds the module as text (no server to fetch it from).
-    const embedded = document.getElementById('three-module-source');
-    const url = embedded ? URL.createObjectURL(new Blob([embedded.textContent.replace(/<\\\/script/g, '</script')], {type: 'text/javascript'})) : '/vendor/three/three.module.min.js';
-    if (!loading) loading = import(url).then(module => (THREE = module)).catch(error => { loading = null; throw error; });
+    // The portable export embeds the module gzip-compressed (no server to fetch it from).
+    const embedded = document.getElementById('three-module-gz');
+    const source = embedded ? window.DengueEmbedded.blob('three-module-gz', 'text/javascript').then(blob => URL.createObjectURL(blob)) : Promise.resolve('/vendor/three/three.module.min.js');
+    if (!loading) loading = source.then(url => import(url)).then(module => (THREE = module)).catch(error => { loading = null; throw error; });
     return loading;
   }
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));

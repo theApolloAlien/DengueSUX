@@ -80,7 +80,7 @@
   // otherwise a routine walk through official places. Loaded only when a plan or the 3D view needs it.
   const walks=new Map();let planRequest=0;
   function loadWalk(code){
-    if(window.DENGUESUX_DATA)return Promise.resolve(window.DENGUESUX_DATA.walks?.[code]||null);
+    if(window.DENGUESUX_DATA){if(!walks.has('*'))walks.set('*',window.DengueEmbedded?.json('walks-gz').catch(()=>null)||Promise.resolve(null));return walks.get('*').then(all=>all?.[code]||null);}
     if(!/^[A-Z]{2,3}$/.test(String(code)))return Promise.resolve(null);
     if(!walks.has(code))walks.set(code,fetch(`/data/walks/${code}.json`,{cache:'no-cache',signal:AbortSignal.timeout(15000)}).then(r=>r.ok?r.json():null).catch(()=>{walks.delete(code);return null;}));
     return walks.get(code);
