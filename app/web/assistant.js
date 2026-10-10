@@ -16,7 +16,7 @@
     return Number.isNaN(+d) ? raw : d.toLocaleDateString('en-SG', opts);
   };
   const wait = ms => new Promise(r => setTimeout(r, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : ms));
-  const TABLE = 'main.denguesux';
+  const TABLE = 'workspace.denguesux';
   const MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december'];
   let data = {}, hooks = {}, busy = false, mode = 'ask';
 
@@ -333,7 +333,35 @@
     }
     if (answer.sources.length || results.length) body.insertAdjacentHTML('beforeend', `<div class="ask-sources">${answer.sources.map((s,i) => `<span>[${i+1}] ${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)} · ${date(s.date)}</span>`).join('')}</div>${results.length ? `<details class="ask-trace"><summary>${results.length} function ${results.length === 1 ? 'call' : 'calls'}</summary>${results.map(r => `<div><code>${r.name}(${esc(JSON.stringify(r.args))})</code><pre>${preview(r.result)}</pre></div>`).join('')}</details>` : ''}`);
   }
+  /* Live Databricks Genie (only when the server has a Genie space configured); otherwise the saved-data answers below are used. */
+  let genieState;
+  async function genieEnabled() {
+    if (genieState === undefined) {
+      try { const r = await fetch('/api/ask/status', {cache:'no-store', signal:AbortSignal.timeout(4000)}); genieState = r.ok && (await r.json()).enabled === true; }
+      catch { genieState = false; }
+    }
+    return genieState;
+  }
+  const richText = t => esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  async function answerGenie(question, msg) {
+    msg.querySelector('.ask-steps').innerHTML = `<div class="ask-step">${icon('database')} Asking Databricks Genie over the gold tables</div>`;
+    let d;
+    try {
+      const r = await fetch('/api/ask', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({question}), signal:AbortSignal.timeout(130000)});
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      d = await r.json();
+    } catch (error) { console.warn('Genie unavailable, using saved-data answers:', error); return false; }
+    msg.querySelector('.ask-steps')?.remove();
+    const rows = d.rows || [], cols = d.columns || [];
+    const parts = [d.answer ? richText(d.answer) : esc(d.description || 'Genie ran the query below.')];
+    if (rows.length) parts.push(`<div class="ask-table-wrap"><table class="ask-table"><thead><tr>${cols.map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.slice(0, 20).map(r => `<tr>${r.map(v => `<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`);
+    if (d.sql) parts.push(`<details class="ask-sql"><summary>${icon('code')} Show SQL</summary><pre>${highlightSql(d.sql)}</pre></details>`);
+    parts.push(`<div class="ask-sources"><span>${icon('sparkle')} Answered live by Databricks Genie · ${TABLE} · ${rows.length} ${rows.length === 1 ? 'row' : 'rows'}${d.truncated ? ', first 50 returned' : ''} · AI-generated: check the SQL</span></div>`);
+    await reveal(msg, parts);
+    return true;
+  }
   async function answerSql(question, msg) {
+    if (await genieEnabled() && await answerGenie(question, msg)) return;
     const q = sqlFor(question);
     await wait(500);
     if (!q) { await reveal(msg, [`I couldn't map that to the gold tables. Try asking about areas, priorities, clusters or the 2022 forecast, for example “${esc(SQL_EXAMPLES[0])}”.`]); return; }

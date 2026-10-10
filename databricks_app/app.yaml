@@ -1,0 +1,6 @@
+# Databricks Apps entry point for DengueSUX. Build the deploy folder with scripts/build_databricks_app.py.
+command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "$DATABRICKS_APP_PORT"]
+env:
+  # Resource key "genie-space" is attached to the app with CAN_RUN permission.
+  - name: GENIE_SPACE_ID
+    valueFrom: genie-space

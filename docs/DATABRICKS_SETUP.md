@@ -94,13 +94,26 @@ Things learned the hard way on Free Edition (already handled in `run_stage.py`):
 - An MLflow experiment cannot share its path with a workspace folder. The Git folder is
   `DengueSUX`, so the experiment is `DengueSUX-national-forecast`.
 
-## Phase 5: Job, app and Genie (in progress)
+## Phase 5: Genie, app and job
 
+- [x] **Genie:** create a Genie space over the `gold_*` tables. The space definition (tables,
+      plain-language instructions, tested example SQL) is saved in `databricks_app/genie_space.json`.
+- [x] **App (Databricks Apps):** build the deploy folder, upload it, create the app with the Genie
+      space (`CAN_RUN`) and the SQL warehouse (`CAN_USE`) attached, then deploy:
+
+```bash
+python scripts/build_databricks_app.py /tmp/app_build --web-from <copy of the pipeline's output/web>
+databricks workspace import-dir /tmp/app_build /Workspace/Users/<you>/denguesux_app --overwrite
+databricks apps create --json @app_create.json      # name, resources: genie-space + sql-warehouse
+databricks apps deploy denguesux --source-code-path /Workspace/Users/<you>/denguesux_app
+```
+
+  The app's service principal also needs `USE CATALOG`, `USE SCHEMA` and `SELECT` on
+  `workspace.denguesux`. The "Ask the data" tab then answers live through Genie, and falls back
+  to saved-data answers if Genie is unavailable. Free Edition stops an app after 24 hours;
+  restart it before a demo with `databricks apps start denguesux`.
 - [ ] **Job:** `databricks.yml` still points at `existing_cluster_id`, which Free Edition does
       not have. It needs serverless tasks before it can be deployed.
-- [ ] **App:** Free Edition allows up to 3 Databricks Apps, and each stops after 24 hours.
-      The app needs an `app.yaml`. After deploying, restart it before a demo.
-- [ ] **Genie:** create a Genie space over the `gold_*` tables so the assistant runs on Databricks.
 
 ## Day-to-day loop after setup
 
