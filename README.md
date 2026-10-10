@@ -1,5 +1,7 @@
 # DengueSUX: Surveillance Using eXplainable AI
 
+![DengueSUX application: This week](app/web/brand/hero.webp)
+
 **Where should we look for mosquitoes this week?** DengueSUX turns Singapore's open data into a weekly dengue plan: which areas to check first, which blocks to walk, and what to tell residents, backed by a live national forecast with ranges and a retrospective check through 2026.
 
 Built for the Databricks AI Social Impact (DAISI) Challenge Singapore 2026 · Problem statement **A2 — DengueRadar: Real-time outbreak forecasting**.

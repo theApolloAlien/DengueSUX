@@ -6,7 +6,14 @@
   <meta name="theme-color" content="#163f35">
   <meta name="description" content="Explore Singapore dengue signals and a national outlook with ranges and retrospective evaluation.">
   <title>DengueSUX — Where to check first</title>
-  <link rel="preload" href="/data/dashboard.json" as="fetch" crossorigin>
+  <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/brand/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+  <link rel="manifest" href="/brand/site.webmanifest">
+  <meta property="og:title" content="DengueSUX — Where to check first">
+  <meta property="og:description" content="Singapore dengue outlook, maps and practical field plans. Real open data, dated sources.">
+  <meta property="og:image" content="/brand/og-card.png">
+  <link rel="preload" href="/data/dashboard.json" as="fetch" fetchpriority="low" crossorigin>
   <link rel="preload" href="/vendor/fonts/dm-sans-400.ttf" as="font" type="font/ttf" crossorigin>
   <style>html{background:#f7f8f4}body{margin:0;color:#193e33;font-family:sans-serif}[hidden]{display:none!important}.app-shell{display:flex;min-height:100vh}.nav-rail{position:fixed;inset:0 auto 0 0;width:208px;background:#eff2ea}.page-shell{margin-left:208px;width:calc(100% - 208px)}.topbar{height:72px}main{padding:32px}.page-heading{min-height:50px;margin-bottom:28px}.boot-grid{display:grid;grid-template-columns:.9fr 1.2fr;gap:28px;width:100%}.boot-hero{height:355px;background:#e1e8dc;border-radius:12px}.boot-list{border:1px solid #e1e6dc;border-radius:12px;padding:24px;background:white;display:grid;gap:16px}.boot-list>div{height:40px;background:#edf1ea;border-radius:6px}.loading-copy{visibility:hidden}@media(max-width:720px){.nav-rail{inset:auto 0 0;width:100%;height:68px}.page-shell{margin:0;width:100%}main{padding:24px 16px}.boot-grid{grid-template-columns:1fr;gap:20px}.boot-hero{height:300px}.page-heading{min-height:68px;margin-bottom:24px}}</style>
   <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
@@ -20,11 +27,12 @@
   <link rel="stylesheet" href="/product.css">
 </head>
 <body>
+  <script>document.body.dataset.bootView=location.hash.split("/")[0].slice(1)||"week";</script>
   <a class="skip-link" href="#main">Skip to dashboard</a>
   <noscript><p class="no-script">This interactive dashboard needs JavaScript to display the map and evidence.</p></noscript>
   <div class="app-shell">
     <aside class="nav-rail" aria-label="Main navigation">
-      <a class="brand-mark" href="#week" aria-label="DengueSUX home"><i class="ph ph-aperture" aria-hidden="true"></i><span>Dengue<b>SUX</b></span></a>
+      <a class="brand-mark" href="#week" aria-label="DengueSUX home"><img src="/brand/logo-mark.svg" width="28" height="28" alt=""><span>Dengue<b>SUX</b></span></a>
       <button class="command-trigger" id="command-open"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><span>Find anything</span><kbd>⌘ K</kbd></button>
       <nav class="section-nav" aria-label="Sections"><span class="nav-indicator" aria-hidden="true"></span>
         <a href="#week" class="rail-button active" data-section="week" aria-current="page" title="This week"><i class="ph ph-squares-four" aria-hidden="true"></i><span>This week</span></a>
@@ -59,11 +67,11 @@
         </div>
 
         <div id="loading-state" class="loading-state" role="status" aria-live="polite">
-          <div class="boot-grid" aria-hidden="true"><div class="boot-hero skeleton"><span class="skeleton"></span><b class="skeleton"></b></div><div class="boot-list"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div></div>
+          <div class="boot-grid" aria-hidden="true"><div class="boot-hero skeleton"><span class="skeleton"></span><b class="skeleton"></b></div><div class="boot-list"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div><div class="boot-detail skeleton"></div></div>
           <div class="boot-bottom" aria-hidden="true"><div class="skeleton"></div><div class="skeleton"></div></div>
           <div class="loading-copy"><p>Loading saved data…</p></div>
         </div>
-        <div id="error-state" class="error-state" hidden><i class="ph ph-cloud-warning" aria-hidden="true"></i><h2>The dashboard data is not ready yet</h2><p id="error-message"></p><button class="solid-button" onclick="location.reload()">Try again</button></div>
+        <div id="error-state" class="error-state" hidden><img class="spot" src="/brand/offline.png" width="80" height="80" alt=""><h2>The dashboard data is not ready yet</h2><p id="error-message"></p><button class="solid-button" onclick="location.reload()">Try again</button></div>
 
         <section id="signals-view" class="view-content" aria-label="Current area signals" hidden>
           <section class="week-summary" aria-labelledby="week-summary-title">
@@ -97,7 +105,7 @@
             <section id="area-browser" class="area-browser" aria-label="Planning area list">
               <div class="area-browser-head">
                 <button class="close-areas" id="close-areas" aria-label="Close area list"><i class="ph ph-x" aria-hidden="true"></i></button>
-                <h3 title="Sorted by people in active clusters">Planning areas <span id="area-list-count">—</span></h3>
+                <h3 title="Sorted by people in active clusters">Areas <span id="area-list-count">—</span></h3>
                 <label class="search-box"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input id="area-search" type="search" placeholder="Find an area" aria-label="Find a planning area"></label>
                 <div class="filter-row segmented" role="group" aria-label="Filter by priority">
                   <button class="filter active" data-filter="active" aria-pressed="true">Active</button>
@@ -113,7 +121,7 @@
               <div id="map"></div>
               <div id="cluster-timeline" class="cluster-timeline" hidden></div>
               <div class="map-top">
-                <button class="map-chip" id="fit-map" title="Fit all planning areas"><i class="ph ph-arrows-out-simple" aria-hidden="true"></i> All Singapore</button>
+                <button class="map-chip" id="fit-map" title="Fit all planning areas"><i class="ph ph-arrows-out-simple" aria-hidden="true"></i> Singapore</button>
                 <button class="map-chip mobile-areas" id="toggle-areas" aria-expanded="false" aria-controls="area-browser"><i class="ph ph-list" aria-hidden="true"></i> Areas</button>
                 <button class="map-chip layers-button" id="layers-button" aria-expanded="false" aria-controls="layers-menu"><i class="ph ph-stack" aria-hidden="true"></i> Layers</button>
               </div>

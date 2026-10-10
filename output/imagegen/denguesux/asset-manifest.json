@@ -1,0 +1,126 @@
+{
+  "generation_status": "Built-in image generation unavailable. Third-party credential fallback not authorized; no key read or transmitted.",
+  "deviations": [
+    "Spot assets are existing, locally vendored Phosphor icons, rasterized without invented artwork.",
+    "Hero and social card use the real application screenshot.",
+    "Logo is an original, hand-built SVG as requested."
+  ],
+  "files": [
+    {
+      "file": "app/web/brand/apple-touch-icon.png",
+      "source": "Original SVG mark and locally vendored DM Sans",
+      "prompt": null,
+      "model": "none",
+      "size_bytes": 4490,
+      "sha256": "e3dc3280e0a56f28362457f4747f15f3c26fa5c06df61bac2ded711440a1a616",
+      "dimensions": [
+        180,
+        180
+      ]
+    },
+    {
+      "file": "app/web/brand/empty-search.png",
+      "source": "Vendored Phosphor icon font; app/web/vendor/icons/LICENSE",
+      "prompt": null,
+      "model": "none",
+      "size_bytes": 2777,
+      "sha256": "3980a3a4221faa8bc7b091089340f34242e8a1b51d5aa0c2623b82378f741796",
+      "dimensions": [
+        160,
+        160
+      ]
+    },
+    {
+      "file": "app/web/brand/favicon-32.png",
+      "source": "Original SVG mark and locally vendored DM Sans",
+      "prompt": null,
+      "model": "none",
+      "size_bytes": 820,
+      "sha256": "d817f5384ad69692137e0e45e61b5838ab97c1030b36206f7baa2c7c1aedf752",
+      "dimensions": [
+        32,
+        32
+      ]
+    },
+    {
+      "file": "app/web/brand/favicon.svg",
+      "source": "Original SVG mark and locally vendored DM Sans",
+      "prompt": null,
+      "model": "none",
+      "size_bytes": 274,
+      "sha256": "462b78a7d89a2faa199ac6728ea0613836ca33b846cf093c2ee1d0ff505884ec"
+    },
+    {
+      "file": "app/web/brand/hero.webp",
+      "source": "output/design/saas/after-week-1440.png",
+      "prompt": null,
+      "model": "none",
+      "size_bytes": 31278,
+      "sha256": "b0b5d42e38d00f32b630518b2781a23f99a1441f4ff6489b1965539ef89035ab",
+      "dimensions": [
+        1200,
+        750
+      ]
+    },
+    {
+      "file": "app/web/brand/logo-mark.svg",
+      "source": "Original SVG mark and locally vendored DM Sans",
+      "prompt": null,
+      "model": "none",
+      "size_bytes": 274,
+      "sha256": "462b78a7d89a2faa199ac6728ea0613836ca33b846cf093c2ee1d0ff505884ec"
+    },
+    {
+      "file": "app/web/brand/no-clusters.png",
+      "source": "Vendored Phosphor icon font; app/web/vendor/icons/LICENSE",
+      "prompt": null,
+      "model": "none",
+      "size_bytes": 2549,
+      "sha256": "be6dbafaa95cb80cd4f88cfbef668d4b749c76f42262bf37467c04bfffb8e81f",
+      "dimensions": [
+        160,
+        160
+      ]
+    },
+    {
+      "file": "app/web/brand/offline.png",
+      "source": "Vendored Phosphor icon font; app/web/vendor/icons/LICENSE",
+      "prompt": null,
+      "model": "none",
+      "size_bytes": 2933,
+      "sha256": "6984f78093e6c516a519861e88e62466501fbd39944361003e4f3e99c62d453e",
+      "dimensions": [
+        160,
+        160
+      ]
+    },
+    {
+      "file": "app/web/brand/og-card.png",
+      "source": "output/design/saas/after-week-1440.png",
+      "prompt": null,
+      "model": "none",
+      "size_bytes": 95908,
+      "sha256": "d7034326b74c2e8261de43f0d99a0d7cae27b4f62c3c4ebe6a7a557ef29715d2",
+      "dimensions": [
+        1200,
+        630
+      ]
+    },
+    {
+      "file": "app/web/brand/site.webmanifest",
+      "source": "Original SVG mark and locally vendored DM Sans",
+      "prompt": null,
+      "model": "none",
+      "size_bytes": 367,
+      "sha256": "9b8039dac2b4eced52d5d2b2ab2481736dd97085204483e909614f1bd27e9eea"
+    },
+    {
+      "file": "app/web/brand/wordmark.svg",
+      "source": "Original SVG mark and locally vendored DM Sans",
+      "prompt": null,
+      "model": "none",
+      "size_bytes": 470,
+      "sha256": "60f823f39c706ac5f9ed1f348834e45090cb5c364045c88f7f547c747d42aca5"
+    }
+  ]
+}

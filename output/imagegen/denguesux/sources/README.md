@@ -1,0 +1,1 @@
+No image-generation request was made. Built-in image generation was unavailable. No external credential was read or transmitted. Final artwork derives from the existing local Phosphor icons (licensed in app/web/vendor/icons/LICENSE), the original SVG brand mark, and output/design/saas/after-week-1440.png.

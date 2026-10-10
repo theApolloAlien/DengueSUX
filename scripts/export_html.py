@@ -20,6 +20,15 @@ def inline_css(path):
 
 def build():
     html=(WEB/'index.html').read_text()
+    # Embedded snapshots need no server-side preload or install manifest. Bundle brand
+    # images/icons as well as CSS so a file:// copy cannot silently lose its identity.
+    html=re.sub(r'\s*<link rel="(?:preload|manifest)"[^>]*>', '', html)
+    def inline_asset(match):
+        asset=WEB/match.group(2).lstrip('/')
+        mime=mimetypes.guess_type(asset)[0] or 'application/octet-stream'
+        encoded=base64.b64encode(asset.read_bytes()).decode()
+        return match.group(1)+'data:'+mime+';base64,'+encoded+'"'
+    html=re.sub(r'((?:src|href)=")(/brand/[^\"]+)"',inline_asset,html)
     html=re.sub(r'<link rel="stylesheet" href="([^"]+)">',lambda m:'<style>'+inline_css(WEB/m.group(1).lstrip('/'))+'</style>',html)
     html=re.sub(r'<script src="([^"]+)"[^>]*></script>',lambda m:'<script>'+(WEB/m.group(1).lstrip('/')).read_text().replace('</script','<\\/script')+'</script>',html)
     # The 3D view loads lazily in the hosted app; the portable export carries its pinned assets.

@@ -62,7 +62,7 @@
     const share = `${n ? `${n.p.name.split(' / ')[0]}: ${n.p.cases} people in an active dengue cluster (NEA, ${data.current?.as_of?.slice(0,10) || ''}). ` : ''}${list.join(' ')} https://www.nea.gov.sg/dengue-zika/stop-dengue-now`;
     box.hidden = false;
     box.className = `check-result is-${status}`;
-    box.innerHTML = `<div class="check-head">${icon(status === 'far' ? 'shield-check' : 'warning-circle')}<div><p class="check-sentence" lang="${lang}">${sentence}.</p>
+    box.innerHTML = `<div class="check-head">${status==='far'?'<img class="spot" src="/brand/no-clusters.png" width="64" height="64" alt="">':icon('warning-circle')}<div><p class="check-sentence" lang="${lang}">${sentence}.</p>
       ${n ? `<p class="check-detail">${esc(n.p.name.split(' / ').slice(0, 2).join(' / '))} · <strong>${num(n.p.cases)} people</strong> · ${esc((n.p.area_names || []).join(' · '))}</p>` : ''}</div></div>
       <div class="notice-tabs" role="group" aria-label="Language">${LANGS.map(([id, name]) => `<button data-check-lang="${id}" aria-pressed="${id === lang}" class="${id === lang ? 'active' : ''}" lang="${id}">${name}</button>`).join('')}</div>
       ${list.length ? `<h4 lang="${lang}">${t.steps}</h4><ol class="check-steps" lang="${lang}">${list.map(s => `<li>${esc(s)}</li>`).join('')}</ol>` : ''}
