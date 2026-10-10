@@ -43,11 +43,25 @@
   const box=document.createElement('div');box.innerHTML=res.answer.paragraphs.join('\n');
   return {answer:box.textContent,cards:window.AnswerCards?.fromTools(res.results,data)||[],sources:res.answer.sources,trace:res.results,mode:'Local, no AI'};
  }
- async function answerRemote(question,signal){
+ async function answerRemote(question,signal,el){
   if(window.DENGUESUX_DATA)return null;
   const status=await fetch('/api/chat/status',{signal}).then(r=>r.json());if(!status.enabled)return null;
   const messages=[...history,{role:'user',content:scrub(question+(context?'\nPlace context: '+context:''))}].slice(-8);
-  const r=await fetch('/api/chat',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({messages,language}),signal});if(!r.ok)throw Error('Assistant unavailable');return {...await r.json(),mode:'AI · dated sources'};
+  const body=JSON.stringify({messages:messages.map(m=>({...m,content:m.content.slice(0,2000)})),language});
+  try{
+   const r=await fetch('/api/chat/stream',{method:'POST',headers:{'content-type':'application/json'},body,signal});if(!r.ok||!r.body)throw Error('Streaming unavailable');
+   const reader=r.body.getReader(),decoder=new TextDecoder();let buffer='',text='',done;
+   try{while(true){const chunk=await reader.read();buffer+=decoder.decode(chunk.value||new Uint8Array(),{stream:!chunk.done});let end;
+    while((end=buffer.indexOf('\n\n'))>=0){const block=buffer.slice(0,end);buffer=buffer.slice(end+2);for(const line of block.split('\n')){if(!line.startsWith('data:'))continue;const event=JSON.parse(line.slice(5));
+     if(event.type==='step'){const labels={get_area:'Looking up the area',top_areas:'Checking area priorities',cluster_growth:'Comparing cluster snapshots',inspection_plan:'Reading the field plan',live_outlook:'Checking the national outlook',forecast_week:'Reading the dated forecast',data_status:'Checking source dates',query_database:'Querying the gold tables',forecast_evaluation:'Checking past forecast error'};el.querySelector('.chat-answer-body').textContent=(labels[event.tool]||'Reading data')+'…';}
+     if(event.type==='delta'){text+=event.text;el.querySelector('.chat-answer-body').textContent=text;el.querySelector('h2 small').textContent='AI · streaming';}
+     if(event.type==='done')done=event;
+     if(event.type==='error')throw Error(event.message);
+    }}if(chunk.done)break;}
+   }finally{await reader.cancel().catch(()=>{});reader.releaseLock();}
+   if(!done)throw Error('Incomplete stream');return {...done,mode:'AI · dated sources'};
+  }catch(e){if(signal.aborted)throw e;}
+  const r=await fetch('/api/chat',{method:'POST',headers:{'content-type':'application/json'},body,signal});if(!r.ok)throw Error('Assistant unavailable');return {...await r.json(),mode:'AI · dated sources'};
  }
  function finish(t,el){el.remove();const answer=renderTurn(t);setConversation();save();answer.querySelector('h2').focus({preventScroll:true});answer.scrollIntoView({block:'nearest',behavior:reduced()?'instant':'smooth'});}
  async function ask(question){
@@ -58,7 +72,7 @@
   if(window.CareActions?.handle(question))return;
   const t={question:scrub(question)},el=renderTurn(t);turns.push(t);const apply=()=>setConversation();if(document.startViewTransition&&!reduced())document.startViewTransition(apply);else apply();
   controller=new AbortController();setBusy(true);
-  try{let result;try{result=await answerRemote(question,controller.signal);}catch(e){if(controller.signal.aborted)throw e;}result||=await answerLocal(question);Object.assign(t,result);history.push({role:'user',content:scrub(question)},{role:'assistant',content:scrub(t.answer||'')});history=history.slice(-8);}
+  try{let result;try{result=await answerRemote(question,AbortSignal.any([controller.signal,AbortSignal.timeout(150000)]),el);}catch(e){if(controller.signal.aborted)throw e;}result||=await answerLocal(question);Object.assign(t,result);history.push({role:'user',content:scrub(question)},{role:'assistant',content:scrub(t.answer||'')});history=history.slice(-8);}
   catch(e){t.answer=controller.signal.aborted?'Stopped. You can ask again when ready.':'The saved data could not answer this. Please check NEA for the latest information.';t.mode='Local, no AI';}
   finally{controller=null;setBusy(false);finish(t,el);}
  }

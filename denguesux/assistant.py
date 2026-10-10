@@ -374,18 +374,23 @@ def _text(message: dict) -> str:
     return (content or '').strip()
 
 
-def run_chat(messages, llm, root: Path, genie=None, now: datetime | None = None, max_steps: int = MAX_STEPS) -> dict:
+def run_chat(messages, llm, root: Path, genie=None, now: datetime | None = None, max_steps: int = MAX_STEPS, on_event=None, stream_final=None, language="en") -> dict:
     """llm(messages, tools) -> assistant message dict (OpenAI chat format)."""
     from .chat_cards import build_cards
     data = load_data(root)
     registry = _sources(data)
-    convo = [{'role': 'system', 'content': system_prompt(data, now)}] + clean_messages(messages)
+    convo = [{'role': 'system', 'content': system_prompt(data, now) + f'\nPreferred response language: {language}. Follow the language of the latest question when it is explicit.'}] + clean_messages(messages)
     calls, used = [], []
     for step in range(max_steps + 1):
         reply = llm(convo, tool_schemas() if step < max_steps else None)
         wanted = (reply.get('tool_calls') or []) if step < max_steps else []  # last turn must answer in words
         if not wanted:
             answer = _text(reply)
+            if stream_final is not None:
+                answer = ''
+                for delta in stream_final(convo):
+                    answer += delta
+                    if on_event: on_event({'type':'delta','text':delta})
             if not answer:
                 answer = "I couldn't put an answer together. Try rephrasing, or ask about an area, a route or the national forecast."
             return {'answer': answer, 'steps': [{'tool': c['tool'], 'args': c['args']} for c in calls], 'trace': [{'tool': c['tool'], 'args': c['args'], 'result': c['result']} for c in calls],
@@ -399,6 +404,7 @@ def run_chat(messages, llm, root: Path, genie=None, now: datetime | None = None,
                     raise ValueError
             except ValueError:
                 args = {}
+            if on_event: on_event({'type':'step','tool':name,'args':args})
             tool = TOOLS.get(name)
             if not tool:
                 result, src = {'error': 'unknown_tool', 'available': list(TOOLS)}, []
@@ -436,3 +442,39 @@ def make_llm(endpoint: str, client=None):
             body['tools'] = tools
         return client.api_client.do('POST', f'/serving-endpoints/{endpoint}/invocations', body=body)['choices'][0]['message']
     return call
+
+
+def make_final_stream(endpoint: str, client=None):
+    """Read real OpenAI-compatible deltas from serving. Close the upstream on stop."""
+    if client is None:
+        from databricks.sdk import WorkspaceClient
+        from databricks.sdk.core import Config
+        client = WorkspaceClient(config=Config(http_timeout_seconds=45, retry_timeout_seconds=10))
+    def stream(messages):
+        result = client.api_client.do('POST', f'/serving-endpoints/{endpoint}/invocations',
+            body={'messages':messages,'max_tokens':900,'temperature':0.2,'stream':True}, raw=True)
+        response = result['contents']
+        if hasattr(response, 'set_chunk_size'): response.set_chunk_size(1)
+        line = bytearray()
+        try:
+            while True:
+                byte = response.read(1)
+                if not byte: break
+                if byte != b'\n':
+                    line.extend(byte)
+                    if len(line)>1024*1024: raise ValueError('Oversized model event')
+                    continue
+                value = bytes(line).decode('utf-8').strip();line.clear()
+                if not value.startswith('data:'): continue
+                value=value[5:].strip()
+                if value=='[DONE]': return
+                event=json.loads(value)
+                if event.get('error'): raise ValueError('Serving stream failed')
+                choices=event.get('choices') or []
+                if choices:
+                    content=choices[0].get('delta',{}).get('content')
+                    if isinstance(content,str) and content: yield content
+            raise ValueError('Serving stream ended before completion')
+        finally:
+            response.close()
+    return stream

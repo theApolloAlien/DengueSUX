@@ -4,10 +4,10 @@ import json
 import os
 from datetime import timedelta
 from typing import Literal, Optional
-from fastapi import FastAPI, HTTPException, Path as PathParam, Query
+from fastapi import Request, FastAPI, HTTPException, Path as PathParam, Query
 from pydantic import BaseModel, Field
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 ROOT=Path(__file__).resolve().parent
@@ -114,6 +114,7 @@ class ChatMessage(BaseModel):
     content: str = Field(max_length=2000)
 
 class ChatBody(BaseModel):
+    language: Literal['en','zh','ms','ta'] = 'en'
     messages: list[ChatMessage] = Field(min_length=1, max_length=20)
 
 @app.get('/api/chat/status')
@@ -130,13 +131,54 @@ def chat(body: ChatBody):
     from denguesux.assistant import run_chat, make_llm
     try:
         return run_chat([m.model_dump() for m in body.messages], make_llm(endpoint), ROOT,
-                        genie=(lambda q: _genie_ask(q)) if _genie_space() else None)
+                        genie=(lambda q: _genie_ask(q)) if _genie_space() else None, language=body.language)
     except (OSError, KeyError, json.JSONDecodeError):
         raise HTTPException(503, 'Build the dated gold facts before using the assistant.') from None
     except ValueError:
         raise HTTPException(422, 'The assistant could not use that conversation. Start a new question.') from None
     except Exception as exc:  # The front end falls back to the saved-data answers.
         raise HTTPException(502, f'The assistant could not answer: {type(exc).__name__}') from None
+
+@app.post('/api/chat/stream')
+async def chat_stream(body: ChatBody, request: Request):
+    """Ephemeral SSE only: no transcript storage, real tool starts and serving deltas."""
+    endpoint = _llm_endpoint()
+    if not endpoint:
+        raise HTTPException(503, 'The assistant model is not configured for this deployment.')
+    _refresh_snapshot()
+    import asyncio
+    import queue
+    import threading
+    from denguesux.assistant import run_chat, make_llm, make_final_stream
+    pending=queue.Queue(maxsize=64)
+    stopped=threading.Event()
+    def emit(event):
+        while not stopped.is_set():
+            try: pending.put(event,timeout=.5);return
+            except queue.Full: pass
+        raise InterruptedError('Client stopped')
+    def work():
+        try:
+            result=run_chat([m.model_dump() for m in body.messages],make_llm(endpoint),ROOT,
+                genie=(lambda q:_genie_ask(q)) if _genie_space() else None,
+                on_event=emit,stream_final=make_final_stream(endpoint),language=body.language)
+            emit({'type':'done',**result})
+        except InterruptedError: pass
+        except Exception:
+            try: emit({'type':'error','message':'Streaming unavailable; retrying the saved-data answer.'})
+            except InterruptedError: pass
+    async def events():
+        threading.Thread(target=work,daemon=True).start()
+        try:
+            while not stopped.is_set():
+                if await request.is_disconnected():break
+                try:event=await asyncio.to_thread(pending.get,True,1)
+                except queue.Empty:
+                    yield ': keepalive\n\n';continue
+                yield 'data: '+json.dumps(event,ensure_ascii=False,default=str)+'\n\n'
+                if event['type'] in ('done','error'):break
+        finally:stopped.set()
+    return StreamingResponse(events(),media_type='text/event-stream',headers={'Cache-Control':'no-store','X-Accel-Buffering':'no'})
 
 class FieldReportBody(BaseModel):
     area_code: str = Field(pattern=r'^[A-Z]{2,3}$')
