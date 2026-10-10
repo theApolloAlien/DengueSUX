@@ -79,7 +79,7 @@
  }
  function mount(api){home=$('#week-view');home.classList.add('chat-home');home.insertAdjacentHTML('afterbegin',`<div class="home-intro"><div class="home-greeting">${greeting()}</div><h1>${api.liveForecast()?.headline?`Dengue is ${esc(api.liveForecast().headline.risk.toLowerCase())} in Singapore this week.`:'The latest dengue picture, in one place.'}</h1><p>${data.current.areas.filter(a=>a.risk==='High').length} areas need checking. A little care starts close to home.</p><div id="saved-places"></div></div><div id="home-conversation"></div>`);$('#home-conversation').append(root);setConversation();
   const grid=home.querySelector('.week-grid');grid.insertAdjacentHTML('beforeend',`<section class="week-activity"><header><h2>Recent activity</h2><span class="feed-status">Saved data</span></header><div id="activity-feed"><p>Cluster snapshot · ${date(data.current.as_of)}</p><a href="#map">View the latest clusters ${icon('arrow-up-right')}</a></div></section>`);
-  window.LocationCheck?.init(data);window.CareActions?.init(data);window.ActivityFeed?.init(data,api);window.AnswerCards?.sparklines(home,data);syncRoute();
+  window.LocationCheck?.init(data);window.CareActions?.init(data);window.ActivityFeed?.init(data,api);window.AedesLayer?.init(data,api);window.AnswerCards?.sparklines(home,data);syncRoute();
  }
  window.ChatHome={init,mount,ask,privateAnswer,scrub,get language(){return language;},get data(){return data;},get hooks(){return hooks;},setContext(v){context=scrub(v);save();},sourcesHTML,number,date,esc,icon,clear};
 })();

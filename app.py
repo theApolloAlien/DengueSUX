@@ -40,7 +40,7 @@ def health():
 
 @app.get('/data/{name}')
 def data(name:str):
-    allowed={'dashboard.json','current.json','model.json','inspection.json','growth.json','notices.json','alerts.json','footprints.json','population.json'}
+    allowed={'dashboard.json','current.json','model.json','inspection.json','growth.json','notices.json','alerts.json','footprints.json','population.json','aedes.json','feed.json'}
     if name not in allowed: raise HTTPException(404)
     _refresh_snapshot()
     p=(ROOT/'output/web'/name).resolve()  # pin one published generation for the whole response

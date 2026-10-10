@@ -47,7 +47,7 @@ def run_daily(root=ROOT, *, spark=None, offline=False, radius_m=300, top_n=8, se
         dashboard["inspection"] = inspection
         dashboard["notices"] = notices
         dashboard["alerts"] = alerts
-        for name in ('footprints', 'population'):
+        for name in ('footprints', 'population', 'aedes', 'feed'):
             path = root / 'output/web' / f'{name}.json'
             if path.exists():
                 dashboard[name] = json.loads(path.read_text())

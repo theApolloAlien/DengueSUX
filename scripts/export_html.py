@@ -36,7 +36,7 @@ def build():
     if gl.exists():
         html=html.replace('<head>','<head><style>'+inline_css(gl.with_suffix('.css'))+'</style><script>'+gl.read_text().replace('</script','<\\/script')+'</script>',1)
     payload=json.loads((ROOT/'output/web/dashboard.json').read_text())
-    for name in ('inspection', 'growth', 'notices', 'alerts', 'footprints', 'population'):
+    for name in ('inspection', 'growth', 'notices', 'alerts', 'footprints', 'population', 'aedes', 'feed'):
         path=ROOT/'output/web'/f'{name}.json'
         if path.exists(): payload[name]=json.loads(path.read_text())
     data=json.dumps(payload,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
