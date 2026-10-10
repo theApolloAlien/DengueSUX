@@ -406,20 +406,20 @@
   async function init(){
     bindEvents();
     document.body.classList.add('is-loading');
-    const loadingCopy=$('.loading-copy>p:last-child');
-    const slowLoad=setTimeout(()=>{loadingCopy.textContent='Still loading the saved evidence. This may take a moment on a slower connection.';},7000);
+    const loadingCopy=$('.loading-copy>p:last-child');let shownAt=0;
+    const showLoader=setTimeout(()=>{shownAt=performance.now();document.body.classList.add('loading-visible');},300);
+    const slowLoad=setTimeout(()=>{loadingCopy.textContent='Still loading…';},4000);
     try{
       if(window.DENGUESUX_DATA)state.data=window.DENGUESUX_DATA;
       else{const response=await fetch('/data/dashboard.json',{cache:'no-cache',signal:AbortSignal.timeout(20000)});if(!response.ok)throw new Error(`Saved artifact unavailable (HTTP ${response.status}). Run the prototype pipeline, then reload.`);state.data=await response.json();}
-      loadingCopy.textContent='Preparing area details, inspection plans and the forecast replay.';
+      loadingCopy.textContent='Loading saved plans…';
       await window.Fieldwork.load(state.data,{toast,open:()=>{state.view='inspection';stopReplay();},back:()=>switchView('signals')});
-      $('#loading-state').hidden=true;$('#signals-view').hidden=false;
+      $('#signals-view').hidden=false;
       renderCurrent();renderModel();renderMethodology();ready=true;switchView(location.hash==='#forecast'?'forecast':'signals');
       $('#main').setAttribute('aria-busy','false');
-      document.body.classList.remove('is-loading');
-      document.body.classList.add('is-ready');
+
       const areaFor=code=>state.areas.find(a=>a.code===code);
-      window.CheckBlock?.init(state.data,{selectArea:code=>{selectArea(code,true);$('.explorer').scrollIntoView({block:'start',behavior:reducedMotion()?'instant':'smooth'});}});
+      window.CheckBlock?.init(state.data,{selectArea:code=>{switchView('signals');selectArea(code,true);$('.explorer').scrollIntoView({block:'start',behavior:reducedMotion()?'instant':'smooth'});}});
       window.Assistant?.init(state.data,{
         selectArea:code=>{switchView('signals');selectArea(code,true);$('.explorer').scrollIntoView({block:'start',behavior:reducedMotion()?'instant':'smooth'});},
         openPlan:code=>{const area=areaFor(code);if(!area)return;switchView('signals');selectArea(code);window.Fieldwork.openPlan(area);},
@@ -428,7 +428,11 @@
         showLive:()=>{switchView('forecast');setMode('live');$('#live-outlook').scrollIntoView({block:'start',behavior:reducedMotion()?'instant':'smooth'});}
       });
       window.Product?.init({state,selectArea,switchView,liveForecast,number,date,toast,drawChart});
-    }catch(error){ready=false;$('#loading-state').hidden=true;$('#signals-view').hidden=true;$('#forecast-view').hidden=true;$('#error-state').hidden=false;$('#error-message').textContent=error.name==='TimeoutError'?'The saved evidence is taking too long to load. Please try again.':'We couldn’t load the saved evidence. Please try again in a moment.';$('#data-timestamp').textContent='Evidence unavailable';$('#main').setAttribute('aria-busy','false');document.body.classList.remove('is-loading');document.body.classList.add('is-error');console.error('DengueSUX:',error);}finally{clearTimeout(slowLoad);}
+      clearTimeout(showLoader);
+      const reveal=()=>{$('#loading-state').hidden=true;document.body.classList.remove('is-loading','loading-visible');document.body.classList.add('is-ready');};
+      // Minimum presentation time only; data processing and input are never delayed.
+      setTimeout(reveal,shownAt?Math.max(0,400-(performance.now()-shownAt)):0);
+    }catch(error){ready=false;$('#loading-state').hidden=true;$('#signals-view').hidden=true;$('#forecast-view').hidden=true;$('#error-state').hidden=false;$('#error-message').textContent=error.name==='TimeoutError'?'The saved evidence is taking too long to load. Please try again.':'We couldn’t load the saved evidence. Please try again in a moment.';$('#data-timestamp').textContent='Evidence unavailable';$('#main').setAttribute('aria-busy','false');document.body.classList.remove('is-loading');document.body.classList.add('is-error');console.error('DengueSUX:',error);}finally{clearTimeout(slowLoad);clearTimeout(showLoader);}
   }
   init();
 })();

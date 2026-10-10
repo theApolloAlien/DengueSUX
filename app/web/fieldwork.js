@@ -144,10 +144,11 @@
   function savedNotice(code,lang){const n=data.notices||{};return n.areas?.[code]?.[lang]||n.notices?.[code]?.[lang]||n[code]?.[lang]||null;}
   async function showNotice(){
     const req=++noticeRequest,code=selectedArea.code,lang=language;
-    $('#notice-content').innerHTML=`<p class="notice-loading" role="status">${icon('circle-notch')} Preparing a draft from the saved source facts…</p>`;
+    const finishLoad=window.Product?.busy($('#plan-notice'));
+    $('#notice-content').innerHTML='<div class="notice-loading" aria-busy="true"><span class="skeleton" style="width:100%;height:150px"></span><span class="sr-only">Loading saved notice</span></div>';
     let result=savedNotice(code,lang);
-    if(!window.DENGUESUX_DATA){try{const r=await fetch(`/api/notices/${encodeURIComponent(code)}?language=${encodeURIComponent(lang)}`);if(r.ok)result=await r.json();}catch{}}
-    if(req!==noticeRequest)return;
+    if(!window.DENGUESUX_DATA){try{const r=await fetch(`/api/notices/${encodeURIComponent(code)}?language=${encodeURIComponent(lang)}`,{signal:AbortSignal.timeout(15000)});if(r.ok)result=await r.json();}catch{}}
+    finishLoad?.();if(req!==noticeRequest)return;
     notice=result;
     const facts=result?.source_facts||result?.facts;
     const languages=[['en','English'],['zh','中文'],['ms','Bahasa Melayu'],['ta','தமிழ்']];
@@ -197,14 +198,7 @@
     box.innerHTML=`<summary>${icon(passed===checks.length?'check-circle':'warning-circle')} ${passed}/${checks.length} automatic checks passed ${icon('caret-down')}</summary><ul>${checks.map(([label,ok])=>`<li class="${ok?'':'failed'}">${icon(ok?'check':'x')} ${esc(label)}</li>`).join('')}</ul>`;
     $('#copy-notice').disabled=passed!==checks.length;
   }
-  function typeNotice(text){
-    const box=$('#notice-text');if(!box)return;
-    // Progress follows elapsed time, so throttled timers catch up instead of stalling mid-draft.
-    const words=text.split(/(\s+)/),start=performance.now();box.textContent='';box.classList.add('is-writing');
-    const step=()=>{if(!box.isConnected||box.dataset.draft!==text)return;const i=Math.min(words.length,Math.ceil((performance.now()-start)/4.5));box.textContent=words.slice(0,i).join('');if(i<words.length)setTimeout(step,24);else box.classList.remove('is-writing');};
-    box.dataset.draft=text;
-    if(matchMedia('(prefers-reduced-motion: reduce)').matches){box.textContent=text;box.classList.remove('is-writing');}else step();
-  }
+  function typeNotice(text){const box=$('#notice-text');if(box){box.textContent=text;box.dataset.draft=text;}}
   function noticeExport(){return `Draft: review before sending\n\n${noticeDraft||noticeText(notice,language)}\n\nSource facts\n${JSON.stringify(notice.source_facts||notice.facts,null,2)}\nNEA: https://www.nea.gov.sg/dengue-zika/stop-dengue-now\n`;}
   window.Fieldwork={load,areaActions,renderGrowth,openPlan,closePlan,openNotice,growthFor,growthBadge};
 })();

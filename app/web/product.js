@@ -73,6 +73,12 @@
   $('#command-search').oninput=commands;$('#command-search').onkeydown=e=>{if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();activeIndex=(activeIndex+(e.key==='ArrowDown'?1:-1)+commandItems.length)%commandItems.length;highlight();}if(e.key==='Enter'){e.preventDefault();runCommand(activeIndex);}};
   let chord=0;document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();if($('#command-dialog').open)$('#command-dialog').close();else openCommand();return;}if(e.target.closest('input,textarea,select,[contenteditable=true]')||document.querySelector('dialog[open]')||document.body.classList.contains('ask-open'))return;if(e.key==='g'){chord=Date.now();return;}if(Date.now()-chord<1200&&{t:1,m:1,p:1,f:1}[e.key]){e.preventDefault();go({t:'week',m:'map',p:'plan',f:'forecast'}[e.key]);chord=0;}if(e.key==='/'){e.preventDefault();if(section==='map'&&!table){$('#toggle-areas').click();$('#area-search').focus();}else if(section==='map')$('#table-search').focus();else openCommand();}if(e.key==='?')$('#shortcuts-dialog').showModal();if(e.key==='Escape')$('.help-menu').open=false;});
  }
+ function busy(button){
+  if(!button)return()=>{};let shown=0;const width=button.getBoundingClientRect().width;
+  button.setAttribute('aria-busy','true');const timer=setTimeout(()=>{shown=performance.now();button.style.minWidth=width+'px';button.classList.add('button-busy');},300);
+  return()=>{clearTimeout(timer);button.removeAttribute('aria-busy');setTimeout(()=>{button.classList.remove('button-busy');button.style.minWidth='';},shown?Math.max(0,400-(performance.now()-shown)):0);};
+ }
+ function connectivity(){const banner=document.createElement('div');banner.className='inline-banner offline-banner';banner.id='offline-banner';banner.setAttribute('role','status');banner.innerHTML='Offline · showing the saved snapshot. <button class="text-button" id="retry-online">Retry</button>';$('#main').prepend(banner);const sync=()=>banner.hidden=navigator.onLine;window.addEventListener('online',sync);window.addEventListener('offline',sync);$('#retry-online').onclick=()=>location.reload();sync();}
  function init(callbacks){
   api=callbacks;
   insert('styleguide-view',styleguide());const w=insert('week-view',week());w.querySelector('.week-bottom').append($('.signal-tools'));
@@ -84,7 +90,7 @@
   if(!api.liveForecast())forecast.insertAdjacentHTML('afterbegin','<p class="forecast-empty">No current forecast is available from the saved official reports.</p>');
   const banner=document.createElement('div');banner.id='route-error';banner.className='inline-banner';banner.hidden=true;banner.textContent='Area not found. Choose one from the list.';$('#main').prepend(banner);
   $('#sidebar-collapse').onclick=()=>{const collapsed=document.body.classList.toggle('sidebar-collapsed');$('#sidebar-collapse').setAttribute('aria-expanded',!collapsed);$('#sidebar-collapse').setAttribute('aria-label',collapsed?'Expand sidebar':'Collapse sidebar');store.set('sidebar',collapsed);requestAnimationFrame(()=>api.state.map?.invalidateSize());};if(store.get('sidebar',false))$('#sidebar-collapse').click();
-  layers();freshness();$('#styleguide-view [data-methodology]').onclick=()=>$('#methodology-dialog').showModal();window.Product.ready=true;window.addEventListener('hashchange',route);route();
+  layers();freshness();connectivity();$('#styleguide-view [data-methodology]').onclick=()=>$('#methodology-dialog').showModal();window.Product.ready=true;window.addEventListener('hashchange',route);route();
  }
- window.Product={init,go,selected,copyLink,ready:false,openingPlan:false};
+ window.Product={init,go,selected,copyLink,busy,ready:false,openingPlan:false};
 })();

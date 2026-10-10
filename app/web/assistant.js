@@ -244,7 +244,6 @@
     const plan = planCalls(question), results = [];
     for (const [name, args] of plan.calls) {
       onStep(name, args);
-      await wait(380);
       results.push({name, args, ...tools[name](args)});
     }
     return {plan, results, answer:compose(plan, results, question)};
@@ -384,7 +383,7 @@
   async function reveal(msg, parts) {
     msg.querySelector('.ask-thinking')?.remove();
     const body = document.createElement('div'); body.className = 'ask-body'; msg.append(body);
-    for (const html of parts) { const p = document.createElement('div'); p.className = 'ask-para'; p.innerHTML = html; body.append(p); p.scrollIntoView({block:'end', behavior:'smooth'}); await wait(160); }
+    for (const html of parts) { const p = document.createElement('div'); p.className = 'ask-para'; p.innerHTML = html; body.append(p); p.scrollIntoView({block:'end', behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}); }
     return body;
   }
   const preview = value => { const text = JSON.stringify(value); return esc(text.length > 220 ? `${text.slice(0, 220)}…` : text); };
@@ -446,7 +445,7 @@
     if (await chatEnabled() && await answerChat(question, msg)) return;
     const steps = msg.querySelector('.ask-steps');
     const {results, answer} = await respond(question, (name, args) => { steps.insertAdjacentHTML('beforeend', `<div class="ask-step">${icon('function')} <code>${name}(${esc(Object.values(args).filter(v => v !== undefined).map(v => JSON.stringify(v)).join(', '))})</code></div>`); });
-    await wait(250); steps.remove();
+    steps.remove();
     const body = await reveal(msg, answer.paragraphs);
     if (answer.actions.length) {
       const row = document.createElement('div'); row.className = 'ask-actions';
@@ -486,10 +485,8 @@
   async function answerSql(question, msg) {
     if (await genieEnabled() && await answerGenie(question, msg)) return;
     const q = sqlFor(question);
-    await wait(500);
     if (!q) { await reveal(msg, [`I couldn't map that to the gold tables. Try asking about areas, priorities, clusters or the 2022 forecast, for example “${esc(SQL_EXAMPLES[0])}”.`]); return; }
-    msg.querySelector('.ask-steps').innerHTML = `<div class="ask-step">${icon('database')} Querying <code>${q.table}</code></div>`;
-    await wait(450);
+    msg.querySelector('.ask-steps').innerHTML = `<div class="ask-step">${icon('database')} Reading saved <code>${q.table}</code></div>`;
     const rows = q.run(), cols = rows[0] ? Object.keys(rows[0]) : [];
     msg.querySelector('.ask-steps').remove();
     const shown = rows.slice(0, 20);
