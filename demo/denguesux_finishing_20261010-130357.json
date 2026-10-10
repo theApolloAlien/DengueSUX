@@ -1,0 +1,65 @@
+{
+  "recorded_at_sgt": "2026-10-10T13:04:53.312763+08:00",
+  "path": "demo/denguesux_finishing_20261010-130357.mp4",
+  "duration_seconds": 51.75,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "sha256": "7b5ff0608596a26e4c2b7f65b67048daa865710fb8b0b0527a6aaefb3739a6cd",
+  "method": "Real browser interactions only; no overlays, fabricated captions, report submissions or personal location.",
+  "scenes": [
+    {
+      "scene": "Latest dated cluster and national briefings",
+      "seconds": 0.0
+    },
+    {
+      "scene": "What changed since the saved snapshot",
+      "seconds": 3.08
+    },
+    {
+      "scene": "Check my block using the public example",
+      "seconds": 6.23
+    },
+    {
+      "scene": "Raw cluster counts with resident population context",
+      "seconds": 10.29
+    },
+    {
+      "scene": "Saved cluster snapshots; dates are never filled",
+      "seconds": 13.37
+    },
+    {
+      "scene": "Jurong West inspection plan and homes covered",
+      "seconds": 16.51
+    },
+    {
+      "scene": "3D route preview with official HDB footprints",
+      "seconds": 22.27
+    },
+    {
+      "scene": "Resident notice draft: English",
+      "seconds": 30.47
+    },
+    {
+      "scene": "Resident notice draft: Chinese",
+      "seconds": 32.63
+    },
+    {
+      "scene": "Resident notice draft: Malay",
+      "seconds": 34.78
+    },
+    {
+      "scene": "Resident notice draft: Tamil",
+      "seconds": 36.94
+    },
+    {
+      "scene": "Live forecast ranges and publication/weather disclosure",
+      "seconds": 40.58
+    },
+    {
+      "scene": "2022 outbreak replay",
+      "seconds": 46.75
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 # DengueSUX jobs for Databricks Free Edition (serverless only: no cluster is configured).
-# Deploy:  databricks bundle deploy -p <profile>      Run:  databricks bundle run pipeline -p <profile>
+# Deploy: databricks bundle deploy --profile denguesux
+# Run: databricks bundle run pipeline --profile denguesux
 bundle:
   name: denguesux
 
@@ -41,9 +42,18 @@ resources:
       schedule:
         quartz_cron_expression: "0 15 8 * * ?"
         timezone_id: Asia/Singapore
-        pause_status: PAUSED  # unpause when you want daily NEA snapshots; each run uses serverless quota
+        pause_status: UNPAUSED  # daily NEA snapshots build the cluster history the open data does not keep; each run uses serverless quota
       tasks:
+        - task_key: live_api_autoloader
+          notebook_task:
+            notebook_path: ./notebooks/06_live_ingestion.py
+            base_parameters: {repo_root: "${workspace.file_path}", data_root: "${var.data_root}", table_prefix: "${var.table_prefix}"}
+          timeout_seconds: 1800
+          max_retries: 1
+          min_retry_interval_millis: 60000
         - task_key: snapshot_growth_inspection_notices
+          depends_on: [{task_key: live_api_autoloader}]
+          run_if: ALL_DONE  # still preserve today's cluster snapshot if weather/Auto Loader fails
           notebook_task:
             notebook_path: ./notebooks/05_daily_inspection.py
             base_parameters: {data_root: "${var.data_root}", table_prefix: "${var.table_prefix}"}

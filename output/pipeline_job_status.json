@@ -1,0 +1,156 @@
+{
+  "cleanup_duration": 0,
+  "creator_user_name": "joshua.apollo13@gmail.com",
+  "effective_performance_target": "PERFORMANCE_OPTIMIZED",
+  "end_time": 1791608167646,
+  "execution_duration": 0,
+  "job_id": 9024263041057,
+  "job_run_id": 297087392137262,
+  "number_in_job": 297087392137262,
+  "original_attempt_run_id": 297087392137262,
+  "run_duration": 683562,
+  "run_id": 297087392137262,
+  "run_name": "DengueSUX pipeline (bronze, silver, gold)",
+  "run_page_url": "https://dbc-84031bfa-001d.cloud.databricks.com/?o=7474658048209156#job/9024263041057/run/297087392137262",
+  "run_type": "JOB_RUN",
+  "setup_duration": 0,
+  "start_time": 1791607484084,
+  "state": {
+    "life_cycle_state": "TERMINATED",
+    "result_state": "SUCCESS",
+    "state_message": "",
+    "user_cancelled_or_timedout": false
+  },
+  "status": {
+    "state": "TERMINATED",
+    "termination_details": {
+      "code": "SUCCESS",
+      "message": "",
+      "type": "SUCCESS"
+    }
+  },
+  "tasks": [
+    {
+      "attempt_number": 0,
+      "cleanup_duration": 0,
+      "depends_on": [
+        {
+          "task_key": "silver"
+        }
+      ],
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED",
+      "end_time": 1791608167282,
+      "execution_duration": 460000,
+      "notebook_task": {
+        "base_parameters": {
+          "data_root": "/Volumes/workspace/denguesux/files/denguesux",
+          "repo_root": "/Workspace/Users/joshua.apollo13@gmail.com/.bundle/denguesux/dev/files",
+          "stage": "gold",
+          "table_prefix": "workspace.denguesux"
+        },
+        "notebook_path": "/Workspace/Users/joshua.apollo13@gmail.com/.bundle/denguesux/dev/files/notebooks/run_stage",
+        "source": "WORKSPACE"
+      },
+      "run_id": 1017553663288058,
+      "run_if": "ALL_SUCCESS",
+      "run_page_url": "https://dbc-84031bfa-001d.cloud.databricks.com/?o=7474658048209156#job/9024263041057/run/1017553663288058",
+      "setup_duration": 1000,
+      "start_time": 1791607706145,
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "SUCCESS",
+          "message": "",
+          "type": "SUCCESS"
+        }
+      },
+      "task_key": "gold"
+    },
+    {
+      "attempt_number": 0,
+      "cleanup_duration": 0,
+      "depends_on": [
+        {
+          "task_key": "bronze"
+        }
+      ],
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED",
+      "end_time": 1791607705783,
+      "execution_duration": 77000,
+      "notebook_task": {
+        "base_parameters": {
+          "data_root": "/Volumes/workspace/denguesux/files/denguesux",
+          "repo_root": "/Workspace/Users/joshua.apollo13@gmail.com/.bundle/denguesux/dev/files",
+          "stage": "silver",
+          "table_prefix": "workspace.denguesux"
+        },
+        "notebook_path": "/Workspace/Users/joshua.apollo13@gmail.com/.bundle/denguesux/dev/files/notebooks/run_stage",
+        "source": "WORKSPACE"
+      },
+      "run_id": 566079196639459,
+      "run_if": "ALL_SUCCESS",
+      "run_page_url": "https://dbc-84031bfa-001d.cloud.databricks.com/?o=7474658048209156#job/9024263041057/run/566079196639459",
+      "setup_duration": 1000,
+      "start_time": 1791607626770,
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "SUCCESS",
+          "message": "",
+          "type": "SUCCESS"
+        }
+      },
+      "task_key": "silver"
+    },
+    {
+      "attempt_number": 0,
+      "cleanup_duration": 0,
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED",
+      "end_time": 1791607626357,
+      "execution_duration": 139000,
+      "notebook_task": {
+        "base_parameters": {
+          "data_root": "/Volumes/workspace/denguesux/files/denguesux",
+          "repo_root": "/Workspace/Users/joshua.apollo13@gmail.com/.bundle/denguesux/dev/files",
+          "stage": "bronze",
+          "table_prefix": "workspace.denguesux"
+        },
+        "notebook_path": "/Workspace/Users/joshua.apollo13@gmail.com/.bundle/denguesux/dev/files/notebooks/run_stage",
+        "source": "WORKSPACE"
+      },
+      "run_id": 32261162921133,
+      "run_if": "ALL_SUCCESS",
+      "run_page_url": "https://dbc-84031bfa-001d.cloud.databricks.com/?o=7474658048209156#job/9024263041057/run/32261162921133",
+      "setup_duration": 3000,
+      "start_time": 1791607484118,
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "SUCCESS",
+          "message": "",
+          "type": "SUCCESS"
+        }
+      },
+      "task_key": "bronze"
+    }
+  ],
+  "trigger": "ONE_TIME"
+}

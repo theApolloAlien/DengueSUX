@@ -98,7 +98,7 @@ def test_cluster_presence_outranks_weather_and_bands_are_cluster_led():
 
 
 def test_real_snapshot_preserves_unique_totals_and_shared_jurong_cluster():
-    result = build_current(save=False)
+    result = build_current(save=False, snapshot_date='2026-09-24')
     assert result['totals']['areas'] == 55
     assert result['totals']['clusters'] == 11
     assert result['totals']['cluster_cases'] == 101

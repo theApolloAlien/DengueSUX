@@ -31,8 +31,14 @@ def write_table(df, name):
     writer = df.write.format('delta').mode('overwrite').option('overwriteSchema', 'true')
     if TABLE_PREFIX:
         writer.saveAsTable(f'{TABLE_PREFIX}.{name}')
+        _document(df.sparkSession, name)
     else:
         writer.save(str(ROOT / 'data/delta' / name))
+
+def _document(spark, name):
+    """Overwrites can drop metadata; reapply descriptions and best-effort governance tags."""
+    from .genie_layer import apply_governance
+    apply_governance(spark.sql, TABLE_PREFIX, [name])
 
 def read_table(spark, name):
     return spark.table(f'{TABLE_PREFIX}.{name}') if TABLE_PREFIX else spark.read.format('delta').load(str(ROOT / 'data/delta' / name))

@@ -1,0 +1,29 @@
+{
+  "app_url": "https://denguesux-7474658048209156.aws.databricksapps.com",
+  "deployment_id": "01f1c469107f1928a4dd3e94321fcf3a",
+  "deployment_state": "SUCCEEDED",
+  "live_label_week": "2026-W39",
+  "report_post_status": 200,
+  "report_storage_verification": {
+    "saved": false,
+    "verified": true,
+    "observations_written": 0
+  },
+  "report_get_status": 200,
+  "report_summary": {
+    "reports": 0,
+    "stops_checked": 0,
+    "water_found": 0
+  },
+  "data_refresh": {
+    "configured": true,
+    "state": "updated",
+    "last_checked_at": "2026-10-10T05:12:24.426149+00:00",
+    "last_success_at": "2026-10-10T05:12:26.490269+00:00",
+    "snapshot_generated_at": "2026-10-10T05:04:46.632006+00:00",
+    "error_type": null,
+    "retry_after_seconds": 59
+  },
+  "model_run_id": "5f344fe0e393468db1e4f6562f9e56bb",
+  "live_prediction": 68.25498617732853
+}

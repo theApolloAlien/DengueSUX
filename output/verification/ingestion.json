@@ -1,0 +1,62 @@
+{
+  "weather": {
+    "columns": [
+      "source",
+      "snapshot_date",
+      "rows",
+      "unique_ids",
+      "first_ingestion"
+    ],
+    "rows": [
+      [
+        "air-temperature",
+        "2026-10-09",
+        "1",
+        "1",
+        "2026-10-10T05:02:11.960Z"
+      ],
+      [
+        "rainfall",
+        "2026-10-09",
+        "1",
+        "1",
+        "2026-10-10T05:02:11.960Z"
+      ],
+      [
+        "relative-humidity",
+        "2026-10-09",
+        "1",
+        "1",
+        "2026-10-10T05:02:11.960Z"
+      ]
+    ]
+  },
+  "clusters": {
+    "columns": [
+      "source",
+      "snapshot_date",
+      "rows",
+      "unique_ids",
+      "first_ingestion"
+    ],
+    "rows": [
+      [
+        "nea_active_clusters",
+        "2026-10-10",
+        "1",
+        "1",
+        "2026-10-10T05:02:29.297Z"
+      ]
+    ]
+  },
+  "alerts": {
+    "columns": [
+      "alerts"
+    ],
+    "rows": [
+      [
+        "10"
+      ]
+    ]
+  }
+}

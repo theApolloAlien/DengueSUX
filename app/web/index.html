@@ -4,12 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#163f35">
-  <meta name="description" content="Explore Singapore dengue signals and an evidence-led two-week national forecast backtest.">
+  <meta name="description" content="Explore Singapore dengue signals and a national outlook with ranges and retrospective evaluation.">
   <title>DengueSUX — Where to check first</title>
   <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="/vendor/icons/style.css">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/fieldwork.css">
+  <link rel="stylesheet" href="/flythrough.css">
   <link rel="stylesheet" href="/assistant.css">
   <link rel="stylesheet" href="/experience.css">
 </head>
@@ -68,6 +69,21 @@
             <p id="briefing-text">Reading the latest cluster snapshot…</p>
             <button class="text-button" id="briefing-view" hidden>View area <i class="ph ph-arrow-right" aria-hidden="true"></i></button>
           </section>
+          <section class="weekly-briefing national-briefing compact" id="national-briefing" aria-label="National outlook" hidden>
+            <i class="ph ph-chart-line-up" aria-hidden="true"></i>
+            <p id="national-briefing-text"></p>
+            <button class="text-button" id="national-briefing-view">See forecast <i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+          </section>
+
+          <details class="change-feed" id="change-feed" hidden></details>
+
+          <section class="check-block" aria-labelledby="check-title">
+            <div class="check-bar"><i class="ph ph-house-line" aria-hidden="true"></i><h2 id="check-title">Is my home near a cluster?</h2>
+              <button class="outline-button" id="check-locate"><i class="ph ph-crosshair-simple" aria-hidden="true"></i> Use my location</button>
+              <form id="check-postal-form" class="check-postal" hidden><label class="search-box"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input id="check-postal" inputmode="numeric" maxlength="6" placeholder="Postal code" aria-label="Postal code"></label><button class="outline-button" type="submit">Check</button></form>
+              <button class="text-button" id="check-example">Try an example</button></div>
+            <div id="check-result" class="check-result" aria-live="polite" hidden></div>
+          </section>
 
           <div class="stats-row compact-stats">
             <div class="stat-item"><div class="stat-label">Active clusters</div><div class="stat-value" id="cluster-count">—</div></div>
@@ -93,6 +109,7 @@
 
             <section class="map-panel" aria-label="Interactive Singapore planning priority map">
               <div id="map"></div>
+              <div id="cluster-timeline" class="cluster-timeline" hidden></div>
               <div class="map-top">
                 <button class="map-chip" id="fit-map" title="Fit all planning areas"><i class="ph ph-arrows-out-simple" aria-hidden="true"></i> All Singapore</button>
                 <button class="map-chip mobile-areas" id="toggle-areas" aria-expanded="false" aria-controls="area-browser"><i class="ph ph-list" aria-hidden="true"></i> Areas</button>
@@ -113,17 +130,22 @@
 
         <section id="inspection-view" class="view-content" aria-label="Inspection plan" hidden></section>
 
-        <section id="forecast-view" class="view-content" aria-label="Historical national forecast" hidden>
+        <section id="forecast-view" class="view-content" aria-label="National two-week forecast" hidden>
+          <section class="live-outlook" id="live-outlook" aria-label="Live national outlook" hidden></section>
           <div class="forecast-intro compact">
-            <p id="forecast-subtitle">Two-week national outlook, replayed week by week through 2022.</p>
-            <button class="outline-button" id="replay-button"><i class="ph ph-play" aria-hidden="true"></i> Replay 2022</button>
+            <div class="mode-switch segmented" role="group" aria-label="Forecast period">
+              <button class="mode-button active" data-mode="live" aria-pressed="true"><i class="ph ph-broadcast" aria-hidden="true"></i> Since 2023 · retrospective</button>
+              <button class="mode-button" data-mode="replay" aria-pressed="false"><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i> 2022 outbreak replay</button>
+            </div>
+            <p id="forecast-subtitle">National outlook with ranges and a retrospective check.</p>
+            <button class="outline-button" id="replay-button"><i class="ph ph-play" aria-hidden="true"></i> Play</button>
           </div>
           <div class="model-selection-note" id="model-selection-note" hidden></div>
 
           <div class="stats-row forecast-stats compact-stats">
-            <div class="stat-item" title="Average absolute weekly error across 2022"><div class="stat-label">Forecast usually off by</div><div class="stat-value" id="model-mae">—</div><p>people a week</p></div>
-            <div class="stat-item" title="Average absolute weekly error of a four-week average"><div class="stat-label">Simple average off by</div><div class="stat-value" id="baseline-mae">—</div><p>people a week</p></div>
-            <div class="stat-item" id="lead-stat"><div class="stat-label">High before the peak</div><div class="stat-value" id="lead-weeks">—</div><p id="lead-caption">weeks of advance warning</p></div>
+            <div class="stat-item" id="model-mae-stat" title="Average absolute weekly error"><div class="stat-label">Forecast usually off by</div><div class="stat-value" id="model-mae">—</div><p id="model-mae-caption">people a week</p></div>
+            <div class="stat-item" id="baseline-mae-stat" title="Average absolute weekly error of a four-week average"><div class="stat-label">Simple average off by</div><div class="stat-value" id="baseline-mae">—</div><p id="baseline-mae-caption">people a week</p></div>
+            <div class="stat-item" id="lead-stat"><div class="stat-label" id="lead-label">High before the peak</div><div class="stat-value" id="lead-weeks">—</div><p id="lead-caption">weeks of advance warning</p></div>
           </div>
 
           <div class="forecast-grid">
@@ -132,7 +154,7 @@
                 <div><h3>Weekly cases, 2022</h3></div>
                 <span class="model-pill" id="model-name">Model</span>
               </div>
-              <div class="chart-key"><span><b class="line-swatch actual"></b>Reported</span><span><b class="line-swatch predicted"></b>Forecast</span><span><b class="line-swatch baseline"></b>Simple average</span></div>
+              <div class="chart-key" id="chart-key"><span><b class="line-swatch actual"></b>Reported</span><span><b class="line-swatch predicted"></b>Forecast</span><span><b class="line-swatch range"></b>80% range</span><span class="key-baseline"><b class="line-swatch baseline"></b>Simple average</span><span class="key-normal"><b class="line-swatch normal"></b>Typical for the week (5-yr median)</span></div>
               <div class="chart-container"><canvas id="forecast-chart" aria-label="Weekly dengue forecast, reported people and simple average"></canvas><div class="chart-tooltip" id="chart-tooltip" hidden></div></div>
               <p id="replay-note" class="replay-note" aria-live="polite" hidden></p>
               <div class="timeline">
@@ -181,7 +203,10 @@
 
   <script src="/vendor/leaflet/leaflet.js"></script>
   <script src="/fieldwork.js"></script>
+  <script src="/flythrough.js"></script>
   <script src="/assistant.js"></script>
+  <script src="/checkblock.js"></script>
+  <script src="/cluster-timeline.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

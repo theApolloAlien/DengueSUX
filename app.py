@@ -3,8 +3,8 @@ from pathlib import Path
 import json
 import os
 from datetime import timedelta
-from typing import Literal
-from fastapi import FastAPI, HTTPException
+from typing import Literal, Optional
+from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel, Field
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -12,20 +12,30 @@ from fastapi.staticfiles import StaticFiles
 ROOT=Path(__file__).resolve().parent
 app=FastAPI(title='DengueSUX',docs_url=None,redoc_url=None)
 
+def _refresh_snapshot():
+    from denguesux.app_snapshot import refresh_snapshot
+    return refresh_snapshot(ROOT)
+
+@app.get('/api/data/status')
+def data_status():
+    return _refresh_snapshot()
+
 @app.get('/api/health')
 def health():
     return {'status':'ready' if (ROOT/'output/web/dashboard.json').exists() else 'awaiting_pipeline','synthetic_data':False}
 
 @app.get('/data/{name}')
 def data(name:str):
-    allowed={'dashboard.json','current.json','model.json','inspection.json','growth.json','notices.json'}
+    allowed={'dashboard.json','current.json','model.json','inspection.json','growth.json','notices.json','alerts.json','footprints.json','population.json'}
     if name not in allowed: raise HTTPException(404)
+    _refresh_snapshot()
     p=ROOT/'output/web'/name
     if not p.exists(): raise HTTPException(503,'Run the pipeline to prepare real data.')
     return FileResponse(p,media_type='application/json')
 
 @app.get('/api/notices/{area_code}')
 def resident_notice(area_code: str, language: Literal['en','zh','ms','ta']='en'):
+    _refresh_snapshot()
     from denguesux.notices import generate_notice
     try:
         return generate_notice(area_code, language, root=ROOT)
@@ -36,9 +46,40 @@ def resident_notice(area_code: str, language: Literal['en','zh','ms','ta']='en')
 
 class AskBody(BaseModel):
     question: str = Field(min_length=3, max_length=500)
+    conversation_id: Optional[str] = Field(default=None, max_length=64)
 
 def _genie_space():
     return os.environ.get('GENIE_SPACE_ID') or None
+
+def _llm_endpoint():
+    return os.environ.get('LLM_ENDPOINT') or None
+
+def _genie_ask(question: str, conversation_id: Optional[str] = None):
+    """One Genie turn over the gold tables. Pass conversation_id to continue a thread (follow-up questions)."""
+    from databricks.sdk import WorkspaceClient
+    space = _genie_space()
+    w = WorkspaceClient()
+    wait = timedelta(seconds=120)
+    if conversation_id:
+        reply = w.genie.create_message_and_wait(space_id=space, conversation_id=conversation_id, content=question.strip(), timeout=wait)
+    else:
+        reply = w.genie.start_conversation_and_wait(space_id=space, content=question.strip(), timeout=wait)
+    out = {'answer': None, 'sql': None, 'description': None, 'columns': [], 'rows': [], 'truncated': False, 'source': 'Databricks Genie', 'conversation_id': reply.conversation_id}
+    for att in reply.attachments or []:
+        if att.text and att.text.content:
+            out['answer'] = att.text.content
+        if att.query:
+            out['sql'] = att.query.query
+            out['description'] = att.query.description
+            result = w.genie.get_message_attachment_query_result(space_id=space, conversation_id=reply.conversation_id,
+                                                                 message_id=reply.message_id, attachment_id=att.attachment_id)
+            resp = result.statement_response
+            if resp and resp.manifest and resp.manifest.schema and resp.manifest.schema.columns:
+                out['columns'] = [c.name for c in resp.manifest.schema.columns]
+            rows = (resp.result.data_array if resp and resp.result and resp.result.data_array else [])
+            out['truncated'] = len(rows) > 50
+            out['rows'] = rows[:50]
+    return out
 
 @app.get('/api/ask/status')
 def ask_status():
@@ -47,33 +88,102 @@ def ask_status():
 @app.post('/api/ask')
 def ask_genie(body: AskBody):
     """Answer a plain-English question with the Databricks Genie space over the gold tables."""
-    space = _genie_space()
-    if not space:
+    if not _genie_space():
         raise HTTPException(503, 'Genie is not configured for this deployment.')
     try:
-        from databricks.sdk import WorkspaceClient
-        w = WorkspaceClient()
-        reply = w.genie.start_conversation_and_wait(space_id=space, content=body.question.strip(), timeout=timedelta(seconds=120))
-        out = {'answer': None, 'sql': None, 'description': None, 'columns': [], 'rows': [], 'truncated': False, 'source': 'Databricks Genie'}
-        for att in reply.attachments or []:
-            if att.text and att.text.content:
-                out['answer'] = att.text.content
-            if att.query:
-                out['sql'] = att.query.query
-                out['description'] = att.query.description
-                result = w.genie.get_message_attachment_query_result(space_id=space, conversation_id=reply.conversation_id,
-                                                                     message_id=reply.message_id, attachment_id=att.attachment_id)
-                resp = result.statement_response
-                if resp and resp.manifest and resp.manifest.schema and resp.manifest.schema.columns:
-                    out['columns'] = [c.name for c in resp.manifest.schema.columns]
-                rows = (resp.result.data_array if resp and resp.result and resp.result.data_array else [])
-                out['truncated'] = len(rows) > 50
-                out['rows'] = rows[:50]
-        return out
-    except HTTPException:
-        raise
+        return _genie_ask(body.question, body.conversation_id)
     except Exception as exc:  # The front end falls back to the saved-data answers.
         raise HTTPException(502, f'Genie could not answer: {type(exc).__name__}') from None
+
+class ChatMessage(BaseModel):
+    role: Literal['user', 'assistant']
+    content: str = Field(max_length=2000)
+
+class ChatBody(BaseModel):
+    messages: list[ChatMessage] = Field(min_length=1, max_length=20)
+
+@app.get('/api/chat/status')
+def chat_status():
+    return {'enabled': bool(_llm_endpoint()), 'model': _llm_endpoint(), 'database': bool(_genie_space())}
+
+@app.post('/api/chat')
+def chat(body: ChatBody):
+    """Tool-calling assistant: a hosted model answers from the dated gold data and can ask Genie for SQL."""
+    endpoint = _llm_endpoint()
+    if not endpoint:
+        raise HTTPException(503, 'The assistant model is not configured for this deployment.')
+    _refresh_snapshot()
+    from denguesux.assistant import run_chat, make_llm
+    try:
+        return run_chat([m.model_dump() for m in body.messages], make_llm(endpoint), ROOT,
+                        genie=(lambda q: _genie_ask(q)) if _genie_space() else None)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from None
+    except (OSError, KeyError, json.JSONDecodeError):
+        raise HTTPException(503, 'Build the dated gold facts before using the assistant.') from None
+    except Exception as exc:  # The front end falls back to the saved-data answers.
+        raise HTTPException(502, f'The assistant could not answer: {type(exc).__name__}') from None
+
+class FieldReportBody(BaseModel):
+    area_code: str = Field(pattern=r'^[A-Z]{2,3}$')
+    stop_id: str = Field(min_length=1, max_length=120)
+    stop_name: str = Field(min_length=1, max_length=160)
+    place_type: str = Field(default='place', max_length=40)
+    outcome: Literal['water_found', 'cleared', 'nothing']
+    note: Optional[str] = Field(default=None, max_length=280)
+    plan_as_of: Optional[str] = Field(default=None, max_length=40)
+
+def _reports():
+    from denguesux.field_reports import store
+    return store(ROOT)
+
+@app.post('/api/reports')
+def add_report(body: FieldReportBody, verify_only: bool = False):
+    """Record an unverified finding at a planned stop; personal details are not requested."""
+    from denguesux.field_reports import make_report
+    if verify_only:
+        try:
+            _reports().verify()
+        except Exception as exc:
+            raise HTTPException(503, f'Report storage verification failed: {type(exc).__name__}') from None
+        return {'saved': False, 'verified': True, 'observations_written': 0}
+    report = make_report(**body.model_dump(), source='databricks_app' if os.environ.get('DATABRICKS_WAREHOUSE_ID') else 'local')
+    try:
+        _reports().add(report)
+    except Exception as exc:
+        raise HTTPException(503, f'Report could not be saved: {type(exc).__name__}') from None
+    return {'saved': True, 'report_id': report['report_id'], 'reported_at': report['reported_at']}
+
+@app.get('/api/reports')
+def list_reports(area_code: Optional[str] = Query(default=None, pattern=r'^[A-Z]{2,3}$')):
+    from denguesux.field_reports import summarise
+    try:
+        rows = _reports().recent(area_code)
+    except Exception as exc:
+        raise HTTPException(503, f'Reports are unavailable: {type(exc).__name__}') from None
+    return summarise(rows)
+
+def _onemap_client():
+    from denguesux.onemap import OneMapClient
+    return OneMapClient(ROOT)
+
+@app.get('/api/locate/status')
+def locate_status():
+    """Postal lookup needs OneMap credentials on the server; 'use my location' works without them."""
+    try:
+        return {'postal': bool(_onemap_client().get_token())}
+    except Exception:
+        return {'postal': False}
+
+@app.get('/api/locate')
+def locate(postal: str = Query(pattern=r'^\d{6}$')):
+    try:
+        found = _onemap_client().locate_postal(postal)
+    except Exception:
+        found = None
+    if not found:
+        raise HTTPException(404, 'That postal code could not be located. Try “Use my location” instead.')
+    return found
 
 @app.get('/reports/{name}')
 def reports(name:str):

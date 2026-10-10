@@ -5,5 +5,6 @@ The dashboard does not need a public CDN at runtime.
 - Leaflet 1.9.4: https://leafletjs.com/ — BSD-2-Clause, included in leaflet/LICENSE.
 - Phosphor Icons web 2.1.2: https://phosphoricons.com/ — MIT, included in icons/LICENSE.
 - DM Sans font: https://fonts.google.com/specimen/DM+Sans — SIL Open Font License, included in fonts/OFL.txt.
+- MapLibre GL JS 5.6.1: https://maplibre.org/maplibre-gl-js/ — BSD-3-Clause and bundled dependency notices, included in maplibre/LICENSE.txt. JavaScript and CSS copied from the official `maplibre-gl@5.6.1` npm tarball after SHA-512 integrity verification; receipt and file SHA-256 hashes are in maplibre/receipt.json. Loaded locally on demand for the optional 3D inspection view.
 
-The displayed geography comes from the pipeline’s real URA planning-area GeoJSON, not a raster base map. No external map tiles or map key are required.
+The area overview uses genuine URA planning-area GeoJSON. Inspection maps use public OneMap raster tiles and retain source shapes/markers if tiles fail. No map key or OneMap token is sent to the browser. The 3D view uses genuine HDB Existing Building shapes; heights illustrate matched storeys × 3 m, and unknown heights stay flat.

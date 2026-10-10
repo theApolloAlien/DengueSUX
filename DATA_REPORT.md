@@ -281,3 +281,16 @@ See [README.md](README.md) for exact commands and dependency versions. Collector
 ## Phase 2 implementation note
 
 Phase 2 is now implemented under the name **DengueSUX**. The original Phase 1 measurements above remain an as-of audit. Additional complete 2017–2022 temperature and humidity archives were downloaded; together with rainfall they comprise 125,148,250 source observations, reduced to 195,800 station-days without synthetic values. See `data/phase2_inputs/weather_manifest.json` for the additional receipts/quality profiles, `MODEL_REPORT.md` for actual historical forecast results, and `README.md` for the working app and Databricks notebook instructions. Current local priorities remain explicitly heuristic.
+
+
+## Live-data addendum — 10 October 2026
+
+The national series now continues through **2026-W39 (week ending 3 October)** using official MOH/CDA annual workbooks. The 2022 workbook overlap was checked against data.gov.sg; revisions differ by at most four people per week. Source workbook hashes, URLs and retrieval times are in `data/evidence/dengue/moh_weekly_manifest.json`. Missing DHF cells are rejected, never treated as zero.
+
+Weather combines the verified 2017–2024 archives with **2,034 downloaded metric-day files** spanning December 2024 to 9 October 2026. Only API station-days from 2025 onward join the archive inputs. The same plausibility, duplicate and 90% daily coverage rules apply; missing observations and stored features remain null. The locked estimator retains disclosed training-only median imputation and missingness indicators. Rates by prediction period are in `MODEL_REPORT.md` and `model.json.weather_missingness`.
+
+HDB Existing Building (`d_16b157c52ed637edd6ba1232e026258d`) supplies 13,436 official polygons. Four invalid source geometries are excluded. A footprint needs an exact block/postal or verified point-containment match; missing matches are never drawn as invented buildings. Published storeys × 3 metres is labelled illustrative height, not a surveyed measurement. Receipt/profile: `data/evidence/inspection/hdb_existing_building.profile.json`.
+
+Population context uses **SingStat's published June 2026 planning-area totals**, directly from the primary publisher's workbook, under **Master Plan 2025** boundaries. This is newer than the historical/region-level data.gov.sg results found during source discovery. All 55 planning areas match; 48 published numeric denominators are usable, while seven “-” values remain null. Detail cells are rounded and are not summed to manufacture totals. Raw counts remain visible beside active-cluster counts per 10,000 residents. This ratio is context, not incidence or individual risk: cluster counts may include non-residents and shared clusters occur in multiple areas. Receipt/profile: `data/evidence/population/singstat_residents_2026.profile.json`.
+
+Daily API landing retains original response bytes, receipts, hashes and retrieval times. Auto Loader appends exact response envelopes with persistent checkpoints. No synthetic observations or field reports were added by deployment verification.

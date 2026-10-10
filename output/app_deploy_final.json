@@ -1,0 +1,15 @@
+{
+  "create_time": "2026-10-10T05:11:35Z",
+  "creator": "joshua.apollo13@gmail.com",
+  "deployment_artifacts": {
+    "source_code_path": "/Workspace/Users/430bad3c-aea5-4e11-a509-391e2e4be606/src/01f1c469107f1928a4dd3e94321fcf3a"
+  },
+  "deployment_id": "01f1c469107f1928a4dd3e94321fcf3a",
+  "mode": "SNAPSHOT",
+  "source_code_path": "/Workspace/Users/joshua.apollo13@gmail.com/denguesux_app",
+  "status": {
+    "message": "App started successfully",
+    "state": "SUCCEEDED"
+  },
+  "update_time": "2026-10-10T05:11:56Z"
+}

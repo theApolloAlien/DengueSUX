@@ -1,0 +1,313 @@
+{
+  "retrieved_at_utc": "2026-10-10T04:30:19.867356+00:00",
+  "source": "Databricks Unity Catalog table-lineage API",
+  "tables": {
+    "silver_national_weekly": {
+      "upstreams": [
+        {
+          "tableInfo": {
+            "name": "bronze_bulletin",
+            "catalog_name": "workspace",
+            "schema_name": "denguesux",
+            "table_type": "TABLE",
+            "lineage_timestamp": "2026-10-10 02:59:43.0"
+          },
+          "jobInfos": [
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 9024263041057,
+              "lineage_timestamp": "2026-10-10 02:59:43.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 584965695792724,
+              "lineage_timestamp": "2026-10-10 02:07:44.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            }
+          ],
+          "notebookInfos": [
+            {
+              "workspace_id": 7474658048209156,
+              "notebook_id": 3992906002504961,
+              "lineage_timestamp": "2026-10-10 02:59:43.0"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "notebook_id": 3255963982239053,
+              "lineage_timestamp": "2026-10-10 02:07:44.0"
+            }
+          ]
+        },
+        {
+          "tableInfo": {
+            "name": "bronze_weather_station_days",
+            "catalog_name": "workspace",
+            "schema_name": "denguesux",
+            "table_type": "TABLE",
+            "lineage_timestamp": "2026-10-10 02:59:43.0"
+          },
+          "jobInfos": [
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 9024263041057,
+              "lineage_timestamp": "2026-10-10 02:59:43.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 584965695792724,
+              "lineage_timestamp": "2026-10-10 02:07:44.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            }
+          ],
+          "notebookInfos": [
+            {
+              "workspace_id": 7474658048209156,
+              "notebook_id": 3992906002504961,
+              "lineage_timestamp": "2026-10-10 02:59:43.0"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "notebook_id": 3255963982239053,
+              "lineage_timestamp": "2026-10-10 02:07:44.0"
+            }
+          ]
+        }
+      ],
+      "downstreams": [
+        {
+          "jobInfos": [
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 9024263041057,
+              "lineage_timestamp": "2026-10-10 03:00:39.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 409617514507301,
+              "lineage_timestamp": "2026-10-10 02:21:38.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 182789112234292,
+              "lineage_timestamp": "2026-10-10 02:20:18.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 568538146359052,
+              "lineage_timestamp": "2026-10-10 02:15:34.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 772198336509950,
+              "lineage_timestamp": "2026-10-10 02:14:43.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            }
+          ],
+          "notebookInfos": [
+            {
+              "workspace_id": 7474658048209156,
+              "notebook_id": 3992906002504961,
+              "lineage_timestamp": "2026-10-10 03:00:39.0"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "notebook_id": 3255963982239053,
+              "lineage_timestamp": "2026-10-10 02:21:38.0"
+            }
+          ]
+        },
+        {
+          "tableInfo": {
+            "name": "gold_national_features",
+            "catalog_name": "workspace",
+            "schema_name": "denguesux",
+            "table_type": "TABLE",
+            "lineage_timestamp": "2026-10-10 03:00:35.0"
+          },
+          "jobInfos": [
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 9024263041057,
+              "lineage_timestamp": "2026-10-10 03:00:35.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 409617514507301,
+              "lineage_timestamp": "2026-10-10 02:21:31.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 182789112234292,
+              "lineage_timestamp": "2026-10-10 02:20:11.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 568538146359052,
+              "lineage_timestamp": "2026-10-10 02:15:29.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 772198336509950,
+              "lineage_timestamp": "2026-10-10 02:14:36.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 584965695792724,
+              "lineage_timestamp": "2026-10-10 02:09:07.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            }
+          ],
+          "notebookInfos": [
+            {
+              "workspace_id": 7474658048209156,
+              "notebook_id": 3992906002504961,
+              "lineage_timestamp": "2026-10-10 03:00:35.0"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "notebook_id": 3255963982239053,
+              "lineage_timestamp": "2026-10-10 02:21:31.0"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_national_features": {
+      "upstreams": [
+        {
+          "tableInfo": {
+            "name": "silver_national_weekly",
+            "catalog_name": "workspace",
+            "schema_name": "denguesux",
+            "table_type": "TABLE",
+            "lineage_timestamp": "2026-10-10 03:00:35.0"
+          },
+          "jobInfos": [
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 9024263041057,
+              "lineage_timestamp": "2026-10-10 03:00:35.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 409617514507301,
+              "lineage_timestamp": "2026-10-10 02:21:31.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 182789112234292,
+              "lineage_timestamp": "2026-10-10 02:20:11.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 568538146359052,
+              "lineage_timestamp": "2026-10-10 02:15:29.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 772198336509950,
+              "lineage_timestamp": "2026-10-10 02:14:36.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 584965695792724,
+              "lineage_timestamp": "2026-10-10 02:09:07.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            }
+          ],
+          "notebookInfos": [
+            {
+              "workspace_id": 7474658048209156,
+              "notebook_id": 3992906002504961,
+              "lineage_timestamp": "2026-10-10 03:00:35.0"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "notebook_id": 3255963982239053,
+              "lineage_timestamp": "2026-10-10 02:21:31.0"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_national_predictions": {
+      "upstreams": [
+        {
+          "jobInfos": [
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 9024263041057,
+              "lineage_timestamp": "2026-10-10 03:01:14.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "job_id": 409617514507301,
+              "lineage_timestamp": "2026-10-10 02:22:06.0",
+              "job_type": "JOB_TYPE_NORMAL"
+            }
+          ],
+          "notebookInfos": [
+            {
+              "workspace_id": 7474658048209156,
+              "notebook_id": 3992906002504961,
+              "lineage_timestamp": "2026-10-10 03:01:14.0"
+            },
+            {
+              "workspace_id": 7474658048209156,
+              "notebook_id": 3255963982239053,
+              "lineage_timestamp": "2026-10-10 02:22:06.0"
+            }
+          ]
+        }
+      ]
+    },
+    "inspection_places": {
+      "upstreams": [
+        {
+          "tableInfo": {
+            "name": "inspection_candidates",
+            "catalog_name": "workspace",
+            "schema_name": "denguesux",
+            "table_type": "TABLE",
+            "lineage_timestamp": "2026-10-10 03:27:01.0"
+          }
+        },
+        {
+          "tableInfo": {
+            "name": "gold_cluster_growth",
+            "catalog_name": "workspace",
+            "schema_name": "denguesux",
+            "table_type": "TABLE",
+            "lineage_timestamp": "2026-10-10 03:27:01.0"
+          }
+        },
+        {
+          "tableInfo": {
+            "name": "dim_planning_area",
+            "catalog_name": "workspace",
+            "schema_name": "denguesux",
+            "table_type": "TABLE",
+            "lineage_timestamp": "2026-10-10 03:27:01.0"
+          }
+        }
+      ]
+    }
+  }
+}

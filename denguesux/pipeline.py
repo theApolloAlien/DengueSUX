@@ -12,7 +12,8 @@ from .spatial import read_geo
 
 METRICS=['rainfall','temperature','humidity']
 
-def epi_calendar(start=2012,end=2022):
+def epi_calendar(start=2012,end=None):
+    end=end or dt.date.today().year
     result=[]
     for year in range(start,end+1):
         for week in range(1,54):
@@ -25,6 +26,11 @@ def bronze(spark):
     source=ROOT/'data/raw/dengue/national_bulletin.csv.gz'
     raw=spark.read.option('header',True).schema('epi_week string, disease string, cases string').csv(str(source))
     write_table(raw.withColumn('source_dataset_id',F.lit('d_ca168b2cb763640d72c4600a68f9909e')),'bronze_bulletin')
+    # data.gov.sg stops at 2022-W52; MOH/CDA yearly workbooks continue the same national series.
+    workbook=ROOT/'data/raw/dengue/moh_weekly_dengue.csv.gz'
+    if workbook.exists():
+        moh=spark.read.option('header',True).schema('epi_week string, disease string, cases int, printed_week_range string, source_url string, source_sha256 string, retrieved_at_utc string').csv(str(workbook))
+        write_table(moh,'bronze_moh_weekly')
     daily=ROOT/'data/phase2_inputs/weather_station_days.csv.gz'
     if not daily.exists(): raise FileNotFoundError('Run scripts/prepare_weather.py first: '+str(daily))
     weather=spark.read.option('header',True).option('inferSchema',True).csv(str(daily))
@@ -45,11 +51,15 @@ def sunday(column):
 
 def silver(spark):
     calendar=spark.createDataFrame(epi_calendar(),'epi_week string, week_start date, week_end date, epi_year int, epi_number int')
-    raw=read_table(spark,'bronze_bulletin')
+    raw=read_table(spark,'bronze_bulletin').select('epi_week','disease','cases').filter(F.col('epi_week')<'2023-W01')
+    if (ROOT/'data/raw/dengue/moh_weekly_dengue.csv.gz').exists():
+        moh=read_table(spark,'bronze_moh_weekly').filter(F.col('epi_week')>='2023-W01').select('epi_week','disease',F.col('cases').cast('string').alias('cases'))
+        raw=raw.unionByName(moh)
     cases=(raw.filter(F.col('disease').isin('Dengue Fever','Dengue Haemorrhagic Fever'))
            .groupBy('epi_week').agg(F.sum(F.col('cases').cast('int')).alias('cases'),F.count('*').alias('disease_rows')))
     if cases.filter((F.col('disease_rows')!=2)|F.col('cases').isNull()).count(): raise ValueError('Missing/duplicate dengue rows')
-    national=calendar.join(cases,'epi_week','left')
+    latest=cases.agg(F.max('epi_week')).first()[0]
+    national=calendar.filter(F.col('epi_week')<=latest).join(cases,'epi_week','left')
     if national.filter(F.col('cases').isNull()).count(): raise ValueError('Bulletin calendar not complete')
     days=read_table(spark,'bronze_weather_station_days').withColumn('date',F.to_date('date')).withColumn('usable',F.col('usable').cast('boolean'))
     clean=days.withColumn('clean_value',F.when(F.col('usable') & F.col('value').isNotNull(),F.col('value').cast('double')))
@@ -128,6 +138,23 @@ def gold(spark):
     write_growth(spark=spark)
     build_inspection(spark=spark)
     write_notices(spark=spark)
+    from .alerts import write_alerts
+    write_alerts(spark=spark)
+    from .map_context import build_map_context
+    build_map_context()
     from .export import export_dashboard
     export_dashboard(current,result)
+    genie_layer(spark,current)
     print('GOLD: national predictions, MLflow evaluation, dated priorities, inspection plans, cluster comparisons and resident drafts exported.')
+
+def genie_layer(spark,current=None):
+    """Planning-area lookup (with region), readable places view and Unity Catalog comments for the Genie space."""
+    from .genie_layer import apply_governance, statements
+    from .runtime import TABLE_PREFIX
+    if not TABLE_PREFIX: return print('GENIE: skipped, no Unity Catalog table prefix configured.')
+    if current is None:
+        from .spatial import build_current
+        current=build_current()
+    for statement in statements(TABLE_PREFIX,[(a['code'],a['name'],a['region']) for a in current['areas']]): spark.sql(statement)
+    apply_governance(spark.sql, TABLE_PREFIX)
+    print('GENIE: dim_planning_area, inspection_places view, comments and best-effort tags refreshed.')

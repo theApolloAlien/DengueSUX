@@ -1,6 +1,6 @@
 # DengueSUX: Surveillance Using eXplainable AI
 
-**Where should we look for mosquitoes this week?** DengueSUX turns Singapore's open data into a weekly dengue plan: which areas to check first, which blocks to walk, and what to tell residents, backed by a two-week national forecast tested on the 2022 outbreak.
+**Where should we look for mosquitoes this week?** DengueSUX turns Singapore's open data into a weekly dengue plan: which areas to check first, which blocks to walk, and what to tell residents, backed by a live national forecast with ranges and a retrospective check through 2026.
 
 Built for the Databricks AI Social Impact (DAISI) Challenge Singapore 2026 · Problem statement **A2 — DengueRadar: Real-time outbreak forecasting**.
 
@@ -21,9 +21,9 @@ Built for the Databricks AI Social Impact (DAISI) Challenge Singapore 2026 · Pr
 - **Where to check first:** all 55 URA planning areas ranked by people in active NEA dengue clusters.
 - **Inspection plan:** one click turns an area into ranked places to check (cluster HDB blocks, parks, hawker centres) on a OneMap walking route, with a checklist per stop. *Places to check, not confirmed breeding sites.*
 - **Resident notices:** English, 中文, Bahasa Melayu and தமிழ் drafts with NEA's Mozzie Wipeout steps; each passes 5 automatic fact checks. Drafts are for human review before sending.
-- **Two-week forecast, tested on 2022:** off by ~83 people a week vs ~172 for a four-week average (52% lower error); turned High 11 weeks before the peak (simple average: 10). Chosen on 2019–2021, replayed on 2022.
+- **Live national outlook:** official MOH/CDA reports through EW39 2026 (week ending 3 October). For the week of 11 October: about **68 people**, with an **80% range of 50–93**. Across 196 evaluated weeks from 2023 onward, error is **28.7 people/week vs 31.9** for a four-week average (**10% lower**); range coverage is **76%**. The 2022 replay remains available as a separate, reused evaluation year.
 - **Explanations and sources:** grouped drivers (recent cases, time of year, rain, heat) and a dated source on every number.
-- **Ask DengueSUX:** plain-English questions and the SQL behind them. The local assistant is scripted; in Databricks it maps to a Genie space.
+- **Ask DengueSUX:** plain-English questions and the SQL behind them. The Databricks app uses a hosted model and a live Genie space; local/offline use has an explicitly labelled saved-data fallback.
 
 ## Quick start
 
@@ -50,9 +50,9 @@ cp .env.example .env
 
 ## Data and credits
 
-Open data from **data.gov.sg** (MOH Weekly Infectious Disease Bulletin; NEA weather archives, real-time weather APIs, dengue clusters and hawker centres; URA Master Plan 2025 planning areas; HDB Property Information; NParks parks) and **OneMap** (Singapore Land Authority) for geocoding, walking routes and base map tiles. Prevention guidance adapted from NEA's Mozzie Wipeout. Details, checksums and limitations: [DATA_REPORT.md](DATA_REPORT.md) and [MODEL_REPORT.md](MODEL_REPORT.md).
+Open data from **data.gov.sg** (MOH Weekly Infectious Disease Bulletin; NEA weather archives, real-time weather APIs, dengue clusters and hawker centres; URA Master Plan 2025 planning areas; HDB Property Information; NParks parks) plus official **MOH/CDA weekly workbooks**, **SingStat resident totals**, and **OneMap** (Singapore Land Authority) for geocoding, walking routes and base map tiles. Prevention guidance adapted from NEA's Mozzie Wipeout. Details, checksums and limitations: [DATA_REPORT.md](DATA_REPORT.md) and [MODEL_REPORT.md](MODEL_REPORT.md).
 
-**Limitations:** public weekly case data ends in December 2022, so the forecast is a replay, not a live forecast; area rankings are priorities, not local case predictions; the three pipeline stages (bronze, silver, gold) have run end to end on Databricks Free Edition serverless compute via `notebooks/run_stage.py`, but the scheduled job bundle (`databricks.yml`) has not yet been run in a live workspace.
+**Limitations:** historical evaluation assumes immediate weekly publication and uses revised official counts. The 80% range is empirical past forecast error, not a guarantee. Area rankings are places to check, not local case predictions or confirmed breeding sites. Weather explanations are associations, not causes. Source observations and stored tables preserve missing values; training-only median imputation and missing-value indicators remain inside the locked estimator. See `MODEL_REPORT.md` for missing-weather rates by evaluation period.
 
 ---
 
@@ -60,7 +60,7 @@ Open data from **data.gov.sg** (MOH Weekly Infectious Disease Bulletin; NEA weat
 
 A working, real-data dengue research dashboard for the DAISI Challenge. Explore Singapore's 55 planning areas, current NEA cluster signals, local weather, and a national two-week forecast with baseline comparisons and grouped explanations.
 
-**The app pairs a dated cluster map with a 2022 national replay.** National reports end in December 2022, so this build does not issue a current national forecast. Area priorities help residents decide where to check first; they are a heuristic, not validated local predictions. No synthetic observations or outcomes are used.
+**The app pairs a dated cluster map with a current national outlook.** The data.gov.sg series through 2022 is continued with official MOH/CDA annual workbooks through EW39 2026. Recent labels must pass a freshness gate before a live forecast is exposed. Area priorities help residents decide where to check first; they are a heuristic, not validated local predictions. No synthetic observations or outcomes are used.
 
 DengueSUX builds on existing NEA and university dengue forecasting research; the contribution here is a public-data, explainable workflow that makes provenance, missingness, model selection and fallback state visible to community operators.
 
@@ -70,9 +70,9 @@ DengueSUX builds on existing NEA and university dengue forecasting research; the
 .venv-prototype/bin/python -m uvicorn app:app --host 127.0.0.1 --port 8787
 ```
 
-Open http://127.0.0.1:8787. The delivered `output/web/dashboard.json` contains real pipeline results, so opening the app does not require retraining. Start with the weekly briefing, use Where / Why / What to do, search an area or show the Top 5, and check the NEA Mozzie Wipeout steps. Forecast lab replays all 52 test weeks and reports advance warning before the peak. “How to read this” holds dates, assumptions and sources. Export data downloads the underlying evidence.
+Open http://127.0.0.1:8787. The delivered `output/web/dashboard.json` contains real pipeline results, so opening the app does not require retraining. Start with the weekly briefing, use Where / Why / What to do, search an area or show the Top 5, and check the NEA Mozzie Wipeout steps. Forecast lab shows the current range, a 2023+ retrospective evaluation, and a separate 52-week 2022 replay. “How to read this” holds dates, assumptions and sources. Export data downloads the underlying evidence.
 
-The national map, fonts, icons and scripts are local assets. Map geometry comes from URA's actual GeoJSON. The street-level inspection map loads attributed OneMap tiles, so its base map needs network access; saved cluster and inspection geometry remains dated and inspectable. The web UI uses vanilla JavaScript and Leaflet; the local server uses Python/FastAPI. No Node build step is needed. OneMap credentials are needed when public search is unavailable and for automatic renewal/routing; the original dashboard and local notice templates do not require them.
+The national map, fonts, icons and scripts are local assets. The optional 3D route preview uses pinned MapLibre GL 5.6.1, official HDB footprints and labelled illustrative storeys × 3 m; reduced-motion users step through stops manually. Map geometry comes from URA's actual GeoJSON. The street-level inspection map loads attributed OneMap tiles, so its base map needs network access; saved cluster and inspection geometry remains dated and inspectable. The web UI uses vanilla JavaScript and Leaflet; the local server uses Python/FastAPI. No Node build step is needed. OneMap credentials are needed when public search is unavailable and for automatic renewal/routing; the original dashboard and local notice templates do not require them.
 
 ### Install and reproduce
 
@@ -130,6 +130,8 @@ The target is **the national case count in week t+2**, a single Sunday–Saturda
 Model selection uses **39 expanding four-week folds across 2019–2021**, including outbreak years. Each fold sees only target labels available before its issue date. Three fixed candidates compete: the four-week average, a Ridge residual model and gradient boosting. The lowest equal-year mean absolute error wins; exact ties prefer baseline, then Ridge, then boosting. Selection is locked before refitting and evaluating only the winner and baseline on 2022. **2022 was already viewed during earlier revisions**, so this is a reused evaluation year, not newly unseen data.
 
 **Gradient boosting won.** Its 2022 average absolute weekly error is **83.2 people**, against **172.4** for the simple average (51.7% lower). National band accuracy is **94.2%**, against **92.3%**. The first High forecast was issued **11 weeks before** the observed peak, versus **10 weeks** for the average. High is a training-derived statistical band, not an official outbreak alert; crossing it early does not predict the peak date. This is one retrospective year with assumed report availability. See `MODEL_REPORT.md` for annual validation errors and the exact protocol.
+
+The fixed recipe is refitted annually for the **2023+ retrospective evaluation**, using only earlier labels at each refit. It is not a record of forecasts actually issued since 2023. The final weather comparison gives **28.7** people/week error with weather versus **28.5** without weather; weather did not improve this later evaluation. The feature comparison is diagnostic and does not alter the locked selection. Live forecasts are computed separately, with each row’s training cutoff exported.
 
 Learned candidates predict a change from the most recent national count using eight weeks of weather/case history, trend and time of year. Weather imputation is fitted on training data only; missing indicators remain associated with their metric. The baseline predicts the latest four-week mean. No local accuracy is claimed because historical planning-area outcomes are unavailable.
 
@@ -211,7 +213,7 @@ The inspection stage publishes `bronze_inspection_sources`, `silver_inspection_c
 .venv-prototype/bin/python scripts/snapshot_clusters.py
 ```
 
-This saves original source bytes, hashes and retrieval time under `data/snapshots/clusters/YYYY-MM-DD/`. Re-running on the same Singapore date reuses the immutable snapshot. The first genuine snapshot is **24 September 2026**; the delivered tracker correctly says **“Not enough history yet.”** There is no backfill or invented seven-day history. A checksum mismatch fails closed.
+This saves original source bytes, hashes and retrieval time under `data/snapshots/clusters/YYYY-MM-DD/`. Re-running on the same Singapore date reuses the immutable snapshot. The genuine snapshots currently span **24 September to 10 October 2026**. The 16-day comparison and playback are labelled with their actual dates; the stricter 7–9-day growth measure still says **“Not enough history yet.”** There is no backfill or invented seven-day history. A checksum mismatch fails closed.
 
 Once a full seven-day span exists, the tracker chooses the nearest saved snapshot **7–9 days earlier**, allowing at most two missing daily runs. Both at least 10% overlap of the smaller polygon and at least 25% Jaccard similarity of locality words are required. Source `OBJECTID` equality alone is not a match. Unique matches are Growing, Stable or Shrinking according to their cumulative reported cluster-count change. Unmatched current clusters are New; absent prior clusters are Closed, meaning no longer in the current feed, not certified absence of transmission. Ambiguous splits/merges are labelled incomparable and contribute no growth points. These differences are not weekly incident infections.
 
@@ -225,7 +227,9 @@ Once a full seven-day span exists, the tracker chooses the nearest saved snapsho
 
 The daily runner updates `current.json`, `growth.json`, `inspection.json`, `notices.json` and the combined dashboard. Existing actual weather dates are retained; a new cluster download never pretends the weather was refreshed. It writes `gold_cluster_growth` and `gold_resident_notices` when Spark is supplied, and `output/daily_inspection_status.json` records the last run. The large historical backfill and model training are not daily tasks.
 
-`databricks.yml` is a deployable Asset Bundle job configured for **08:15 Asia/Singapore, daily, PAUSED**. Supply `existing_cluster_id`, a persistent `/Volumes/...` `data_root`, and writable `catalog.schema` `table_prefix`; install the Python dependencies on the selected cluster, then deploy/enable the schedule in your workspace. The notebook passes the existing Spark session. Credentials belong in the private Volume `.env` or workspace-managed environment, not in bundle variables or the UI. **No job has been deployed or activated from this checkout.** A local scheduler may run the same daily command. This configuration is not proof that collection is already running.
+`databricks.yml` defines Free Edition **serverless-only** jobs. The daily schedule is **08:15 Asia/Singapore, UNPAUSED**. It lands official API responses in the Unity Catalog Volume, ingests new files with Auto Loader `availableNow`, then refreshes cluster/inspection outputs. Persistent checkpoints avoid reprocessing saved files. Heavy archive reduction stays local. Always pass `--profile denguesux` to Databricks CLI commands. The app refreshes its approved public dashboard from the Volume at most once a minute and retains dated saved data if refresh fails. The OneMap token remains local and is never uploaded. See [governance and ingestion](docs/GOVERNANCE_INGESTION.md) for table tags, lineage evidence and the Python lineage boundary.
+
+The app also provides “What changed”, saved-date cluster playback, Check my block, homes per route, and unverified field reports stored in a restricted Unity Catalog table. Report-storage verification uses a zero-row insert and never creates a pretend observation.
 
 ### Resident notice drafts
 
@@ -235,7 +239,7 @@ Local mode is explicitly **“Local template fallback · no LLM used.”** `deng
 
 The fixed `gold-only-notice-v1` prompt supplies only the approved dated gold facts and credited prevention sentences. The model may arrange the approved sentences; an exact allowlist rejects changed numbers, extra facts, omitted advice or new claims. Failed or unconfigured calls use the labelled local template with a clear fallback note. This conservative interface sacrifices free-form generation to preserve factual constraints. `/api/notices/{area_code}?language=en|zh|ms|ta` returns a draft, never sends it. Source guidance: [NEA prevention / BLOCK page](https://www.nea.gov.sg/dengue-zika/prevent-aedes-mosquito-breeding) and [NEA home prevention checklist](https://www.nea.gov.sg/dengue-zika/prevent-aedes-mosquito-breeding/other-preventive-measures), checked 24 September 2026.
 
-No photo-report stretch feature was added. The app collects no names, phone numbers, email addresses or resident images. OneMap account credentials are private operational configuration, not public resident data.
+No photo-report stretch feature was added. The app requests no names, phone numbers, email addresses or resident images. Optional field-report notes are treated as potentially private and are excluded from public exports. OneMap account credentials are private operational configuration, not public resident data.
 
 ### Port to Databricks Free Edition / serverless
 
@@ -254,4 +258,4 @@ No photo-report stretch feature was added. The app collects no names, phone numb
 5. Run bronze → silver → gold. Existing serverless `spark` is passed to the shared stages; no local Spark master or JVM configuration is set. The implementation uses PySpark DataFrame/SQL APIs compatible with Spark Connect. All year/minute reduction has been performed locally to stay within Free Edition resource limits.
 6. Generate `output/denguesux.html` locally, upload it to the Volume and run `04_dashboard.py`. After refreshing data on Databricks, regenerate the bundle from the exported JSON with the included asset exporter. The Python/FastAPI development server is for local preview; Databricks notebooks render the static bundle through `displayHTML`.
 
-Local execution and the persisted output checks have been verified. Import and execution in a live Databricks Free Edition workspace remain untested; Python library availability, notebook HTML policy and writable Unity Catalog/MLflow paths must be checked there. OneMap and optional workspace-model credentials are configured privately as described above; none are supplied in the source.
+Local execution and Databricks Free Edition serverless execution have both been verified. App deployment and job-run evidence for this finishing run are recorded in [build progress](docs/BUILD_PROGRESS.md). OneMap and optional workspace-model credentials are configured privately as described above; none are supplied in the source.

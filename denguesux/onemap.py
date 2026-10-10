@@ -257,6 +257,22 @@ class OneMapClient:
                 return None
         return None
 
+    def locate_postal(self, postal):
+        """One residential postal code to coordinates for a resident lookup. Nothing is cached or logged."""
+        postal = str(postal).strip()
+        if not re.fullmatch(r"\d{6}", postal) or not self.get_token():
+            return None
+        result = self._get("/api/common/elastic/search", {"searchVal": postal, "returnGeom": "Y", "getAddrDetails": "Y", "pageNum": 1})
+        for row in (result or {}).get("results", []):
+            if str(row.get("POSTAL")) == postal:
+                try:
+                    latitude, longitude = float(row["LATITUDE"]), float(row["LONGITUDE"])
+                except (KeyError, TypeError, ValueError):
+                    continue
+                if valid_coordinate(latitude, longitude):
+                    return {"postal": postal, "address": row.get("ADDRESS"), "latitude": latitude, "longitude": longitude}
+        return None
+
     def geocode_block(self, block, street, *, refresh=False):
         block, road = str(block).upper().strip(), canonical_street(street)
         if not re.fullmatch(r"[0-9]+[A-Z]?", block) or not road:

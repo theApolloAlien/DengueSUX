@@ -24,6 +24,8 @@ CATALOG = {
         2020: "d_10d453bc02d1a41daf6373b96b1929e4",
         2021: "d_557fbb859f12a8af29ef4e1375288165",
         2022: "d_6fd47a46bd59c5cb70d9561b404d0a64",
+        2023: "d_370bbfc65de96ad93eaefa182135d1c0",
+        2024: "d_910c81fce47f38574015b3882ac59254",
     },
     "humidity": {
         2017: "d_0e0e47c0657e4fe3fddae3b9e516ba74",
@@ -32,11 +34,17 @@ CATALOG = {
         2020: "d_15f4385609fa3aa8f5812872586cbb80",
         2021: "d_b30e532f095592dfa8fef924c2325b38",
         2022: "d_6ecc4ed07e7dcc024c22e548aa1e86f6",
+        2023: "d_d6fb7c8f42cacf73af76d17518c39f24",
+        2024: "d_7916c4c0cbe0dfaadaeac4b56d732a2a",
     },
-    "rainfall": {year: value[0] for year, value in RAINFALL_DATASETS.items() if 2017 <= year <= 2022},
+    "rainfall": {year: value[0] for year, value in RAINFALL_DATASETS.items() if 2017 <= year <= 2024},
 }
 RAW = ROOT / "data/raw/weather_history"
 OUT = ROOT / "data/phase2_inputs"
+ARCHIVE_YEARS = list(range(2017, 2025))
+# The yearly archives end with 2024; later days come from scripts/collect_weather_daily.py.
+API_STATION_DAYS = OUT / "weather_api_station_days.csv.gz"
+API_FROM = "2025-01-01"
 POLICY = {
     "timezone": "Asia/Singapore",
     "sampling": "Every downloaded observation; all stations; no temporal subsampling.",
@@ -181,6 +189,10 @@ def combine(profiles):
         paths = [ROOT / profile["station_day_path"] for profile in profiles]
         csvs = "[" + ",".join(q(path) for path in paths) + "]"
         con.execute(f"CREATE TABLE station_days AS SELECT * FROM read_csv({csvs}, header=true, union_by_name=true)")
+        if API_STATION_DAYS.exists():
+            # Archive days win wherever both exist; the API only extends the series past the archives.
+            con.execute(f"""INSERT INTO station_days BY NAME SELECT * FROM read_csv({q(API_STATION_DAYS)}, header=true)
+                WHERE date >= DATE {q(API_FROM)}""")
         all_path = OUT / "weather_station_days.csv.gz"
         national_path = OUT / "weather_national_days.csv"
         con.execute("COPY (SELECT * FROM station_days ORDER BY metric, date, station_id) TO " + q(all_path) + " (HEADER, COMPRESSION GZIP)")
@@ -196,7 +208,10 @@ def combine(profiles):
             avg(usable_stations) mean_usable_stations FROM national_days GROUP BY metric ORDER BY metric""")
         manifest = {"generated_at_utc": utc_now(), "status": "complete", "synthetic_data": False,
                     "quality_policy": POLICY, "national_summary": national_summary,
-                    "sources": profiles, "outputs": [
+                    "sources": profiles,
+                    "api_extension": {"path": str(API_STATION_DAYS.relative_to(ROOT)), "from": API_FROM,
+                                      "sha256": sha256_file(API_STATION_DAYS)} if API_STATION_DAYS.exists() else None,
+                    "outputs": [
                         {"path": str(path.relative_to(ROOT)), "bytes": path.stat().st_size, "sha256": sha256_file(path)}
                         for path in (all_path, national_path)]}
         write_json(OUT / "weather_manifest.json", manifest)
@@ -207,7 +222,7 @@ def combine(profiles):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--years", nargs="+", type=int, choices=list(range(2017, 2023)), default=list(range(2017, 2023)))
+    parser.add_argument("--years", nargs="+", type=int, choices=ARCHIVE_YEARS, default=ARCHIVE_YEARS)
     parser.add_argument("--metrics", nargs="+", choices=list(CATALOG), default=list(CATALOG))
     parser.add_argument("--workers", type=int, choices=[1, 2], default=2)
     args = parser.parse_args()
@@ -218,6 +233,13 @@ def main():
         futures = [pool.submit(prepare, metric, year) for metric in args.metrics for year in args.years]
         for future in as_completed(futures):
             profiles.append(future.result())
+    # Combine every prepared year, not only the ones requested in this run.
+    done = {(profile["metric"], profile["year"]) for profile in profiles}
+    for metric in CATALOG:
+        for year in ARCHIVE_YEARS:
+            path = OUT / f"weather_{metric}_{year}_profile.json"
+            if (metric, year) not in done and path.exists():
+                profiles.append(json.loads(path.read_text()))
     combine(sorted(profiles, key=lambda profile: (profile["metric"], profile["year"])))
 
 

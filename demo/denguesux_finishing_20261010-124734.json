@@ -1,0 +1,74 @@
+{
+  "recorded_at_sgt": "2026-10-10T12:48:30.372336+08:00",
+  "path": "demo/denguesux_finishing_20261010-124734.mp4",
+  "duration_seconds": 51.55,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "sha256": "acada7720c16aa0a7668c787ab53066f97a9527a9488cf7cd230ebf692e47531",
+  "method": "Real browser interactions only; no overlays, fabricated captions, report submissions or personal location.",
+  "scenes": [
+    {
+      "scene": "Latest dated cluster and national briefings",
+      "seconds": 0.0
+    },
+    {
+      "scene": "What changed since the saved snapshot",
+      "seconds": 3.09
+    },
+    {
+      "scene": "Check my block using the public example",
+      "seconds": 6.26
+    },
+    {
+      "scene": "Raw cluster counts with resident population context",
+      "seconds": 10.34
+    },
+    {
+      "scene": "Saved cluster snapshots; dates are never filled",
+      "seconds": 13.42
+    },
+    {
+      "scene": "Jurong West inspection plan and homes covered",
+      "seconds": 16.56
+    },
+    {
+      "scene": "3D route preview with official HDB footprints",
+      "seconds": 22.39
+    },
+    {
+      "scene": "Resident notice draft: English",
+      "seconds": 30.64
+    },
+    {
+      "scene": "Resident notice draft: Chinese",
+      "seconds": 32.8
+    },
+    {
+      "scene": "Resident notice draft: Malay",
+      "seconds": 34.94
+    },
+    {
+      "scene": "Resident notice draft: Tamil",
+      "seconds": 37.1
+    },
+    {
+      "scene": "Live forecast ranges and publication/weather disclosure",
+      "seconds": 40.37
+    },
+    {
+      "scene": "2022 outbreak replay",
+      "seconds": 46.54
+    }
+  ],
+  "encoded_video": {
+    "codec": "h264",
+    "width": 1440,
+    "height": 900,
+    "duration_seconds": 51.5,
+    "bytes": 5796910
+  },
+  "verification_report": "output/verification/browser.json",
+  "visual_qa": "Verified six extracted frames covering changes, timeline, 3D, notices, live forecast and 2022 replay; no overlays or sensitive values visible."
+}

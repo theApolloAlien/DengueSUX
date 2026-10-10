@@ -3,9 +3,7 @@
 Plain-language steps for getting DengueSUX running in a Databricks Free Edition workspace.
 Do them in order. Tick each box only when the "You should see" line is true.
 
-**Honest caveat:** the notebooks and job have never been run on Databricks. Expect to hit
-a few errors. Phases 4 and 5 are where they will most likely appear. When one does, copy
-the full error text and bring it back; that is normal progress, not failure.
+The medallion pipeline, daily snapshot job and app have run on Databricks Free Edition. Current run evidence is recorded in `docs/BUILD_PROGRESS.md`.
 Button names in Databricks change slightly between releases, so match by meaning.
 
 **The golden rule:** edit code on your laptop, push to GitHub, then press Pull in
@@ -103,23 +101,37 @@ Things learned the hard way on Free Edition (already handled in `run_stage.py`):
 
 ```bash
 python scripts/build_databricks_app.py /tmp/app_build --web-from <copy of the pipeline's output/web>
-databricks workspace import-dir /tmp/app_build /Workspace/Users/<you>/denguesux_app --overwrite
-databricks apps create --json @app_create.json      # name, resources: genie-space + sql-warehouse
-databricks apps deploy denguesux --source-code-path /Workspace/Users/<you>/denguesux_app
+databricks workspace import-dir /tmp/app_build /Workspace/Users/<you>/denguesux_app --overwrite --profile denguesux
+databricks apps create --profile denguesux --json @app_create.json      # name, resources: genie-space + sql-warehouse
+databricks apps deploy denguesux --source-code-path /Workspace/Users/<you>/denguesux_app --profile denguesux
 ```
 
   The app's service principal also needs `USE CATALOG`, `USE SCHEMA` and `SELECT` on
   `workspace.denguesux`. The "Ask the data" tab then answers live through Genie, and falls back
   to saved-data answers if Genie is unavailable. Free Edition stops an app after 24 hours;
-  restart it before a demo with `databricks apps start denguesux`.
-- [x] **Jobs (serverless):** `databricks.yml` defines two jobs with no cluster, so they run on
-      serverless compute: `pipeline` (bronze, silver, gold) and `daily_inspection` (live NEA
-      snapshot, growth, inspection plans, resident notices; schedule is PAUSED to save quota).
+  restart it before a demo with `databricks apps start denguesux --profile denguesux`.
+- [x] **Assistant model and Genie tuning:** the Assistant tab calls a Databricks-hosted model
+      (`databricks-meta-llama-3-3-70b-instruct`) that uses tools over the dated gold data and can ask Genie for SQL.
+      Attach the endpoint to the app as resource `llm-endpoint` (`CAN_QUERY`); `app.yaml` reads it as `LLM_ENDPOINT`.
+      Without it the panel falls back to rule-based answers.
 
 ```bash
-databricks bundle deploy -p <profile>
-databricks bundle run pipeline -p <profile>
-databricks bundle run daily_inspection -p <profile>
+python scripts/build_genie_layer.py --profile <profile>        # dim_planning_area, inspection_places view, table/column comments
+python scripts/build_genie_space.py --validate --push <space_id> # EXPLAIN every example + benchmark, then update the live space
+databricks genie genie-create-eval-run <space_id>              # run the 12 benchmark questions (chat mode)
+python scripts/eval_assistant.py                               # 27 behaviour checks against the real model and Genie
+```
+
+  Pipeline writes drop Unity Catalog comments, so `write_table` re-applies them and the gold stage refreshes the
+  lookup and view. Compute-free: all of this runs through the SQL warehouse.
+- [x] **Jobs (serverless):** `databricks.yml` defines two jobs with no cluster, so they run on
+      serverless compute: `pipeline` (bronze, silver, gold) and `daily_inspection` (live NEA
+      snapshot, growth, inspection plans, resident notices; schedule is UNPAUSED at 08:15 Asia/Singapore; bounded Auto Loader ingestion precedes the refresh).
+
+```bash
+databricks bundle deploy --profile denguesux
+databricks bundle run pipeline --profile denguesux
+databricks bundle run daily_inspection --profile denguesux
 ```
 
   Both were run end to end on Databricks Free Edition. The daily job's live fetch from data.gov.sg
@@ -140,3 +152,5 @@ databricks bundle run daily_inspection -p <profile>
 - Run each notebook once, read the result, then move on. Avoid re-running everything in a loop.
 - Free Edition internet is limited to trusted domains, so live calls to data.gov.sg or
   OneMap may be blocked. Test one small request early. Your saved data works without it.
+
+The app also attaches `data-volume` with READ_VOLUME on `workspace.denguesux.files`; `DENGUE_DATA_VOLUME` identifies the approved dashboard folder. This lets scheduled public-data updates reach the app without redeployment. No OneMap token is copied to the Volume or app. See `docs/GOVERNANCE_INGESTION.md` for refresh safeguards.

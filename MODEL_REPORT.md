@@ -1,38 +1,80 @@
 # National two-week model evaluation
 
-Selected model: **Weather + trend gradient boosting**. Average absolute weekly error in the 2022 replay: **83.2 people**, versus **172.4** for the four-week average. Error is 51.7% lower. National statistical-band accuracy is **94.2%**, versus **92.3%**.
+Selected model: **Weather + trend gradient boosting**. In the 2022 replay, it was off by 83.2 people a week on average; the four-week-average baseline was off by 172.4.
 
-## Selection locked before evaluation
+## Selection and evaluation protocol
 
-39 expanding four-week folds cover 155 validation targets across **2019–2021**, including outbreak years. Each fold trains only on target weeks completed before its first issue date. The final validation targets must also be observable before the first 2022 issue.
-
-The fixed candidates are the four-week average, Ridge residual (alpha 100), and seeded gradient boosting residual (120 estimators, learning rate .03, depth 2, minimum leaf 4, subsample .9, Huber loss). Seed: 20260924. The selection rule is the lowest mean of the three annual validation errors, with each year weighted equally. Exact ties prefer baseline, then Ridge, then boosting. No paired-bootstrap tie rule is used in this revision.
+- Three fixed candidates: four-week average, Ridge residual (alpha 100), and seeded GradientBoosting residual with the parameters saved in model.json.
+- 39 expanding four-week validation folds cover 2019–2021 (155 predictions), including the 2019 and 2020 outbreaks. A fold trains only on target weeks completed before its first issue date. The last validation targets must also be observable before the first 2022 issue.
+- The predeclared rule selects the lowest mean of the three annual validation mean absolute errors, weighting 2019, 2020 and 2021 equally, with exact ties preferring baseline, then Ridge, then boosting. There is no bootstrap significance rule and no 2022 tuning.
+- Selection is locked before refitting on 249 observed pre-evaluation targets. Only the selected model and baseline are evaluated on the 52 2022 weeks. Rejected candidates are not evaluated on 2022.
+- **2022 is a reused evaluation year:** results were viewed in earlier prototype revisions. This is not a newly unseen test set. Selection in this revision uses only 2019–2021.
 
 | Model | 2019 error | 2020 error | 2021 error | Equal-year error |
 | --- | ---: | ---: | ---: | ---: |
 | Four-week average | 84.2 | 197.6 | 21.5 | 101.1 |
-| Ridge residual | 65.5 | 105.4 | 34.9 | 68.6 |
-| Gradient boosting residual | 63.6 | 107.5 | 17.3 | 62.8 |
+| Weather + trend ridge | 65.5 | 105.4 | 34.9 | 68.6 |
+| Weather + trend gradient boosting | 63.6 | 108.0 | 17.4 | 63.0 |
 
-After selection, the winner was refitted on 249 observable pre-evaluation targets and evaluated on all 52 weeks of 2022 alongside the baseline. Rejected candidates were not evaluated by this run. **2022 is a reused evaluation year** already viewed during earlier development, not newly unseen data. It was excluded from selection in this revision. An overlapping task later ran another selector; the delivered revision preserves this originally locked run and its exact predictions rather than choosing between 2022 results.
+Errors are mean absolute differences in weekly people with dengue. Classification accuracy is 94.2% for the selected model and 92.3% for the baseline. Low/Medium/High cutoffs (68.0, 230.3) are thirds of observed target counts available before evaluation, not official outbreak thresholds. Each validation fold computes its own cutoffs from its training rows only.
 
-## Advance warning before the peak
+## Peak warning in the 2022 replay
 
-Observed peak: **1,567 people**, week starting **22 May 2022**.
+Observed peak: **1567 people**, week starting **2022-05-22**.
 
-- Selected forecast first High issue: **6 March 2022**, **11 weeks before peak**.
-- Simple average first High issue: **13 March 2022**, **10 weeks before peak**.
+- Selected model: first High issued 2022-03-06, 11 weeks before peak.
+- Four-week average: first High issued 2022-03-13, 10 weeks before peak.
 
-The selected forecast crossed High one week earlier. High means at least 230.3 people, based on the upper third of pre-evaluation training targets; it is not an official outbreak threshold. Low is below 68.0. Validation folds use only their own training labels for thresholds.
+Lead time uses the date a forecast would be issued, measured to the start of the observed peak week. If the first replay issue is already High, its earlier crossing is unobserved and only a lower bound is reported. This single-year descriptive measure is not a validated outbreak detection rate. The t+2 target starts one week after issue and ends almost two weeks after issue. Historical issue dates assume preceding-week case data is immediately available; actual publication delays are unknown.
 
-Lead time runs from forecast issue to the beginning of the observed peak week. It is a descriptive warning measure for one replay, not proof of predicting the peak date or a validated outbreak-detection rate. If the first replay forecast is already High, the implementation reports only a lower bound; an absent crossing produces no claimed warning.
+## Explanations and reproducibility
 
-## Horizon, missing data and explanations
+The exported predictor, metrics, prediction labels and explanations all refer to the same selected model. The four groups are Recent cases, Time of year, Rain, and Heat (temperature plus humidity). Missing-value indicators stay in their parent groups. Ridge uses exact additive linear contributions; boosting uses TreeSHAP; the baseline only attributes its four-week average to Recent cases. Contributions sum to the prediction before a nonnegative floor. These are associations, not causal effects.
 
-The target is the national weekly count at t+2, a Sunday–Saturday week, not the sum of two weeks. Features use observations through week t. Issuance is assumed on the following Sunday; the target starts one week after issue and ends almost two weeks after issue. Actual report publication delays are unknown.
+No synthetic case outcomes are used. Missing weather remains missing in observations and exported features; the estimator substitutes training-set medians internally and retains missingness indicators. National case labels end 2026-10-03. A current national outlook is published only when the label freshness gate passes; its unreported outcomes cannot yet be evaluated. There are no historical local outcomes for local error measurement. MLflow logs the complete selected replay predictor, including its persistence component and zero floor, with all evaluation details. Logging failures stop the run.
 
-The complete exported predictor includes the latest observed count, learned residual and nonnegative floor. Its name, metrics, predictions, risk bands and explanations refer to the same selected model. TreeSHAP contributions plus the training background add to each prediction before the zero floor. Four groups are **Recent cases**, **Time of year**, **Rain**, **Heat** (temperature and humidity). Missing-value indicators stay in their parent group. These are associations, not causal effects.
+MLflow run: `5f344fe0e393468db1e4f6562f9e56bb`.
 
-Missing weather remains missing until training-only median imputation. No synthetic outcomes are used. National labels end 31 December 2022, so this is not a current national forecast. No historical planning-area outcomes exist here, so no local accuracy is claimed.
+## Missing weather inputs
 
-MLflow stores the complete predictor and evaluation evidence. Reloading it reproduced all 52 exported predictions exactly. Logging failures stop the pipeline. Run: `ef02042b46d74bde9e46c60962f71e1c`.
+Share of prediction weeks with at least one missing weather lag supplied to the selected learned estimator. Its imputer uses training-set medians internally; observations and exported features remain missing. The four-week-average baseline does not use weather.
+
+| Forecast period | Weeks | Weeks with any imputed weather input | Share of weeks |
+| --- | ---: | ---: | ---: |
+| 2022 replay | 52 | 13 | 25.0% |
+| 2023+ retrospective evaluation | 196 | 74 | 37.8% |
+| Live outlook | 2 | 0 | 0.0% |
+
+## Retrospective evaluation, 2023 onward
+
+Retrospective evaluation of the fixed 2019–2021 selection and hyperparameters; refitted once a year on labels ending before that year's first assumed issue date. Later years are excluded from recipe selection. Revised workbook counts and immediate publication are assumed; these are not forecasts recorded in real time.
+
+Across **196 weeks** (2023-01-01 to 2026-10-03), the forecast was off by **28.7 people a week** against **31.9** for the four-week average (10% lower). The 80% range contained the reported count in **76%** of weeks.
+
+| Year | Weeks | Forecast error | Simple-average error | 80% range coverage | Peak week (people) |
+| --- | ---: | ---: | ---: | ---: | --- |
+| 2023 | 53 | 39.3 | 48.5 | 77% | 2023-09-24 (342) |
+| 2024 | 52 | 42.8 | 45.1 | 81% | 2024-02-04 (515) |
+| 2025 | 52 | 15.1 | 13.2 | 75% | 2025-06-08 (125) |
+| 2026 | 39 | 13.8 | 16.7 | 69% | 2026-06-28 (130) |
+
+## Ranges
+
+Empirical quantiles of log((actual+10)/(forecast+10)) from the selected model's validation folds, 155 predictions. Coverage in the 2022 replay: 81%. The range describes past forecast error, not a guarantee.
+
+## Live forecast
+
+Issued from the week ending 2026-10-03 (2026-W39, 71 people reported). For the week of **2026-10-11**: about **68 people** (80% range 50–93).
+
+## Does weather help? (MLflow child runs)
+
+| Feature set | Features | 2019–2021 equal-year error | 2023+ error |
+| --- | ---: | ---: | ---: |
+| Cases, trend, season + weather | 37 | 63.0 | 28.7 |
+| Cases, trend, season only | 13 | 66.7 | 28.5 |
+
+Same boosting recipe and folds; only the inputs differ. Selection still uses the locked rule above.
+
+## Published runtime
+
+These exported model results come from the successful Databricks serverless pipeline run `297087392137262` (MLflow run `5f344fe0e393468db1e4f6562f9e56bb`). The locked estimator, features, hyperparameters and selection rule are unchanged. The local run gave a live point estimate of 68.75 versus 68.25 on Databricks; The two runs differ by one person after rounding; the cause of this small numeric difference was not isolated. The published app uses the Databricks result and its empirical range.

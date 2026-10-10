@@ -14,6 +14,8 @@ deck/slide-*.jpg
 data/delta/
 data/phase2_inputs/
 data/snapshots/
+data/landing/
+data/autoloader/
 output/mlruns/
 output/mlflow.db*
 output/models/

@@ -1,0 +1,36 @@
+{
+  "source_name": "Singapore Residents by Planning Area / Subzone, Age Group, Sex and Type of Dwelling, June 2026",
+  "population_year": 2026,
+  "population_reference": "June 2026",
+  "boundary_vintage": "Master Plan 2025",
+  "row_count": 55,
+  "numeric_totals": 48,
+  "national_published_total": 4231520,
+  "source_notes": [
+    "(Total) Resident Population by Planning Area/Subzone, Age Group and Type of Dwelling, June 2026",
+    "Note:",
+    "Planning areas refer to areas demarcated in the Urban Redevelopment Authority's Master Plan 2025.",
+    "Data from 2003 onwards excludes residents who have been away from Singapore for a continuous period of 12 months or longer as at the reference period.",
+    "\"-\" denotes Nil or negligible.",
+    "Data has been rounded to the nearest 10 and may not add up due to rounding.",
+    "^ Includes non-privatised Housing and Urban Development Company (HUDC) flats.",
+    "* Includes HDB studio apartments and Community Care Apartments."
+  ],
+  "receipt": {
+    "publisher": "Singapore Department of Statistics",
+    "source_url": "https://www.singstat.gov.sg/files/0b0662a7-05ca-40b9-855b-e30377811f41.xlsx",
+    "listing_url": "https://www.singstat.gov.sg/find-data/explore-data-themes/population/geographic-distribution/latest-news-data",
+    "retrieved_at_utc": "2026-10-10T04:34:30.304449+00:00",
+    "completed_at_utc": "2026-10-10T04:34:31.143389+00:00",
+    "raw_bytes": 4895755,
+    "raw_sha256": "b45cf037312b0bde8888e443b2e7dc88e54d4c84fb4b9ef1c91903a5613c6213",
+    "stored_path": "data/raw/population/singstat_residents_2026.xlsx.gz",
+    "stored_bytes": 4315904,
+    "stored_sha256": "e6048cbe5d765753705b5c569d40ce7e70b942d495000db8956b76b5d01e2b49",
+    "compression": "gzip (original bytes after decompression)",
+    "status": "complete"
+  },
+  "selection": "2026(Total) sheet; Subzone=Total, Age Group=Total, Type of Dwelling=Total; national Total excluded",
+  "missing_policy": "Nonnumeric source cells remain null, including '-'; no zero filling or summing rounded detail cells.",
+  "catalogue_note": "Current planning-area totals were verified at SingStat's primary publisher page; data.gov.sg catalogue searches returned historical Census tables and an annual region-level table, not this 2026 planning-area workbook."
+}

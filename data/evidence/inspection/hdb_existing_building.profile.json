@@ -1,0 +1,36 @@
+{
+  "row_count": 13436,
+  "geometry_types": {
+    "Polygon": 13426,
+    "MultiPolygon": 10
+  },
+  "invalid_geometries": 4,
+  "properties": [
+    "BLK_NO",
+    "ENTITYID",
+    "FMEL_UPD_D",
+    "INC_CRC",
+    "OBJECTID",
+    "POSTAL_COD",
+    "SHAPE.AREA",
+    "SHAPE.LEN",
+    "ST_COD"
+  ],
+  "slug": "hdb_existing_building",
+  "dataset_id": "d_16b157c52ed637edd6ba1232e026258d",
+  "source_name": "HDB Existing Building",
+  "receipt": {
+    "dataset_id": "d_16b157c52ed637edd6ba1232e026258d",
+    "source_url": "https://data.gov.sg/datasets/d_16b157c52ed637edd6ba1232e026258d/view",
+    "api_url": "https://api-open.data.gov.sg/v1/public/api/datasets/d_16b157c52ed637edd6ba1232e026258d/poll-download",
+    "retrieved_at_utc": "2026-10-10T04:30:34.552708+00:00",
+    "completed_at_utc": "2026-10-10T04:30:37.534467+00:00",
+    "raw_bytes": 57012074,
+    "raw_sha256": "7c987511548de3a82da403cabca02702031e02ade8703a9e401417883dfeb702",
+    "stored_path": "data/raw/inspection/hdb_existing_building.geojson.gz",
+    "stored_bytes": 17603885,
+    "stored_sha256": "f1631140cf45a179104e468d4ce0eefafb625db40ab773c065ea9d6696a3c9b8",
+    "compression": "gzip (original bytes after decompression)",
+    "status": "complete"
+  }
+}

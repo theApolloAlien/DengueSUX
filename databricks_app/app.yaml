@@ -4,3 +4,13 @@ env:
   # Resource key "genie-space" is attached to the app with CAN_RUN permission.
   - name: GENIE_SPACE_ID
     valueFrom: genie-space
+  # Resource key "llm-endpoint" is a Foundation Model serving endpoint attached with CAN_QUERY; it powers the Assistant tab.
+  - name: LLM_ENDPOINT
+    valueFrom: llm-endpoint
+  # Resource key "sql-warehouse" (CAN_USE) stores field reports in a Unity Catalog table.
+  - name: DATABRICKS_WAREHOUSE_ID
+    valueFrom: sql-warehouse
+  - name: DENGUE_TABLE_PREFIX
+    value: workspace.denguesux
+  - name: DENGUE_DATA_VOLUME
+    value: /Volumes/workspace/denguesux/files/denguesux

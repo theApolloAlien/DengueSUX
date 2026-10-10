@@ -40,6 +40,11 @@ FEATURES = (
     + [f"{metric}_lag_{i}" for metric in ["rainfall", "temperature", "humidity"] for i in range(1, 9)]
     + ["season_sin", "season_cos"]
 )
+WEATHER_PREFIXES = ("rainfall_", "temperature_", "humidity_")
+FEATURE_SETS = {"all": FEATURES, "no_weather": [f for f in FEATURES if not f.startswith(WEATHER_PREFIXES)]}
+PROSPECTIVE_START = pd.Timestamp("2023-01-01")  # first target week in the later retrospective evaluation
+INTERVAL_OFFSET = 10.0  # people; keeps log-ratio errors finite in very quiet weeks
+INTERVAL_LEVEL = 0.8
 
 
 def chronological_split(df: pd.DataFrame):
@@ -76,8 +81,9 @@ def _baseline(rows):
 class NationalForecastRegressor(RegressorMixin, BaseEstimator):
     """Log the complete selected predictor, including persistence and nonnegative floor."""
 
-    def __init__(self, model_key="ridge"):
+    def __init__(self, model_key="ridge", feature_set="all"):
         self.model_key = model_key
+        self.feature_set = feature_set
 
     def fit(self, X, y):
         self.feature_names_in_ = np.asarray(FEATURES, dtype=object)
@@ -85,13 +91,13 @@ class NationalForecastRegressor(RegressorMixin, BaseEstimator):
         self.residual_model_ = None
         if self.model_key != "baseline":
             self.residual_model_ = make_model() if self.model_key == "ridge" else make_gradient_model()
-            self.residual_model_.fit(X[FEATURES], np.asarray(y, dtype=float) - X.cases_current.to_numpy(float))
+            self.residual_model_.fit(X[FEATURE_SETS[self.feature_set]], np.asarray(y, dtype=float) - X.cases_current.to_numpy(float))
         return self
 
     def predict(self, X):
         if self.model_key == "baseline":
             return _baseline(X)
-        return np.maximum(0.0, X.cases_current.to_numpy(float) + self.residual_model_.predict(X[FEATURES]))
+        return np.maximum(0.0, X.cases_current.to_numpy(float) + self.residual_model_.predict(X[FEATURE_SETS[self.feature_set]]))
 
 
 def metrics(y, prediction, thresholds):
@@ -237,13 +243,190 @@ def peak_lead_time(predictions, high_threshold):
     return result
 
 
+def _interval_calibration(frame: pd.DataFrame, key: str):
+    """Spread of the selected model's own 2019–2021 rolling-fold errors, as log ratios.
+
+    Only validation folds are used, so no 2022-or-later label shapes the range. Ratios scale the
+    band with the level: a quiet week gets a narrow range, an outbreak week a wide one.
+    """
+    ratios = []
+    for train, validation in _rolling_folds(frame):
+        prediction = NationalForecastRegressor(key).fit(train[FEATURES], train.target_cases).predict(validation[FEATURES])
+        ratios.extend(np.log((validation.target_cases.to_numpy(float) + INTERVAL_OFFSET) / (prediction + INTERVAL_OFFSET)))
+    tail = (1 - INTERVAL_LEVEL) / 2
+    low, high = np.quantile(ratios, [tail, 1 - tail])
+    return {"level": INTERVAL_LEVEL, "lower_log_ratio": float(low), "upper_log_ratio": float(high), "offset": INTERVAL_OFFSET,
+            "calibration_predictions": len(ratios), "calibration_window": "2019–2021 rolling validation folds",
+            "method": "Empirical quantiles of log((actual+10)/(forecast+10)) from the selected model's validation folds"}
+
+
+def _interval(prediction, calibration):
+    base = np.asarray(prediction, dtype=float) + calibration["offset"]
+    return (np.maximum(0.0, base * np.exp(calibration["lower_log_ratio"]) - calibration["offset"]),
+            base * np.exp(calibration["upper_log_ratio"]) - calibration["offset"])
+
+
+def seasonal_normal(frame: pd.DataFrame, year: int, week: int, years: int = 5):
+    """Median and range of the same epidemiological week over the previous five years (week 53 uses 52)."""
+    if not {"cases", "epi_year", "epi_number"} <= set(frame.columns):
+        return None
+    history = frame.dropna(subset=["cases"])
+    values = []
+    for prior in range(year - years, year):
+        rows = history[(history.epi_year == prior) & (history.epi_number == week)]
+        if rows.empty and week == 53:
+            rows = history[(history.epi_year == prior) & (history.epi_number == 52)]
+        if not rows.empty:
+            values.append(float(rows.cases.iloc[0]))
+    if len(values) < 3:
+        return None
+    return {"median": float(np.median(values)), "low": float(min(values)), "high": float(max(values)),
+            "years": f"{year - years}–{year - 1}", "n_years": len(values)}
+
+
+def _target_week(row):
+    from epiweeks import Week
+    week = Week.fromdate(pd.Timestamp(row.target_week_start).date(), system="cdc")
+    return week.year, week.week
+
+
+def _weather_input_status(row, model_key):
+    """Describe missing prediction inputs without changing observations or the estimator."""
+    weather = [feature for feature in FEATURES if feature.startswith(WEATHER_PREFIXES)]
+    missing = sum(bool(pd.isna(row[feature])) for feature in weather)
+    return {"weather_inputs_total": len(weather), "weather_inputs_missing": missing,
+            "weather_inputs_imputed": bool(missing and model_key != "baseline")}
+
+
+def _weather_missingness(rows):
+    weeks = len(rows)
+    imputed = sum(row["weather_inputs_imputed"] for row in rows)
+    return {"weeks": weeks, "weeks_with_imputed_weather_inputs": imputed,
+            "share_of_weeks_with_imputed_weather_inputs": imputed / weeks if weeks else None}
+
+
+def _prediction_rows(predictor, rows, fit, thresholds, calibration, frame):
+    prediction = predictor.predict(rows[FEATURES])
+    baseline = _baseline(rows)
+    low, high = _interval(prediction, calibration)
+    explanations, bases, method = _explanations(predictor, rows, fit)
+    out = []
+    for position, (_, row) in enumerate(rows.iterrows()):
+        year, week = _target_week(row)
+        actual = None if pd.isna(row.target_cases) else float(row.target_cases)
+        out.append({"issue_date": str(pd.Timestamp(row.issue_date).date()), "origin_week": str(pd.Timestamp(row.week_start).date()),
+                    "origin_week_end": str(pd.Timestamp(row.week_end).date()),
+                    "target_date": str(pd.Timestamp(row.target_week_start).date()), "target_week_end": str(pd.Timestamp(row.target_week_end).date()),
+                    "target_epi_week": f"{year}-W{week:02d}", "actual": actual, "prediction": float(prediction[position]),
+                    "selected_prediction": float(prediction[position]), "baseline": float(baseline[position]),
+                    "lower": float(low[position]), "upper": float(high[position]),
+                    "risk": str(band([prediction[position]], thresholds)[0]), "baseline_risk": str(band([baseline[position]], thresholds)[0]),
+                    "actual_risk": None if actual is None else str(band([actual], thresholds)[0]),
+                    "origin_cases": float(row.cases_current), "normal": seasonal_normal(frame, year, week),
+                    **_weather_input_status(row, predictor.model_key),
+                    "top_features": [{"feature": group, "value": explanations[position][group], "association": "associated with the prediction"} for group in GROUPS],
+                    "explanation_base": float(bases[position]), "explanation_method": method})
+    return out
+
+
+def _summary(rows, thresholds):
+    actual = np.array([r["actual"] for r in rows], dtype=float)
+    selected = np.array([r["prediction"] for r in rows], dtype=float)
+    baseline = np.array([r["baseline"] for r in rows], dtype=float)
+    covered = [r["lower"] <= r["actual"] <= r["upper"] for r in rows]
+    model, simple = metrics(actual, selected, thresholds), metrics(actual, baseline, thresholds)
+    return {"n": len(rows), "selected": model, "baseline": simple, "interval_coverage": float(np.mean(covered)),
+            "error_reduction": float(1 - model["mae"] / simple["mae"]) if simple["mae"] else None}
+
+
+def prospective_evaluation(frame: pd.DataFrame, key: str, thresholds, calibration):
+    """Retrospectively score the fixed recipe on 2023 onward, excluded from recipe selection.
+
+    Each year the same model is refitted on every label observable before that year's first
+    issue date, as a deployed forecast would be retrained once a year. Bands keep the fixed
+    pre-2022 cutoffs so High means the same number of people throughout.
+    """
+    known = frame.dropna(subset=["target_cases"]).copy()
+    starts = pd.to_datetime(known.target_week_start)
+    years = sorted(starts[starts >= PROSPECTIVE_START].dt.year.unique())
+    if not years:
+        return None
+    rows, by_year = [], {}
+    for year in years:
+        test = known[starts.dt.year == year]
+        cutoff = pd.to_datetime(test.issue_date).min()
+        fit = known[pd.to_datetime(known.target_week_end) < cutoff]
+        predictor = NationalForecastRegressor(key).fit(fit[FEATURES], fit.target_cases)
+        year_rows = _prediction_rows(predictor, test, fit, thresholds, calibration, frame)
+        for row in year_rows:
+            row["refit_labels_through"] = str(pd.Timestamp(fit.target_week_end.max()).date())
+        summary = _summary(year_rows, thresholds)
+        peak = max(year_rows, key=lambda r: r["actual"])
+        summary["peak"] = {"week": peak["target_date"], "people": peak["actual"]}
+        summary["peak_lead_time"] = peak_lead_time(year_rows, thresholds[1]) if peak["actual"] >= thresholds[1] else None
+        by_year[str(int(year))] = summary
+        rows.extend(year_rows)
+    overall = _summary(rows, thresholds)
+    return {"window": f"{rows[0]['target_date']} to {rows[-1]['target_week_end']}", "protocol":
+            "Retrospective evaluation of the fixed 2019–2021 selection and hyperparameters; refitted once a year on labels ending before that year's first assumed issue date. Later years are excluded from recipe selection. Revised workbook counts and immediate publication are assumed; these are not forecasts recorded in real time.",
+            "overall": overall, "by_year": by_year, "predictions": rows}
+
+
+def live_forecast(frame: pd.DataFrame, key: str, thresholds, calibration, label_metadata=None):
+    """Forecasts whose target week has not been reported yet, from the latest official labels."""
+    if not (label_metadata or {}).get("available", False):
+        return None
+    pending = frame[frame.target_cases.isna() & frame.cases_current.notna()].sort_values("week_start")
+    if pending.empty:
+        return None
+    known = frame.dropna(subset=["target_cases"])
+    rows = []
+    for index in pending.tail(2).index:
+        issue = pd.Timestamp(pending.loc[index, "issue_date"])
+        fit = known[pd.to_datetime(known.target_week_end) < issue]
+        predictor = NationalForecastRegressor(key).fit(fit[FEATURES], fit.target_cases)
+        forecast = _prediction_rows(predictor, pending.loc[[index]], fit, thresholds, calibration, frame)[0]
+        forecast.update(trained_on_labels_through=str(pd.Timestamp(fit.target_week_end.max()).date()), training_rows=int(len(fit)))
+        rows.append(forecast)
+    latest = frame.dropna(subset=["cases"]).sort_values("week_start").iloc[-1]
+    return {"issued_from_week_end": str(pd.Timestamp(latest.week_end).date()), "latest_reported_people": float(latest.cases),
+            "latest_epi_week": f"{int(latest.epi_year)}-W{int(latest.epi_number):02d}",
+            "trained_on_labels_through": str(pd.Timestamp(fit.target_week_end.max()).date()), "training_rows": int(len(fit)),
+            "forecasts": rows, "headline": rows[-1], "available": True,
+            "note": "Forecasts for weeks not yet reported. Each row uses only labels ending before its assumed issue date; publication delays are unknown. The range is the model's own 80% error spread from 2019–2021, not a guarantee."}
+
+
+def feature_set_comparison(frame: pd.DataFrame, thresholds):
+    """Does weather help? Same boosting recipe with and without weather lags, on the same folds."""
+    out = {}
+    for name in FEATURE_SETS:
+        errors = {year: [] for year in (2019, 2020, 2021)}
+        for train, validation in _rolling_folds(frame):
+            prediction = NationalForecastRegressor("gradient_boosting", name).fit(train[FEATURES], train.target_cases).predict(validation[FEATURES])
+            for actual, predicted, year in zip(validation.target_cases, prediction, pd.to_datetime(validation.target_week_start).dt.year):
+                errors[int(year)].append(abs(float(actual) - float(predicted)))
+        known = frame.dropna(subset=["target_cases"])
+        starts = pd.to_datetime(known.target_week_start)
+        prospective = []
+        for year in sorted(starts[starts >= PROSPECTIVE_START].dt.year.unique()):
+            test = known[starts.dt.year == year]
+            fit = known[pd.to_datetime(known.target_week_end) < pd.to_datetime(test.issue_date).min()]
+            prediction = NationalForecastRegressor("gradient_boosting", name).fit(fit[FEATURES], fit.target_cases).predict(test[FEATURES])
+            prospective.extend(np.abs(test.target_cases.to_numpy(float) - prediction))
+        out[name] = {"features": len(FEATURE_SETS[name]),
+                     "validation_by_year": {str(y): float(np.mean(v)) for y, v in errors.items() if v},
+                     "validation_equal_year_mae": float(np.mean([np.mean(v) for v in errors.values() if v])),
+                     "prospective_mae": float(np.mean(prospective)) if prospective else None}
+    return out
+
+
 def _availability(frame: pd.DataFrame, label_metadata: dict[str, Any] | None):
     if label_metadata is not None:
         return dict(label_metadata)
     latest = pd.to_datetime(frame.week_end).max() if len(frame) else None
     return {"available": False, "reason": "historical_labels_only", "mode": "historical_backtest",
             "latest_label_week_end": str(latest.date()) if latest is not None else None,
-            "message": "Case data stops at Dec 2022. The forecast replays 2022."}
+            "message": "A current forecast requires verified recent weekly labels; historical evaluation remains available."}
 
 
 def _lead_sentence(item):
@@ -282,17 +465,35 @@ def train_and_evaluate(frame: pd.DataFrame, label_metadata: dict[str, Any] | Non
             "baseline": float(base_pred[position]), "risk": str(band([selected_pred[position]], thresholds)[0]),
             "baseline_risk": str(band([base_pred[position]], thresholds)[0]), "actual_risk": str(band([row.target_cases], thresholds)[0]),
             "origin_cases": float(row.cases_current), "top_features": contributions,
+            **_weather_input_status(row, selected_key),
             "explanation_base": float(explanation_bases[position]), "explanation_remainder": 0.0,
             "explanation_method": explanation_method})
     feature_importance = [{"feature": group, "value": float(np.mean([abs(row[group]) for row in explanations]))} for group in GROUPS]
     lead = peak_lead_time(predictions, thresholds[1])
+    calibration = _interval_calibration(frame, selected_key)
+    low, high = _interval(selected_pred, calibration)
+    for position, row in enumerate(predictions):
+        year, week = _target_week(test.iloc[position])
+        row.update(lower=float(low[position]), upper=float(high[position]), target_epi_week=f"{year}-W{week:02d}",
+                   normal=seasonal_normal(frame, year, week))
+    replay_summary = _summary(predictions, thresholds)
+    # Later retrospective evaluation keeps the recipe fixed; unreported targets pass the freshness gate.
+    prospective = prospective_evaluation(frame, selected_key, thresholds, calibration)
+    live = live_forecast(frame, selected_key, thresholds, calibration, label_metadata)
+    feature_sets = feature_set_comparison(frame, thresholds)
+    weather_missingness = {"method": "Share of prediction weeks with at least one missing weather lag supplied to the selected learned estimator. Its imputer uses training-set medians internally; observations and exported features remain missing. The four-week-average baseline does not use weather.",
+                           "replay_2022": _weather_missingness(predictions),
+                           "prospective": _weather_missingness(prospective["predictions"] if prospective else []),
+                           "live": _weather_missingness(live["forecasts"] if live else [])}
     model_label = MODEL_NAMES[selected_key]
     result = {"name": model_label, "recommended_model": model_label,
         "selected_model": selected_key, "selected_baseline": selected_key == "baseline", "horizon_weeks": 2,
         "metrics": selected_metrics, "selected_metrics": selected_metrics, "baseline_metrics": baseline_metrics,
         "validation": [{"name": key, **value} for key, value in comparison.items()],
         "validation_candidates": comparison, "validation_baseline": comparison["baseline"], "validation_folds": folds,
-        "selection_details": selection_details, "peak_lead_time": lead,
+        "selection_details": selection_details, "peak_lead_time": lead, "replay_interval_coverage": replay_summary["interval_coverage"],
+        "interval_calibration": calibration, "prospective": prospective, "live_forecast": live, "feature_set_comparison": feature_sets,
+        "weather_missingness": weather_missingness,
         "thresholds": {"low": float(thresholds[0]), "high": float(thresholds[1])},
         "training_window": f"{fit.week_start.min()} to {fit.week_start.max()}",
         "evaluation_window": f"{test.target_week_start.min()} to {test.target_week_end.max()}",
@@ -303,6 +504,8 @@ def train_and_evaluate(frame: pd.DataFrame, label_metadata: dict[str, Any] | Non
         "predictions": predictions, "feature_importance": feature_importance, "features": FEATURES,
         "latest_label": str(pd.Timestamp(frame.week_end.max()).date()), "current_forecast": _availability(frame, label_metadata),
         "limitations": ["2022 was viewed in earlier revisions. This revision fixes selection using only 2019–2021, then evaluates once on 2022.",
+                        "2023 onward is a retrospective evaluation of the fixed recipe, refitted once a year using earlier labels; it is not performance recorded in real time.",
+                        "Labels after 2022 come from the official MOH/CDA yearly workbooks, which can be revised slightly after first publication.",
                         "Historical issue dates assume the preceding week's case total was available immediately; publication delays are not known.",
                         "Area priorities have no historical local outcome labels and no local forecast accuracy can be measured.",
                         "Feature contributions describe associations; Heat combines temperature and humidity.",
@@ -324,10 +527,22 @@ def train_and_evaluate(frame: pd.DataFrame, label_metadata: dict[str, Any] | Non
                            "evaluation": "2022 reused evaluation set; not used for selection", "fit_labels_before": str(test_cutoff.date())})
         mlflow.log_metrics({"evaluation_selected_mae": selected_metrics["mae"], "evaluation_baseline_mae": baseline_metrics["mae"],
                             "evaluation_selected_accuracy": selected_metrics["accuracy"], "evaluation_baseline_accuracy": baseline_metrics["accuracy"],
+                            "replay_interval_coverage": replay_summary["interval_coverage"],
+                            **({"prospective_selected_mae": prospective["overall"]["selected"]["mae"],
+                                "prospective_baseline_mae": prospective["overall"]["baseline"]["mae"],
+                                "prospective_interval_coverage": prospective["overall"]["interval_coverage"]} if prospective else {}),
+                            **({"live_forecast_people": live["headline"]["prediction"]} if live else {}),
                             **{f"validation_{key}_selection_mae": values["selection_mae"] for key, values in comparison.items()}})
         mlflow.sklearn.log_model(predictor, name="selected_national_model", input_example=fit[FEATURES].head(3),
                                  code_paths=[str(Path(__file__).resolve().parent)])
         mlflow.log_dict(result, "evaluation.json")
+        # One child run per feature set, so the MLflow UI can compare "with weather" and "without weather".
+        for name, values in feature_sets.items():
+            with mlflow.start_run(run_name=f"feature_set_{name}", nested=True):
+                mlflow.log_params({"feature_set": name, "features": values["features"], "model": "gradient_boosting"})
+                mlflow.log_metrics({"validation_equal_year_mae": values["validation_equal_year_mae"],
+                                    **({"prospective_mae": values["prospective_mae"]} if values["prospective_mae"] is not None else {}),
+                                    **{f"validation_{year}_mae": v for year, v in values["validation_by_year"].items()}})
     out = ROOT / "output/web/model.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, indent=2, allow_nan=False))
@@ -363,10 +578,53 @@ Lead time uses the date a forecast would be issued, measured to the start of the
 
 The exported predictor, metrics, prediction labels and explanations all refer to the same selected model. The four groups are Recent cases, Time of year, Rain, and Heat (temperature plus humidity). Missing-value indicators stay in their parent groups. Ridge uses exact additive linear contributions; boosting uses TreeSHAP; the baseline only attributes its four-week average to Recent cases. Contributions sum to the prediction before a nonnegative floor. These are associations, not causal effects.
 
-No synthetic case outcomes are used. Missing weather stays missing until training-only median imputation. National case labels end {result['latest_label']}; there is no validated current national forecast and no historical local outcomes for local error measurement. MLflow logs the complete selected predictor, including its persistence component and zero floor, with all evaluation details. Logging failures stop the run.
+No synthetic case outcomes are used. Missing weather remains missing in observations and exported features; the estimator substitutes training-set medians internally and retains missingness indicators. National case labels end {result['latest_label']}. A current national outlook is published only when the label freshness gate passes; its unreported outcomes cannot yet be evaluated. There are no historical local outcomes for local error measurement. MLflow logs the complete selected replay predictor, including its persistence component and zero floor, with all evaluation details. Logging failures stop the run.
 
 MLflow run: `{result['run_id']}`.
-"""
+{_weather_report(weather_missingness)}
+{_prospective_report(prospective, live, feature_sets, calibration, replay_summary)}"""
     (ROOT / "MODEL_REPORT.md").write_text(report)
-    flat = pd.DataFrame([{k: v for k, v in prediction.items() if k != "top_features"} for prediction in predictions])
+    segments = [("replay_2022", predictions)] + ([("prospective", prospective["predictions"])] if prospective else []) + ([("live", live["forecasts"])] if live else [])
+    flat = pd.DataFrame([{**{k: v for k, v in row.items() if k not in ("top_features", "normal")}, "segment": segment,
+                          "normal_median": (row.get("normal") or {}).get("median"), "normal_low": (row.get("normal") or {}).get("low"),
+                          "normal_high": (row.get("normal") or {}).get("high")} for segment, rows in segments for row in rows])
     return result, flat
+
+
+def _weather_report(disclosure):
+    lines = ["", "## Missing weather inputs", "", disclosure["method"], "",
+             "| Forecast period | Weeks | Weeks with any imputed weather input | Share of weeks |",
+             "| --- | ---: | ---: | ---: |"]
+    for key, label in (("replay_2022", "2022 replay"), ("prospective", "2023+ retrospective evaluation"), ("live", "Live outlook")):
+        values = disclosure[key]
+        share = values["share_of_weeks_with_imputed_weather_inputs"]
+        percent = f"{share:.1%}" if share is not None else "Unavailable"
+        lines.append(f"| {label} | {values['weeks']} | {values['weeks_with_imputed_weather_inputs']} | {percent} |")
+    return "\n".join(lines)
+
+
+def _prospective_report(prospective, live, feature_sets, calibration, replay_summary):
+    lines = ["", "## Retrospective evaluation, 2023 onward", ""]
+    if not prospective:
+        lines.append("No official labels after 2022 were available for this run.")
+    else:
+        o = prospective["overall"]
+        lines += [prospective["protocol"], "",
+                  f"Across **{o['n']} weeks** ({prospective['window']}), the forecast was off by **{o['selected']['mae']:.1f} people a week** "
+                  f"against **{o['baseline']['mae']:.1f}** for the four-week average ({o['error_reduction']:.0%} lower). "
+                  f"The 80% range contained the reported count in **{o['interval_coverage']:.0%}** of weeks.", "",
+                  "| Year | Weeks | Forecast error | Simple-average error | 80% range coverage | Peak week (people) |", "| --- | ---: | ---: | ---: | ---: | --- |"]
+        for year, v in prospective["by_year"].items():
+            lines.append(f"| {year} | {v['n']} | {v['selected']['mae']:.1f} | {v['baseline']['mae']:.1f} | {v['interval_coverage']:.0%} | {v['peak']['week']} ({v['peak']['people']:.0f}) |")
+    lines += ["", "## Ranges", "", f"{calibration['method']}, {calibration['calibration_predictions']} predictions. "
+              f"Coverage in the 2022 replay: {replay_summary['interval_coverage']:.0%}. The range describes past forecast error, not a guarantee.", ""]
+    if live:
+        h = live["headline"]
+        lines += ["## Live forecast", "", f"Issued from the week ending {live['issued_from_week_end']} ({live['latest_epi_week']}, {live['latest_reported_people']:.0f} people reported). "
+                  f"For the week of **{h['target_date']}**: about **{h['prediction']:.0f} people** (80% range {h['lower']:.0f}–{h['upper']:.0f}).", ""]
+    lines += ["## Does weather help? (MLflow child runs)", "", "| Feature set | Features | 2019–2021 equal-year error | 2023+ error |", "| --- | ---: | ---: | ---: |"]
+    for name, v in feature_sets.items():
+        lines.append(f"| {'Cases, trend, season + weather' if name == 'all' else 'Cases, trend, season only'} | {v['features']} | {v['validation_equal_year_mae']:.1f} | "
+                     + (f"{v['prospective_mae']:.1f}" if v['prospective_mae'] is not None else "—") + " |")
+    lines += ["", "Same boosting recipe and folds; only the inputs differ. Selection still uses the locked rule above.", ""]
+    return "\n".join(lines)

@@ -162,3 +162,41 @@ def contract_for_file(path: str | Path, *, source_url: str, retrieved_at: str, s
     contract["sha256"] = file_sha256(path)
     contract["frame_rows"] = rows.to_dict("records")
     return contract
+
+
+DATA_GOV_SG_URL = "https://data.gov.sg/datasets/d_ca168b2cb763640d72c4600a68f9909e/view"
+WORKBOOKS_FROM = "2023-W01"  # data.gov.sg ends 2022-W52; official yearly workbooks continue the series
+
+
+def combined_label_rows(root: str | Path) -> list[dict]:
+    """data.gov.sg rows through 2022, then MOH/CDA yearly-workbook rows from 2023-W01.
+
+    Each row keeps its own source. Overlapping 2022 workbook rows are used only for the
+    cross-check in data/evidence/dengue/moh_weekly_manifest.json, never mixed into training labels.
+    """
+    root = Path(root)
+    rows = [{**row, "source": "data.gov.sg"} for row in read_rows(root / "data/raw/dengue/national_bulletin.csv.gz")
+            if str(row.get("epi_week", "")) < WORKBOOKS_FROM]
+    workbook = root / "data/raw/dengue/moh_weekly_dengue.csv.gz"
+    if workbook.exists():
+        rows += [{**row, "source": "MOH/CDA workbook"} for row in read_rows(workbook)
+                 if str(row.get("epi_week", "")) >= WORKBOOKS_FROM]
+    return rows
+
+
+def combined_contract(root: str | Path, *, retrieved_at: str) -> dict:
+    """One contract for the joined national series, with both sources named."""
+    root = Path(root)
+    rows = combined_label_rows(root)
+    frame, contract = normalize_weekly_labels(rows, source_url=DATA_GOV_SG_URL, retrieved_at=retrieved_at,
+                                              source_kind="data.gov.sg + MOH/CDA workbooks")
+    manifest_path = root / "data/evidence/dengue/moh_weekly_manifest.json"
+    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
+    contract["sources"] = [
+        {"name": "Weekly Infectious Disease Bulletin Cases · data.gov.sg", "url": DATA_GOV_SG_URL, "weeks": "2012-W01 to 2022-W52"},
+        *({"name": f"Weekly Infectious Diseases Bulletin {w['year']} · {w['publisher']}", "url": w["listing_url"],
+           "workbook_url": w["source_url"], "retrieved_at": w["retrieved_at_utc"], "sha256": w["sha256"],
+           "weeks": f"{w['year']}-W01 to {w['last_week']}"} for w in manifest.get("workbooks", []) if w["year"] >= 2023),
+    ]
+    contract["crosscheck_2022"] = {k: v for k, v in (manifest.get("crosscheck_2022_vs_data_gov_sg") or {}).items() if k != "differences"}
+    return contract

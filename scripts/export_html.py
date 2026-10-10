@@ -22,8 +22,12 @@ def build():
     html=(WEB/'index.html').read_text()
     html=re.sub(r'<link rel="stylesheet" href="([^"]+)">',lambda m:'<style>'+inline_css(WEB/m.group(1).lstrip('/'))+'</style>',html)
     html=re.sub(r'<script src="([^"]+)"[^>]*></script>',lambda m:'<script>'+(WEB/m.group(1).lstrip('/')).read_text().replace('</script','<\\/script')+'</script>',html)
+    # The 3D view loads lazily in the hosted app; the portable export carries its pinned assets.
+    gl=WEB/'vendor/maplibre/maplibre-gl.js'
+    if gl.exists():
+        html=html.replace('<head>','<head><style>'+inline_css(gl.with_suffix('.css'))+'</style><script>'+gl.read_text().replace('</script','<\\/script')+'</script>',1)
     payload=json.loads((ROOT/'output/web/dashboard.json').read_text())
-    for name in ('inspection', 'growth', 'notices'):
+    for name in ('inspection', 'growth', 'notices', 'alerts', 'footprints', 'population'):
         path=ROOT/'output/web'/f'{name}.json'
         if path.exists(): payload[name]=json.loads(path.read_text())
     data=json.dumps(payload,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')

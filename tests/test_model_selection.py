@@ -119,6 +119,11 @@ def test_exported_metrics_names_and_logged_predictor_use_same_selection(monkeypa
     _, _, test = model.chronological_split(frame)
     np.testing.assert_allclose(calls['predictor'].predict(test[FEATURES]), predicted)
     assert result['run_id'] == 'test-real-run-id'
+    weather = result['weather_missingness']['replay_2022']
+    assert weather['weeks'] == len(result['predictions'])
+    assert weather['weeks_with_imputed_weather_inputs'] == int(test.humidity_lag_1.isna().sum())
+    assert weather['share_of_weeks_with_imputed_weather_inputs'] == pytest.approx(test.humidity_lag_1.isna().mean())
+    assert '## Missing weather inputs' in (tmp_path / 'MODEL_REPORT.md').read_text()
 
     def fail_logging(*args, **kwargs):
         raise RuntimeError('tracking storage unavailable')

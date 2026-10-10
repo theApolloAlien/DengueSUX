@@ -185,7 +185,7 @@ def area_rank_key(area):
     return (-area["cluster_cases"], -area["cluster_count"], -area["score"], area["name"])
 
 
-def build_current(root=ROOT, day=None, *, save=True):
+def build_current(root=ROOT, day=None, *, save=True, snapshot_date=None):
     root = Path(root)
     if day is None:
         exported = root / "output/web/current.json"
@@ -201,6 +201,8 @@ def build_current(root=ROOT, day=None, *, save=True):
     boundary = read_geo(root / "data/raw/boundaries/planning_areas_2025.geojson.gz")
     source = root / "data/raw/dengue/active_clusters.geojson.gz"
     snapshots = sorted((root / "data/snapshots/clusters").glob("*/snapshot.json"))
+    if snapshot_date:
+        snapshots = [path for path in snapshots if path.parent.name == snapshot_date]
     retrieved = None
     if snapshots:
         index = json.loads(snapshots[-1].read_text())
@@ -258,6 +260,8 @@ def build_current(root=ROOT, day=None, *, save=True):
     result = {"as_of": retrieved, "weather_date": day, "cluster_updated_range": sorted({str(f["properties"]["updated_at"]) for f in cluster_features}), "areas": sorted(areas, key=area_rank_key), "boundaries": {"type": "FeatureCollection", "features": features}, "clusters": {"type": "FeatureCollection", "features": cluster_features}, "totals": {"areas": len(areas), "clusters": len(cluster_features), "cluster_cases": sum(int(f["properties"]["cases"]) for f in cluster_features), "high": sum(a["risk"] == "High" for a in areas), "medium": sum(a["risk"] == "Medium" for a in areas), "low": sum(a["risk"] == "Low" for a in areas)}, "methodology": {"kind": "Where to check first: transparent cluster-led priorities, not a validated local forecast.", "score": "Rank by people in active clusters, then number of clusters, then observed current weather. High means at least 10 people in active clusters; Medium means an active cluster with fewer than 10 people; Low means no active cluster. These are assumed operational rules, not validated risk bands.", "weather": "Nearest station with 90–105% daily reading coverage within 15 km. Completeness counts the three observed current metrics. Missing weather adds no priority contribution and never becomes zero rainfall. Historical context requires at least seven qualifying local days for each metric and is not scored.", "assignment": "A cluster is shown in every planning area it overlaps by positive area. Boundary-only touches are excluded. Shared clusters appear in both area totals; do not add area totals together. National totals count each source cluster once. People are from the dated cluster snapshot, not weekly incidence or predicted infections.", "construction": "Construction metadata is retained only when reported and does not affect priority.", "explanations": "Area reasons describe observed cluster and weather context, not causes or learned predictions.", "unmatched_clusters": unmatched, "boundary_edition": "URA Master Plan 2025, indicative, static", "local_accuracy": None}}
     result["growth"] = {key: growth_report[key] for key in ("as_of_date", "baseline_date", "history_days", "snapshot_count", "history_available", "status", "status_label", "growing_count")}
     result["totals"]["growing_clusters"] = growth_report["growing_count"]
+    from .map_context import add_population_context
+    add_population_context(result, root)
     if save:
         out = root / "output/web/current.json"
         out.parent.mkdir(parents=True, exist_ok=True)

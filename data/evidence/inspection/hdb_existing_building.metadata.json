@@ -1,0 +1,16 @@
+{
+  "id": "d_16b157c52ed637edd6ba1232e026258d",
+  "title": "HDB Existing Building",
+  "description": "HDB Existing Buildings.",
+  "format": "GEOJSON",
+  "updateFrequency": "monthly",
+  "agencies": [
+    "Housing & Development Board"
+  ],
+  "updatedAt": "2026-06-21T02:07:14.675000+00:00",
+  "coverageStart": "2025-11-03T16:00:00+00:00",
+  "catalogue_url": "https://data.gov.sg/datasets/d_16b157c52ed637edd6ba1232e026258d/view",
+  "footprint_coordinates": "GeoJSON longitude/latitude, WGS84; verified bounds within Singapore.",
+  "join_rule": "Exact BLK_NO + POSTAL_COD for verified cluster blocks. Route stops without postal require the exact block and its verified OneMap point inside one unique footprint. ST_COD is an HDB street code, not a street name; do not join it to the property street text.",
+  "height_rule": "max_floor_lvl from existing HDB Property Information join, multiplied by illustrative 3 m per storey. Missing storeys remain null."
+}

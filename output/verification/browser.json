@@ -1,0 +1,285 @@
+{
+  "verified_at_utc": "2026-10-10T05:03:57.221149+00:00",
+  "url": "http://127.0.0.1:8787",
+  "initial_tool": "agent-browser via npx; loaded app, inspected interactive snapshot, clicked the public block example",
+  "contexts": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "fresh_context": true,
+      "checks": [
+        {
+          "step": "overview",
+          "viewport": 1440,
+          "document": 1440,
+          "body": 1440,
+          "overflow": false
+        },
+        {
+          "step": "changes",
+          "viewport": 1440,
+          "document": 1440,
+          "body": 1440,
+          "overflow": false
+        },
+        {
+          "step": "example",
+          "viewport": 1440,
+          "document": 1440,
+          "body": 1440,
+          "overflow": false
+        },
+        {
+          "step": "population",
+          "viewport": 1440,
+          "document": 1440,
+          "body": 1440,
+          "overflow": false
+        },
+        {
+          "step": "timeline",
+          "viewport": 1440,
+          "document": 1440,
+          "body": 1440,
+          "overflow": false
+        },
+        {
+          "step": "plan",
+          "viewport": 1440,
+          "document": 1440,
+          "body": 1440,
+          "overflow": false
+        },
+        {
+          "step": "3d",
+          "viewport": 1440,
+          "document": 1440,
+          "body": 1440,
+          "overflow": false
+        },
+        {
+          "step": "notice-en",
+          "viewport": 1440,
+          "document": 1440,
+          "body": 1440,
+          "overflow": false
+        },
+        {
+          "step": "notice-zh",
+          "viewport": 1440,
+          "document": 1440,
+          "body": 1440,
+          "overflow": false
+        },
+        {
+          "step": "notice-ms",
+          "viewport": 1440,
+          "document": 1440,
+          "body": 1440,
+          "overflow": false
+        },
+        {
+          "step": "notice-ta",
+          "viewport": 1440,
+          "document": 1440,
+          "body": 1440,
+          "overflow": false
+        },
+        {
+          "step": "forecast",
+          "viewport": 1440,
+          "document": 1440,
+          "body": 1440,
+          "overflow": false
+        },
+        {
+          "step": "replay",
+          "viewport": 1440,
+          "document": 1440,
+          "body": 1440,
+          "overflow": false
+        }
+      ],
+      "errors": [],
+      "failed_requests": [],
+      "status": "passed",
+      "source_date_text": "Updated 10 Oct 2026",
+      "briefing_text": "Largest cluster: 91 people in Jurong West and Jurong East.",
+      "sensitive_text_found": false,
+      "geolocation_denial": "Handled with an example/area-list fallback; no location granted.",
+      "example_text": "Blk 117 Ho Ching Road is inside an active dengue cluster.\n\nHo Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 333, 334, 335) · 91 people · Jurong West · Jurong East\n\nEnglish\n中文\nBahasa Melayu\nதமிழ்\nFive things to do this week\nLoosen hardened soil.\nEmpty flowerpot plates.\nOverturn pails and wipe their rims.\nReplace water in vases.\nKeep roof gutters clear and apply BTI as directed.\nShare with neighbours\nSee this area\n\nDistance to the dated NEA cluster footprint, not a measure of personal risk. The shared message contains no location.",
+      "area_text": "West Region\n\nHigh\nJurong West\n97 people\n\nin 2 active clusters\n\n3.87 people in active clusters per 10,000 residents\n250,890 residents · June 2026 · context, not incidence or individual risk\n\n Plan inspection \nDraft resident notice\n2 clusters\nLocal weather\n3/3 stations",
+      "plan_heading": "Jurong West\nInspection plan\nResident notice",
+      "three_d_status": "13 source building shapes · 13 with matched storeys",
+      "three_d_canvas": true,
+      "reduced_motion_play_disabled": true,
+      "notice_languages": {
+        "en": true,
+        "zh": true,
+        "ms": true,
+        "ta": true
+      },
+      "live_outlook_text": "UNREPORTED WEEKS · SINGAPORE\nQuieter than usual\nWeek of 11 October: about 68 people\nTypical 143\n\nLikely between 50 and 93. That’s lower than a typical October week (about 143 people in 2021–2025). Mostly shaped by recent case counts (pulling it down).\n\nLast reported\n71 people\nWeek to 3 Oct 2026 · 2026-W39\nEarlier unreported week\nabout 78\nWeek of 4 Oct\nSource\nOfficial weekly bulletin\nMOH / Communicable Diseases Agency",
+      "report_writes": 0,
+      "cancelled_requests": [
+        {
+          "path": "/maps/tiles/Default/15/25823/16261.png",
+          "failure": "net::ERR_ABORTED"
+        },
+        {
+          "path": "/maps/tiles/Default/15/25823/16260.png",
+          "failure": "net::ERR_ABORTED"
+        },
+        {
+          "path": "/maps/tiles/Default/15/25822/16261.png",
+          "failure": "net::ERR_ABORTED"
+        },
+        {
+          "path": "/maps/tiles/Default/15/25824/16261.png",
+          "failure": "net::ERR_ABORTED"
+        },
+        {
+          "path": "/maps/tiles/Default/15/25823/16262.png",
+          "failure": "net::ERR_ABORTED"
+        },
+        {
+          "path": "/maps/tiles/Default/15/25822/16260.png",
+          "failure": "net::ERR_ABORTED"
+        },
+        {
+          "path": "/maps/tiles/Default/15/25824/16260.png",
+          "failure": "net::ERR_ABORTED"
+        },
+        {
+          "path": "/maps/tiles/Default/15/25822/16262.png",
+          "failure": "net::ERR_ABORTED"
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "fresh_context": true,
+      "checks": [
+        {
+          "step": "overview",
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "overflow": false
+        },
+        {
+          "step": "changes",
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "overflow": false
+        },
+        {
+          "step": "example",
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "overflow": false
+        },
+        {
+          "step": "population",
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "overflow": false
+        },
+        {
+          "step": "timeline",
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "overflow": false
+        },
+        {
+          "step": "plan",
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "overflow": false
+        },
+        {
+          "step": "3d",
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "overflow": false
+        },
+        {
+          "step": "notice-en",
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "overflow": false
+        },
+        {
+          "step": "notice-zh",
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "overflow": false
+        },
+        {
+          "step": "notice-ms",
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "overflow": false
+        },
+        {
+          "step": "notice-ta",
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "overflow": false
+        },
+        {
+          "step": "forecast",
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "overflow": false
+        },
+        {
+          "step": "replay",
+          "viewport": 390,
+          "document": 390,
+          "body": 390,
+          "overflow": false
+        }
+      ],
+      "errors": [],
+      "failed_requests": [],
+      "status": "passed",
+      "source_date_text": "Updated 10 Oct 2026",
+      "briefing_text": "Largest cluster: 91 people in Jurong West and Jurong East.",
+      "sensitive_text_found": false,
+      "geolocation_denial": "Handled with an example/area-list fallback; no location granted.",
+      "example_text": "Blk 117 Ho Ching Road is inside an active dengue cluster.\n\nHo Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 333, 334, 335) · 91 people · Jurong West · Jurong East\n\nEnglish\n中文\nBahasa Melayu\nதமிழ்\nFive things to do this week\nLoosen hardened soil.\nEmpty flowerpot plates.\nOverturn pails and wipe their rims.\nReplace water in vases.\nKeep roof gutters clear and apply BTI as directed.\nShare with neighbours\nSee this area\n\nDistance to the dated NEA cluster footprint, not a measure of personal risk. The shared message contains no location.",
+      "area_text": "West Region\n\nHigh\nJurong West\n97 people\n\nin 2 active clusters\n\n3.87 people in active clusters per 10,000 residents\n250,890 residents · June 2026 · context, not incidence or individual risk\n\n Plan inspection \nDraft resident notice\n2 clusters\nLocal weather\n3/3 stations",
+      "plan_heading": "Jurong West\nInspection plan\nResident notice",
+      "three_d_status": "13 source building shapes · 13 with matched storeys",
+      "three_d_canvas": true,
+      "reduced_motion_play_disabled": true,
+      "notice_languages": {
+        "en": true,
+        "zh": true,
+        "ms": true,
+        "ta": true
+      },
+      "live_outlook_text": "UNREPORTED WEEKS · SINGAPORE\nQuieter than usual\nWeek of 11 October: about 68 people\nTypical 143\n\nLikely between 50 and 93. That’s lower than a typical October week (about 143 people in 2021–2025). Mostly shaped by recent case counts (pulling it down).\n\nLast reported\n71 people\nWeek to 3 Oct 2026 · 2026-W39\nEarlier unreported week\nabout 78\nWeek of 4 Oct\nSource\nOfficial weekly bulletin\nMOH / Communicable Diseases Agency",
+      "report_writes": 0,
+      "cancelled_requests": []
+    }
+  ],
+  "status": "passed"
+}

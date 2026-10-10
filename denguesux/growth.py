@@ -132,6 +132,35 @@ def compare_clusters(current, baseline):
     return result
 
 
+def latest_changes(snapshots):
+    """What changed between the two most recent saved snapshots, whatever the gap.
+
+    Unlike growth (which needs a 7–9 day baseline for scoring), this feed is descriptive only
+    and always states both dates. Changes in cumulative cluster totals are not weekly cases.
+    """
+    if len(snapshots) < 2:
+        return None
+    previous, latest = snapshots[-2], snapshots[-1]
+    rows = compare_clusters(latest["rows"], previous["rows"])
+    items = []
+    for row in rows:
+        kind = row["classification"]
+        if kind == "Stable":
+            continue
+        items.append({"kind": kind, "label": row["status_label"], "locality": row["locality"], "people": row.get("case_size"),
+                      "previous_people": row.get("baseline_case_size"), "change": row.get("growth_cases"), "cluster_id": row["cluster_id"]})
+    order = {"New": 0, "Growing": 1, "Shrinking": 2, "not_comparable": 3, "Closed": 4}
+    items.sort(key=lambda item: (order.get(item["kind"], 9), -(item["change"] or item["people"] or item["previous_people"] or 0)))
+    count = lambda kind: sum(item["kind"] == kind for item in items)
+    return {"from_date": previous["date"].isoformat(), "to_date": latest["date"].isoformat(),
+            "days": (latest["date"] - previous["date"]).days, "items": items,
+            "summary": {"new": count("New"), "growing": count("Growing"), "shrinking": count("Shrinking"), "closed": count("Closed"),
+                        "stable": sum(row["classification"] == "Stable" for row in rows),
+                        "people_then": sum(r["case_size"] for r in previous["rows"]), "people_now": sum(r["case_size"] for r in latest["rows"]),
+                        "clusters_then": len(previous["rows"]), "clusters_now": len(latest["rows"])},
+            "note": "Compares the two latest saved snapshots. Totals are cumulative cluster sizes, not new weekly cases. Closed means absent from the newest snapshot."}
+
+
 def build_growth(root=ROOT):
     snapshots = load_snapshots(root)
     now = dt.datetime.now(dt.timezone.utc).isoformat()
@@ -166,7 +195,10 @@ def build_growth(root=ROOT):
             "status": "available" if available else INSUFFICIENT,
             "status_label": "Compared with the saved snapshot about seven days earlier" if available else unavailable_label,
             "growing_count": sum(row["classification"] == "Growing" for row in rows) if available else None,
-            "clusters": rows, "source_updated_range": source_dates,
+            "clusters": rows, "source_updated_range": source_dates, "changes": latest_changes(snapshots),
+            "timeline": [{"date": snap["date"].isoformat(), "clusters": [{"id": r["cluster_id"], "locality": r["locality"], "people": r["case_size"],
+                          "lat": round(shape(r["geometry"]).representative_point().y, 6), "lon": round(shape(r["geometry"]).representative_point().x, 6)}
+                          for r in snap["rows"]]} for snap in snapshots],
             "sources": sources,
             "methodology": {"baseline": "Nearest saved snapshot at least 7 and at most 9 days earlier; no backfill.",
                             "matching": "At least 10% overlap of the smaller footprint and 25% Jaccard similarity of locality words. Both are required. Ambiguous splits/merges receive no growth value.",

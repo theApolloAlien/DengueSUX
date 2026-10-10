@@ -34,6 +34,10 @@ def run_daily(root=ROOT, *, spark=None, offline=False, radius_m=300, top_n=8):
     from denguesux.inspection import build_inspection
     inspection = build_inspection(root=root, radius_m=radius_m, top_n=top_n, offline=offline, spark=spark)
     notices = write_notices(root, spark=spark)
+    from denguesux.alerts import write_alerts
+    alerts = write_alerts(root, spark=spark)
+    from denguesux.map_context import build_map_context
+    build_map_context(root)
     dashboard_path = root / "output/web/dashboard.json"
     if dashboard_path.exists():
         dashboard = json.loads(dashboard_path.read_text())
@@ -41,6 +45,11 @@ def run_daily(root=ROOT, *, spark=None, offline=False, radius_m=300, top_n=8):
         dashboard["growth"] = growth
         dashboard["inspection"] = inspection
         dashboard["notices"] = notices
+        dashboard["alerts"] = alerts
+        for name in ('footprints', 'population'):
+            path = root / 'output/web' / f'{name}.json'
+            if path.exists():
+                dashboard[name] = json.loads(path.read_text())
         dashboard["meta"]["generated_at"] = dt.datetime.now(dt.timezone.utc).isoformat()
         _atomic_json(dashboard_path, dashboard)
     summary = {"completed_at": dt.datetime.now(dt.timezone.utc).isoformat(), "snapshot_date": growth["as_of_date"],

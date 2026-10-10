@@ -5,8 +5,9 @@ from denguesux.pipeline import epi_calendar
 from denguesux.model import chronological_split, make_model
 
 def test_epi_calendar_preserves_sunday_saturday_and_53():
-    rows=epi_calendar(); lookup={r[0]:r for r in rows}
+    rows=epi_calendar(2012,2022); lookup={r[0]:r for r in rows}
     assert len(rows)==574
+    current=epi_calendar(); assert current[-1][3]==dt.date.today().year and {'2025-W53','2026-W01'}<={r[0] for r in current}
     assert lookup['2014-W53'][1]==dt.date(2014,12,28)
     assert lookup['2020-W53'][1]==dt.date(2020,12,27)
     assert all(r[1].weekday()==6 and r[2].weekday()==5 for r in rows)

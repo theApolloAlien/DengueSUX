@@ -1,6 +1,6 @@
-/* Ask DengueSUX: answers by calling functions over the exported gold data and cites each dated source.
-   The responder below composes answers locally from those function results; a hosted model can replace
-   `respond` later without changing the tools, citations or UI. */
+/* Ask DengueSUX. With a hosted model configured, /api/chat answers by calling tools over the exported gold data (and Databricks
+   Genie for SQL) and returns the sources it used. Without it, or if it fails, the rule-based responder below composes answers
+   locally from the same kind of function results, so the panel always works. */
 (() => {
   'use strict';
   const $ = s => document.querySelector(s);
@@ -18,21 +18,31 @@
   const wait = ms => new Promise(r => setTimeout(r, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : ms));
   const TABLE = 'workspace.denguesux';
   const MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december'];
-  let data = {}, hooks = {}, busy = false, mode = 'ask';
+  let data = {}, hooks = {}, busy = false, mode = 'ask', history = [], genieThread = null;
 
   const current = () => data.current || {};
   const model = () => data.model || {};
+  const liveForecast = () => {
+    const m=model(),live=m.live_forecast,gate=m.current_forecast||{};
+    if(live?.available!==true||gate.available!==true||data.meta?.labels?.gate?.available===false)return null;
+    const today=new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Singapore'});
+    const age=(Date.parse(`${today}T00:00:00Z`)-Date.parse(`${live.issued_from_week_end}T00:00:00Z`))/86400000;
+    return age>=0&&age<=(gate.max_age_days||21)&&live.headline?.target_week_end>=today?live:null;
+  };
   const areas = () => [...(current().areas || [])].sort((a,b) => (b.cluster_cases||0)-(a.cluster_cases||0) || (b.cluster_count||0)-(a.cluster_count||0) || a.name.localeCompare(b.name));
   const predictions = () => model().predictions || [];
   const clustersIn = code => (current().clusters?.features || []).map(f => f.properties).filter(p => (p.area_codes || [p.area_code]).includes(code));
   const sourceUrl = name => (data.meta?.sources || []).find(s => s.name.startsWith(name))?.url;
+  const bulletinUrl = () => [...(data.meta?.labels?.contract?.sources||[])].reverse().find(s=>s.url)?.url||sourceUrl('Weekly national');
   const SOURCES = {
     clusters: () => ({id:'clusters', name:'NEA active clusters · data.gov.sg', date:current().as_of, url:sourceUrl('NEA active clusters'), table:'gold_area_priorities'}),
     weather: () => ({id:'weather', name:'NEA weather stations · data.gov.sg', date:current().weather_date, url:sourceUrl('NEA weather'), table:'gold_area_priorities'}),
     growth: () => ({id:'growth', name:'Daily cluster snapshots', date:data.growth?.retrieved_at || current().as_of, table:'gold_cluster_growth'}),
     inspection: () => ({id:'inspection', name:'OneMap places and walking route', date:data.inspection?.as_of, url:'https://www.onemap.gov.sg/', table:'inspection_routes'}),
     forecast: () => ({id:'forecast', name:`2022 forecast backtest · MLflow run ${String(model().run_id || '').slice(0,8)}`, date:data.meta?.generated_at, table:'gold_national_predictions'}),
-    bulletin: () => ({id:'bulletin', name:'MOH weekly infectious disease bulletin', date:data.meta?.labels?.contract?.retrieved_at, url:sourceUrl('Weekly national'), table:'gold_national_features'})
+    bulletin: () => ({id:'bulletin', name:'Official MOH/CDA weekly infectious disease bulletin', date:model().latest_label, url:bulletinUrl(), table:'silver_national_weekly'}),
+    live: () => ({id:'live', name:'National outlook with 80% ranges · MOH / CDA labels', date:model().live_forecast?.issued_from_week_end, url:bulletinUrl(), table:'gold_national_predictions'}),
+    prospective: () => ({id:'prospective', name:`2023+ retrospective evaluation · MLflow run ${String(model().run_id || '').slice(0,8)}`, date:data.meta?.generated_at, table:'gold_national_predictions'})
   };
 
   /* ---------- Functions the assistant can call ---------- */
@@ -44,8 +54,9 @@
     const rows = predictions(); if (!rows.length) return -1;
     const lead = model().peak_lead_time || {};
     const t = String(text).toLowerCase();
+    const year=t.match(/\b(20\d\d)\b/);if(year&&year[1]!=='2022')return -1;
     const iso = t.match(/\b(20\d\d)-(\d\d)-(\d\d)\b/);
-    if (iso) { const target = iso[0]; const i = rows.findIndex(r => r.target_date >= target); return i < 0 ? rows.length-1 : i; }
+    if (iso) { const target = iso[0]; if(target<rows[0].target_date||target>(rows.at(-1).target_week_end||rows.at(-1).target_date))return -1;const i = rows.findIndex(r => r.target_date >= target); return i < 0 ? rows.length-1 : i; }
     const month = MONTHS.findIndex(m => t.includes(m) || new RegExp(`\\b${m.slice(0,3)}\\b`).test(t));
     if (month >= 0) {
       const inMonth = rows.map((r,i) => ({r,i})).filter(({r}) => new Date(`${r.target_date}T12:00:00`).getMonth() === month);
@@ -86,6 +97,18 @@
       const lead = model().peak_lead_time || {};
       return {result:{week_index:week, issue_date:r.issue_date, target_week:r.target_date, forecast:r.selected_prediction ?? r.prediction, reported:r.actual, simple_average:r.baseline, level:r.risk, reported_level:r.actual_risk, origin_week_cases:r.origin_cases, high_threshold:model().thresholds?.high, peak_week:lead.peak_week, peak_people:lead.peak_people, first_high_issue:lead.selected?.first_high_issue_date, weeks_before_peak:lead.selected?.weeks_before_peak}, sources:[SOURCES.forecast(), SOURCES.bulletin()]};
     },
+    live_outlook() {
+      const l = liveForecast(), o = model().prospective?.overall; if (!l) return {result:{error:'no_live_forecast'}, sources:[]};
+      const h = l.headline;
+      return {result:{latest_week_end:l.issued_from_week_end, latest_people:l.latest_reported_people, target_week:h.target_date, forecast:h.prediction, low:h.lower, high:h.upper, level:h.risk,
+        typical:h.normal, this_week:l.forecasts[0], contributions:(h.top_features || []).map(f => ({feature:f.feature, value:f.value})),
+        imputed_weather:(l.forecasts||[]).filter(r=>r.weather_inputs_imputed).map(r=>({week:r.target_date,missing:r.weather_inputs_missing,total:r.weather_inputs_total})),
+        test_weeks:o?.n, test_error:o?.selected.mae, test_simple_average_error:o?.baseline.mae, test_range_coverage:o?.interval_coverage}, sources:[SOURCES.live(), SOURCES.prospective()]};
+    },
+    forecast_evaluation() {
+      const evaluation=model().prospective;
+      return evaluation?{result:{...evaluation.overall,window:evaluation.window,weather_missingness:model().weather_missingness?.prospective},sources:[SOURCES.prospective()]}:{result:{error:'no_evaluation'},sources:[]};
+    },
     explain_forecast({week}) {
       const r = predictions()[week]; if (!r) return {result:{error:'no_such_week'}, sources:[]};
       return {result:{method:r.explanation_method || 'Grouped TreeSHAP contributions', base_value:r.explanation_base, contributions:(r.top_features || []).map(f => ({feature:f.feature, value:f.value}))}, sources:[SOURCES.forecast()]};
@@ -97,8 +120,10 @@
     const t = question.toLowerCase(), area = findArea(t), week = weekIndex(t);
     const n = Number(t.match(/\btop\s+(\d{1,2})\b/)?.[1] || t.match(/\b(\d{1,2})\s+(areas|places)\b/)?.[1] || 5);
     if (area && /route|walk|volunteer|inspect|plan|visit|check first|where .*look/.test(t)) return {intent:'route', area, calls:[['get_area', {code:area.code}], ['inspection_plan', {area:area.code}]]};
+    if(!area&&!/2022|replay/.test(t)&&/accura|reliab|trust|error|how (well|good)|since 2023/.test(t))return {intent:'evaluation',calls:[['forecast_evaluation',{}]]};
+    if (!area && !/2022|replay|peak/.test(t) && /(next|this|coming) (week|fortnight)|right now|currently|latest|live|expect|national/.test(t)) return {intent:'live', calls:[['live_outlook', {}]]};
     if (/forecast|warning|predict|outlook|drove|driver|shap|replay|2022|peak/.test(t) && !area) {
-      const w = week >= 0 ? week : weekIndex('first high warning');
+      const w = week >= 0 ? week : /20\d\d/.test(t)?-1:weekIndex('first high warning');
       return {intent:'forecast', calls:[['forecast_replay', {week:w}], ['explain_forecast', {week:w}]]};
     }
     if (/grow|growing|spread|increas|rising|shrink/.test(t)) return {intent:'growth', area, calls:[['cluster_growth', {area:area?.code}]]};
@@ -154,7 +179,7 @@
     }
     if (plan.intent === 'forecast') {
       const f = R('forecast_replay').result, e = R('explain_forecast').result;
-      if (f.error) { out.paragraphs.push("I couldn't find that week in the 2022 replay. Try a month, such as “March 2022”."); return out; }
+      if (f.error) { out.paragraphs.push("That week is outside the 2022 replay. Use Ask the data for a later historical week, or ask for the latest national outlook."); return out; }
       const isFirst = f.issue_date === f.first_high_issue;
       if (/peak/i.test(question)) out.paragraphs.push(`Reported cases peaked in the week of <b>${date(f.peak_week)}</b>, at <b>${people(f.peak_people)}</b>.${C('forecast_replay','bulletin')}`);
       out.paragraphs.push(`${isFirst ? 'The early warning came on' : 'The forecast issued on'} <b>${date(f.issue_date)}</b>${isFirst ? ', when the forecast' : ''} predicted <b>${people(Math.round(f.forecast))}</b> (${esc(f.level)}) for the week of ${date(f.target_week,{day:'numeric',month:'short'})}. The High line is ${num(f.high_threshold,0)}.${C('forecast_replay','forecast')}${isFirst ? ` That was <b>${num(f.weeks_before_peak)} weeks</b> before the ${date(f.peak_week,{day:'numeric',month:'short'})} peak of ${people(f.peak_people)}.` : ''}`);
@@ -165,6 +190,28 @@
       if (lead) out.paragraphs.push(lead.feature === 'Recent cases' ? `So the signal came mostly from recent cases: <b>${people(f.origin_week_cases)}</b> were reported in the week the forecast was made.${C('forecast_replay','bulletin')} ${weatherShare < .25 ? 'Weather played a small part.' : 'Weather also mattered.'} These are associations, not causes.` : `The largest factor was ${esc(lead.feature.toLowerCase())}. These contributions are associations, not causes.`);
       out.paragraphs.push(`${people(f.reported)} were actually reported that week; a simple four-week average would have said ${num(Math.round(f.simple_average))}.${C('forecast_replay','bulletin')}`);
       out.actions.push({label:'Show this week on the chart', run:() => hooks.showWeek?.(f.week_index)});
+    }
+    if (plan.intent === 'live') {
+      const l = R('live_outlook').result;
+      if (l.error) { out.paragraphs.push('A current national outlook is unavailable because the saved forecast is missing or out of date. Historical evaluation remains available.'); return out; }
+      const n = l.typical, ratio = n ? l.forecast / Math.max(n.median, 1) : null;
+      const versus = ratio == null ? '' : ratio < .8 ? 'lower than' : ratio > 1.25 ? 'higher than' : 'about the same as';
+      out.paragraphs.push(`For the week of <b>${date(l.target_week,{day:'numeric',month:'long'})}</b>, expect about <b>${people(Math.round(l.forecast))}</b> nationally, likely between ${num(l.low,0)} and ${num(l.high,0)}.${C('live_outlook','live')}${n ? ` That’s ${versus} a typical week at this time of year (about ${num(n.median,0)} in ${esc(n.years)}).` : ''}`);
+      out.paragraphs.push(`The latest official count is <b>${people(l.latest_people)}</b> for the week ending ${date(l.latest_week_end)}. The earlier unreported week of ${date(l.this_week?.target_date)} has a forecast of about ${num(Math.round(l.this_week?.prediction),0)}.${C('live_outlook','live')}`);
+      if (l.test_weeks) out.paragraphs.push(`In a retrospective check of ${num(l.test_weeks,0)} weeks since 2023, the fixed recipe was off by about <b>${num(l.test_error,0)} people a week</b>, against ${num(l.test_simple_average_error,0)} for a simple average. Its 80% range held the real count in ${num(l.test_range_coverage*100,0)}% of weeks. Models were refitted yearly on earlier labels; this is not performance recorded in real time.${C('live_outlook','prospective')}`);
+      if(l.imputed_weather.length)out.paragraphs.push(`Missing weather inputs: ${l.imputed_weather.map(r=>`${num(r.missing)} of ${num(r.total)} for the week of ${date(r.week)}`).join('; ')}. The estimator uses training-set medians internally; observations remain missing.${C('live_outlook','live')}`);
+      out.paragraphs.push('Ranges describe past forecast error, not a guarantee.');
+      const top = [...l.contributions].sort((x,y) => Math.abs(y.value)-Math.abs(x.value))[0];
+      if (top) out.paragraphs.push(`The biggest influence was ${esc(top.feature.toLowerCase())}, ${top.value >= 0 ? 'pushing the outlook up' : 'pulling it down'}. These are associations, not causes.`);
+      out.actions.push({label:'Open the forecast', run:() => hooks.showLive?.()}, {label:'Which areas should we check first?', ask:'Which areas should we check first?'});
+    }
+    if(plan.intent==='evaluation'){
+      const e=R('forecast_evaluation').result;
+      if(e.error){out.paragraphs.push('The 2023+ retrospective evaluation is unavailable.');return out;}
+      out.paragraphs.push(`Across ${num(e.n)} weeks (${esc(e.window)}), average error was <b>${num(e.selected.mae,1)} people a week</b>, versus ${num(e.baseline.mae,1)} for the simple average. The 80% range contained the reported count in ${num(e.interval_coverage*100,1)}% of weeks.${C('forecast_evaluation','prospective')}`);
+      out.paragraphs.push('This is a retrospective check of the fixed recipe, refitted yearly using earlier labels. It uses revised counts and assumed immediate publication, not performance recorded in real time.');
+      if(e.weather_missingness)out.paragraphs.push(`${num(e.weather_missingness.share_of_weeks_with_imputed_weather_inputs*100,1)}% of these weeks used at least one imputed weather input inside the estimator; observations remain missing.${C('forecast_evaluation','prospective')}`);
+      out.actions.push({label:'Open the forecast evaluation',run:()=>hooks.showLive?.()});
     }
     if (plan.intent === 'top') {
       const rows = R('top_areas').result;
@@ -186,8 +233,8 @@
       }
     }
     if (plan.intent === 'help') {
-      out.paragraphs.push('I can answer questions about area priorities, active clusters, inspection routes and the 2022 forecast replay, using the saved data. Try one of these:');
-      ['Why is Jurong East High?', 'Plan a Saturday volunteer route in Bedok.', 'What drove the March 2022 early warning?', 'Which areas should we check first?'].forEach(q => out.actions.push({label:q, ask:q}));
+      out.paragraphs.push('I can answer questions about area priorities, active clusters, inspection routes, the live national outlook and the 2022 replay, using the saved data. Try one of these:');
+      ['What’s expected next week?', 'Why is Jurong East High?', 'Plan a Saturday volunteer route in Bedok.', 'What drove the March 2022 early warning?'].forEach(q => out.actions.push({label:q, ask:q}));
     }
     return out;
   }
@@ -210,19 +257,29 @@
     const t = question.toLowerCase(), n = Number(t.match(/\b(?:top|first)\s+(\d{1,2})\b/)?.[1] || 10);
     const more = Number(t.match(/(?:more than|over|above|at least|>=?)\s*(\d+)/)?.[1]);
     const region = REGIONS.find(r => t.includes(`${r} region`) || t.includes(r.replace('-', ' ')) && /region|areas? in/.test(t));
+    if (/next week|coming|live|latest forecast|this week/.test(t)) return {
+      table:'gold_national_predictions', summary:'Forecasts for weeks that have not been reported yet, with their 80% ranges.',
+      sql:`SELECT target_date, round(prediction) AS forecast, round(lower) AS likely_low, round(upper) AS likely_high, normal_median AS typical_week\nFROM ${TABLE}.gold_national_predictions\nWHERE segment = 'live'\n  AND datediff(CAST(from_utc_timestamp(current_timestamp(), 'Asia/Singapore') AS DATE), CAST(origin_week_end AS DATE)) BETWEEN 0 AND 21\n  AND CAST(target_week_end AS DATE) >= CAST(from_utc_timestamp(current_timestamp(), 'Asia/Singapore') AS DATE)\nORDER BY target_date;`,
+      run:() => (liveForecast()?.forecasts || []).map(r => ({target_date:r.target_date, forecast:Math.round(r.prediction), likely_low:Math.round(r.lower), likely_high:Math.round(r.upper), typical_week:r.normal?.median ?? null}))
+    };
+    if (/since 2023|2023|2024|2025|2026|by year|each year/.test(t) && /error|accura|off by|mae|well/.test(t)) return {
+      table:'gold_national_predictions', summary:'Average weekly error in the 2023+ retrospective evaluation of the fixed recipe, refitted yearly using earlier labels.',
+      sql:`SELECT year(target_date) AS year,\n       round(avg(abs(prediction - actual)), 1) AS forecast_error,\n       round(avg(abs(baseline - actual)), 1) AS simple_average_error\nFROM ${TABLE}.gold_national_predictions\nWHERE segment = 'prospective'\nGROUP BY year(target_date)\nORDER BY year;`,
+      run:() => Object.entries(model().prospective?.by_year || {}).map(([year, v]) => ({year:+year, forecast_error:Math.round(v.selected.mae*10)/10, simple_average_error:Math.round(v.baseline.mae*10)/10}))
+    };
     if (/error|accura|off by|mae/.test(t)) return {
       table:'gold_national_predictions', summary:'Average absolute weekly error of the forecast and the simple average, by month of 2022.',
-      sql:`SELECT date_format(target_date, 'MMM') AS month,\n       round(avg(abs(prediction - actual)), 0) AS forecast_error,\n       round(avg(abs(baseline - actual)), 0) AS simple_average_error\nFROM ${TABLE}.gold_national_predictions\nWHERE year(target_date) = 2022\nGROUP BY month(target_date), month\nORDER BY month(target_date);`,
+      sql:`SELECT date_format(target_date, 'MMM') AS month,\n       round(avg(abs(prediction - actual)), 0) AS forecast_error,\n       round(avg(abs(baseline - actual)), 0) AS simple_average_error\nFROM ${TABLE}.gold_national_predictions\nWHERE segment = 'replay_2022'\nGROUP BY month(target_date), month\nORDER BY month(target_date);`,
       run:() => { const g = {}; predictions().forEach(r => { const m = new Date(`${r.target_date}T12:00:00`).getMonth(); (g[m] ||= []).push(r); }); return Object.entries(g).map(([m, rs]) => ({month:monthName(+m), forecast_error:Math.round(rs.reduce((s,r) => s+Math.abs((r.selected_prediction ?? r.prediction)-r.actual),0)/rs.length), simple_average_error:Math.round(rs.reduce((s,r) => s+Math.abs(r.baseline-r.actual),0)/rs.length)})); }
     };
     if (/week|forecast|predict|2022/.test(t) && /high/.test(t)) return {
       table:'gold_national_predictions', summary:'Weeks in 2022 where the two-week forecast was High.',
-      sql:`SELECT issue_date, target_date, round(prediction) AS forecast, actual AS reported\nFROM ${TABLE}.gold_national_predictions\nWHERE risk = 'High'\nORDER BY target_date;`,
+      sql:`SELECT issue_date, target_date, round(prediction) AS forecast, actual AS reported\nFROM ${TABLE}.gold_national_predictions\nWHERE segment = 'replay_2022' AND risk = 'High'\nORDER BY target_date;`,
       run:() => predictions().filter(r => r.risk === 'High').map(r => ({issue_date:r.issue_date, target_date:r.target_date, forecast:Math.round(r.selected_prediction ?? r.prediction), reported:r.actual}))
     };
     if (/peak|busiest|worst week|most cases/.test(t) && /week|2022/.test(t)) return {
       table:'gold_national_predictions', summary:'The five weeks of 2022 with the most reported people.',
-      sql:`SELECT target_date, actual AS reported, round(prediction) AS forecast\nFROM ${TABLE}.gold_national_predictions\nORDER BY actual DESC\nLIMIT 5;`,
+      sql:`SELECT target_date, actual AS reported, round(prediction) AS forecast\nFROM ${TABLE}.gold_national_predictions\nWHERE segment = 'replay_2022'\nORDER BY actual DESC\nLIMIT 5;`,
       run:() => [...predictions()].sort((a,b) => b.actual-a.actual).slice(0,5).map(r => ({target_date:r.target_date, reported:r.actual, forecast:Math.round(r.selected_prediction ?? r.prediction)}))
     };
     if (/how many|count|breakdown|split/.test(t) && /priorit|high|medium|low|level/.test(t)) return {
@@ -247,7 +304,7 @@
     };
     return null;
   }
-  const SQL_EXAMPLES = ['Top 10 areas by people in clusters', 'How many areas are High, Medium and Low?', 'Clusters with more than 3 people', 'Weeks in 2022 where the forecast was High', 'Monthly forecast error in 2022', 'Areas in the West Region with active clusters'];
+  const SQL_EXAMPLES = ['Forecast for next week', 'Forecast error by year since 2023', 'Top 10 areas by people in clusters', 'How many areas are High, Medium and Low?', 'Clusters with more than 3 people', 'Weeks in 2022 where the forecast was High', 'Monthly forecast error in 2022', 'Areas in the West Region with active clusters'];
   const highlightSql = sql => esc(sql).replace(/\b(SELECT|FROM|WHERE|AND|GROUP BY|ORDER BY|LIMIT|AS|DESC|CASE|WHEN|THEN|ELSE|END)\b/g, '<b>$1</b>').replace(/\b(count|sum|avg|abs|round|max|year|month|date_format)(?=\()/g, '<b>$1</b>');
 
   /* ---------- UI ---------- */
@@ -293,12 +350,12 @@
     requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
   }
   function setMode(next) {
-    mode = next;
+    mode = next; history = []; genieThread = null;
     $$('.ask-modes [data-mode]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === mode)));
     $('#ask-input').placeholder = mode === 'sql' ? 'Ask a question about the gold tables' : 'Ask about areas, routes or the forecast';
     const log = $('#ask-log'); log.innerHTML = '';
     const examples = mode === 'sql' ? SQL_EXAMPLES : ['Why is Jurong East High?', 'Plan a Saturday volunteer route in Bedok.', 'What drove the March 2022 early warning?', 'Which areas should we check first?'];
-    log.innerHTML = `<div class="ask-welcome"><p>${mode === 'sql' ? `Ask in plain English. I'll write SQL over the gold Delta tables and show the result.` : `Answers come from the saved cluster, weather, route and forecast data, with a dated source for every number.`}</p><div class="ask-suggestions">${examples.map(q => `<button class="ask-chip">${esc(q)}</button>`).join('')}</div></div>`;
+    log.innerHTML = `<div class="ask-welcome"><p>${mode === 'sql' ? `Ask in plain English. I'll write SQL over the gold Delta tables and show the result.` : `Ask in your own words. Answers come from the saved cluster, weather, route and forecast data, can use live Databricks SQL, and cite a dated source for every number.`}</p><div class="ask-suggestions">${examples.map(q => `<button class="ask-chip">${esc(q)}</button>`).join('')}</div></div>`;
     log.querySelectorAll('.ask-chip').forEach(b => b.addEventListener('click', () => ask(b.textContent)));
   }
   function bubble(role, html) {
@@ -321,7 +378,62 @@
     return body;
   }
   const preview = value => { const text = JSON.stringify(value); return esc(text.length > 220 ? `${text.slice(0, 220)}…` : text); };
+  /* ---------- Hosted model with tools (server side), rule-based fallback ---------- */
+  let chatState;
+  async function chatEnabled() {
+    if (chatState === undefined) {
+      try { const r = await fetch('/api/chat/status', {cache:'no-store', signal:AbortSignal.timeout(4000)}); chatState = r.ok && (await r.json()).enabled === true; }
+      catch { chatState = false; }
+    }
+    return chatState;
+  }
+  /* Safe mini-markdown: escape first, then bold, lists, paragraphs and [[source]] markers. Returns one HTML block per paragraph or list. */
+  function mdBlocks(text, sources) {
+    const order = [], numberOf = id => { if (!sources.some(s => s.id === id)) return null; if (!order.includes(id)) order.push(id); return order.indexOf(id) + 1; };
+    const inline = line => esc(line).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\s*\[\[([a-z_, ]+)\]\]/g, (m, ids) => ids.split(',').map(i => numberOf(i.trim())).filter(Boolean).map(n => `<sup class="ask-cite">[${n}]</sup>`).join(''));
+    const blocks = []; let list = null, para = [];
+    const flushPara = () => { if (para.length) blocks.push(para.map(inline).join('<br>')); para = []; };
+    const flushList = () => { if (list) blocks.push(`<${list.tag} class="ask-list">${list.items.map(i => `<li>${inline(i)}</li>`).join('')}</${list.tag}>`); list = null; };
+    for (const raw of String(text).replace(/\r/g, '').split('\n')) {
+      const line = raw.replace(/^#{1,4}\s*/, '').trimEnd(), bullet = line.match(/^\s*[-*•]\s+(.*)/), num_ = line.match(/^\s*\d+[.)]\s+(.*)/);
+      if (bullet || num_) { flushPara(); const tag = bullet ? 'ul' : 'ol'; if (list && list.tag !== tag) flushList(); (list ||= {tag, items:[]}).items.push((bullet || num_)[1]); }
+      else if (!line.trim()) { flushPara(); flushList(); }
+      else { flushList(); para.push(line.trim()); }
+    }
+    flushPara(); flushList();
+    return {blocks, cited: order};
+  }
+  const ACTIONS = {select_area: a => hooks.selectArea?.(a.area), open_plan: a => hooks.openPlan?.(a.area), open_notice: a => hooks.openNotice?.(a.area), show_week: a => hooks.showWeek?.(a.week), show_live: () => hooks.showLive?.()};
+  async function answerChat(question, msg) {
+    msg.querySelector('.ask-steps').innerHTML = `<div class="ask-step">${icon('sparkle')} Checking the saved data</div>`;
+    let d;
+    try {
+      const r = await fetch('/api/chat', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({messages:[...history, {role:'user', content:question}]}), signal:AbortSignal.timeout(150000)});
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      d = await r.json();
+    } catch (error) { console.warn('Assistant model unavailable, using saved-data answers:', error); return false; }
+    msg.querySelector('.ask-steps')?.remove();
+    const sources = d.sources || [], {blocks, cited} = mdBlocks(d.answer, sources);
+    history = [...history, {role:'user', content:question}, {role:'assistant', content:String(d.answer).replace(/\s*\[\[[^\]]*\]\]/g, '')}].slice(-8);
+    const body = await reveal(msg, blocks);
+    const actions = (d.actions || []).filter(a => ACTIONS[a.type]);
+    if (actions.length) {
+      const row = document.createElement('div'); row.className = 'ask-actions';
+      actions.forEach(a => { const b = document.createElement('button'); b.className = 'ask-chip'; b.textContent = a.label; b.addEventListener('click', () => ACTIONS[a.type](a)); row.append(b); });
+      body.append(row);
+    }
+    const trace = d.trace || [], sql = trace.filter(t => t.tool === 'query_database' && t.result?.sql);
+    sql.forEach(t => {
+      const cols = t.result.columns || [], rows = (t.result.rows || []).slice(0, 8);
+      if (rows.length) body.insertAdjacentHTML('beforeend', `<div class="ask-table-wrap"><table class="ask-table"><thead><tr>${cols.map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(v => `<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`);
+      body.insertAdjacentHTML('beforeend', `<details class="ask-sql"><summary>${icon('code')} Show SQL (AI-generated: check it)</summary><pre>${highlightSql(t.result.sql)}</pre></details>`);
+    });
+    const shown = [...cited.map(id => sources.find(s => s.id === id)), ...sources.filter(s => !cited.includes(s.id))].filter(Boolean);
+    if (shown.length || trace.length) body.insertAdjacentHTML('beforeend', `<div class="ask-sources">${shown.map(s => `<span>${cited.includes(s.id) ? `[${cited.indexOf(s.id) + 1}] ` : ''}${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}${s.date ? ` · ${date(s.date)}` : ''}</span>`).join('')}</div>${trace.length ? `<details class="ask-trace"><summary>${trace.length} function ${trace.length === 1 ? 'call' : 'calls'}</summary>${trace.map(t => `<div><code>${esc(t.tool)}(${esc(JSON.stringify(t.args))})</code><pre>${preview(t.result)}</pre></div>`).join('')}</details>` : ''}`);
+    return true;
+  }
   async function answerAsk(question, msg) {
+    if (await chatEnabled() && await answerChat(question, msg)) return;
     const steps = msg.querySelector('.ask-steps');
     const {results, answer} = await respond(question, (name, args) => { steps.insertAdjacentHTML('beforeend', `<div class="ask-step">${icon('function')} <code>${name}(${esc(Object.values(args).filter(v => v !== undefined).map(v => JSON.stringify(v)).join(', '))})</code></div>`); });
     await wait(250); steps.remove();
@@ -347,11 +459,12 @@
     msg.querySelector('.ask-steps').innerHTML = `<div class="ask-step">${icon('database')} Asking Databricks Genie over the gold tables</div>`;
     let d;
     try {
-      const r = await fetch('/api/ask', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({question}), signal:AbortSignal.timeout(130000)});
+      const r = await fetch('/api/ask', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({question, conversation_id:genieThread}), signal:AbortSignal.timeout(130000)});
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       d = await r.json();
     } catch (error) { console.warn('Genie unavailable, using saved-data answers:', error); return false; }
     msg.querySelector('.ask-steps')?.remove();
+    genieThread = d.conversation_id || genieThread;
     const rows = d.rows || [], cols = d.columns || [];
     const parts = [d.answer ? richText(d.answer) : esc(d.description || 'Genie ran the query below.')];
     if (rows.length) parts.push(`<div class="ask-table-wrap"><table class="ask-table"><thead><tr>${cols.map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.slice(0, 20).map(r => `<tr>${r.map(v => `<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`);

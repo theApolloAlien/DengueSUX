@@ -1,0 +1,52 @@
+{
+  "silver_national_weekly": {
+    "upstreams": [
+      {
+        "name": "bronze_bulletin",
+        "catalog_name": "workspace",
+        "schema_name": "denguesux",
+        "table_type": "TABLE",
+        "lineage_timestamp": "2026-10-10 04:47:55.0"
+      },
+      {
+        "name": "bronze_weather_station_days",
+        "catalog_name": "workspace",
+        "schema_name": "denguesux",
+        "table_type": "TABLE",
+        "lineage_timestamp": "2026-10-10 04:47:55.0"
+      },
+      {
+        "name": "bronze_moh_weekly",
+        "catalog_name": "workspace",
+        "schema_name": "denguesux",
+        "table_type": "TABLE",
+        "lineage_timestamp": "2026-10-10 04:47:55.0"
+      }
+    ],
+    "downstreams": [
+      {
+        "name": "gold_national_features",
+        "catalog_name": "workspace",
+        "schema_name": "denguesux",
+        "table_type": "TABLE",
+        "lineage_timestamp": "2026-10-10 04:49:02.0"
+      }
+    ]
+  },
+  "gold_national_features": {
+    "upstreams": [
+      {
+        "name": "silver_national_weekly",
+        "catalog_name": "workspace",
+        "schema_name": "denguesux",
+        "table_type": "TABLE",
+        "lineage_timestamp": "2026-10-10 04:49:02.0"
+      }
+    ],
+    "downstreams": []
+  },
+  "gold_national_predictions": {
+    "upstreams": [],
+    "downstreams": []
+  }
+}

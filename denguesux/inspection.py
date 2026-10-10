@@ -168,6 +168,43 @@ def load_hdb(root):
     return blocks, receipt, {"kind": "hdb_property", "payload": payload, "source": receipt}
 
 
+def block_facts(hdb):
+    """Homes and storeys per HDB block, keyed like the geocoder (block, canonical street)."""
+    facts = {}
+    for row in hdb:
+        source = row["source_row"]
+        units = str(source.get("total_dwelling_units", "")).strip()
+        floors = str(source.get("max_floor_lvl", "")).strip()
+        facts[(row["block"], canonical_street(row["street"]))] = {
+            "dwelling_units": int(units) if units.isdigit() else None, "max_floor_lvl": int(floors) if floors.isdigit() else None,
+            "year_completed": source.get("year_completed")}
+    return facts
+
+
+def _facts_for(facts, block, street):
+    return facts.get((str(block or "").strip().upper(), canonical_street(street or "")))
+
+
+def plan_impact(anchors, stops, facts):
+    """Homes in the verified cluster blocks and in the blocks on the route (HDB Property Information)."""
+    for item in anchors:
+        item.update({k: v for k, v in (_facts_for(facts, item.get("block"), item.get("street")) or {}).items()})
+    for stop in stops:
+        match = re.fullmatch(r"Blk (\S+) (.+)", str(stop.get("name", ""))) if stop.get("place_type") in ("block", "hdb", "hdb_block") else None
+        if match:
+            stop.update({k: v for k, v in (_facts_for(facts, match.group(1), match.group(2)) or {}).items()})
+    unique = {item["id"]: item for item in anchors if item.get("dwelling_units") is not None}
+    route_blocks = [stop for stop in stops if stop.get("dwelling_units") is not None]
+    if not unique and not route_blocks:
+        return None
+    return {"homes_in_cluster_blocks": sum(item["dwelling_units"] for item in unique.values()), "cluster_blocks_matched": len(unique),
+            "cluster_blocks_listed": len({item["id"] for item in anchors}),
+            "homes_in_route_blocks": sum(stop["dwelling_units"] for stop in route_blocks), "route_blocks_matched": len(route_blocks),
+            "tallest_block_floors": max([x.get("max_floor_lvl") or 0 for x in [*unique.values(), *route_blocks]] or [0]) or None,
+            "source": "HDB Property Information (data.gov.sg): total_dwelling_units and max_floor_lvl per block",
+            "note": "Homes are flats in HDB blocks only; private housing is not counted. Not a count of residents at risk."}
+
+
 def score_candidate(place_type, distance_m, radius_m, cases, *, growth_cases=None, elderly_share=None):
     if radius_m <= 0 or not 0 <= distance_m <= radius_m:
         raise ValueError("Candidate must be within a positive search radius")
@@ -251,6 +288,7 @@ def build_inspection(root=ROOT, *, radius_m=300, top_n=8, offline=False, spark=N
     sources.insert(0, cluster_source)
     bronze.insert(0, raw_bronze)
     hdb, hdb_source, hdb_bronze = load_hdb(root)
+    hdb_facts = block_facts(hdb)
     if hdb_source:
         sources.append(hdb_source)
         bronze.append(hdb_bronze)
@@ -343,6 +381,7 @@ def build_inspection(root=ROOT, *, radius_m=300, top_n=8, offline=False, spark=N
             candidate["rank"] = rank
             candidates.append(candidate)
         stops, route = order_route(selected_candidates[:top_n], client)
+        impact = plan_impact(anchors, stops, hdb_facts)
         status = "ready" if stops else "no_active_clusters" if not features else "unavailable"
         missing = sum(error["cluster_id"] in ids for error in errors)
         message = (f"{len(stops)} places to check within {radius_m} m of verified cluster blocks. Coverage is a partial candidate shortlist."
@@ -353,7 +392,7 @@ def build_inspection(root=ROOT, *, radius_m=300, top_n=8, offline=False, spark=N
         area_results[code] = {"area_code": code, "area_name": area["name"], "status": status, "message": message,
                              "as_of": as_of, "cluster_blocks": anchors, "clusters": {"type": "FeatureCollection", "features": features},
                              "search_rings": [{"latitude": block["latitude"], "longitude": block["longitude"], "radius_m": radius_m, "cluster_id": block["cluster_id"], "block_id": block["id"]} for block in anchors],
-                             "unresolved_blocks": missing, "candidate_count": len(selected_candidates), "stops": stops, "route": route}
+                             "unresolved_blocks": missing, "candidate_count": len(selected_candidates), "stops": stops, "route": route, "impact": impact}
     public_geocode_source = {"name": "SLA OneMap Search and Routing", "url": "https://www.onemap.gov.sg/apidocs/",
                              "retrieved_at": max((block["retrieved_at"] for block in blocks), default=None),
                              "status": client.status, "attribution": "© OneMap, Singapore Land Authority"}

@@ -1,0 +1,132 @@
+{
+  "answer": "The national outlook for the week of 11 October 2026 is **68** people, with an 80% range of **50** to **93**. Weather inputs were not imputed [[live, bulletin]].",
+  "steps": [
+    {
+      "tool": "live_outlook",
+      "args": {}
+    }
+  ],
+  "trace": [
+    {
+      "tool": "live_outlook",
+      "args": {},
+      "result": {
+        "segment": "live",
+        "latest_reported_week_end": "2026-10-03",
+        "latest_reported_people": 71.0,
+        "headline": {
+          "issue_date": "2026-10-04",
+          "target_date": "2026-10-11",
+          "target_week_end": "2026-10-17",
+          "target_epi_week": "2026-W41",
+          "prediction": 68,
+          "lower": 50,
+          "upper": 93,
+          "risk": "Medium",
+          "normal": {
+            "median": 143.0,
+            "low": 33.0,
+            "high": 376.0,
+            "years": "2021\u20132025",
+            "n_years": 5
+          },
+          "weather_inputs_total": 24,
+          "weather_inputs_missing": 0,
+          "weather_inputs_imputed": false,
+          "trained_on_labels_through": "2026-10-03"
+        },
+        "forecasts": [
+          {
+            "issue_date": "2026-09-27",
+            "target_date": "2026-10-04",
+            "target_week_end": "2026-10-10",
+            "target_epi_week": "2026-W40",
+            "prediction": 78,
+            "lower": 58,
+            "upper": 106,
+            "risk": "Medium",
+            "normal": {
+              "median": 155.0,
+              "low": 55.0,
+              "high": 397.0,
+              "years": "2021\u20132025",
+              "n_years": 5
+            },
+            "weather_inputs_total": 24,
+            "weather_inputs_missing": 0,
+            "weather_inputs_imputed": false,
+            "trained_on_labels_through": "2026-09-26"
+          },
+          {
+            "issue_date": "2026-10-04",
+            "target_date": "2026-10-11",
+            "target_week_end": "2026-10-17",
+            "target_epi_week": "2026-W41",
+            "prediction": 68,
+            "lower": 50,
+            "upper": 93,
+            "risk": "Medium",
+            "normal": {
+              "median": 143.0,
+              "low": 33.0,
+              "high": 376.0,
+              "years": "2021\u20132025",
+              "n_years": 5
+            },
+            "weather_inputs_total": 24,
+            "weather_inputs_missing": 0,
+            "weather_inputs_imputed": false,
+            "trained_on_labels_through": "2026-10-03"
+          }
+        ],
+        "range_level": 0.8,
+        "contributions": [
+          {
+            "feature": "Recent cases",
+            "value": -174.69098435056688,
+            "association": "associated with the prediction"
+          },
+          {
+            "feature": "Time of year",
+            "value": -3.277806458993218,
+            "association": "associated with the prediction"
+          },
+          {
+            "feature": "Rain",
+            "value": -1.656366505539142,
+            "association": "associated with the prediction"
+          },
+          {
+            "feature": "Heat",
+            "value": 0.766069504323269,
+            "association": "associated with the prediction"
+          }
+        ],
+        "caveat": "National weekly reported people, not people in clusters. These weeks are not yet reported. Ranges describe past forecast error, not guarantees; contributions are associations, not causes. Issue dates assume immediate publication. Any missing weather inputs use training-set medians internally; observations remain missing."
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "live",
+      "name": "National outlook with 80% ranges",
+      "date": "2026-10-03",
+      "url": "https://www.cda.gov.sg/resources/weekly-infectious-diseases-bulletin-2026/",
+      "table": "gold_national_predictions",
+      "segment": "live"
+    },
+    {
+      "id": "bulletin",
+      "name": "Official MOH/CDA weekly infectious disease bulletin",
+      "date": "2026-10-03",
+      "url": "https://www.cda.gov.sg/resources/weekly-infectious-diseases-bulletin-2026/",
+      "table": "silver_national_weekly"
+    }
+  ],
+  "actions": [
+    {
+      "type": "show_live",
+      "label": "Open the national forecast"
+    }
+  ]
+}
