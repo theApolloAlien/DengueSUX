@@ -114,3 +114,45 @@ footer{font-size:11px;color:#627367;padding-bottom:90px}footer button{font-size:
 .population-context{margin:14px 0 0;padding-top:12px;border-top:1px solid #dce3d6;font-size:12px;line-height:1.5;color:#506552}
 .population-context strong{font-size:18px;color:#163f35}
 .population-context small{font-size:10px}
+
+/* Demo polish (Oct 2026): one "this week" card instead of stacked banners; aligned controls; uncluttered map overlays. */
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.week-summary{margin-top:22px;border:1px solid #dfe5da;border-radius:12px;background:#fff;box-shadow:0 4px 14px #163f350a;overflow:hidden}
+.week-summary .summary-cells{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin:0;padding:16px 4px 14px}
+.week-summary .stat-item{padding:2px 20px;border-right:1px solid var(--line);min-width:0}
+.week-summary .stat-item:last-child{border-right:0}
+.week-summary .stat-label{font-size:12px;color:#5c6f5c;margin-bottom:2px;min-height:0}
+.week-summary .stat-value{font-size:30px;line-height:1.2;letter-spacing:-1px;font-weight:500;font-variant-numeric:tabular-nums}
+.week-summary .stat-value small{font-size:13px;letter-spacing:0;color:#6c7c6c;font-weight:400}
+.week-summary .stat-value.is-unavailable{font-size:20px;color:#7d8a80;padding:6px 0 3px}
+.week-summary .stat-note{font-size:11px;line-height:1.45;color:#6d7b6f;margin:3px 0 0}
+.summary-national{background:linear-gradient(180deg,#f3f7f0,#fff 70%);border-radius:8px;margin:-4px 0;padding-top:6px!important;padding-bottom:6px!important}
+.summary-national .text-button{font-size:12px;color:var(--forest);font-weight:600;margin-top:4px;display:inline-flex;align-items:center;gap:5px;min-height:28px}
+.summary-foot{display:flex;align-items:center;gap:10px;padding:10px 20px;border-top:1px solid #efe2c4;background:#faf4e6;font-size:13px;color:#5d5540}
+.summary-foot>i{font-size:17px;color:#b08546;flex-shrink:0}
+.summary-foot p{flex:1;min-width:0;margin:0}
+.summary-foot strong{font-weight:600;color:var(--ink)}
+.summary-foot .text-button{font-size:12px;color:var(--forest);white-space:nowrap;font-weight:600}
+.week-summary~.change-feed{margin-top:12px}
+.week-summary~.stats-row,.week-summary .growth-stat p{margin:0}
+.check-bar{min-height:40px}
+.check-bar .outline-button,.check-postal .outline-button{min-height:38px;height:38px;padding:0 14px;display:inline-flex;align-items:center;gap:6px}
+.check-postal{align-items:center}
+.check-postal .search-box{height:38px;min-height:38px}
+#check-example{min-height:38px;padding:0 4px;font-size:13px;color:var(--forest);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.check-block+.explorer,.change-feed~.check-block+.explorer{margin-top:16px}
+.map-panel:has(#cluster-timeline:not([hidden])) .map-legend{top:62px;bottom:auto;left:12px}
+.cluster-timeline{bottom:30px}
+.cluster-timeline-controls label{white-space:nowrap}
+@media(max-width:1000px){.week-summary .summary-cells{grid-template-columns:1fr 1fr;row-gap:14px}.week-summary .stat-item:nth-child(2n){border-right:0}.summary-national{grid-column:1/-1;margin:0 12px!important;padding:12px 14px!important;border:1px solid #dce6d6}}
+@media(max-width:720px){.week-summary{margin-top:16px}.week-summary .summary-cells{padding:14px 0 12px}.week-summary .stat-item{padding:0 14px}.week-summary .stat-value{font-size:25px}.week-summary .stat-note{font-size:11px}.summary-foot{display:grid;grid-template-columns:18px 1fr;padding:11px 14px;font-size:12px}.summary-foot .text-button{grid-column:2;justify-self:start;min-height:30px}
+  .check-bar{gap:8px}.check-bar h2{flex-basis:calc(100% - 30px)}.check-postal .search-box{width:auto;flex:1}.check-postal{flex:1 1 100%}
+  .map-panel:has(#cluster-timeline:not([hidden])) .map-legend{top:54px;left:8px}.cluster-timeline{bottom:22px}.cluster-timeline p{font-size:10px}}
+.summary-national .stat-note .text-button{display:inline-flex;margin:0 0 0 2px;min-height:0;font-size:11px;vertical-align:baseline}
+.summary-national .stat-note .text-button i{font-size:13px}
+.week-summary .summary-cells{padding:14px 4px 12px}
+.signal-tools{display:grid;gap:10px;margin-top:12px}
+.signal-tools>.change-feed,.signal-tools>.check-block{margin-top:0}
+.signal-tools+.explorer{margin-top:16px}
+@media(max-width:1000px){.week-summary .summary-cells{grid-template-columns:repeat(3,minmax(0,1fr))}.week-summary .stat-item:nth-child(2n){border-right:1px solid var(--line)}.week-summary .stat-item:nth-child(3){border-right:0}}
+@media(max-width:720px){.week-summary .stat-item{padding:0 10px}.week-summary .stat-item:first-child{padding-left:14px}.week-summary .stat-label{font-size:11px;line-height:1.3;min-height:29px}.week-summary .stat-value{font-size:24px}.week-summary .stat-note{font-size:10px}.summary-national{margin:0 10px!important}.summary-national .stat-label{min-height:0}}

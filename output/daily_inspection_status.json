@@ -1,10 +1,10 @@
 {
-  "completed_at": "2026-09-24T05:57:07.633999+00:00",
-  "snapshot_date": "2026-09-24",
-  "snapshot_count": 1,
+  "completed_at": "2026-10-10T08:11:48.510594+00:00",
+  "snapshot_date": "2026-10-10",
+  "snapshot_count": 2,
   "growth_status": "not_enough_history",
   "notice_count": 220,
-  "inspection_status": "no_route_candidates",
-  "offline": true,
+  "inspection_status": "ready",
+  "offline": false,
   "scheduler": "Runner only; scheduler activation is a deployment step."
 }

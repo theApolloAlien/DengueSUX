@@ -33,5 +33,5 @@ else:
     sys.path.insert(0, str(repository))
 # COMMAND ----------
 from scripts.daily_inspection import run_daily
-result = run_daily(spark=spark)
+result = run_daily(spark=spark, send_alerts=True)  # the scheduled job is the only alert sender
 print({key: value for key, value in result.items() if key != "scheduler"})

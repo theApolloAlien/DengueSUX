@@ -82,7 +82,12 @@
   }
   function styleArea(feature){const p=normalizeArea(feature.properties);const selected=p.code===state.selected;return{color:selected?'#714032':'#bdbaad',weight:selected?2.1:.8,fillColor:$('#show-priority').checked?color(p.risk):'#dce7d5',fillOpacity:selected?.93:.76,opacity:selected?1:.8};}
   function selectArea(code,pan=false){
-    const area=state.areas.find(a=>a.code===code);if(!area)return;state.selected=code;renderAreas();renderAreaDetail(area);
+    const area=state.areas.find(a=>a.code===code);if(!area)return;state.selected=code;
+    const fromList=!!document.activeElement?.closest?.('#area-list'),drawerOpen=$('.explorer').classList.contains('show-areas');
+    renderAreas();renderAreaDetail(area);
+    // Re-rendering replaces the focused row; keep keyboard and screen-reader users where they were.
+    if(fromList&&!drawerOpen)$(`#area-list [data-area="${CSS.escape(code)}"]`)?.focus({preventScroll:true});
+    else if(fromList)requestAnimationFrame(()=>$('#area-detail .detail-title')?.focus({preventScroll:true}));
     if(state.areaLayer){state.areaLayer.setStyle(styleArea);const layer=state.layers.get(code);if(layer){layer.bringToFront();if(pan){const p=area.centroid;if(p)state.map.panTo(p,{animate:!matchMedia('(prefers-reduced-motion: reduce)').matches});}}}
     setDrawer(false);
   }
@@ -93,7 +98,7 @@
     const station=m=>finite(m.value)?`${m.station_name} · ${number(m.distance_km,1)} km · ${percent(m.coverage)} readings · ${date(current().weather_date)}`:'No qualifying observation';
     const wx=(label,m,unit,i)=>`<div class="signal-row" title="${escape(station(m))}"><span class="signal-label">${icon(i)}${label}</span><span class="signal-value">${finite(m.value)?number(m.value,1):'—'}<small>${finite(m.value)?unit:''}</small></span></div>`;
     const caption=area.cluster_count?`in ${number(area.cluster_count)} active ${area.cluster_count===1?'cluster':'clusters'}`:'No active clusters in this snapshot';
-    $('#area-detail').innerHTML=`<div class="detail-top"><p class="detail-region">${escape(area.region||'Singapore')}</p>${badge(area.risk)}</div><h3 class="detail-title">${escape(area.name)}</h3><div class="priority-summary"><div class="area-people">${number(area.cluster_cases)} <span>people</span></div><p class="priority-caption">${caption}</p></div><details class="area-weather"><summary>Local weather <span>${observed}/3 stations</span></summary>${weatherRows.map(row=>wx(...row)).join('')}</details>`;
+    $('#area-detail').innerHTML=`<div class="detail-top"><p class="detail-region">${escape(area.region||'Singapore')}</p>${badge(area.risk)}</div><h3 class="detail-title" tabindex="-1">${escape(area.name)}</h3><div class="priority-summary"><div class="area-people">${number(area.cluster_cases)} <span>people</span></div><p class="priority-caption">${caption}</p></div><details class="area-weather"><summary>Local weather <span>${observed}/3 stations</span></summary>${weatherRows.map(row=>wx(...row)).join('')}</details>`;
     const populationNote=current().population?.note;
     if(populationNote){const context=document.createElement('p');context.className='population-context';context.title=populationNote;context.innerHTML=finite(area.cluster_cases_per_10000_residents)?`<strong>${number(area.cluster_cases_per_10000_residents,2)}</strong> people in active clusters per 10,000 residents<br><small>${number(area.resident_population)} residents · June ${area.population_year} · context, not incidence or individual risk</small>`:'<small>Population context unavailable: the official total is nonnumeric or zero.</small>';$('#area-detail .priority-summary').append(context);}
     window.Fieldwork?.areaActions(area);
@@ -148,11 +153,20 @@
     return `That’s ${word} a typical ${date(p.target_date,{month:'long'})} week (about ${number(n.median)} people in ${escape(n.years)}).`;
   }
   function renderNationalBriefing(){
-    const live=liveForecast();const h=live?.headline;const box=$('#national-briefing');
-    if(!h){box.hidden=true;return;}
-    box.hidden=false;
-    $('#national-briefing-text').innerHTML=`Nationally, <strong>${number(live.latest_reported_people)} people</strong> were reported in the week to ${date(live.issued_from_week_end,{day:'numeric',month:'short'})}. Expected for the week of ${date(h.target_date,{day:'numeric',month:'short'})}: <strong>about ${number(h.prediction)}</strong> (likely ${number(h.lower)}–${number(h.upper)}). ${normalSentence(h)}`;
-    $('#national-briefing-view').onclick=()=>switchView('forecast');
+    const live=liveForecast();const h=live?.headline;
+    $('#national-briefing-view').onclick=()=>switchView('forecast');$('#national-briefing-view').hidden=false;
+    if(!h){
+      const latest=state.data.model?.latest_label;
+      $('#national-label').textContent='National outlook';$('#national-value').textContent='Unavailable';$('#national-value').classList.add('is-unavailable');
+      $('#national-briefing-text').textContent=latest?`No current outlook: the latest official weekly report (to ${date(latest,{day:'numeric',month:'short'})}) is too old for a live forecast.`:'No current outlook is available from the saved data.';
+      return;
+    }
+    $('#national-value').classList.remove('is-unavailable');
+    $('#national-label').textContent=`Expected nationally, week of ${date(h.target_date,{day:'numeric',month:'short'})}`;
+    $('#national-value').innerHTML=`~${number(h.prediction)}<small> people</small>`;
+    const usual={'lower than':'quieter than usual','higher than':'busier than usual','about the same as':'about usual'}[versusNormal(h.prediction,h.normal)];
+    $('#national-briefing-text').textContent=`Likely ${number(h.lower)}–${number(h.upper)}${usual?`, ${usual} for ${date(h.target_date,{month:'long'})}`:''} · last report ${number(live.latest_reported_people)} (to ${date(live.issued_from_week_end,{day:'numeric',month:'short'})}).`;
+    $('#national-briefing').title=`${number(live.latest_reported_people)} people were reported in the week to ${date(live.issued_from_week_end)} (official weekly bulletin). ${normalSentence(h).replace(/&[a-z]+;/g,'')}`;
   }
   function renderChanges(){
     const c=(state.data.growth||{}).changes,box=$('#change-feed');
@@ -164,6 +178,9 @@
       :i.kind==='Closed'?`<li class="is-closed">${icon('check-circle')}<span><b>${short(i.locality)}</b> no longer listed</span></li>`
       :`<li>${icon('question')}<span><b>${short(i.locality)}</b> changed shape (split or merge)</span></li>`;
     const s=c.summary,parts=[s.new&&`${s.new} new`,s.growing&&`${s.growing} growing`,s.shrinking&&`${s.shrinking} shrinking`,s.closed&&`${s.closed} closed`].filter(Boolean);
+    const since=date(c.from_date,{day:'numeric',month:'short'});
+    $('#cluster-note').textContent=s.new||s.closed?`${number(s.new||0)} new · ${number(s.closed||0)} closed since ${since}`:`No change since ${since}`;
+    if(finite(s.people_then))$('#case-note').textContent=`${number(s.people_then)} on ${since} · cluster sizes, not weekly cases`;
     box.hidden=false;
     const alerts=state.data.alerts?.alerts||[];
     box.innerHTML=`<summary>${icon('clock-counter-clockwise')}<span><strong>Since ${date(c.from_date,{day:'numeric',month:'short'})}</strong> (${c.days} days): ${parts.join(' · ')||'no changes'}. People in clusters ${number(s.people_then)} → <strong>${number(s.people_now)}</strong>.${alerts.length?` <span class="alert-count">${icon('bell-ringing')} ${alerts.length} alert${alerts.length===1?'':'s'}</span>`:''}</span>${icon('caret-down')}</summary>${alerts.length?`<ol class="alert-list">${alerts.map(a=>`<li class="sev-${escape(a.severity)}"><strong>${escape(a.title)}</strong> ${escape(a.message)}</li>`).join('')}</ol>`:''}<ul>${c.items.map(line).join('')}</ul><p>${escape(c.note)} Notifications are sent only when a Telegram chat or webhook is configured.</p>`;
@@ -343,13 +360,13 @@
     const updates=c.cluster_updated_range||[];
     const sorted=[...updates].sort();
     const block=(iconName,title,summary,body,open=false)=>`<details class="methodology-block method-accordion"${open?' open':''}><summary><h3>${icon(iconName)} ${title}</h3><span>${summary}</span></summary>${body}</details>`;
-    const link=(href,label)=>`<a class="source-link" href="${escape(href)}" target="_blank" rel="noopener">${escape(label)} ${icon('arrow-up-right')}</a>`;
+    const link=(href,label)=>`<a class="source-link" href="${/^https:\/\//.test(String(href))?escape(href):'#'}" target="_blank" rel="noopener">${escape(label)} ${icon('arrow-up-right')}</a>`;
     $('#methodology-content').innerHTML=[
       block('map-trifold','Priority levels','A rule of thumb from people in active clusters, not a forecast.',`<table class="method-table"><tbody><tr><td>${badge('High')}</td><td>10 or more people in active clusters</td></tr><tr><td>${badge('Medium')}</td><td>An active cluster with fewer than 10 people</td></tr><tr><td>${badge('Low')}</td><td>No active cluster in this snapshot. Not the same as no risk.</td></tr></tbody></table>`,true),
       block('calendar-dots','Data dates',`Clusters ${date(c.as_of)} · national cases to ${date(latest)}.`,`<table class="method-table"><tbody><tr><td>Cluster snapshot</td><td>${date(c.as_of)}${sorted.length?` (NEA updates ${date(sorted[0])}–${date(sorted.at(-1))})`:''}</td></tr><tr><td>Weather</td><td>${date(c.weather_date)}, nearest station within 15 km</td></tr><tr><td>National reports</td><td>${date(latest)} · official weekly bulletin</td></tr></tbody></table>`),
       block('chart-line-up','How the forecast was tested',`Chosen on 2019–2021; retrospective checks from 2022 onward.`,`<p>A simple average and two learned models were compared on 2019–2021, with each year weighted equally. The ${escape(modelLabel().toLowerCase())} recipe was fixed before the 2022 evaluation. From 2023 onward, it is refitted each year using earlier reports only. This retrospective check assumes immediate publication and uses revised workbook counts.</p><table class="method-table"><tbody><tr><td>Usually off by</td><td>Average absolute weekly error</td></tr><tr><td>High</td><td>At least ${number(model.thresholds?.high,1)} reported people a week</td></tr><tr><td>Lead time</td><td>First High forecast to the observed peak: ${escape(leadText(model.peak_lead_time?.selected).toLowerCase())} (simple average: ${escape(leadText(model.peak_lead_time?.baseline).toLowerCase())})</td></tr></tbody></table>`),
       block('bug','Why two weeks?','About a week from egg to mosquito, then days to symptoms.',`<p>Aedes can develop from egg to adult in about a week. Symptoms can begin 4–10 days after an infected bite. The timing varies, so clearing standing water early interrupts breeding.</p>${link('https://www.nea.gov.sg/dengue-zika/stop-dengue-now','NEA: Mozzie Wipeout')}${link('https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue','WHO: dengue symptoms')}`),
-      block('warning-circle','Limitations','What these numbers can’t tell you.',`<ul><li>A cluster crossing a boundary counts in both areas, so area totals shouldn’t be added up. National totals count each cluster once.</li><li>Counts are people in current clusters, not new infections this week. The per-10,000-residents figure is context, not incidence or individual risk: cluster counts may include non-residents and shared clusters appear in both areas. Denominators are published June 2026 SingStat resident totals, rounded to the nearest 10.</li><li>Priority thresholds are assumptions. Missing weather adds nothing to area priorities; construction-site data is not scored. National model observations keep missing values; the estimator uses training-set medians and missingness indicators internally.</li><li>The 2022 results had been viewed during earlier development.</li><li>Lead time doesn’t show that the model predicted when the peak would occur.</li><li>We assume each week’s report is available at the start of the following week.</li><li>Weather and explanation bars show associations, not causes.</li><li>Local forecast accuracy can’t be measured without historical local outcomes.</li></ul>`),
+      block('warning-circle','Limitations','What these numbers can’t tell you.',`<ul><li>A cluster crossing a boundary counts in both areas, so area totals shouldn’t be added up. National totals count each cluster once.</li><li>Counts are people in current clusters, not new infections this week. The per-10,000-residents figure is context, not incidence or individual risk: cluster counts may include non-residents and shared clusters appear in both areas. Denominators are published June 2026 SingStat resident totals, rounded to the nearest 10.</li><li>Priority thresholds are assumptions. Missing weather adds nothing to area priorities; construction-site data is not scored. National model observations keep missing values; the estimator uses training-set medians and missingness indicators internally.</li><li>The 2022 results had been viewed during earlier development.</li><li>Lead time doesn’t show that the model predicted when the peak would occur.</li><li>We assume each week’s report is available at the start of the following week.</li><li>Weather and explanation bars show associations, not causes.</li><li>The 3D walk preview uses official HDB block footprints. Heights are estimates from published storeys (2.8 m a floor plus 1.3 m for the roof), not surveys; blocks without a verified storey count stay flat, and condos, schools and other non-HDB buildings are not modelled.</li><li>Local forecast accuracy can’t be measured without historical local outcomes.</li></ul>`),
       block('database','Sources','Real, open data. No synthetic outcomes.',`<p>Boundaries use the indicative URA 2025 plan. Export data includes the detailed method and model results.</p>${(meta().sources||[]).slice(0,3).map(src=>link(src.url,src.name)).join('')}`)
     ].join('');
   }
@@ -372,7 +389,11 @@
     document.addEventListener('click',e=>{if(!e.target.closest('#layers-button')&&!e.target.closest('#layers-menu')){$('#layers-menu').hidden=true;$('#layers-button').setAttribute('aria-expanded','false');}});
     $('#toggle-areas').addEventListener('click',()=>setDrawer(!$('.explorer').classList.contains('show-areas')));
     $('#close-areas').addEventListener('click',()=>setDrawer(false,true));
-    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('.explorer').classList.contains('show-areas'))setDrawer(false,true);});
+    document.addEventListener('keydown',e=>{
+      if(e.key!=='Escape'||document.querySelector('dialog[open]'))return;  // an open dialog handles its own Escape
+      if(!$('#layers-menu').hidden){$('#layers-menu').hidden=true;$('#layers-button').setAttribute('aria-expanded','false');$('#layers-button').focus();}
+      else if($('.explorer').classList.contains('show-areas'))setDrawer(false,true);
+    });
     $('#forecast-week').addEventListener('input',e=>{stopReplay();state.index=Number(e.target.value);renderPrediction();});
     $('#forecast-chart').addEventListener('click',e=>{stopReplay();const i=chartIndex(e);if(i===null)return;state.index=i;$('#forecast-week').value=i;renderPrediction();});
     $('#forecast-chart').addEventListener('mousemove',e=>{const i=chartIndex(e);if(i===null)return;const p=state.predictions[i],tooltip=$('#chart-tooltip');tooltip.hidden=false;tooltip.innerHTML=`<strong>Week of ${date(p.target_date)}</strong><div class="tooltip-row"><span>Reported</span><strong>${finite(p.actual)?number(p.actual):'Not yet'}</strong></div><div class="tooltip-row"><span>Forecast</span><strong>${number(p.predicted)}${finite(p.lower)?` <small>(${number(p.lower)}–${number(p.upper)})</small>`:''}</strong></div><div class="tooltip-row"><span>${state.mode==='live'?'Typical':'Simple average'}</span><strong>${number(state.mode==='live'?p.normalMedian:p.baseline)}</strong></div>`;const rect=$('#forecast-chart').getBoundingClientRect();tooltip.style.left=`${Math.max(0,Math.min(rect.width-180,e.clientX-rect.left+14))}px`;tooltip.style.top=`${Math.max(0,e.clientY-rect.top-95)}px`;});

@@ -27,10 +27,12 @@ def main():
         shutil.copy2(REPO / name, out / name)
     for name in ("app.yaml", "requirements.txt"):
         shutil.copy2(REPO / "databricks_app" / name, out / name)
-    shutil.copytree(REPO / "app", out / "app")
+    # Never ship hidden local snapshot generations, temporary writes or OS files.
+    skip = shutil.ignore_patterns(".*", "*.tmp", "*.part", "__pycache__")
+    shutil.copytree(REPO / "app", out / "app", ignore=skip)
     for m in MODULES:
         shutil.copy2(REPO / "denguesux" / m, out / "denguesux" / m)
-    shutil.copytree(args.web_from, out / "output/web")
+    shutil.copytree(args.web_from, out / "output/web", ignore=skip, symlinks=False)
     shutil.copy2(REPO / "output/denguesux.html", out / "output/denguesux.html")
     files = [p for p in out.rglob("*") if p.is_file()]
     print(f"Built {out}: {len(files)} files, {sum(p.stat().st_size for p in files) / 1e6:.1f} MB")

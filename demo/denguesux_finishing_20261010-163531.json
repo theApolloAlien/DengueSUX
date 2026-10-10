@@ -1,0 +1,73 @@
+{
+  "recorded_at_sgt": "2026-10-10T16:36:37.511304+08:00",
+  "path": "demo/denguesux_finishing_20261010-163531.mp4",
+  "duration_seconds": 61.62,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "sha256": "8c39e3b929236796fe3f0898d76271687d255e59cfa8090b8aac1330142ad251",
+  "method": "Real browser interactions only; no overlays, fabricated captions, report submissions or personal location.",
+  "scenes": [
+    {
+      "scene": "This week at a glance: clusters, people, High areas, national range",
+      "seconds": 0.0
+    },
+    {
+      "scene": "What changed since the saved snapshot",
+      "seconds": 4.07
+    },
+    {
+      "scene": "Check my block using the public example",
+      "seconds": 7.24
+    },
+    {
+      "scene": "Raw cluster counts with resident population context",
+      "seconds": 11.3
+    },
+    {
+      "scene": "Saved cluster snapshots; dates are never filled",
+      "seconds": 14.38
+    },
+    {
+      "scene": "Jurong West inspection plan and homes covered",
+      "seconds": 17.51
+    },
+    {
+      "scene": "3D walk preview: official HDB footprints of the route and nearby blocks",
+      "seconds": 23.2
+    },
+    {
+      "scene": "Camera follows the saved OneMap walking route; checklist stays in sync",
+      "seconds": 26.27
+    },
+    {
+      "scene": "Whole route: stops, cluster blocks and see-through nearby blocks",
+      "seconds": 36.5
+    },
+    {
+      "scene": "Resident notice draft: English",
+      "seconds": 40.38
+    },
+    {
+      "scene": "Resident notice draft: Chinese",
+      "seconds": 42.52
+    },
+    {
+      "scene": "Resident notice draft: Malay",
+      "seconds": 44.67
+    },
+    {
+      "scene": "Resident notice draft: Tamil",
+      "seconds": 46.83
+    },
+    {
+      "scene": "Live forecast ranges and publication/weather disclosure",
+      "seconds": 50.44
+    },
+    {
+      "scene": "2022 outbreak replay",
+      "seconds": 56.62
+    }
+  ]
+}

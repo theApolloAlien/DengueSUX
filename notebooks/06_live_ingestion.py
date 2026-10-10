@@ -29,6 +29,15 @@ sys.path.insert(0, repo_root)
 
 # COMMAND ----------
 from denguesux.live_ingestion import land_daily, ingest_available_now
-landing = land_daily(data_root)
-print({key: landing[key] for key in ('weather_date', 'cluster_date', 'note')})
+# The cluster envelope is landed before weather is requested. Ingest whatever landed even if a
+# weather API call failed, then let the task fail so the run still reports the weather problem.
+landing_error = None
+try:
+    landing = land_daily(data_root)
+    print({key: landing[key] for key in ('weather_date', 'cluster_date', 'note')})
+except Exception as exc:
+    landing_error = exc
+    print(f'Landing incomplete ({type(exc).__name__}); ingesting the envelopes that did land.')
 print(ingest_available_now(spark, data_root, table_prefix))
+if landing_error is not None:
+    raise landing_error

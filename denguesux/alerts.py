@@ -23,6 +23,19 @@ def _read(path):
     return json.loads(path.read_text()) if path.exists() else {}
 
 
+def _day(value):
+    """'2026-09-24' -> '24 Sep 2026' (the date style used across the app); other text is returned unchanged."""
+    try:
+        day = dt.date.fromisoformat(str(value))
+    except ValueError:
+        return str(value)
+    return f"{day.day} {day.strftime('%b %Y')}"
+
+
+def _plural(count, word):
+    return f"{count} {word}" + ("" if count == 1 else "s")
+
+
 def build_alerts(root=ROOT):
     web = Path(root) / "output/web"
     current, growth, model = _read(web / "current.json"), _read(web / "growth.json"), _read(web / "model.json")
@@ -33,7 +46,7 @@ def build_alerts(root=ROOT):
         if area.get("risk") == "High" and keep([area["code"]]):
             alerts.append({"kind": "area_high", "severity": "high", "area_codes": [area["code"]],
                            "title": f"{area['name']} is High priority",
-                           "message": f"{area['cluster_cases']} people in {area['cluster_count']} active cluster(s) overlap {area['name']}. Plan an inspection walk this week."})
+                           "message": f"{area['cluster_cases']} people in {_plural(area['cluster_count'], 'active cluster')} overlapping {area['name']}. Plan an inspection walk this week."})
     by_locality = {f["properties"]["name"]: f["properties"] for f in current.get("clusters", {}).get("features", [])}
     changes = growth.get("changes") or {}
     for item in changes.get("items", []):
@@ -44,10 +57,10 @@ def build_alerts(root=ROOT):
         place = item["locality"].split(" / ")[0]
         if item["kind"] == "New":
             alerts.append({"kind": "new_cluster", "severity": "medium", "area_codes": codes, "title": f"New cluster: {place}",
-                           "message": f"{item['people']} people in a new cluster at {place} ({', '.join(props.get('area_names') or [])}), since {changes['from_date']}."})
+                           "message": f"{item['people']} {'person' if item['people'] == 1 else 'people'} in a new cluster at {place} ({', '.join(props.get('area_names') or [])}), not listed on {_day(changes['from_date'])}."})
         elif item["kind"] == "Growing" and (item.get("change") or 0) >= GROWTH_ALERT_PEOPLE:
             alerts.append({"kind": "growing_cluster", "severity": "high", "area_codes": codes, "title": f"Cluster growing: {place}",
-                           "message": f"{place} grew by {item['change']} people ({item['previous_people']} → {item['people']}) between {changes['from_date']} and {changes['to_date']}."})
+                           "message": f"{place} grew by {item['change']} people ({item['previous_people']} → {item['people']}) between {_day(changes['from_date'])} and {_day(changes['to_date'])}."})
     outlook = model.get("live_forecast") or {}
     current_available = (model.get('current_forecast') or {}).get('available', True)
     live = outlook.get("headline") if outlook.get('available') is True and current_available else None
@@ -64,7 +77,7 @@ def build_alerts(root=ROOT):
         interval = f" (80% range {live['lower']:.0f}–{live['upper']:.0f})" if live.get('lower') is not None and live.get('upper') is not None else ' (range unavailable)'
         alerts.append({"kind": "national_above_normal", "severity": "high", "area_codes": [],
                        "title": "National outlook above a typical week",
-                       "message": f"About {live['prediction']:.0f} people forecast{interval} in the week of {live['target_date']}, against a typical {normal['median']:.0f} ({normal['years']}). Associations, not causes."})
+                       "message": f"About {live['prediction']:.0f} people forecast{interval} in the week of {_day(live['target_date'])}, against a typical {normal['median']:.0f} ({normal['years']}). Associations, not causes."})
     order = {"high": 0, "medium": 1}
     alerts.sort(key=lambda a: (order.get(a["severity"], 2), a["kind"]))
     return {"generated_at": dt.datetime.now(dt.timezone.utc).isoformat(), "snapshot_date": changes.get("to_date") or growth.get("as_of_date"),
@@ -87,7 +100,8 @@ def _send(text):
     return sent
 
 
-def write_alerts(root=ROOT, *, send=True, spark=None):
+def write_alerts(root=ROOT, *, send=False, spark=None):
+    """Write alerts.json (and gold_alerts). Messages go out only when send=True: the scheduled daily job."""
     result = build_alerts(root)
     if send and result["alerts"]:
         text = "DengueSUX alerts, " + str(result["snapshot_date"]) + "\n" + "\n".join(f"• {a['title']}: {a['message']}" for a in result["alerts"])

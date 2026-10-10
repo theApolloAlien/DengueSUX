@@ -257,11 +257,17 @@ class OneMapClient:
                 return None
         return None
 
+    def postal_lookup_available(self):
+        """True when a token is configured or OneMap public search can be used without credentials."""
+        token = self.get_token()
+        return bool(token) or (self.status == "public_search_no_token" and not self._public_denied and not self.offline)
+
     def locate_postal(self, postal):
         """One residential postal code to coordinates for a resident lookup. Nothing is cached or logged."""
         postal = str(postal).strip()
-        if not re.fullmatch(r"\d{6}", postal) or not self.get_token():
+        if not re.fullmatch(r"\d{6}", postal):
             return None
+        # Uses the private token when configured, otherwise OneMap's public search (no credentials).
         result = self._get("/api/common/elastic/search", {"searchVal": postal, "returnGeom": "Y", "getAddrDetails": "Y", "pageNum": 1})
         for row in (result or {}).get("results", []):
             if str(row.get("POSTAL")) == postal:

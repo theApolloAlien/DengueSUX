@@ -23,7 +23,8 @@ from .runtime import ROOT, write_table
 from .spatial import distance_km
 
 FOOTNOTE = "Places to check, ranked by nearby cases and place type. Not confirmed breeding sites."
-STALE_NOTE = "Map data may be stale. OneMap could not be refreshed; only previously verified cached geocodes are used."
+STALE_NOTE = ("Map data may be stale: OneMap could not be refreshed for this update, so previously verified block "
+              "locations and saved walking routes are reused. Check access on site.")
 TYPE_POINTS = {"block": 25.0, "hawker": 20.0, "park": 15.0}
 CHECKLISTS = {
     "block": ["Check gutters for trapped water", "Empty planter trays", "Check corridor pails and containers"],
@@ -313,7 +314,7 @@ def build_inspection(root=ROOT, *, radius_m=300, top_n=8, offline=False, spark=N
         if block["id"] not in known_places:
             known_places.add(block["id"])
             places.append({"id": block["id"], "name": "Blk " + block["block"] + " " + block["street"].title(),
-                           "place_type": "block", "latitude": block["latitude"], "longitude": block["longitude"],
+                           "place_type": "block", "latitude": block["latitude"], "longitude": block["longitude"], "postal": block.get("postal") or None,
                            "sources": [cluster_source, {"name": "SLA OneMap Search", "url": block["source_url"], "retrieved_at": block["retrieved_at"], "response_sha256": block["response_sha256"]}],
                            "coordinate_method": "exact_block_and_street", "as_of": block["retrieved_at"]})
     # Bounded authentic subset: all HDB rows on the explicitly reported streets.
@@ -336,8 +337,9 @@ def build_inspection(root=ROOT, *, radius_m=300, top_n=8, offline=False, spark=N
             if not location:
                 continue
             known_places.add(block_id)
-            places.append({"id": block_id, "name": "Blk " + row["block"] + " " + row["street"].title(),
-                           "place_type": "block", "latitude": location["latitude"], "longitude": location["longitude"],
+            # One display form per road: "Bishan Street 12", never a mix with HDB's "Bishan St 12".
+            places.append({"id": block_id, "name": "Blk " + row["block"] + " " + canonical_street(row["street"]).title(),
+                           "place_type": "block", "latitude": location["latitude"], "longitude": location["longitude"], "postal": location.get("postal") or None,
                            "sources": [hdb_source, {"name": "SLA OneMap Search", "url": location["source_url"], "retrieved_at": location["retrieved_at"], "response_sha256": location["response_sha256"]}],
                            "coordinate_method": "exact_block_and_street", "as_of": location["retrieved_at"]})
     statuses.insert(0, {"layer": "HDB Property Information", "status": "partial" if blocks else "blocked",

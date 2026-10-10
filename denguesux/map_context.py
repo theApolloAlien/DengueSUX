@@ -4,10 +4,12 @@ from __future__ import annotations
 from collections import defaultdict
 import gzip
 import json
+import math
 from pathlib import Path
 import re
 
-from shapely.geometry import Point, shape
+from shapely.geometry import Point, box, shape
+from shapely.strtree import STRtree
 
 from .onemap import write_json
 from .runtime import ROOT
@@ -16,9 +18,15 @@ POPULATION_NOTE = ("People in active clusters per 10,000 June 2026 residents (ci
                    "Context only, not weekly incidence or individual risk: cluster counts may include non-residents; "
                    "shared clusters appear in every overlapping area. Residents are rounded to the nearest 10; "
                    "nonnumeric and zero denominators have no rate.")
-FOOTPRINT_NOTE = ("Official HDB footprints; illustrated height is published max_floor_lvl × 3 m, "
-                  "not a surveyed building height. Missing storeys remain unavailable. "
-                  "Places to check, not confirmed breeding sites.")
+STOREY_HEIGHT_M = 2.8
+ROOF_ALLOWANCE_M = 1.3
+CONTEXT_MARGIN_M = 160
+FOOTPRINT_NOTE = ("Official HDB footprints. Estimated height = published max_floor_lvl × 2.8 m + 1.3 m roof allowance "
+                  "(the NUS Urban Analytics Lab HDB 3D convention), not a surveyed height. Blocks without a verified "
+                  "storey count stay flat; non-HDB buildings are not modelled. Places to check, not confirmed breeding sites.")
+HEIGHT_METHOD = "published max_floor_lvl × 2.8 m + 1.3 m roof allowance (estimate)"
+USES = (("residential", "homes"), ("commercial", "shops"), ("market_hawker", "market / hawker"),
+        ("multistorey_carpark", "car park"), ("precinct_pavilion", "pavilion"), ("miscellaneous", "other"))
 
 
 def population_context(areas, source):
@@ -60,13 +68,54 @@ def add_population_context(current, root=ROOT):
     return current
 
 
-def route_footprints(inspection, payload):
-    """Join cluster blocks by exact postal+block; other stops need a containing footprint.
+def estimated_height(floors):
+    valid = isinstance(floors, (int, float)) and not isinstance(floors, bool) and floors > 0
+    return round(float(floors) * STOREY_HEIGHT_M + ROOF_ALLOWANCE_M, 1) if valid else None
 
-    Never turn an unmatched point into a rectangle, infer storeys, or repair an
-    invalid source polygon. Keep only official geometries with a defensible join.
+
+def hdb_block_details(rows):
+    """Published storeys, uses and completion year per (block, canonical road) from HDB Property Information."""
+    from .onemap import canonical_street
+    details = {}
+    for row in rows:
+        source = row.get("source_row", {})
+        floors = str(source.get("max_floor_lvl", "")).strip()
+        details[(str(row["block"]).upper(), canonical_street(row["street"]))] = {
+            "max_floor_lvl": int(floors) if floors.isdigit() and int(floors) > 0 else None,
+            "uses": [label for key, label in USES if str(source.get(key, "")).strip().upper() == "Y"],
+            "year_completed": int(source["year_completed"]) if str(source.get("year_completed", "")).isdigit() else None}
+    return details
+
+
+def _rounded(geometry):
+    """Round official coordinates to 7 decimal places (about 1 cm) to keep the public artifact small."""
+    def walk(value):
+        return [walk(item) for item in value] if isinstance(value, list) and value and isinstance(value[0], list) else [round(v, 7) for v in value]
+    return {"type": geometry["type"], "coordinates": walk(geometry["coordinates"])}
+
+
+def _margin_box(points, metres):
+    lons, lats = [p[0] for p in points], [p[1] for p in points]
+    dlat = metres / 110540
+    dlon = metres / (111320 * math.cos(math.radians(sum(lats) / len(lats))))
+    return box(min(lons) - dlon, min(lats) - dlat, max(lons) + dlon, max(lats) + dlat)
+
+
+def route_footprints(inspection, payload, street_codes=None, details=None, margin_m=CONTEXT_MARGIN_M):
+    """Official HDB footprints for each inspection plan and its surroundings.
+
+    Stops and cluster blocks join by exact block+postal, exact block+verified road
+    (HDB street code resolved through OneMap), or a verified point inside the
+    block's footprint. Surrounding HDB blocks are included as context. Storeys come
+    only from HDB Property Information through an exact block+road join; otherwise
+    the block stays flat. Never turn a point into a rectangle, infer storeys, or
+    repair an invalid source polygon.
     """
-    by_postal, by_block = defaultdict(list), defaultdict(list)
+    from .onemap import canonical_street
+    roads = {code: entry["road"] for code, entry in ((street_codes or {}).get("codes") or {}).items()
+             if isinstance(entry, dict) and entry.get("status") == "verified" and entry.get("road")}
+    details = details or {}
+    parsed, by_postal, by_road, by_block = [], defaultdict(list), defaultdict(list), defaultdict(list)
     invalid = 0
     for feature in payload.get("features", []):
         geometry = feature.get("geometry")
@@ -81,41 +130,86 @@ def route_footprints(inspection, payload):
             continue
         props = feature.get("properties", {})
         block, postal = str(props.get("BLK_NO", "")).strip().upper(), str(props.get("POSTAL_COD", "")).strip()
-        by_postal[(block, postal)].append(feature)
-        by_block[block].append((feature, geom))
-    areas, counts = {}, {"matched_blocks": 0, "unmatched_blocks": 0, "invalid_source_geometries_skipped": invalid}
+        road = roads.get(str(props.get("ST_COD", "")).strip())
+        item = {"feature": feature, "geom": geom, "block": block, "postal": postal, "road": road}
+        parsed.append(item)
+        by_postal[(block, postal)].append(item)
+        by_block[block].append(item)
+        if road:
+            by_road[(block, road)].append(item)
+    tree = STRtree([item["geom"] for item in parsed]) if parsed else None
+    areas = {}
+    counts = {"matched_blocks": 0, "unmatched_blocks": 0, "context_blocks": 0, "context_blocks_with_storeys": 0,
+              "invalid_source_geometries_skipped": invalid, "verified_street_codes": len(roads)}
     for code, plan in inspection.get("areas", {}).items():
-        selected = {}
+        selected, points = {}, []
         anchors = {item["id"]: item for item in plan.get("cluster_blocks", [])}
         stops = {item["id"]: item for item in plan.get("stops", [])}
         for key, item in {**stops, **anchors}.items():
             match = re.fullmatch(r"Blk (\S+) (.+)", str(item.get("name", "")))
             block = str(item.get("block") or (match.group(1) if match else "")).upper()
+            if finite_point(item):
+                points.append((float(item["longitude"]), float(item["latitude"])))
             if not block:
                 continue
-            candidates = by_postal.get((block, str(item.get("postal", ""))), [])
-            method = "exact_block_and_postal"
-            if not candidates and item.get("coordinate_method") == "exact_block_and_street":
+            road = canonical_street(item.get("street") or (match.group(2) if match else ""))
+            candidates, method = by_postal.get((block, str(item.get("postal", ""))), []), "exact_block_and_postal"
+            if not candidates and road:
+                candidates, method = by_road.get((block, road), []), "exact_block_and_verified_road"
+            if not candidates and item.get("coordinate_method") == "exact_block_and_street" and finite_point(item):
                 point = Point(item["longitude"], item["latitude"])
-                candidates = [feature for feature, geom in by_block[block] if geom.covers(point)]
+                candidates = [entry for entry in by_block[block] if entry["geom"].covers(point)]
                 method = "exact_block_and_verified_point_inside_footprint"
             if len(candidates) != 1:
                 counts["unmatched_blocks"] += 1
                 continue
-            feature = candidates[0]
+            entry = candidates[0]
             floors = item.get("max_floor_lvl")
-            valid_floors = isinstance(floors, (int, float)) and not isinstance(floors, bool) and floors > 0
-            selected[key] = {"type": "Feature", "geometry": feature["geometry"],
-                             "properties": {"id": key, "block": block, "postal": feature["properties"].get("POSTAL_COD"),
-                                            "source_objectid": str(feature["properties"].get("OBJECTID", "")),
-                                            "cluster_block": key in anchors, "stop_number": stops.get(key, {}).get("number"),
-                                            "max_floor_lvl": floors if valid_floors else None,
-                                            "height_m": float(floors) * 3 if valid_floors else None,
-                                            "height_method": "published max_floor_lvl × illustrative 3 metres per floor" if valid_floors else "unavailable",
-                                            "join_method": method}}
+            source_id = str(entry["feature"]["properties"].get("OBJECTID", ""))
+            previous = selected.get(source_id, {}).get("properties", {})
+            selected[source_id] = {"type": "Feature", "geometry": _rounded(entry["feature"]["geometry"]), "properties": {
+                "id": previous.get("id") or key, "stop_id": key if key in stops else previous.get("stop_id"),
+                "block": block, "road": (entry["road"] or road or "").title() or None, "postal": entry["postal"] or None,
+                "source_objectid": source_id, "role": "stop" if key in stops or previous.get("role") == "stop" else "cluster_block",
+                "cluster_block": key in anchors or bool(previous.get("cluster_block")),
+                "stop_number": stops.get(key, {}).get("number") or previous.get("stop_number"),
+                "max_floor_lvl": floors if estimated_height(floors) else None, "height_m": estimated_height(floors),
+                "height_method": HEIGHT_METHOD if estimated_height(floors) else "unavailable",
+                "uses": (details.get((block, entry["road"] or road)) or {}).get("uses", []), "join_method": method}}
             counts["matched_blocks"] += 1
+        route = (plan.get("route") or {}).get("geometry") or {}
+        if route.get("type") == "LineString":
+            points.extend((float(p[0]), float(p[1])) for p in route.get("coordinates", []) if isinstance(p, list) and len(p) >= 2)
+        if points and tree is not None:
+            region = _margin_box(points, margin_m)
+            for index in sorted(tree.query(region)):
+                entry = parsed[int(index)]
+                source_id = str(entry["feature"]["properties"].get("OBJECTID", ""))
+                if source_id in selected or not entry["geom"].intersects(region):
+                    continue
+                fact = details.get((entry["block"], entry["road"])) if entry["road"] else None
+                floors = (fact or {}).get("max_floor_lvl")
+                selected[source_id] = {"type": "Feature", "geometry": _rounded(entry["feature"]["geometry"]), "properties": {
+                    "id": "hdb:" + source_id, "stop_id": None, "block": entry["block"], "road": entry["road"].title() if entry["road"] else None,
+                    "postal": entry["postal"] or None, "source_objectid": source_id, "role": "context", "cluster_block": False,
+                    "stop_number": None, "max_floor_lvl": floors, "height_m": estimated_height(floors),
+                    "height_method": HEIGHT_METHOD if estimated_height(floors) else "unavailable",
+                    "uses": (fact or {}).get("uses", []),
+                    "join_method": "exact_block_and_verified_road" if fact else "storeys_unavailable_no_verified_road_join"}}
+                counts["context_blocks"] += 1
+                counts["context_blocks_with_storeys"] += bool(estimated_height(floors))
         areas[code] = {"type": "FeatureCollection", "features": list(selected.values())}
-    return {"note": FOOTPRINT_NOTE, "areas": areas, "coverage": counts}
+    return {"note": FOOTPRINT_NOTE, "areas": areas, "coverage": counts,
+            "method": {"storey_height_m": STOREY_HEIGHT_M, "roof_allowance_m": ROOF_ALLOWANCE_M, "context_margin_m": margin_m,
+                       "height_reference": "Biljecki (2020), NUS Urban Analytics Lab hdb3d: 2.8 m floor-to-floor + 1.3 m roof",
+                       "coordinate_rounding": "7 decimal places (about 1 cm)"}}
+
+
+def finite_point(item):
+    try:
+        return math.isfinite(float(item["longitude"])) and math.isfinite(float(item["latitude"]))
+    except (KeyError, TypeError, ValueError):
+        return False
 
 
 def build_map_context(root=ROOT):
@@ -136,10 +230,17 @@ def build_map_context(root=ROOT):
         with gzip.open(paths["footprints"], "rt") as handle:
             payload = json.load(handle)
         inspection = json.loads((root / "output/web/inspection.json").read_text())
-        footprints = route_footprints(inspection, payload)
+        codes_path = root / "data/raw/inspection/hdb_street_codes.json"
+        street_codes = json.loads(codes_path.read_text()) if codes_path.exists() else None
+        from .inspection import load_hdb
+        footprints = route_footprints(inspection, payload, street_codes, hdb_block_details(load_hdb(root)[0]))
         footprints["source"] = receipt
         footprints["as_of"] = inspection.get("as_of")
-        write_json(root / "output/web/footprints.json", footprints)
+        # Compact: polygon vertices dominate this artifact and indentation would triple its size.
+        target = root / "output/web/footprints.json"
+        temporary = target.with_name(target.name + ".tmp")
+        temporary.write_text(json.dumps(footprints, ensure_ascii=False, separators=(",", ":"), allow_nan=False))
+        temporary.replace(target)
         summary["footprints"] = footprints["coverage"]
     return summary
 

@@ -2,11 +2,11 @@ import io
 
 import pytest
 
-from denguesux.map_context import population_context, route_footprints
+from denguesux.map_context import estimated_height, hdb_block_details, population_context, route_footprints
 
 
-def footprint(block="117", postal="610117", coordinates=None):
-    return {"type": "Feature", "properties": {"BLK_NO": block, "POSTAL_COD": postal, "OBJECTID": 1},
+def footprint(block="117", postal="610117", coordinates=None, code="HOC01X", objectid=1):
+    return {"type": "Feature", "properties": {"BLK_NO": block, "POSTAL_COD": postal, "OBJECTID": objectid, "ST_COD": code},
             "geometry": {"type": "Polygon", "coordinates": coordinates or [[[103.70, 1.30], [103.71, 1.30], [103.71, 1.31], [103.70, 1.31], [103.70, 1.30]]]}}
 
 
@@ -38,11 +38,11 @@ def test_footprints_require_exact_join_and_do_not_invent_missing_height():
                {"id": "wrong-postal", "block": "117", "postal": "610118", "max_floor_lvl": 99},
                {"id": "missing-height", "block": "118", "postal": "610118"}]
     result = route_footprints({"areas": {"E": {"cluster_blocks": anchors, "stops": [{"id": "real", "number": 2}]}}},
-                              {"features": [footprint(), footprint("118", "610118")]})
+                              {"features": [footprint(), footprint("118", "610118", objectid=2)]})
     features = {f["properties"]["id"]: f for f in result["areas"]["E"]["features"]}
     assert set(features) == {"real", "missing-height"}
     assert features["real"]["geometry"] == footprint()["geometry"]
-    assert features["real"]["properties"]["height_m"] == 30
+    assert features["real"]["properties"]["height_m"] == 29.3  # 10 storeys × 2.8 m + 1.3 m roof allowance
     assert features["real"]["properties"]["stop_number"] == 2
     assert features["missing-height"]["properties"]["height_m"] is None
     assert result["coverage"]["unmatched_blocks"] == 1
@@ -82,3 +82,49 @@ def test_workbook_uses_published_total_rows_not_rounded_detail_sums():
     assert national == 10000
     assert rows[0]["resident_population"] == 10000
     assert rows[1]["resident_population"] is None and rows[1]["source_value"] == "-"
+
+
+def square(lon, lat, size=0.0002):
+    return [[[lon, lat], [lon + size, lat], [lon + size, lat + size], [lon, lat + size], [lon, lat]]]
+
+
+CODES = {"codes": {"HOC01X": {"status": "verified", "road": "HO CHING ROAD"}, "BAD01X": {"status": "unresolved"}}}
+
+
+def test_estimated_height_uses_published_storeys_only():
+    assert estimated_height(10) == 29.3
+    for missing in (None, 0, -2, True, "10"):
+        assert estimated_height(missing) is None
+
+
+def test_stop_joins_by_verified_road_when_postal_is_missing():
+    stops = [{"id": "s1", "number": 1, "name": "Blk 117 Ho Ching Road", "longitude": 103.7001, "latitude": 1.3001, "max_floor_lvl": 12}]
+    result = route_footprints({"areas": {"E": {"stops": stops}}}, {"features": [footprint(coordinates=square(103.71, 1.31))]}, CODES)
+    [feature] = result["areas"]["E"]["features"]
+    assert feature["properties"]["join_method"] == "exact_block_and_verified_road"
+    assert feature["properties"]["role"] == "stop" and feature["properties"]["stop_id"] == "s1"
+    assert feature["properties"]["height_m"] == estimated_height(12)
+
+
+def test_surrounding_blocks_get_storeys_only_through_verified_road_join():
+    details = hdb_block_details([{"block": "200", "street": "Ho Ching Rd", "source_row": {"max_floor_lvl": "16", "residential": "Y", "multistorey_carpark": "N"}},
+                                 {"block": "300", "street": "Elsewhere Rd", "source_row": {"max_floor_lvl": "30"}}])
+    stops = [{"id": "s1", "number": 1, "name": "Blk 117 Ho Ching Road", "longitude": 103.7001, "latitude": 1.3001, "max_floor_lvl": 12}]
+    payload = {"features": [footprint(coordinates=square(103.7, 1.3)),
+                            footprint("200", "610200", square(103.7008, 1.3), objectid=2),          # ~90 m away, verified road
+                            footprint("300", "610300", square(103.7, 1.3008), "BAD01X", objectid=3),  # nearby, unverified street code
+                            footprint("400", "610400", square(103.75, 1.35), objectid=4)]}         # several km away
+    result = route_footprints({"areas": {"E": {"stops": stops}}}, payload, CODES, details)
+    features = {f["properties"]["block"]: f["properties"] for f in result["areas"]["E"]["features"]}
+    assert set(features) == {"117", "200", "300"}
+    assert features["200"]["role"] == "context" and features["200"]["height_m"] == estimated_height(16)
+    assert features["200"]["uses"] == ["homes"]
+    assert features["300"]["height_m"] is None and features["300"]["join_method"] == "storeys_unavailable_no_verified_road_join"
+    assert result["coverage"]["context_blocks"] == 2 and result["coverage"]["context_blocks_with_storeys"] == 1
+
+
+def test_footprint_coordinates_are_only_rounded_to_centimetres():
+    raw = [[[103.700000012345, 1.300000098765], [103.7002, 1.3], [103.7002, 1.3002], [103.7, 1.3002], [103.700000012345, 1.300000098765]]]
+    anchor = {"id": "a", "block": "117", "postal": "610117", "max_floor_lvl": 4}
+    [feature] = route_footprints({"areas": {"E": {"cluster_blocks": [anchor]}}}, {"features": [footprint(coordinates=raw)]})["areas"]["E"]["features"]
+    assert feature["geometry"]["coordinates"][0][0] == [103.7, 1.3000001]

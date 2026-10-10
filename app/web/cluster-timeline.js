@@ -2,7 +2,8 @@
 (() => {
   'use strict';
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  window.ClusterTimeline={init(timeline,map,currentLayer){
+  const day=v=>{const d=new Date(`${v}T12:00:00+08:00`);return Number.isNaN(+d)?String(v):d.toLocaleDateString('en-SG',{day:'numeric',month:'short',year:'numeric'});};
+  window.ClusterTimeline={label:day,init(timeline,map,currentLayer){
     const box=document.querySelector('#cluster-timeline');
     const days=timeline.filter(d=>d.date&&Array.isArray(d.clusters)).sort((a,b)=>a.date.localeCompare(b.date));
     if(!box||days.length<2)return;
@@ -13,7 +14,7 @@
     const stop=()=>{clearInterval(timer);timer=null;play.textContent='Play snapshots';play.setAttribute('aria-label','Play saved cluster snapshots');};
     const draw=()=>{
       const day=days[index],latest=index===days.length-1;
-      slider.value=index;box.querySelector('output').textContent=day.date;
+      slider.value=index;box.querySelector('output').textContent=window.ClusterTimeline.label(day.date);slider.setAttribute('aria-valuetext',`Saved ${window.ClusterTimeline.label(day.date)}`);
       historical.clearLayers();map.removeLayer(currentLayer);map.removeLayer(historical);
       const show=document.querySelector('#show-clusters').checked;
       document.querySelector('#show-priority').disabled=!latest;
@@ -23,7 +24,7 @@
         day.clusters.forEach(c=>{if(!Number.isFinite(c.lat)||!Number.isFinite(c.lon)||!Number.isFinite(c.people))return;
           const size=Math.round(16+5*Math.sqrt(Math.max(0,c.people)));
           L.marker([c.lat,c.lon],{icon:L.divIcon({className:'cluster-pin',html:esc(c.people),iconSize:[size,size],iconAnchor:[size/2,size/2]}),title:c.locality})
-            .bindPopup('<strong>'+esc(c.people)+' people</strong><br>'+esc(c.locality)+'<br>Saved '+esc(day.date)+'<br><small>Cluster counts, not new weekly infections.</small>').addTo(historical);
+            .bindPopup('<strong>'+esc(c.people)+' people</strong><br>'+esc(c.locality)+'<br>Saved '+esc(window.ClusterTimeline.label(day.date))+'<br><small>Cluster counts, not new weekly infections.</small>').addTo(historical);
         });if(show)historical.addTo(map);
       }
       const gap=index?Math.round((Date.parse(day.date)-Date.parse(days[index-1].date))/86400000):null;

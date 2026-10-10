@@ -40,8 +40,14 @@ class LocalStore:
     def recent(self, area_code=None, limit=200):
         if not self.path.exists():
             return []
-        rows = [json.loads(line) for line in self.path.read_text().splitlines() if line.strip()]
-        rows = [row for row in rows if not area_code or row["area_code"] == area_code]
+        rows = []
+        for line in self.path.read_text().splitlines():
+            try:
+                row = json.loads(line) if line.strip() else None
+            except json.JSONDecodeError:
+                continue  # one damaged line must not hide every other report
+            if isinstance(row, dict) and (not area_code or row.get("area_code") == area_code):
+                rows.append({key: value for key, value in row.items() if key != "note"})
         return sorted(rows, key=lambda row: row["reported_at"], reverse=True)[:limit]
 
     def verify(self):
@@ -97,22 +103,33 @@ class WarehouseStore:
     def recent(self, area_code=None, limit=200):
         self._ensure()
         where = "WHERE area_code = :area_code" if area_code else ""
-        response = self._run(f"SELECT report_id, CAST(reported_at AS STRING), area_code, stop_id, stop_name, place_type, outcome, note, plan_as_of, source "
+        # Optional notes may contain personal information; they are never read back through the app.
+        response = self._run(f"SELECT report_id, CAST(reported_at AS STRING), area_code, stop_id, stop_name, place_type, outcome, plan_as_of, source "
                              f"FROM {self.table} {where} ORDER BY reported_at DESC LIMIT {int(limit)}",
                              [("area_code", area_code, "STRING")] if area_code else [])
-        names = ["report_id", "reported_at", "area_code", "stop_id", "stop_name", "place_type", "outcome", "note", "plan_as_of", "source"]
+        names = ["report_id", "reported_at", "area_code", "stop_id", "stop_name", "place_type", "outcome", "plan_as_of", "source"]
         return [dict(zip(names, row)) for row in (response.result.data_array or [])] if response.result else []
 
 
+_WAREHOUSE_STORES = {}
+
+
 def store(root):
+    """Reuse one warehouse store per process so the table check runs once, not on every save."""
     warehouse = os.environ.get("DATABRICKS_WAREHOUSE_ID")
-    return WarehouseStore(warehouse) if warehouse else LocalStore(root)
+    if not warehouse:
+        return LocalStore(root)
+    if warehouse not in _WAREHOUSE_STORES:
+        _WAREHOUSE_STORES[warehouse] = WarehouseStore(warehouse)
+    return _WAREHOUSE_STORES[warehouse]
 
 
 def make_report(*, area_code, stop_id, stop_name, place_type, outcome, note, plan_as_of, source):
     if outcome not in OUTCOMES:
         raise ValueError("Unknown outcome")
-    return {"report_id": uuid.uuid4().hex, "reported_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+    now = dt.datetime.now(dt.timezone.utc)
+    # Millisecond resolution keeps quick successive taps in their real order.
+    return {"report_id": uuid.uuid4().hex, "reported_at": now.strftime("%Y-%m-%d %H:%M:%S.") + f"{now.microsecond // 1000:03d}",
             "area_code": area_code, "stop_id": stop_id, "stop_name": stop_name, "place_type": place_type, "outcome": outcome,
             "note": (note or "").strip()[:280] or None, "plan_as_of": plan_as_of, "source": source}
 
@@ -121,7 +138,7 @@ def summarise(rows):
     """Per-stop latest outcome and counts, for the plan screen and the map."""
     latest = {}
     for row in rows:
-        latest.setdefault(row["stop_id"], row)
+        latest.setdefault(row["stop_id"], {"stop_id": row["stop_id"], "outcome": row["outcome"], "reported_at": row["reported_at"]})
     return {"reports": len(rows), "stops_checked": len(latest),
             "water_found": sum(row["outcome"] == "water_found" for row in latest.values()),
             "last_reported_at": rows[0]["reported_at"] if rows else None, "by_stop": latest}

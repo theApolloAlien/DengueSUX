@@ -187,3 +187,32 @@ def test_only_fixed_dashboard_path_is_downloadable_and_unconfigured_is_idle(tmp_
     assert not remote.calls
     instance = snapshots.SnapshotCache(tmp_path, '', client_factory=lambda: pytest.fail('No client without configuration'))
     assert instance.refresh()['state'] == 'disabled'
+
+
+def test_later_export_from_older_cluster_snapshot_is_not_published(tmp_path, public_snapshot):
+    web = saved(tmp_path, public_snapshot)
+    original = (web / 'dashboard.json').read_bytes()
+    stale = copy.deepcopy(public_snapshot)
+    stale['meta']['generated_at'] = '2026-10-10T00:00:00Z'  # generated later...
+    stale['current']['as_of'] = '2020-01-01T00:00:00+00:00'  # ...but from older cluster observations
+    status = cache(tmp_path, FakeFiles(encoded(stale))).refresh()
+    assert status['state'] == 'retained_newer_saved'
+    assert (web / 'dashboard.json').read_bytes() == original
+
+
+def test_background_refresh_returns_without_waiting(tmp_path, public_snapshot, monkeypatch):
+    import threading
+    saved(tmp_path, public_snapshot)
+    gate, started = threading.Event(), threading.Event()
+
+    class SlowFiles(FakeFiles):
+        def download(self, path):
+            started.set()
+            gate.wait(5)
+            return super().download(path)
+
+    instance = cache(tmp_path, SlowFiles(encoded(public_snapshot)))
+    monkeypatch.setattr(snapshots, '_cache', lambda root: instance)
+    status = snapshots.refresh_in_background(tmp_path)  # returns while the download is still blocked
+    assert started.wait(2) and status['state'] in {'saved', 'refreshing'}
+    gate.set()

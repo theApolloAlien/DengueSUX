@@ -1,5 +1,7 @@
 # Current handover status — 10 Oct 2026
 
+**Latest:** the afternoon platform audit (3D accuracy rebuild, UX polish, privacy/reliability fixes, redeploy) is recorded in `docs/PLATFORM_AUDIT.md`; 165 tests pass. Its “Remaining limitations and actions” list supersedes older to-dos below.
+
 The original finishing run and remaining build stages have been completed or are in final verification. **Read `docs/BUILD_PROGRESS.md` for current run IDs, results and outstanding checks before rerunning anything.** The historical instructions below record the original task. User authorization now permits commits, pushes and Unity Catalog grants; it overrides the old approval wording. The estimator/feature/selection recipe remains locked. Training-only imputation is permitted and disclosed; missing source observations, stored values and user-visible observations must remain missing.
 
 You are continuing work on DengueSUX, a Singapore dengue early-warning app (repo root: /Users/apollo/1m/dengueRadar). It is an entry to the Databricks DAISI Challenge, problem A2 "DengueRadar". Demo Day is 27 Oct 2026. Demo Day judging: social impact 30%, technical execution on Databricks 30%, usability for non-technical users 20%, data rigour 10%, presentation 10%.

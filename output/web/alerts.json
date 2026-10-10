@@ -1,1 +1,105 @@
-{"generated_at":"2026-10-10T05:04:31.396066+00:00","snapshot_date":"2026-10-10","subscribed_areas":"all","alerts":[{"kind":"area_high","severity":"high","area_codes":["JW"],"title":"Jurong West is High priority","message":"97 people in 2 active cluster(s) overlap Jurong West. Plan an inspection walk this week."},{"kind":"area_high","severity":"high","area_codes":["JE"],"title":"Jurong East is High priority","message":"91 people in 1 active cluster(s) overlap Jurong East. Plan an inspection walk this week."},{"kind":"area_high","severity":"high","area_codes":["BS"],"title":"Bishan is High priority","message":"12 people in 1 active cluster(s) overlap Bishan. Plan an inspection walk this week."},{"kind":"growing_cluster","severity":"high","area_codes":["JW","JE"],"title":"Cluster growing: Ho Ching Rd (Blk 117, 119, 120)","message":"Ho Ching Rd (Blk 117, 119, 120) grew by 17 people (74 → 91) between 2026-09-24 and 2026-10-10."},{"kind":"growing_cluster","severity":"high","area_codes":["BS"],"title":"Cluster growing: Bishan St 12 (Blk 107, 109, 110, 111, 115, 116, 118)","message":"Bishan St 12 (Blk 107, 109, 110, 111, 115, 116, 118) grew by 7 people (5 → 12) between 2026-09-24 and 2026-10-10."},{"kind":"new_cluster","severity":"medium","area_codes":["WC"],"title":"New cluster: Old Choa Chu Kang Rd","message":"6 people in a new cluster at Old Choa Chu Kang Rd (Western Water Catchment), since 2026-09-24."},{"kind":"new_cluster","severity":"medium","area_codes":["JW"],"title":"New cluster: Soon Lee Rd","message":"6 people in a new cluster at Soon Lee Rd (Jurong West), since 2026-09-24."},{"kind":"new_cluster","severity":"medium","area_codes":["SB"],"title":"New cluster: Sembawang Cl (Blk 330, 339A)","message":"2 people in a new cluster at Sembawang Cl (Blk 330, 339A) (Sembawang), since 2026-09-24."},{"kind":"new_cluster","severity":"medium","area_codes":["PR"],"title":"New cluster: Pasir Ris Lk (Seastrand, Watercolours)","message":"2 people in a new cluster at Pasir Ris Lk (Seastrand, Watercolours) (Pasir Ris), since 2026-09-24."},{"kind":"new_cluster","severity":"medium","area_codes":["AM"],"title":"New cluster: Lentor Gdns","message":"2 people in a new cluster at Lentor Gdns (Ang Mo Kio), since 2026-09-24."}],"rules":{"area_high":"Area priority is High (10+ people in active clusters)","new_cluster":"Cluster absent from the previous snapshot","growing_cluster":"Cluster grew by at least 5 people between the two latest snapshots","national_above_normal":"Live national forecast above 1.25 × the 5-year median for that week"},"delivered_to":[]}
+{
+  "generated_at": "2026-10-10T08:24:00.852770+00:00",
+  "snapshot_date": "2026-10-10",
+  "subscribed_areas": "all",
+  "alerts": [
+    {
+      "kind": "area_high",
+      "severity": "high",
+      "area_codes": [
+        "JW"
+      ],
+      "title": "Jurong West is High priority",
+      "message": "97 people in 2 active clusters overlapping Jurong West. Plan an inspection walk this week."
+    },
+    {
+      "kind": "area_high",
+      "severity": "high",
+      "area_codes": [
+        "JE"
+      ],
+      "title": "Jurong East is High priority",
+      "message": "91 people in 1 active cluster overlapping Jurong East. Plan an inspection walk this week."
+    },
+    {
+      "kind": "area_high",
+      "severity": "high",
+      "area_codes": [
+        "BS"
+      ],
+      "title": "Bishan is High priority",
+      "message": "12 people in 1 active cluster overlapping Bishan. Plan an inspection walk this week."
+    },
+    {
+      "kind": "growing_cluster",
+      "severity": "high",
+      "area_codes": [
+        "JW",
+        "JE"
+      ],
+      "title": "Cluster growing: Ho Ching Rd (Blk 117, 119, 120)",
+      "message": "Ho Ching Rd (Blk 117, 119, 120) grew by 17 people (74 → 91) between 24 Sep 2026 and 10 Oct 2026."
+    },
+    {
+      "kind": "growing_cluster",
+      "severity": "high",
+      "area_codes": [
+        "BS"
+      ],
+      "title": "Cluster growing: Bishan St 12 (Blk 107, 109, 110, 111, 115, 116, 118)",
+      "message": "Bishan St 12 (Blk 107, 109, 110, 111, 115, 116, 118) grew by 7 people (5 → 12) between 24 Sep 2026 and 10 Oct 2026."
+    },
+    {
+      "kind": "new_cluster",
+      "severity": "medium",
+      "area_codes": [
+        "WC"
+      ],
+      "title": "New cluster: Old Choa Chu Kang Rd",
+      "message": "6 people in a new cluster at Old Choa Chu Kang Rd (Western Water Catchment), not listed on 24 Sep 2026."
+    },
+    {
+      "kind": "new_cluster",
+      "severity": "medium",
+      "area_codes": [
+        "JW"
+      ],
+      "title": "New cluster: Soon Lee Rd",
+      "message": "6 people in a new cluster at Soon Lee Rd (Jurong West), not listed on 24 Sep 2026."
+    },
+    {
+      "kind": "new_cluster",
+      "severity": "medium",
+      "area_codes": [
+        "SB"
+      ],
+      "title": "New cluster: Sembawang Cl (Blk 330, 339A)",
+      "message": "2 people in a new cluster at Sembawang Cl (Blk 330, 339A) (Sembawang), not listed on 24 Sep 2026."
+    },
+    {
+      "kind": "new_cluster",
+      "severity": "medium",
+      "area_codes": [
+        "PR"
+      ],
+      "title": "New cluster: Pasir Ris Lk (Seastrand, Watercolours)",
+      "message": "2 people in a new cluster at Pasir Ris Lk (Seastrand, Watercolours) (Pasir Ris), not listed on 24 Sep 2026."
+    },
+    {
+      "kind": "new_cluster",
+      "severity": "medium",
+      "area_codes": [
+        "AM"
+      ],
+      "title": "New cluster: Lentor Gdns",
+      "message": "2 people in a new cluster at Lentor Gdns (Ang Mo Kio), not listed on 24 Sep 2026."
+    }
+  ],
+  "rules": {
+    "area_high": "Area priority is High (10+ people in active clusters)",
+    "new_cluster": "Cluster absent from the previous snapshot",
+    "growing_cluster": "Cluster grew by at least 5 people between the two latest snapshots",
+    "national_above_normal": "Live national forecast above 1.25 × the 5-year median for that week"
+  },
+  "delivered_to": []
+}

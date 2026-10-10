@@ -177,3 +177,22 @@ def test_env_loader_never_executes_interpolations(tmp_path, monkeypatch):
     path.write_text('ONEMAP_TOKEN=\nONEMAP_EMAIL="fixture@example.test"\nONEMAP_PASSWORD=\'$(not-executed)#literal\'\nUNRELATED=ignored\n')
     assert read_private_env(path) == {"ONEMAP_TOKEN": "", "ONEMAP_EMAIL": "fixture@example.test", "ONEMAP_PASSWORD": "$(not-executed)#literal"}
     assert canonical_street("Bt Batok St 21") == "BUKIT BATOK STREET 21"
+
+
+def test_postal_lookup_uses_public_search_without_credentials(tmp_path):
+    session = Session(get=Response({"found": 1, "results": [{"BLK_NO": "117", "ROAD_NAME": "HO CHING ROAD", "POSTAL": "610117",
+                                                             "ADDRESS": "117 HO CHING ROAD SINGAPORE 610117", "LATITUDE": "1.335", "LONGITUDE": "103.723"}]}))
+    instance = client(tmp_path, session, env={})
+    assert instance.postal_lookup_available()
+    found = instance.locate_postal("610117")
+    assert found == {"postal": "610117", "address": "117 HO CHING ROAD SINGAPORE 610117", "latitude": 1.335, "longitude": 103.723}
+    assert session.gets[0][1]["headers"] == {}  # no credential is sent or required
+    assert instance.locate_postal("61011") is None and len(session.gets) == 1
+    assert not instance.geocode_path.exists()  # resident lookups are never cached
+
+
+def test_postal_lookup_rejects_a_different_postal_code(tmp_path):
+    session = Session(get=Response({"found": 1, "results": [{"POSTAL": "610118", "LATITUDE": "1.335", "LONGITUDE": "103.723"}]}))
+    instance = client(tmp_path, session, env={})
+    assert instance.locate_postal("610117") is None
+    assert not instance.map_data_stale  # a clean "not found", not a service failure

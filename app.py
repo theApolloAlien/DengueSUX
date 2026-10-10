@@ -4,21 +4,35 @@ import json
 import os
 from datetime import timedelta
 from typing import Literal, Optional
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Path as PathParam, Query
 from pydantic import BaseModel, Field
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 ROOT=Path(__file__).resolve().parent
 app=FastAPI(title='DengueSUX',docs_url=None,redoc_url=None)
+app.add_middleware(GZipMiddleware, minimum_size=1024, compresslevel=6)
+
+@app.middleware('http')
+async def cache_policy(request, call_next):
+    """Pinned vendor files may be cached; app code, data and API answers are revalidated so a deploy or refresh shows at once."""
+    response = await call_next(request)
+    if 'cache-control' not in response.headers:
+        path = request.url.path
+        response.headers['Cache-Control'] = 'public, max-age=604800' if path.startswith('/vendor/') else 'no-store' if path.startswith('/api/') else 'no-cache'
+    return response
 
 def _refresh_snapshot():
-    from denguesux.app_snapshot import refresh_snapshot
-    return refresh_snapshot(ROOT)
+    """User requests never wait for the Volume; a due refresh runs in the background."""
+    from denguesux.app_snapshot import refresh_in_background
+    return refresh_in_background(ROOT)
 
 @app.get('/api/data/status')
 def data_status():
-    return _refresh_snapshot()
+    """Explicit status check: waits for a due refresh so operators see its real outcome."""
+    from denguesux.app_snapshot import refresh_snapshot
+    return refresh_snapshot(ROOT)
 
 @app.get('/api/health')
 def health():
@@ -29,20 +43,20 @@ def data(name:str):
     allowed={'dashboard.json','current.json','model.json','inspection.json','growth.json','notices.json','alerts.json','footprints.json','population.json'}
     if name not in allowed: raise HTTPException(404)
     _refresh_snapshot()
-    p=ROOT/'output/web'/name
+    p=(ROOT/'output/web'/name).resolve()  # pin one published generation for the whole response
     if not p.exists(): raise HTTPException(503,'Run the pipeline to prepare real data.')
     return FileResponse(p,media_type='application/json')
 
 @app.get('/api/notices/{area_code}')
-def resident_notice(area_code: str, language: Literal['en','zh','ms','ta']='en'):
+def resident_notice(area_code: str = PathParam(pattern=r'^[A-Z]{2,3}$'), language: Literal['en','zh','ms','ta']='en'):
     _refresh_snapshot()
     from denguesux.notices import generate_notice
     try:
         return generate_notice(area_code, language, root=ROOT)
-    except ValueError:
-        raise HTTPException(404,'Unknown planning area or unavailable source facts.') from None
     except (OSError, KeyError, json.JSONDecodeError):
         raise HTTPException(503,'Build the dated gold facts before generating a notice.') from None
+    except ValueError:
+        raise HTTPException(404,'Unknown planning area or unavailable source facts.') from None
 
 class AskBody(BaseModel):
     question: str = Field(min_length=3, max_length=500)
@@ -117,10 +131,10 @@ def chat(body: ChatBody):
     try:
         return run_chat([m.model_dump() for m in body.messages], make_llm(endpoint), ROOT,
                         genie=(lambda q: _genie_ask(q)) if _genie_space() else None)
-    except ValueError as exc:
-        raise HTTPException(422, str(exc)) from None
     except (OSError, KeyError, json.JSONDecodeError):
         raise HTTPException(503, 'Build the dated gold facts before using the assistant.') from None
+    except ValueError:
+        raise HTTPException(422, 'The assistant could not use that conversation. Start a new question.') from None
     except Exception as exc:  # The front end falls back to the saved-data answers.
         raise HTTPException(502, f'The assistant could not answer: {type(exc).__name__}') from None
 
@@ -132,6 +146,14 @@ class FieldReportBody(BaseModel):
     outcome: Literal['water_found', 'cleared', 'nothing']
     note: Optional[str] = Field(default=None, max_length=280)
     plan_as_of: Optional[str] = Field(default=None, max_length=40)
+
+def _planned_stop(area_code, stop_id):
+    """Reports must refer to a stop in the saved public plan, so counts cannot be inflated with invented stops."""
+    try:
+        plan = json.loads((ROOT/'output/web/inspection.json').read_text()).get('areas', {}).get(area_code) or {}
+    except (OSError, json.JSONDecodeError):
+        return None
+    return next((stop for stop in plan.get('stops', []) if str(stop.get('id')) == stop_id), None)
 
 def _reports():
     from denguesux.field_reports import store
@@ -147,7 +169,11 @@ def add_report(body: FieldReportBody, verify_only: bool = False):
         except Exception as exc:
             raise HTTPException(503, f'Report storage verification failed: {type(exc).__name__}') from None
         return {'saved': False, 'verified': True, 'observations_written': 0}
-    report = make_report(**body.model_dump(), source='databricks_app' if os.environ.get('DATABRICKS_WAREHOUSE_ID') else 'local')
+    stop = _planned_stop(body.area_code, body.stop_id)
+    if stop is None:
+        raise HTTPException(422, 'That stop is not in the current inspection plan for this area. Reload the plan and try again.')
+    fields = {**body.model_dump(), 'stop_name': str(stop.get('name') or body.stop_name)[:160], 'place_type': str(stop.get('place_type') or body.place_type)[:40]}
+    report = make_report(**fields, source='databricks_app' if os.environ.get('DATABRICKS_WAREHOUSE_ID') else 'local')
     try:
         _reports().add(report)
     except Exception as exc:
@@ -167,23 +193,45 @@ def _onemap_client():
     from denguesux.onemap import OneMapClient
     return OneMapClient(ROOT)
 
+_postal_probe = {'checked': 0.0, 'ok': False}
+
+def _probe_postal():
+    """Offer postal lookup only if OneMap actually answers from this server (cached; public cloud IPs can be refused)."""
+    import time
+    now = time.monotonic()
+    if _postal_probe['checked'] and now - _postal_probe['checked'] < (900 if _postal_probe['ok'] else 300):
+        return _postal_probe['ok']
+    ok = False
+    try:
+        client = _onemap_client()
+        if client.postal_lookup_available():
+            plan = json.loads((ROOT/'output/web/inspection.json').read_text()).get('areas', {})
+            probe = next((str(stop['postal']) for area in plan.values() for stop in area.get('stops', []) if stop.get('postal')), None)
+            # A public HDB block from the saved plan; the answer itself is discarded.
+            ok = bool(probe) and client.locate_postal(probe) is not None and not client.map_data_stale
+    except Exception:
+        ok = False
+    _postal_probe.update(checked=now, ok=ok)
+    return ok
+
 @app.get('/api/locate/status')
 def locate_status():
-    """Postal lookup needs OneMap credentials on the server; 'use my location' works without them."""
-    try:
-        return {'postal': bool(_onemap_client().get_token())}
-    except Exception:
-        return {'postal': False}
+    """Postal lookup uses the server's OneMap token or OneMap public search, and is offered only when it works."""
+    return {'postal': _probe_postal()}
 
 @app.get('/api/locate')
 def locate(postal: str = Query(pattern=r'^\d{6}$')):
+    client = None
     try:
-        found = _onemap_client().locate_postal(postal)
+        client = _onemap_client()
+        found = client.locate_postal(postal)
     except Exception:
         found = None
-    if not found:
-        raise HTTPException(404, 'That postal code could not be located. Try “Use my location” instead.')
-    return found
+    if found:
+        return found
+    if client is None or client.map_data_stale or not client.postal_lookup_available():
+        raise HTTPException(503, 'Postal lookup is unavailable right now. Try “Use my location” or the example.')
+    raise HTTPException(404, 'That postal code could not be located. Check the six digits or try “Use my location”.')
 
 @app.get('/reports/{name}')
 def reports(name:str):

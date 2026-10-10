@@ -156,13 +156,24 @@ class SnapshotCache:
             stream.close()
 
     def _local_generated(self):
+        return self._local_times()[0]
+
+    def _local_times(self):
+        """(generated_at, cluster as_of) of the saved dashboard, or None for either when unreadable."""
         path = self.web / 'dashboard.json'
         try:
             if path.stat().st_size > MAX_BYTES:
-                return None
-            return _timestamp(_decode(path.read_bytes())['meta']['generated_at'])
-        except (OSError, ValueError, TypeError, KeyError):
-            return None
+                return None, None
+            payload = _decode(path.read_bytes())
+        except (OSError, ValueError, TypeError):
+            return None, None
+        times = []
+        for getter in (lambda: payload['meta']['generated_at'], lambda: payload['current']['as_of']):
+            try:
+                times.append(_timestamp(getter()))
+            except (ValueError, TypeError, KeyError):
+                times.append(None)
+        return tuple(times)
 
     @staticmethod
     def _write(path, body):
@@ -233,7 +244,7 @@ class SnapshotCache:
                 return self.status()
             self.state['state'] = 'refreshing'
             self.state['last_checked_at'] = _utc_now().isoformat()
-            local = self._local_generated()
+            local, local_as_of = self._local_times()
             self.state['snapshot_generated_at'] = local.isoformat() if local else None
             payload = validate_snapshot(self._download())
             remote = _timestamp(payload['meta']['generated_at'])
@@ -241,6 +252,9 @@ class SnapshotCache:
                 raise ValueError('Snapshot generation timestamp is in the future')
             if local is not None and remote <= local:
                 self.state['state'] = 'current' if remote == local else 'retained_newer_saved'
+            elif local_as_of is not None and _timestamp(payload['current']['as_of']) < local_as_of:
+                # A later export built from an older cluster snapshot never replaces newer saved observations.
+                self.state['state'] = 'retained_newer_saved'
             else:
                 self._publish(payload)
                 self.state['snapshot_generated_at'] = remote.isoformat()
@@ -274,6 +288,15 @@ def _cache(root):
 def refresh_snapshot(root, *, force=False):
     """Refresh at most once a minute; return safe status and preserve saved data on failure."""
     return _cache(root).refresh(force=force)
+
+
+def refresh_in_background(root):
+    """Start a due refresh without making the current request wait; it is served from saved data."""
+    cache = _cache(root)
+    if not cache.volume_root or cache.clock() < cache.next_attempt or cache.lock.locked():
+        return cache.status()
+    threading.Thread(target=cache.refresh, name='denguesux-snapshot-refresh', daemon=True).start()
+    return cache.status()
 
 
 def snapshot_status(root):

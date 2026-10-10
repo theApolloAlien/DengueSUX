@@ -1,0 +1,40 @@
+{
+ "desktop-summary": {
+  "clusters": "8",
+  "people": "126",
+  "high": "3",
+  "national": "~68 people",
+  "updated": " Updated 10 Oct 2026"
+ },
+ "desktop-postal-form-visible": false,
+ "desktop-check-example": "Blk 117 Ho Ching Road is inside an active dengue cluster.\n      Ho Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 333",
+ "desktop-plan-stops": 8,
+ "desktop-stale-warning": 1,
+ "desktop-3d-status": "31 official HDB block shapes within about 160 m of the route · 31 raised from published storeys · 0 flat (storeys unverified). Tap a block for details.",
+ "desktop-3d-stop": "Stop 2 of 8 · Blk 208 Bukit Batok Street 21 · 13 storeys",
+ "desktop-notice-checks": " 5/5 automatic checks passed ",
+ "desktop-forecast-headline": "Week of 11 October: about 68 people",
+ "desktop-assistant": "Why is Jurong West High?Jurong West is High because it has active clusters with at least 10 people, following the operational rule for area priority[1][2]. There are 2 active clusters, with 97 people in them. One cluster has 91 people and is shared with Jurong East, while the other has 6 people and is not shared with any other area[1][2].Show on map[1] NEA active clusters · data.gov.sg · 10 Oct 20",
+ "desktop-overflow": false,
+ "desktop-errors": [],
+ "desktop-report-posts": [],
+ "phone-summary": {
+  "clusters": "8",
+  "people": "126",
+  "high": "3",
+  "national": "~68 people",
+  "updated": " Updated 10 Oct 2026"
+ },
+ "phone-postal-form-visible": false,
+ "phone-check-example": "Blk 117 Ho Ching Road is inside an active dengue cluster.\n      Ho Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 333",
+ "phone-plan-stops": 8,
+ "phone-stale-warning": 1,
+ "phone-3d-status": "31 official HDB block shapes within about 160 m of the route · 31 raised from published storeys · 0 flat (storeys unverified). Tap a block for details.",
+ "phone-3d-stop": "Stop 2 of 8 · Blk 208 Bukit Batok Street 21 · 13 storeys",
+ "phone-notice-checks": " 5/5 automatic checks passed ",
+ "phone-forecast-headline": "Week of 11 October: about 68 people",
+ "phone-assistant": "Why is Jurong West High?Jurong West is High because it has 2 active clusters with 97 people, meeting the operational rule for a High priority area[1][2]. One cluster has 91 people near Ho Ching Rd, and the other has 6 people near Soon Lee Rd. The area's weather on 23 Sep 2026 was 27°C temperature, 88.5% humidity, and 35mm rain[2].Show on map[1] NEA active clusters · data.gov.sg · 10 Oct 2026[2] NE",
+ "phone-overflow": false,
+ "phone-errors": [],
+ "phone-report-posts": []
+}

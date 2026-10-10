@@ -1,0 +1,83 @@
+{
+  "audited_at_sgt": "2026-10-10",
+  "baseline": {
+    "commit": "74ccf9e",
+    "tests": 149,
+    "deployment_id": "01f1c469107f1928a4dd3e94321fcf3a"
+  },
+  "volume_uploads": [
+    "data/raw/inspection/hdb_street_codes.json",
+    "data/cache/onemap/geocodes.json",
+    "data/cache/onemap/routes.json"
+  ],
+  "bundle": {
+    "validate": "Validation OK! (--strict)",
+    "deploy": "13 files uploaded; 2 jobs unchanged"
+  },
+  "daily_inspection_run": {
+    "run_id": 453000698540667,
+    "tasks": {
+      "live_api_autoloader": {
+        "run_id": 602926490248319,
+        "result": "SUCCESS"
+      },
+      "snapshot_growth_inspection_notices": {
+        "run_id": 550777599266032,
+        "result": "SUCCESS"
+      }
+    },
+    "alerts_delivered_to": []
+  },
+  "app_deployments": [
+    {
+      "deployment_id": "01f1c484550f179e9cdb606cd286e345",
+      "state": "SUCCEEDED"
+    },
+    {
+      "deployment_id": "01f1c485236b115994b26bdf7fea47cc",
+      "state": "SUCCEEDED",
+      "active": true
+    }
+  ],
+  "app_resources": [
+    "data-volume",
+    "genie-space",
+    "llm-endpoint",
+    "sql-warehouse"
+  ],
+  "live_checks": {
+    "data_status": "current (snapshot generated 2026-10-10T08:24:19Z)",
+    "gzip": true,
+    "cache_control": "no-cache",
+    "dashboard_transfer_bytes": 914042,
+    "report_verify_only": {
+      "saved": false,
+      "verified": true,
+      "observations_written": 0
+    },
+    "invented_stop_post": 422,
+    "reports_after": 0,
+    "postal_lookup": "withheld (OneMap refuses public search from the Databricks network; 503 path verified before the probe fix)",
+    "hosted_assistant": "answered 68 (50–93) and Jurong West with dated sources",
+    "genie": "top-5 areas from workspace.denguesux.gold_area_priorities",
+    "browser_journey": "output/verification/platform/live_journey.json (desktop + phone, no errors, no report posts, no overflow)"
+  },
+  "footprints_cloud": {
+    "matched_blocks": 43,
+    "context_blocks": 230,
+    "context_blocks_with_storeys": 228,
+    "verified_street_codes": 625,
+    "per_area": {
+      "JW": 74,
+      "JE": 74,
+      "BS": 54,
+      "BK": 31,
+      "SB": 40
+    }
+  },
+  "fallback_video": {
+    "path": "demo/denguesux_finishing_20261010-163531.mp4",
+    "seconds": 61.62,
+    "sha256": "8c39e3b929236796fe3f0898d76271687d255e59cfa8090b8aac1330142ad251"
+  }
+}

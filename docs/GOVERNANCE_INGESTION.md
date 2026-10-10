@@ -25,6 +25,12 @@ The 08:15 Asia/Singapore `daily_inspection` job first runs `notebooks/06_live_in
 4. Read each landing root with `cloudFiles` JSON, an explicit envelope schema and recursive file discovery. `trigger(availableNow=True)` ends after available input, and Delta append writes use separate schema/checkpoint paths under `data/autoloader/<source>/` in the Volume.
 5. Refresh the inspection outputs. The saved daily cluster snapshot is reused, so there is no second source observation for the day.
 
+If a weather API call fails after the cluster envelope has landed, the notebook still runs the Auto Loader ingest for whatever landed and then re-raises, so the task reports the weather failure without delaying the cluster observation's bronze row.
+
+Alerts are written to `alerts.json` and `gold_alerts` on every run, but only the scheduled `05_daily_inspection` notebook passes `send_alerts=True`. Manual, local, pipeline and test runs never send webhook or Telegram messages, even if those variables are present.
+
+The 3D walk preview reads one extra Volume input, `data/raw/inspection/hdb_street_codes.json`: HDB footprint street codes resolved to road names through OneMap public search, each with the checked postal code, block and response SHA-256. It contains public SLA/HDB facts only. Unverified codes leave their blocks flat. Refresh it with `scripts/collect_map_context.py --street-codes` when HDB publishes new streets, then upload it to the same Volume path.
+
 The notebook does not start a continuously running stream and does not backfill a day missed while scheduling was disabled. A rerun with the same checkpoints does not append the same files again. Keep checkpoint directories with their tables; deleting a checkpoint and retaining a table can replay files. Do not hand-edit landing envelopes. The deterministic `ingest_id` can identify duplicate source content during an audited recovery.
 
 The new live bronze tables retain original responses for incremental ingestion and auditing. The national forecast still uses the established station-day reduction and full-quality historical pipeline; this change does not claim that the raw envelopes automatically retrain the forecast.

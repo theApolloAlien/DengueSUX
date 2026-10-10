@@ -14,8 +14,10 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(1, str(Path(__file__).resolve().parents[1]))
 from collect_inspection_sources import acquire, profile_bytes
 from phase1_common import ROOT, sha256_file, utc_now, write_json
 
@@ -101,6 +103,95 @@ def population_source(root=ROOT):
     return output
 
 
+ONEMAP_SEARCH = "https://www.onemap.gov.sg/api/common/elastic/search"
+# Whole-word abbreviations seen in HDB Property Information but spelt out by OneMap.
+ROAD_ABBREVIATIONS = {"LORONG": "LOR", "KAMPONG": "KG", "PARK": "PK", "TERRACE": "TER", "HEIGHTS": "HTS",
+                      "SQUARE": "SQ", "TANJONG": "TG", "SAINT": "STREET", "COMMONWEALTH": "C WEALTH"}
+
+
+def road_key(road):
+    """Compare roads after expanding/abbreviating whole words only; never a fuzzy or partial match."""
+    from denguesux.onemap import canonical_street
+    return " ".join(ROAD_ABBREVIATIONS.get(word, word) for word in canonical_street(road).split())
+
+
+def street_codes(root=ROOT, *, session=None, pause=0.3, max_codes=None):
+    """Resolve HDB footprint street codes (ST_COD) to OneMap road names.
+
+    One public OneMap Search per code, using a real footprint postal code. A code
+    is accepted only when OneMap returns that exact postal code and block number
+    and HDB Property Information lists the same block on that road. Codes that
+    fail stay unresolved, so those footprints keep unknown storeys.
+    """
+    import requests
+    from denguesux.inspection import block_facts, load_hdb
+    from denguesux.onemap import canonical_street
+    root = Path(root).resolve()
+    footprints = root / "data/raw/inspection/hdb_existing_building.geojson.gz"
+    output = root / "data/raw/inspection/hdb_street_codes.json"
+    with gzip.open(footprints, "rt") as handle:
+        features = json.load(handle)["features"]
+    facts = block_facts(load_hdb(root)[0])
+    blocks = {}
+    for feature in features:
+        props = feature.get("properties", {})
+        code, block, postal = str(props.get("ST_COD", "")).strip(), str(props.get("BLK_NO", "")).strip().upper(), str(props.get("POSTAL_COD", "")).strip()
+        if code and block and len(postal) == 6 and postal.isdigit():
+            blocks.setdefault(code, []).append((block, postal))
+    saved = json.loads(output.read_text()) if output.exists() else {}
+    codes = dict(saved.get("codes", {}))
+    session = session or requests.Session()
+    attempted = 0
+    for code in sorted(blocks):
+        if codes.get(code, {}).get("status") == "verified":
+            continue
+        if max_codes is not None and attempted >= max_codes:
+            break
+        attempted += 1
+        entry = {"status": "unresolved", "reason": "No exact OneMap block and postal match confirmed by HDB Property Information"}
+        for block, postal in sorted(blocks[code], key=lambda item: item[1])[:3]:
+            time.sleep(pause)
+            try:
+                response = session.get(ONEMAP_SEARCH, params={"searchVal": postal, "returnGeom": "N", "getAddrDetails": "Y", "pageNum": 1},
+                                       timeout=(10, 30), allow_redirects=False)
+                payload = response.json() if response.status_code == 200 else None
+            except (requests.RequestException, ValueError):
+                payload = None
+            rows = (payload or {}).get("results") if isinstance(payload, dict) else None
+            if not isinstance(rows, list):
+                continue
+            roads = {canonical_street(row.get("ROAD_NAME", "")) for row in rows if isinstance(row, dict)
+                     and str(row.get("POSTAL", "")).strip() == postal and str(row.get("BLK_NO", "")).strip().upper() == block}
+            roads.discard("")
+            if len(roads) != 1:
+                continue
+            road, normalised = roads.pop(), False
+            if (block, road) not in facts:
+                # Same road written with HDB abbreviations (e.g. LOR 1 TOA PAYOH): accept only one exact key match.
+                same = [hdb_road for (hdb_block, hdb_road) in facts if hdb_block == block and road_key(hdb_road) == road_key(road)]
+                if len(same) == 1:
+                    road, normalised = same[0], True
+            if (block, road) not in facts:
+                entry = {"status": "unresolved", "reason": "OneMap road not listed for this block in HDB Property Information",
+                         "checked_block": block, "checked_postal": postal, "onemap_road": road}
+                continue
+            joined = sum((b, road) in facts for b, _ in blocks[code])
+            entry = {"status": "verified", "road": road, "checked_block": block, "checked_postal": postal, "abbreviation_matched": normalised,
+                     "footprints": len(blocks[code]), "footprints_in_hdb_property": joined,
+                     "retrieved_at_utc": utc_now(),
+                     "response_sha256": hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()}
+            break
+        codes[code] = entry
+    verified = sum(entry.get("status") == "verified" for entry in codes.values())
+    result = {"source": "SLA OneMap Search (public, no credentials), checked against HDB Property Information",
+              "source_url": "https://www.onemap.gov.sg/apidocs/search", "footprint_dataset_id": FOOTPRINT_ID,
+              "method": "One real footprint postal code per HDB street code; exact postal and block match; the block must be "
+                        "listed on that road in HDB Property Information. No fuzzy or nearest-name matching.",
+              "updated_at_utc": utc_now(), "code_count": len(blocks), "verified": verified, "codes": codes}
+    write_json(output, result)
+    return {"street_codes": len(blocks), "verified": verified, "attempted_now": attempted}
+
+
 def collect(root=ROOT):
     root = Path(root).resolve()
     path = root / "data/raw/inspection/hdb_existing_building.geojson.gz"
@@ -116,5 +207,6 @@ def collect(root=ROOT):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
+    parser.add_argument("--street-codes", action="store_true", help="Resolve HDB footprint street codes with OneMap public search")
     args = parser.parse_args()
-    print(json.dumps(collect(args.root), indent=2))
+    print(json.dumps(street_codes(args.root) if args.street_codes else collect(args.root), indent=2))

@@ -47,3 +47,15 @@ Automatic Volume-to-app refresh is implemented and the real cloud download passe
 Final snapshot refresh and assistant evidence: `output/verification/deployment.json`, `output/verification/assistant_live.json`. The final deployment ID is recorded in the former. No secrets were found in the final publishable-file scan.
 
 - Final field-report governance: app-created table required scoped SELECT/MODIFY for the current workspace operator; granted and all table/column comments applied successfully.
+
+## Platform audit and polish (10 Oct 2026, afternoon)
+
+Full record: `docs/PLATFORM_AUDIT.md`.
+
+- **3D walk preview rebuilt for accuracy:** every official HDB footprint within ~160 m of the route (not only stop blocks); heights = published storeys × 2.8 m + 1.3 m roof (NUS Urban Analytics Lab convention); street codes resolved through OneMap with exact block/postal checks (625/660 verified); all HDB stop buildings now matched; see-through context, colour legend, building details on tap, safer camera framing. Satellite cross-check of Jurong West, Bukit Batok and Bishan.
+- **UX:** one “This week” summary card; national outlook labelled “Unavailable” when stale; consistent road names and dates; tidier Check my block; map overlay collision fixed; data-driven assistant prompts; 3D method in “How to read this”.
+- **Reliability/privacy:** report notes never returned by the API; reports must name a planned stop; gzip + cache headers; background Volume refresh with an as-of guard; opt-in alert sending (scheduled job only); Auto Loader ingests landed envelopes even if weather fails; keyboard focus/Escape fixes; https-only links; postal lookup offered only when OneMap answers.
+- **Verification:** 165 tests; `demo/verify_platform.py` 15/15 edge states; live browser journey at 1440/390 passed.
+- **Deployed:** bundle deploy; daily run **453000698540667** SUCCESS (no alert sent); app deployment **01f1c485236b115994b26bdf7fea47cc** RUNNING with Genie, warehouse, model endpoint and READ_VOLUME preserved; data status `current`.
+- **Fallback video:** `demo/denguesux_finishing_20261010-163531.mp4` (61.6 s).
+- **Action before Demo Day:** the live outlook targets the week ending 17 Oct and is withdrawn after it. Once CDA publishes EW40/41, refresh `scripts/collect_moh_weekly.py`, weather and the pipeline (then the `pipeline` job) so the card shows a current range on 27 Oct.

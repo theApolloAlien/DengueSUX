@@ -42,3 +42,34 @@ def test_warehouse_waits_for_queued_statement(monkeypatch):
     monkeypatch.setattr(time, 'sleep', lambda _: None)
     assert storage._run('SELECT 1') is completed
     assert calls == ['query']
+
+
+def test_notes_are_stored_privately_but_never_returned(tmp_path, monkeypatch):
+    import json
+    storage = LocalStore(tmp_path)
+    monkeypatch.setattr(server, '_reports', lambda: storage)
+    monkeypatch.setattr(server, '_planned_stop', lambda area, stop: {'id': stop, 'name': 'Blk 117 Ho Ching Road', 'place_type': 'block'})
+    client = TestClient(server.app)
+    saved = client.post('/api/reports', json={'area_code': 'JW', 'stop_id': 'block:117', 'stop_name': 'anything',
+                                               'outcome': 'water_found', 'note': 'private detail #05-12'})
+    assert saved.status_code == 200
+    stored = json.loads(storage.path.read_text())
+    assert stored['note'] == 'private detail #05-12' and stored['stop_name'] == 'Blk 117 Ho Ching Road'
+    body = client.get('/api/reports?area_code=JW').text
+    assert 'private detail' not in body and '"note"' not in body
+    assert set(json.loads(body)['by_stop']['block:117']) == {'stop_id', 'outcome', 'reported_at'}
+
+
+def test_reports_must_name_a_stop_in_the_saved_plan(tmp_path, monkeypatch):
+    storage = LocalStore(tmp_path)
+    monkeypatch.setattr(server, '_reports', lambda: storage)
+    monkeypatch.setattr(server, '_planned_stop', lambda area, stop: None)
+    response = TestClient(server.app).post('/api/reports', json={'area_code': 'JW', 'stop_id': 'invented', 'stop_name': 'x', 'outcome': 'nothing'})
+    assert response.status_code == 422 and not storage.path.exists()
+
+
+def test_damaged_local_line_does_not_hide_other_reports(tmp_path):
+    storage = LocalStore(tmp_path)
+    storage.path.parent.mkdir(parents=True)
+    storage.path.write_text('{"area_code":"JW","stop_id":"a","outcome":"nothing","reported_at":"2026-10-10 01:00:00.000","note":"n"}\n{broken\n')
+    assert storage.recent('JW') == [{'area_code': 'JW', 'stop_id': 'a', 'outcome': 'nothing', 'reported_at': '2026-10-10 01:00:00.000'}]

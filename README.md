@@ -20,6 +20,8 @@ Built for the Databricks AI Social Impact (DAISI) Challenge Singapore 2026 · Pr
 
 - **Where to check first:** all 55 URA planning areas ranked by people in active NEA dengue clusters.
 - **Inspection plan:** one click turns an area into ranked places to check (cluster HDB blocks, parks, hawker centres) on a OneMap walking route, with a checklist per stop. *Places to check, not confirmed breeding sites.*
+- **3D walk preview:** the route in 3D with every official HDB block within about 160 m, not just the stops. Shapes are HDB's published footprints; heights are estimates from published storeys (2.8 m a floor + 1.3 m roof, the NUS Urban Analytics Lab HDB 3D convention). Blocks without a verified storey count stay flat, and non-HDB buildings are not modelled.
+- **Check my block:** distance from a home to the nearest active cluster, using the browser's location (never sent to the server), a public example block, or a postal code looked up through OneMap (not stored). Postal lookup is offered only when OneMap actually answers from the server: locally with a token or public search; the Databricks-hosted app hides it because OneMap refuses public searches from that cloud network.
 - **Resident notices:** English, 中文, Bahasa Melayu and தமிழ் drafts with NEA's Mozzie Wipeout steps; each passes 5 automatic fact checks. Drafts are for human review before sending.
 - **Live national outlook:** official MOH/CDA reports through EW39 2026 (week ending 3 October). For the week of 11 October: about **68 people**, with an **80% range of 50–93**. Across 196 evaluated weeks from 2023 onward, error is **28.7 people/week vs 31.9** for a four-week average (**10% lower**); range coverage is **76%**. The 2022 replay remains available as a separate, reused evaluation year.
 - **Explanations and sources:** grouped drivers (recent cases, time of year, rain, heat) and a dated source on every number.
@@ -50,7 +52,7 @@ cp .env.example .env
 
 ## Data and credits
 
-Open data from **data.gov.sg** (MOH Weekly Infectious Disease Bulletin; NEA weather archives, real-time weather APIs, dengue clusters and hawker centres; URA Master Plan 2025 planning areas; HDB Property Information; NParks parks) plus official **MOH/CDA weekly workbooks**, **SingStat resident totals**, and **OneMap** (Singapore Land Authority) for geocoding, walking routes and base map tiles. Prevention guidance adapted from NEA's Mozzie Wipeout. Details, checksums and limitations: [DATA_REPORT.md](DATA_REPORT.md) and [MODEL_REPORT.md](MODEL_REPORT.md).
+Open data from **data.gov.sg** (MOH Weekly Infectious Disease Bulletin; NEA weather archives, real-time weather APIs, dengue clusters and hawker centres; URA Master Plan 2025 planning areas; HDB Property Information and HDB Existing Building footprints; NParks parks), SLA OneMap search, tiles and walking routes, plus official **MOH/CDA weekly workbooks**, **SingStat resident totals**, and **OneMap** (Singapore Land Authority) for geocoding, walking routes and base map tiles. Prevention guidance adapted from NEA's Mozzie Wipeout. Details, checksums and limitations: [DATA_REPORT.md](DATA_REPORT.md) and [MODEL_REPORT.md](MODEL_REPORT.md).
 
 **Limitations:** historical evaluation assumes immediate weekly publication and uses revised official counts. The 80% range is empirical past forecast error, not a guarantee. Area rankings are places to check, not local case predictions or confirmed breeding sites. Weather explanations are associations, not causes. Source observations and stored tables preserve missing values; training-only median imputation and missing-value indicators remain inside the locked estimator. See `MODEL_REPORT.md` for missing-weather rates by evaluation period.
 
@@ -72,7 +74,7 @@ DengueSUX builds on existing NEA and university dengue forecasting research; the
 
 Open http://127.0.0.1:8787. The delivered `output/web/dashboard.json` contains real pipeline results, so opening the app does not require retraining. Start with the weekly briefing, use Where / Why / What to do, search an area or show the Top 5, and check the NEA Mozzie Wipeout steps. Forecast lab shows the current range, a 2023+ retrospective evaluation, and a separate 52-week 2022 replay. “How to read this” holds dates, assumptions and sources. Export data downloads the underlying evidence.
 
-The national map, fonts, icons and scripts are local assets. The optional 3D route preview uses pinned MapLibre GL 5.6.1, official HDB footprints and labelled illustrative storeys × 3 m; reduced-motion users step through stops manually. Map geometry comes from URA's actual GeoJSON. The street-level inspection map loads attributed OneMap tiles, so its base map needs network access; saved cluster and inspection geometry remains dated and inspectable. The web UI uses vanilla JavaScript and Leaflet; the local server uses Python/FastAPI. No Node build step is needed. OneMap credentials are needed when public search is unavailable and for automatic renewal/routing; the original dashboard and local notice templates do not require them.
+The national map, fonts, icons and scripts are local assets. The optional 3D walk preview uses pinned MapLibre GL 5.6.1 and official HDB footprints for the stops, cluster blocks and every HDB block within about 160 m of the route; heights are labelled estimates (published storeys × 2.8 m + 1.3 m roof). Reduced-motion users step through stops manually or with the arrow keys. Map geometry comes from URA's actual GeoJSON. The street-level inspection map loads attributed OneMap tiles, so its base map needs network access; saved cluster and inspection geometry remains dated and inspectable. The web UI uses vanilla JavaScript and Leaflet; the local server uses Python/FastAPI. No Node build step is needed. OneMap credentials are needed when public search is unavailable and for automatic renewal/routing; the original dashboard and local notice templates do not require them.
 
 ### Install and reproduce
 
@@ -207,6 +209,14 @@ Renewal is automatic when the pipeline runs, not a hidden background service. If
 
 The inspection stage publishes `bronze_inspection_sources`, `silver_inspection_cluster_blocks`, `silver_inspection_places`, `inspection_candidates` and `inspection_routes`. Small geographic joins run in shared Python/Shapely code; persistence uses explicit-schema PySpark/Delta, locally or in Databricks. JSON mirrors live in `output/gold/` and `output/web/inspection.json`.
 
+### 3D walk preview: how the buildings are built
+
+The 3D view shows only official geometry. **Footprints** are HDB Existing Building polygons from data.gov.sg (`d_16b157c52ed637edd6ba1232e026258d`), rounded to 7 decimal places (about 1 cm). Invalid source polygons are skipped, never repaired; points are never turned into boxes.
+
+**Heights** need a join from a footprint to HDB Property Information's `max_floor_lvl`. Footprints carry an HDB street code (`ST_COD`, e.g. `TOG02Q`), while the property table uses street names. `scripts/collect_map_context.py --street-codes` resolves each code once through OneMap's public search (no credentials): a real footprint postal code must come back with the same postal code and block number, and HDB Property Information must list that block on the returned road. Whole-word HDB abbreviations (LOR/LORONG, PK/PARK, C WEALTH/COMMONWEALTH, …) are accepted only when exactly one road matches. 625 of 660 codes verified (12,692+ footprints); unresolved codes keep their blocks flat. The mapping and its response hashes are saved in `data/raw/inspection/hdb_street_codes.json` and uploaded to the Volume for the daily job.
+
+Height = published storeys × 2.8 m + 1.3 m roof allowance, following the NUS Urban Analytics Lab HDB 3D model (Biljecki 2020). There is no public LiDAR for Singapore, so this is an estimate, labelled as such in the view and in “How to read this”. Stops, cluster blocks and nearby blocks are coloured differently; nearby blocks are see-through so they never hide a stop. Tap a block to see its storeys, estimated height, uses and source. Condos, schools and other non-HDB buildings remain flat on the OneMap base map. Placement was cross-checked against satellite imagery for the Jurong West, Bukit Batok and Bishan routes (see `docs/PLATFORM_AUDIT.md`).
+
 ### Daily cluster history and growth
 
 ```bash
@@ -229,7 +239,7 @@ The daily runner updates `current.json`, `growth.json`, `inspection.json`, `noti
 
 `databricks.yml` defines Free Edition **serverless-only** jobs. The daily schedule is **08:15 Asia/Singapore, UNPAUSED**. It lands official API responses in the Unity Catalog Volume, ingests new files with Auto Loader `availableNow`, then refreshes cluster/inspection outputs. Persistent checkpoints avoid reprocessing saved files. Heavy archive reduction stays local. Always pass `--profile denguesux` to Databricks CLI commands. The app refreshes its approved public dashboard from the Volume at most once a minute and retains dated saved data if refresh fails. The OneMap token remains local and is never uploaded. See [governance and ingestion](docs/GOVERNANCE_INGESTION.md) for table tags, lineage evidence and the Python lineage boundary.
 
-The app also provides “What changed”, saved-date cluster playback, Check my block, homes per route, and unverified field reports stored in a restricted Unity Catalog table. Report-storage verification uses a zero-row insert and never creates a pretend observation.
+The app also provides “What changed”, saved-date cluster playback, Check my block, homes per route, and unverified field reports stored in a restricted Unity Catalog table. A report must name a stop in the current saved plan; its optional note is stored but never returned by the app's API or included in exports. Report-storage verification uses a zero-row insert and never creates a pretend observation. Alerts are written to `alerts.json`/`gold_alerts` on every run but sent to a webhook or Telegram only by the scheduled daily job, and only when a destination is configured.
 
 ### Resident notice drafts
 

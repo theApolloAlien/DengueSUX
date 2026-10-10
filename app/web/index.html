@@ -64,31 +64,31 @@
         <div id="error-state" class="error-state" hidden><i class="ph ph-cloud-warning" aria-hidden="true"></i><h2>The dashboard data is not ready yet</h2><p id="error-message"></p><button class="solid-button" onclick="location.reload()">Try again</button></div>
 
         <section id="signals-view" class="view-content" aria-label="Current area signals" hidden>
-          <section class="weekly-briefing compact" aria-label="This week's briefing">
-            <i class="ph ph-crosshair" aria-hidden="true"></i>
-            <p id="briefing-text">Reading the latest cluster snapshot…</p>
-            <button class="text-button" id="briefing-view" hidden>View area <i class="ph ph-arrow-right" aria-hidden="true"></i></button>
-          </section>
-          <section class="weekly-briefing national-briefing compact" id="national-briefing" aria-label="National outlook" hidden>
-            <i class="ph ph-chart-line-up" aria-hidden="true"></i>
-            <p id="national-briefing-text"></p>
-            <button class="text-button" id="national-briefing-view">See forecast <i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+          <section class="week-summary" aria-labelledby="week-summary-title">
+            <h2 id="week-summary-title" class="sr-only">This week at a glance</h2>
+            <div class="stats-row summary-cells">
+              <div class="stat-item"><div class="stat-label">Active clusters</div><div class="stat-value" id="cluster-count">—</div><p class="stat-note" id="cluster-note">NEA snapshot</p></div>
+              <div class="stat-item"><div class="stat-label">People in clusters</div><div class="stat-value" id="case-count">—</div><p class="stat-note" id="case-note">Cumulative cluster sizes, not weekly cases</p></div>
+              <div class="stat-item" title="10 or more people in active clusters"><div class="stat-label">High-priority areas</div><div class="stat-value accent" id="high-count">—</div><p class="stat-note">10 or more people in clusters</p></div>
+              <div class="stat-item summary-national" id="national-briefing"><div class="stat-label" id="national-label">National outlook</div><div class="stat-value" id="national-value">—</div><p class="stat-note"><span id="national-briefing-text">Loading the latest weekly report…</span> <button class="text-button" id="national-briefing-view" hidden>See forecast <i class="ph ph-arrow-right" aria-hidden="true"></i></button></p></div>
+            </div>
+            <div class="summary-foot">
+              <i class="ph ph-crosshair" aria-hidden="true"></i>
+              <p id="briefing-text">Reading the latest cluster snapshot…</p>
+              <button class="text-button" id="briefing-view" hidden>View area <i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+            </div>
           </section>
 
+          <div class="signal-tools">
           <details class="change-feed" id="change-feed" hidden></details>
 
           <section class="check-block" aria-labelledby="check-title">
             <div class="check-bar"><i class="ph ph-house-line" aria-hidden="true"></i><h2 id="check-title">Is my home near a cluster?</h2>
               <button class="outline-button" id="check-locate"><i class="ph ph-crosshair-simple" aria-hidden="true"></i> Use my location</button>
-              <form id="check-postal-form" class="check-postal" hidden><label class="search-box"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input id="check-postal" inputmode="numeric" maxlength="6" placeholder="Postal code" aria-label="Postal code"></label><button class="outline-button" type="submit">Check</button></form>
+              <form id="check-postal-form" class="check-postal" novalidate hidden><label class="search-box"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><input id="check-postal" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{6}" maxlength="6" placeholder="Postal code" aria-label="Postal code" title="Looked up with OneMap (Singapore Land Authority). Not stored by DengueSUX."></label><button class="outline-button" type="submit">Check</button></form>
               <button class="text-button" id="check-example">Try an example</button></div>
             <div id="check-result" class="check-result" aria-live="polite" hidden></div>
           </section>
-
-          <div class="stats-row compact-stats">
-            <div class="stat-item"><div class="stat-label">Active clusters</div><div class="stat-value" id="cluster-count">—</div></div>
-            <div class="stat-item"><div class="stat-label">People in clusters</div><div class="stat-value" id="case-count">—</div></div>
-            <div class="stat-item" title="10 or more people in active clusters"><div class="stat-label">High-priority areas</div><div class="stat-value accent" id="high-count">—</div></div>
           </div>
 
           <div class="explorer">

@@ -41,3 +41,29 @@ def test_stale_forecast_cannot_emit_national_outlook_alert(tmp_path):
     model['current_forecast'] = {'available': False}
     (web / 'model.json').write_text(json.dumps(model))
     assert not build_alerts(tmp_path)['alerts']
+
+
+def test_alert_messages_use_app_dates_and_plain_plurals(tmp_path):
+    import json
+    from denguesux.alerts import build_alerts
+    web = tmp_path / "output/web"
+    web.mkdir(parents=True)
+    (web / "current.json").write_text(json.dumps({"areas": [{"code": "JW", "name": "Jurong West", "risk": "High", "cluster_cases": 12, "cluster_count": 1}],
+        "clusters": {"features": [{"properties": {"name": "Ho Ching Rd (Blk 117)", "area_codes": ["JW"], "area_names": ["Jurong West"]}}]}}))
+    (web / "growth.json").write_text(json.dumps({"changes": {"from_date": "2026-09-24", "to_date": "2026-10-10", "items": [
+        {"kind": "Growing", "locality": "Ho Ching Rd (Blk 117)", "people": 12, "previous_people": 5, "change": 7},
+        {"kind": "New", "locality": "Ho Ching Rd (Blk 117)", "people": 1}]}}))
+    (web / "model.json").write_text("{}")
+    messages = [a["message"] for a in build_alerts(tmp_path)["alerts"]]
+    assert "12 people in 1 active cluster overlapping Jurong West." in messages[0]
+    assert any("between 24 Sep 2026 and 10 Oct 2026" in m for m in messages)
+    assert any(m.startswith("1 person in a new cluster") and "not listed on 24 Sep 2026" in m for m in messages)
+    assert not any("(s)" in m or "2026-09-24" in m for m in messages)
+
+
+def test_alerts_are_not_sent_unless_explicitly_requested(tmp_path, monkeypatch):
+    from denguesux import alerts
+    monkeypatch.setenv("ALERT_WEBHOOK_URL", "https://example.invalid/hook")
+    monkeypatch.setattr(alerts, "build_alerts", lambda root: {"alerts": [{"title": "t", "message": "m"}], "snapshot_date": "2026-10-10", "generated_at": "x"})
+    monkeypatch.setattr(alerts, "_send", lambda text: (_ for _ in ()).throw(AssertionError("must not send")))
+    assert "delivered_to" not in alerts.write_alerts(tmp_path)

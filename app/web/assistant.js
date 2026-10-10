@@ -6,6 +6,7 @@
   const $ = s => document.querySelector(s);
   const $$ = s => [...document.querySelectorAll(s)];
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const safeUrl = v => { try { const u = new URL(v); return u.protocol === 'https:' ? esc(u.href) : '#'; } catch { return '#'; } };
   const icon = n => `<i class="ph ph-${n}" aria-hidden="true"></i>`;
   const finite = v => typeof v === 'number' && Number.isFinite(v);
   const num = (v, d=0) => finite(v) ? v.toLocaleString('en-SG', {maximumFractionDigits:d, minimumFractionDigits:0}) : '—';
@@ -234,7 +235,7 @@
     }
     if (plan.intent === 'help') {
       out.paragraphs.push('I can answer questions about area priorities, active clusters, inspection routes, the live national outlook and the 2022 replay, using the saved data. Try one of these:');
-      ['What’s expected next week?', 'Why is Jurong East High?', 'Plan a Saturday volunteer route in Bedok.', 'What drove the March 2022 early warning?'].forEach(q => out.actions.push({label:q, ask:q}));
+      suggestions().forEach(q => out.actions.push({label:q, ask:q}));
     }
     return out;
   }
@@ -349,12 +350,21 @@
     if (open) $('#ask-input').focus(); else $('#ask-fab').focus();
     requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
   }
+  // Starter questions follow the current snapshot, so they never point at an area without clusters or a plan.
+  function suggestions() {
+    const areas = [...(data.current?.areas || [])].sort((a, b) => (b.cluster_cases || 0) - (a.cluster_cases || 0));
+    const top = areas.find(a => a.risk === 'High') || areas[0];
+    const planned = areas.find(a => data.inspection?.areas?.[a.code]?.stops?.length);
+    return ['What’s expected next week?', top && `Why is ${top.name} ${top.risk}?`, planned && `Plan a Saturday volunteer route in ${planned.name}.`,
+      'Which areas should we check first?', 'What drove the March 2022 early warning?'].filter(Boolean).slice(0, 4);
+  }
   function setMode(next) {
+    if (busy) return;  // an answer in progress belongs to the current conversation
     mode = next; history = []; genieThread = null;
     $$('.ask-modes [data-mode]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === mode)));
     $('#ask-input').placeholder = mode === 'sql' ? 'Ask a question about the gold tables' : 'Ask about areas, routes or the forecast';
     const log = $('#ask-log'); log.innerHTML = '';
-    const examples = mode === 'sql' ? SQL_EXAMPLES : ['Why is Jurong East High?', 'Plan a Saturday volunteer route in Bedok.', 'What drove the March 2022 early warning?', 'Which areas should we check first?'];
+    const examples = mode === 'sql' ? SQL_EXAMPLES : suggestions();
     log.innerHTML = `<div class="ask-welcome"><p>${mode === 'sql' ? `Ask in plain English. I'll write SQL over the gold Delta tables and show the result.` : `Ask in your own words. Answers come from the saved cluster, weather, route and forecast data, can use live Databricks SQL, and cite a dated source for every number.`}</p><div class="ask-suggestions">${examples.map(q => `<button class="ask-chip">${esc(q)}</button>`).join('')}</div></div>`;
     log.querySelectorAll('.ask-chip').forEach(b => b.addEventListener('click', () => ask(b.textContent)));
   }
@@ -363,13 +373,13 @@
     $('#ask-log').append(el); el.scrollIntoView({block:'end', behavior:'smooth'}); return el;
   }
   async function ask(question) {
-    if (busy) return; busy = true; $('.ask-send').disabled = true;
+    if (busy) return; busy = true; $('.ask-send').disabled = true; $$('.ask-modes [data-mode]').forEach(b => b.disabled = true);
     $('#ask-log .ask-welcome')?.remove();
     bubble('user', esc(question));
     const msg = bubble('bot', `<div class="ask-steps"></div><div class="ask-thinking">${icon('circle-notch')} Thinking</div>`);
     try { mode === 'sql' ? await answerSql(question, msg) : await answerAsk(question, msg); }
     catch (error) { console.error('Ask DengueSUX:', error); msg.innerHTML = `<p>Something went wrong reading the saved data. Try again or rephrase the question.</p>`; }
-    busy = false; $('.ask-send').disabled = false; $('#ask-input').focus();
+    busy = false; $('.ask-send').disabled = false; $$('.ask-modes [data-mode]').forEach(b => b.disabled = false); $('#ask-input').focus();
   }
   async function reveal(msg, parts) {
     msg.querySelector('.ask-thinking')?.remove();
@@ -429,7 +439,7 @@
       body.insertAdjacentHTML('beforeend', `<details class="ask-sql"><summary>${icon('code')} Show SQL (AI-generated: check it)</summary><pre>${highlightSql(t.result.sql)}</pre></details>`);
     });
     const shown = [...cited.map(id => sources.find(s => s.id === id)), ...sources.filter(s => !cited.includes(s.id))].filter(Boolean);
-    if (shown.length || trace.length) body.insertAdjacentHTML('beforeend', `<div class="ask-sources">${shown.map(s => `<span>${cited.includes(s.id) ? `[${cited.indexOf(s.id) + 1}] ` : ''}${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}${s.date ? ` · ${date(s.date)}` : ''}</span>`).join('')}</div>${trace.length ? `<details class="ask-trace"><summary>${trace.length} function ${trace.length === 1 ? 'call' : 'calls'}</summary>${trace.map(t => `<div><code>${esc(t.tool)}(${esc(JSON.stringify(t.args))})</code><pre>${preview(t.result)}</pre></div>`).join('')}</details>` : ''}`);
+    if (shown.length || trace.length) body.insertAdjacentHTML('beforeend', `<div class="ask-sources">${shown.map(s => `<span>${cited.includes(s.id) ? `[${cited.indexOf(s.id) + 1}] ` : ''}${s.url ? `<a href="${safeUrl(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)}${s.date ? ` · ${date(s.date)}` : ''}</span>`).join('')}</div>${trace.length ? `<details class="ask-trace"><summary>${trace.length} function ${trace.length === 1 ? 'call' : 'calls'}</summary>${trace.map(t => `<div><code>${esc(t.tool)}(${esc(JSON.stringify(t.args))})</code><pre>${preview(t.result)}</pre></div>`).join('')}</details>` : ''}`);
     return true;
   }
   async function answerAsk(question, msg) {
@@ -443,7 +453,7 @@
       answer.actions.forEach(a => { const b = document.createElement('button'); b.className = 'ask-chip'; b.textContent = a.label; b.addEventListener('click', () => a.ask ? ask(a.ask) : a.run?.()); row.append(b); });
       body.append(row);
     }
-    if (answer.sources.length || results.length) body.insertAdjacentHTML('beforeend', `<div class="ask-sources">${answer.sources.map((s,i) => `<span>[${i+1}] ${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)} · ${date(s.date)}</span>`).join('')}</div>${results.length ? `<details class="ask-trace"><summary>${results.length} function ${results.length === 1 ? 'call' : 'calls'}</summary>${results.map(r => `<div><code>${r.name}(${esc(JSON.stringify(r.args))})</code><pre>${preview(r.result)}</pre></div>`).join('')}</details>` : ''}`);
+    if (answer.sources.length || results.length) body.insertAdjacentHTML('beforeend', `<div class="ask-sources">${answer.sources.map((s,i) => `<span>[${i+1}] ${s.url ? `<a href="${safeUrl(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>` : esc(s.name)} · ${date(s.date)}</span>`).join('')}</div>${results.length ? `<details class="ask-trace"><summary>${results.length} function ${results.length === 1 ? 'call' : 'calls'}</summary>${results.map(r => `<div><code>${r.name}(${esc(JSON.stringify(r.args))})</code><pre>${preview(r.result)}</pre></div>`).join('')}</details>` : ''}`);
   }
   /* Live Databricks Genie (only when the server has a Genie space configured); otherwise the saved-data answers below are used. */
   let genieState;

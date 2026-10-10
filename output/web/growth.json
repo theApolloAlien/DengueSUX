@@ -1,1 +1,1187 @@
-{"schema_version":1,"generated_at":"2026-10-10T05:02:57.843628+00:00","as_of_date":"2026-10-10","retrieved_at":"2026-10-10T03:02:50.078454+00:00","baseline_date":null,"comparison_days":null,"history_days":16,"snapshot_count":2,"history_available":false,"status":"not_enough_history","status_label":"No saved snapshot from 7–9 days earlier","growing_count":null,"clusters":[{"cluster_id":"529293","locality":"Sembawang Cl (Blk 330, 339A)","case_size":2,"geometry":{"type":"Polygon","coordinates":[[[103.8170112923358,1.4483650223261215],[103.81652913292355,1.4482540180920838],[103.81661601139517,1.4480100621252607],[103.81658551435252,1.447934819748311],[103.81604375387393,1.4470753889402375],[103.81580549657217,1.4457645038529494],[103.81550809781986,1.4453157752697516],[103.81689094326595,1.4446774397698996],[103.8177979965371,1.4442391716604828],[103.81813546966073,1.444126388953478],[103.81829683254219,1.4447180744898176],[103.81859761856626,1.4448915768348096],[103.81846461653511,1.4452270397186093],[103.81879458124156,1.445371256220722],[103.8188413729664,1.4452508477338213],[103.81912260496534,1.4453790005672646],[103.81905821572457,1.4455407049069935],[103.81976284785728,1.4458485139514232],[103.81967685896673,1.4460177560495904],[103.81903611305566,1.4476655840595563],[103.81859342731552,1.4486794316389708],[103.81782838390285,1.4485568798019286],[103.8170112923358,1.4483650223261215]]]},"source_updated_at":"20261001151112","classification":"not_enough_history","status_label":"No saved snapshot from 7–9 days earlier","history_available":false,"growth_cases":null,"baseline_case_size":null,"baseline_cluster_id":null,"match_method":null,"match_overlap":null,"match_locality_similarity":null},{"cluster_id":"529294","locality":"Old Choa Chu Kang Rd","case_size":6,"geometry":{"type":"Polygon","coordinates":[[[103.71662666596306,1.3792392110890954],[103.71660334180957,1.379237568520437],[103.71673644074342,1.3756376630946472],[103.71667524026773,1.3751694156204701],[103.71643332208937,1.3741088941483486],[103.7176971945839,1.3744368009840753],[103.71859587501407,1.3745194309761515],[103.71961312759943,1.374500437682229],[103.71961563542646,1.375242819900369],[103.71965001917768,1.3759843960470899],[103.71967412482344,1.379233658400213],[103.71662666596306,1.3792392110890954]]]},"source_updated_at":"20260930152846","classification":"not_enough_history","status_label":"No saved snapshot from 7–9 days earlier","history_available":false,"growth_cases":null,"baseline_case_size":null,"baseline_cluster_id":null,"match_method":null,"match_overlap":null,"match_locality_similarity":null},{"cluster_id":"529295","locality":"Soon Lee Rd","case_size":6,"geometry":{"type":"Polygon","coordinates":[[[103.69844972669348,1.3333276213000802],[103.69843085204528,1.331867103592616],[103.69843730687975,1.3297404920468807],[103.7009526987449,1.3297566444273226],[103.70095294641669,1.3300326566756266],[103.70171919411382,1.3300320196433038],[103.70171896283072,1.3330036361673159],[103.7009938264162,1.3330091172859937],[103.70099491825539,1.3332261109002348],[103.7001626478066,1.3332192911659948],[103.700162857211,1.3333523020425369],[103.69844972669348,1.3333276213000802]]]},"source_updated_at":"20261002115014","classification":"not_enough_history","status_label":"No saved snapshot from 7–9 days earlier","history_available":false,"growth_cases":null,"baseline_case_size":null,"baseline_cluster_id":null,"match_method":null,"match_overlap":null,"match_locality_similarity":null},{"cluster_id":"529296","locality":"Bt Batok St 21 (Blk 201, 207, 209, 210)","case_size":5,"geometry":{"type":"Polygon","coordinates":[[[103.74882678167573,1.3483956736727896],[103.74880945261727,1.3484043938442285],[103.74695541344518,1.3458929409707299],[103.747717018964,1.3453514107399733],[103.74812028959457,1.3451599404520078],[103.74862805500032,1.3451140744558232],[103.74939252163384,1.3451310587569705],[103.75048125299973,1.3451376112324713],[103.75127694297946,1.3451242329059079],[103.75125280646778,1.3465034959069877],[103.75088891121585,1.346520925105329],[103.75061165085285,1.346773798301261],[103.75042102881385,1.34707899457115],[103.75042966828482,1.34782892292791],[103.74985163717584,1.347885100205746],[103.74938129919548,1.348029449286096],[103.74882678167573,1.3483956736727896]]]},"source_updated_at":"20261005165456","classification":"not_enough_history","status_label":"No saved snapshot from 7–9 days earlier","history_available":false,"growth_cases":null,"baseline_case_size":null,"baseline_cluster_id":null,"match_method":null,"match_overlap":null,"match_locality_similarity":null},{"cluster_id":"529297","locality":"Pasir Ris Lk (Seastrand, Watercolours)","case_size":2,"geometry":{"type":"Polygon","coordinates":[[[103.95915939297804,1.3769862526226517],[103.95915939260128,1.3769790674662643],[103.95908792452136,1.3754989534455335],[103.96023729836237,1.375312081776587],[103.96132598973986,1.3751252128419718],[103.96172943330014,1.3767885261087627],[103.96061218807914,1.377040063232177],[103.9600446358445,1.377047277909839],[103.95915939297804,1.3769862526226517]]]},"source_updated_at":"20261001151112","classification":"not_enough_history","status_label":"No saved snapshot from 7–9 days earlier","history_available":false,"growth_cases":null,"baseline_case_size":null,"baseline_cluster_id":null,"match_method":null,"match_overlap":null,"match_locality_similarity":null},{"cluster_id":"529290","locality":"Ho Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 333, 334, 335) / Tah Ching Rd (Blk 321, 322, 323, 324, 326, 329, 330, 331, 332) / Yuan Ching Rd / Yuan Ching Rd (Blk 122) / Yuan Ching Rd (Lakeside Twr) / Yung Sheng Rd (Blk 182)","case_size":91,"geometry":{"type":"Polygon","coordinates":[[[103.72485197182857,1.3385267223140478],[103.72450870122515,1.33832704358123],[103.72413504149253,1.3389802409347944],[103.72384722082275,1.3394902895718876],[103.7234655390837,1.3401281041191393],[103.722884484758,1.339730444864506],[103.72250765895933,1.3394393214917366],[103.72178856866908,1.338960301047941],[103.72151585281544,1.3387647571723262],[103.7212735732418,1.3386020005332178],[103.72199397622337,1.3374445802923307],[103.72136574404965,1.3370468588982847],[103.7214892330874,1.3368392807427076],[103.72070061422347,1.3362051459837692],[103.72062083323755,1.3355735724139306],[103.72128075782221,1.3355563421105292],[103.7212708715963,1.334134127137513],[103.72104616706702,1.3341354064497821],[103.72103099883559,1.3329594211886873],[103.72089607641547,1.3329568384637025],[103.72089255309614,1.3326615258602645],[103.72161262333371,1.3326675321483892],[103.7216111924696,1.3320971875199865],[103.7219176400177,1.3320987298552658],[103.72191767411087,1.3322199117655191],[103.72229954941396,1.3322137052868626],[103.72252513610302,1.3322136739053356],[103.72252604063584,1.3321804286628922],[103.72263811779217,1.3321309533263535],[103.72273153258502,1.3321279387841471],[103.72285428601894,1.3321870788053563],[103.72285344462983,1.3322149250047586],[103.72339180018406,1.3322378712182386],[103.7233756031352,1.3323526748383563],[103.72325204349835,1.3328237745228624],[103.72361719468842,1.332926144903242],[103.72422425132498,1.3329269724048542],[103.72447318809517,1.3329031309187924],[103.7248384304971,1.3328120135810257],[103.72499052237083,1.3327563956672144],[103.72507442957895,1.3354259286280445],[103.72591844115556,1.335434629685606],[103.7259027789603,1.3366841149236761],[103.7258557925763,1.3369312264091346],[103.7257371468252,1.337434069577014],[103.72565793182409,1.3376408477591726],[103.72518317827534,1.3385460343303983],[103.72485197182857,1.3385267223140478]]]},"source_updated_at":"20261007153705","classification":"not_enough_history","status_label":"No saved snapshot from 7–9 days earlier","history_available":false,"growth_cases":null,"baseline_case_size":null,"baseline_cluster_id":null,"match_method":null,"match_overlap":null,"match_locality_similarity":null},{"cluster_id":"529291","locality":"Bishan St 12 (Blk 107, 109, 110, 111, 115, 116, 118)","case_size":12,"geometry":{"type":"Polygon","coordinates":[[[103.84751249287608,1.3496079715575944],[103.84685310663058,1.346484932760418],[103.84682280215213,1.3459062464030416],[103.84681280244175,1.345811901351349],[103.84783585281522,1.3455759775122342],[103.84777313059031,1.3449739469989452],[103.84819682234897,1.3448922649559636],[103.84815805976307,1.3446677512935725],[103.84867094739695,1.3446313257314935],[103.84880953050799,1.3456044173709218],[103.84901262635915,1.3464972561816717],[103.84940463457505,1.346480016426882],[103.8496672728871,1.3465412745078111],[103.85000712224642,1.3458559059426816],[103.85015679752881,1.345608350520159],[103.85033875164444,1.345468331932166],[103.8512981772482,1.3452535583576142],[103.85146441639829,1.3459740552129034],[103.85134826998534,1.346076126265053],[103.85138057851654,1.3463004563320582],[103.85176851759793,1.3465895425406345],[103.85202097169007,1.3468882585022104],[103.8516585850682,1.3474593981452023],[103.85147189265302,1.3475842750932],[103.85114608010713,1.3476778331065213],[103.85129873046809,1.3484038882808242],[103.85067253053836,1.348547859524239],[103.85077143289385,1.3489661662375796],[103.85107838413192,1.3489048480982309],[103.85112035847473,1.349123247270624],[103.85017662099804,1.3493160455279953],[103.8501037993208,1.3490016419405757],[103.84952490759255,1.3491458287034954],[103.84751249287608,1.3496079715575944]]]},"source_updated_at":"20261007153705","classification":"not_enough_history","status_label":"No saved snapshot from 7–9 days earlier","history_available":false,"growth_cases":null,"baseline_case_size":null,"baseline_cluster_id":null,"match_method":null,"match_overlap":null,"match_locality_similarity":null},{"cluster_id":"529292","locality":"Lentor Gdns","case_size":2,"geometry":{"type":"Polygon","coordinates":[[[103.83294595196021,1.3840679306651031],[103.83266016532336,1.3841703769749294],[103.83257962063132,1.3840363230483723],[103.83256114685749,1.3839015257527105],[103.83215934538453,1.3834646001197974],[103.83208083422097,1.383329803693451],[103.83373883865245,1.382149173725445],[103.83439003167818,1.3826837106400909],[103.83344326057268,1.3836737680882019],[103.83332780080303,1.3839433599574191],[103.83294595196021,1.3840679306651031]]]},"source_updated_at":"20261007153705","classification":"not_enough_history","status_label":"No saved snapshot from 7–9 days earlier","history_available":false,"growth_cases":null,"baseline_case_size":null,"baseline_cluster_id":null,"match_method":null,"match_overlap":null,"match_locality_similarity":null}],"source_updated_range":["20260930152846","20261001151112","20261002115014","20261005165456","20261007153705"],"changes":{"from_date":"2026-09-24","to_date":"2026-10-10","days":16,"items":[{"kind":"New","label":"New","locality":"Old Choa Chu Kang Rd","people":6,"previous_people":null,"change":null,"cluster_id":"529294"},{"kind":"New","label":"New","locality":"Soon Lee Rd","people":6,"previous_people":null,"change":null,"cluster_id":"529295"},{"kind":"New","label":"New","locality":"Sembawang Cl (Blk 330, 339A)","people":2,"previous_people":null,"change":null,"cluster_id":"529293"},{"kind":"New","label":"New","locality":"Pasir Ris Lk (Seastrand, Watercolours)","people":2,"previous_people":null,"change":null,"cluster_id":"529297"},{"kind":"New","label":"New","locality":"Lentor Gdns","people":2,"previous_people":null,"change":null,"cluster_id":"529292"},{"kind":"Growing","label":"Growing","locality":"Ho Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 333, 334, 335) / Tah Ching Rd (Blk 321, 322, 323, 324, 326, 329, 330, 331, 332) / Yuan Ching Rd / Yuan Ching Rd (Blk 122) / Yuan Ching Rd (Lakeside Twr) / Yung Sheng Rd (Blk 182)","people":91,"previous_people":74,"change":17,"cluster_id":"529290"},{"kind":"Growing","label":"Growing","locality":"Bishan St 12 (Blk 107, 109, 110, 111, 115, 116, 118)","people":12,"previous_people":5,"change":7,"cluster_id":"529291"},{"kind":"Growing","label":"Growing","locality":"Bt Batok St 21 (Blk 201, 207, 209, 210)","people":5,"previous_people":2,"change":3,"cluster_id":"529296"},{"kind":"Closed","label":"Closed: no longer in snapshot","locality":"Kim Tian Rd (Blk 119B, 119D, 127D, 131B)","people":null,"previous_people":4,"change":null,"cluster_id":"527707"},{"kind":"Closed","label":"Closed: no longer in snapshot","locality":"Upp Changi Rd East (Changi Ct)","people":null,"previous_people":3,"change":null,"cluster_id":"527703"},{"kind":"Closed","label":"Closed: no longer in snapshot","locality":"Defu South St 1","people":null,"previous_people":3,"change":null,"cluster_id":"527701"},{"kind":"Closed","label":"Closed: no longer in snapshot","locality":"Woodlands Dr 16 (Blk 573A, 573B)","people":null,"previous_people":2,"change":null,"cluster_id":"527705"},{"kind":"Closed","label":"Closed: no longer in snapshot","locality":"Mandai Est","people":null,"previous_people":2,"change":null,"cluster_id":"527708"},{"kind":"Closed","label":"Closed: no longer in snapshot","locality":"Canberra Rd (Blk 308) / Sembawang Vista (Blk 318)","people":null,"previous_people":2,"change":null,"cluster_id":"527698"},{"kind":"Closed","label":"Closed: no longer in snapshot","locality":"Farleigh Ave / S'goon Gdn Way","people":null,"previous_people":2,"change":null,"cluster_id":"527699"},{"kind":"Closed","label":"Closed: no longer in snapshot","locality":"Jln Papan","people":null,"previous_people":2,"change":null,"cluster_id":"527700"}],"summary":{"new":5,"growing":3,"shrinking":0,"closed":8,"stable":0,"people_then":101,"people_now":126,"clusters_then":11,"clusters_now":8},"note":"Compares the two latest saved snapshots. Totals are cumulative cluster sizes, not new weekly cases. Closed means absent from the newest snapshot."},"timeline":[{"date":"2026-09-24","clusters":[{"id":"527702","locality":"Bt Batok St 21 (Blk 207, 210)","people":2,"lat":1.346198,"lon":103.74922},{"id":"527703","locality":"Upp Changi Rd East (Changi Ct)","people":3,"lat":1.342758,"lon":103.962477},{"id":"527704","locality":"Ho Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 335) / Tah Ching Rd (Blk 321, 322, 323, 324, 326, 329, 330, 332) / Yuan Ching Rd / Yuan Ching Rd (Blk 122) / Yuan Ching Rd (Lakeside Twr)","people":74,"lat":1.336445,"lon":103.723452},{"id":"527705","locality":"Woodlands Dr 16 (Blk 573A, 573B)","people":2,"lat":1.430766,"lon":103.797545},{"id":"527706","locality":"Bishan St 12 (Blk 110, 115, 116)","people":5,"lat":1.347281,"lon":103.848975},{"id":"527707","locality":"Kim Tian Rd (Blk 119B, 119D, 127D, 131B)","people":4,"lat":1.281799,"lon":103.828504},{"id":"527708","locality":"Mandai Est","people":2,"lat":1.407048,"lon":103.758599},{"id":"527698","locality":"Canberra Rd (Blk 308) / Sembawang Vista (Blk 318)","people":2,"lat":1.445288,"lon":103.821788},{"id":"527699","locality":"Farleigh Ave / S'goon Gdn Way","people":2,"lat":1.36644,"lon":103.862484},{"id":"527700","locality":"Jln Papan","people":2,"lat":1.321163,"lon":103.729475},{"id":"527701","locality":"Defu South St 1","people":3,"lat":1.344104,"lon":103.895631}]},{"date":"2026-10-10","clusters":[{"id":"529293","locality":"Sembawang Cl (Blk 330, 339A)","people":2,"lat":1.446547,"lon":103.817709},{"id":"529294","locality":"Old Choa Chu Kang Rd","people":6,"lat":1.377609,"lon":103.718163},{"id":"529295","locality":"Soon Lee Rd","people":6,"lat":1.33095,"lon":103.700076},{"id":"529296","locality":"Bt Batok St 21 (Blk 201, 207, 209, 210)","people":5,"lat":1.346647,"lon":103.749131},{"id":"529297","locality":"Pasir Ris Lk (Seastrand, Watercolours)","people":2,"lat":1.376144,"lon":103.960346},{"id":"529290","locality":"Ho Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 333, 334, 335) / Tah Ching Rd (Blk 321, 322, 323, 324, 326, 329, 330, 331, 332) / Yuan Ching Rd / Yuan Ching Rd (Blk 122) / Yuan Ching Rd (Lakeside Twr) / Yung Sheng Rd (Blk 182)","people":91,"lat":1.335889,"lon":103.723287},{"id":"529291","locality":"Bishan St 12 (Blk 107, 109, 110, 111, 115, 116, 118)","people":12,"lat":1.347174,"lon":103.849419},{"id":"529292","locality":"Lentor Gdns","people":2,"lat":1.383007,"lon":103.833308}]}],"sources":[{"name":"NEA Dengue Clusters · data.gov.sg","url":"https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view","dataset_id":"d_dbfabf16158d1b0e1c420627c0819168","retrieved_at":"2026-10-10T03:02:50.078454+00:00","snapshot_date":"2026-10-10","raw_sha256":"0d7c95ec19d0d0226ceef809873616a0cbd4ae89ea559b0d8213d72ca10c32a7"}],"methodology":{"baseline":"Nearest saved snapshot at least 7 and at most 9 days earlier; no backfill.","matching":"At least 10% overlap of the smaller footprint and 25% Jaccard similarity of locality words. Both are required. Ambiguous splits/merges receive no growth value.","statuses":"New = unmatched active cluster; Growing/Stable/Shrinking compare cumulative reported counts. Closed = absent from the current snapshot, not confirmation that transmission ended.","limits":"Snapshot dates are retrieval dates, not onset dates. Differences are not weekly incident cases. Missing or ambiguous growth adds zero scoring points and is labelled unavailable."}}
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-10T08:22:01.042103+00:00",
+  "as_of_date": "2026-10-10",
+  "retrieved_at": "2026-10-10T03:02:50.078454+00:00",
+  "baseline_date": null,
+  "comparison_days": null,
+  "history_days": 16,
+  "snapshot_count": 2,
+  "history_available": false,
+  "status": "not_enough_history",
+  "status_label": "No saved snapshot from 7–9 days earlier",
+  "growing_count": null,
+  "clusters": [
+    {
+      "cluster_id": "529293",
+      "locality": "Sembawang Cl (Blk 330, 339A)",
+      "case_size": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.8170112923358,
+              1.4483650223261215
+            ],
+            [
+              103.81652913292355,
+              1.4482540180920838
+            ],
+            [
+              103.81661601139517,
+              1.4480100621252607
+            ],
+            [
+              103.81658551435252,
+              1.447934819748311
+            ],
+            [
+              103.81604375387393,
+              1.4470753889402375
+            ],
+            [
+              103.81580549657217,
+              1.4457645038529494
+            ],
+            [
+              103.81550809781986,
+              1.4453157752697516
+            ],
+            [
+              103.81689094326595,
+              1.4446774397698996
+            ],
+            [
+              103.8177979965371,
+              1.4442391716604828
+            ],
+            [
+              103.81813546966073,
+              1.444126388953478
+            ],
+            [
+              103.81829683254219,
+              1.4447180744898176
+            ],
+            [
+              103.81859761856626,
+              1.4448915768348096
+            ],
+            [
+              103.81846461653511,
+              1.4452270397186093
+            ],
+            [
+              103.81879458124156,
+              1.445371256220722
+            ],
+            [
+              103.8188413729664,
+              1.4452508477338213
+            ],
+            [
+              103.81912260496534,
+              1.4453790005672646
+            ],
+            [
+              103.81905821572457,
+              1.4455407049069935
+            ],
+            [
+              103.81976284785728,
+              1.4458485139514232
+            ],
+            [
+              103.81967685896673,
+              1.4460177560495904
+            ],
+            [
+              103.81903611305566,
+              1.4476655840595563
+            ],
+            [
+              103.81859342731552,
+              1.4486794316389708
+            ],
+            [
+              103.81782838390285,
+              1.4485568798019286
+            ],
+            [
+              103.8170112923358,
+              1.4483650223261215
+            ]
+          ]
+        ]
+      },
+      "source_updated_at": "20261001151112",
+      "classification": "not_enough_history",
+      "status_label": "No saved snapshot from 7–9 days earlier",
+      "history_available": false,
+      "growth_cases": null,
+      "baseline_case_size": null,
+      "baseline_cluster_id": null,
+      "match_method": null,
+      "match_overlap": null,
+      "match_locality_similarity": null
+    },
+    {
+      "cluster_id": "529294",
+      "locality": "Old Choa Chu Kang Rd",
+      "case_size": 6,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.71662666596306,
+              1.3792392110890954
+            ],
+            [
+              103.71660334180957,
+              1.379237568520437
+            ],
+            [
+              103.71673644074342,
+              1.3756376630946472
+            ],
+            [
+              103.71667524026773,
+              1.3751694156204701
+            ],
+            [
+              103.71643332208937,
+              1.3741088941483486
+            ],
+            [
+              103.7176971945839,
+              1.3744368009840753
+            ],
+            [
+              103.71859587501407,
+              1.3745194309761515
+            ],
+            [
+              103.71961312759943,
+              1.374500437682229
+            ],
+            [
+              103.71961563542646,
+              1.375242819900369
+            ],
+            [
+              103.71965001917768,
+              1.3759843960470899
+            ],
+            [
+              103.71967412482344,
+              1.379233658400213
+            ],
+            [
+              103.71662666596306,
+              1.3792392110890954
+            ]
+          ]
+        ]
+      },
+      "source_updated_at": "20260930152846",
+      "classification": "not_enough_history",
+      "status_label": "No saved snapshot from 7–9 days earlier",
+      "history_available": false,
+      "growth_cases": null,
+      "baseline_case_size": null,
+      "baseline_cluster_id": null,
+      "match_method": null,
+      "match_overlap": null,
+      "match_locality_similarity": null
+    },
+    {
+      "cluster_id": "529295",
+      "locality": "Soon Lee Rd",
+      "case_size": 6,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.69844972669348,
+              1.3333276213000802
+            ],
+            [
+              103.69843085204528,
+              1.331867103592616
+            ],
+            [
+              103.69843730687975,
+              1.3297404920468807
+            ],
+            [
+              103.7009526987449,
+              1.3297566444273226
+            ],
+            [
+              103.70095294641669,
+              1.3300326566756266
+            ],
+            [
+              103.70171919411382,
+              1.3300320196433038
+            ],
+            [
+              103.70171896283072,
+              1.3330036361673159
+            ],
+            [
+              103.7009938264162,
+              1.3330091172859937
+            ],
+            [
+              103.70099491825539,
+              1.3332261109002348
+            ],
+            [
+              103.7001626478066,
+              1.3332192911659948
+            ],
+            [
+              103.700162857211,
+              1.3333523020425369
+            ],
+            [
+              103.69844972669348,
+              1.3333276213000802
+            ]
+          ]
+        ]
+      },
+      "source_updated_at": "20261002115014",
+      "classification": "not_enough_history",
+      "status_label": "No saved snapshot from 7–9 days earlier",
+      "history_available": false,
+      "growth_cases": null,
+      "baseline_case_size": null,
+      "baseline_cluster_id": null,
+      "match_method": null,
+      "match_overlap": null,
+      "match_locality_similarity": null
+    },
+    {
+      "cluster_id": "529296",
+      "locality": "Bt Batok St 21 (Blk 201, 207, 209, 210)",
+      "case_size": 5,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.74882678167573,
+              1.3483956736727896
+            ],
+            [
+              103.74880945261727,
+              1.3484043938442285
+            ],
+            [
+              103.74695541344518,
+              1.3458929409707299
+            ],
+            [
+              103.747717018964,
+              1.3453514107399733
+            ],
+            [
+              103.74812028959457,
+              1.3451599404520078
+            ],
+            [
+              103.74862805500032,
+              1.3451140744558232
+            ],
+            [
+              103.74939252163384,
+              1.3451310587569705
+            ],
+            [
+              103.75048125299973,
+              1.3451376112324713
+            ],
+            [
+              103.75127694297946,
+              1.3451242329059079
+            ],
+            [
+              103.75125280646778,
+              1.3465034959069877
+            ],
+            [
+              103.75088891121585,
+              1.346520925105329
+            ],
+            [
+              103.75061165085285,
+              1.346773798301261
+            ],
+            [
+              103.75042102881385,
+              1.34707899457115
+            ],
+            [
+              103.75042966828482,
+              1.34782892292791
+            ],
+            [
+              103.74985163717584,
+              1.347885100205746
+            ],
+            [
+              103.74938129919548,
+              1.348029449286096
+            ],
+            [
+              103.74882678167573,
+              1.3483956736727896
+            ]
+          ]
+        ]
+      },
+      "source_updated_at": "20261005165456",
+      "classification": "not_enough_history",
+      "status_label": "No saved snapshot from 7–9 days earlier",
+      "history_available": false,
+      "growth_cases": null,
+      "baseline_case_size": null,
+      "baseline_cluster_id": null,
+      "match_method": null,
+      "match_overlap": null,
+      "match_locality_similarity": null
+    },
+    {
+      "cluster_id": "529297",
+      "locality": "Pasir Ris Lk (Seastrand, Watercolours)",
+      "case_size": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.95915939297804,
+              1.3769862526226517
+            ],
+            [
+              103.95915939260128,
+              1.3769790674662643
+            ],
+            [
+              103.95908792452136,
+              1.3754989534455335
+            ],
+            [
+              103.96023729836237,
+              1.375312081776587
+            ],
+            [
+              103.96132598973986,
+              1.3751252128419718
+            ],
+            [
+              103.96172943330014,
+              1.3767885261087627
+            ],
+            [
+              103.96061218807914,
+              1.377040063232177
+            ],
+            [
+              103.9600446358445,
+              1.377047277909839
+            ],
+            [
+              103.95915939297804,
+              1.3769862526226517
+            ]
+          ]
+        ]
+      },
+      "source_updated_at": "20261001151112",
+      "classification": "not_enough_history",
+      "status_label": "No saved snapshot from 7–9 days earlier",
+      "history_available": false,
+      "growth_cases": null,
+      "baseline_case_size": null,
+      "baseline_cluster_id": null,
+      "match_method": null,
+      "match_overlap": null,
+      "match_locality_similarity": null
+    },
+    {
+      "cluster_id": "529290",
+      "locality": "Ho Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 333, 334, 335) / Tah Ching Rd (Blk 321, 322, 323, 324, 326, 329, 330, 331, 332) / Yuan Ching Rd / Yuan Ching Rd (Blk 122) / Yuan Ching Rd (Lakeside Twr) / Yung Sheng Rd (Blk 182)",
+      "case_size": 91,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.72485197182857,
+              1.3385267223140478
+            ],
+            [
+              103.72450870122515,
+              1.33832704358123
+            ],
+            [
+              103.72413504149253,
+              1.3389802409347944
+            ],
+            [
+              103.72384722082275,
+              1.3394902895718876
+            ],
+            [
+              103.7234655390837,
+              1.3401281041191393
+            ],
+            [
+              103.722884484758,
+              1.339730444864506
+            ],
+            [
+              103.72250765895933,
+              1.3394393214917366
+            ],
+            [
+              103.72178856866908,
+              1.338960301047941
+            ],
+            [
+              103.72151585281544,
+              1.3387647571723262
+            ],
+            [
+              103.7212735732418,
+              1.3386020005332178
+            ],
+            [
+              103.72199397622337,
+              1.3374445802923307
+            ],
+            [
+              103.72136574404965,
+              1.3370468588982847
+            ],
+            [
+              103.7214892330874,
+              1.3368392807427076
+            ],
+            [
+              103.72070061422347,
+              1.3362051459837692
+            ],
+            [
+              103.72062083323755,
+              1.3355735724139306
+            ],
+            [
+              103.72128075782221,
+              1.3355563421105292
+            ],
+            [
+              103.7212708715963,
+              1.334134127137513
+            ],
+            [
+              103.72104616706702,
+              1.3341354064497821
+            ],
+            [
+              103.72103099883559,
+              1.3329594211886873
+            ],
+            [
+              103.72089607641547,
+              1.3329568384637025
+            ],
+            [
+              103.72089255309614,
+              1.3326615258602645
+            ],
+            [
+              103.72161262333371,
+              1.3326675321483892
+            ],
+            [
+              103.7216111924696,
+              1.3320971875199865
+            ],
+            [
+              103.7219176400177,
+              1.3320987298552658
+            ],
+            [
+              103.72191767411087,
+              1.3322199117655191
+            ],
+            [
+              103.72229954941396,
+              1.3322137052868626
+            ],
+            [
+              103.72252513610302,
+              1.3322136739053356
+            ],
+            [
+              103.72252604063584,
+              1.3321804286628922
+            ],
+            [
+              103.72263811779217,
+              1.3321309533263535
+            ],
+            [
+              103.72273153258502,
+              1.3321279387841471
+            ],
+            [
+              103.72285428601894,
+              1.3321870788053563
+            ],
+            [
+              103.72285344462983,
+              1.3322149250047586
+            ],
+            [
+              103.72339180018406,
+              1.3322378712182386
+            ],
+            [
+              103.7233756031352,
+              1.3323526748383563
+            ],
+            [
+              103.72325204349835,
+              1.3328237745228624
+            ],
+            [
+              103.72361719468842,
+              1.332926144903242
+            ],
+            [
+              103.72422425132498,
+              1.3329269724048542
+            ],
+            [
+              103.72447318809517,
+              1.3329031309187924
+            ],
+            [
+              103.7248384304971,
+              1.3328120135810257
+            ],
+            [
+              103.72499052237083,
+              1.3327563956672144
+            ],
+            [
+              103.72507442957895,
+              1.3354259286280445
+            ],
+            [
+              103.72591844115556,
+              1.335434629685606
+            ],
+            [
+              103.7259027789603,
+              1.3366841149236761
+            ],
+            [
+              103.7258557925763,
+              1.3369312264091346
+            ],
+            [
+              103.7257371468252,
+              1.337434069577014
+            ],
+            [
+              103.72565793182409,
+              1.3376408477591726
+            ],
+            [
+              103.72518317827534,
+              1.3385460343303983
+            ],
+            [
+              103.72485197182857,
+              1.3385267223140478
+            ]
+          ]
+        ]
+      },
+      "source_updated_at": "20261007153705",
+      "classification": "not_enough_history",
+      "status_label": "No saved snapshot from 7–9 days earlier",
+      "history_available": false,
+      "growth_cases": null,
+      "baseline_case_size": null,
+      "baseline_cluster_id": null,
+      "match_method": null,
+      "match_overlap": null,
+      "match_locality_similarity": null
+    },
+    {
+      "cluster_id": "529291",
+      "locality": "Bishan St 12 (Blk 107, 109, 110, 111, 115, 116, 118)",
+      "case_size": 12,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.84751249287608,
+              1.3496079715575944
+            ],
+            [
+              103.84685310663058,
+              1.346484932760418
+            ],
+            [
+              103.84682280215213,
+              1.3459062464030416
+            ],
+            [
+              103.84681280244175,
+              1.345811901351349
+            ],
+            [
+              103.84783585281522,
+              1.3455759775122342
+            ],
+            [
+              103.84777313059031,
+              1.3449739469989452
+            ],
+            [
+              103.84819682234897,
+              1.3448922649559636
+            ],
+            [
+              103.84815805976307,
+              1.3446677512935725
+            ],
+            [
+              103.84867094739695,
+              1.3446313257314935
+            ],
+            [
+              103.84880953050799,
+              1.3456044173709218
+            ],
+            [
+              103.84901262635915,
+              1.3464972561816717
+            ],
+            [
+              103.84940463457505,
+              1.346480016426882
+            ],
+            [
+              103.8496672728871,
+              1.3465412745078111
+            ],
+            [
+              103.85000712224642,
+              1.3458559059426816
+            ],
+            [
+              103.85015679752881,
+              1.345608350520159
+            ],
+            [
+              103.85033875164444,
+              1.345468331932166
+            ],
+            [
+              103.8512981772482,
+              1.3452535583576142
+            ],
+            [
+              103.85146441639829,
+              1.3459740552129034
+            ],
+            [
+              103.85134826998534,
+              1.346076126265053
+            ],
+            [
+              103.85138057851654,
+              1.3463004563320582
+            ],
+            [
+              103.85176851759793,
+              1.3465895425406345
+            ],
+            [
+              103.85202097169007,
+              1.3468882585022104
+            ],
+            [
+              103.8516585850682,
+              1.3474593981452023
+            ],
+            [
+              103.85147189265302,
+              1.3475842750932
+            ],
+            [
+              103.85114608010713,
+              1.3476778331065213
+            ],
+            [
+              103.85129873046809,
+              1.3484038882808242
+            ],
+            [
+              103.85067253053836,
+              1.348547859524239
+            ],
+            [
+              103.85077143289385,
+              1.3489661662375796
+            ],
+            [
+              103.85107838413192,
+              1.3489048480982309
+            ],
+            [
+              103.85112035847473,
+              1.349123247270624
+            ],
+            [
+              103.85017662099804,
+              1.3493160455279953
+            ],
+            [
+              103.8501037993208,
+              1.3490016419405757
+            ],
+            [
+              103.84952490759255,
+              1.3491458287034954
+            ],
+            [
+              103.84751249287608,
+              1.3496079715575944
+            ]
+          ]
+        ]
+      },
+      "source_updated_at": "20261007153705",
+      "classification": "not_enough_history",
+      "status_label": "No saved snapshot from 7–9 days earlier",
+      "history_available": false,
+      "growth_cases": null,
+      "baseline_case_size": null,
+      "baseline_cluster_id": null,
+      "match_method": null,
+      "match_overlap": null,
+      "match_locality_similarity": null
+    },
+    {
+      "cluster_id": "529292",
+      "locality": "Lentor Gdns",
+      "case_size": 2,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              103.83294595196021,
+              1.3840679306651031
+            ],
+            [
+              103.83266016532336,
+              1.3841703769749294
+            ],
+            [
+              103.83257962063132,
+              1.3840363230483723
+            ],
+            [
+              103.83256114685749,
+              1.3839015257527105
+            ],
+            [
+              103.83215934538453,
+              1.3834646001197974
+            ],
+            [
+              103.83208083422097,
+              1.383329803693451
+            ],
+            [
+              103.83373883865245,
+              1.382149173725445
+            ],
+            [
+              103.83439003167818,
+              1.3826837106400909
+            ],
+            [
+              103.83344326057268,
+              1.3836737680882019
+            ],
+            [
+              103.83332780080303,
+              1.3839433599574191
+            ],
+            [
+              103.83294595196021,
+              1.3840679306651031
+            ]
+          ]
+        ]
+      },
+      "source_updated_at": "20261007153705",
+      "classification": "not_enough_history",
+      "status_label": "No saved snapshot from 7–9 days earlier",
+      "history_available": false,
+      "growth_cases": null,
+      "baseline_case_size": null,
+      "baseline_cluster_id": null,
+      "match_method": null,
+      "match_overlap": null,
+      "match_locality_similarity": null
+    }
+  ],
+  "source_updated_range": [
+    "20260930152846",
+    "20261001151112",
+    "20261002115014",
+    "20261005165456",
+    "20261007153705"
+  ],
+  "changes": {
+    "from_date": "2026-09-24",
+    "to_date": "2026-10-10",
+    "days": 16,
+    "items": [
+      {
+        "kind": "New",
+        "label": "New",
+        "locality": "Old Choa Chu Kang Rd",
+        "people": 6,
+        "previous_people": null,
+        "change": null,
+        "cluster_id": "529294"
+      },
+      {
+        "kind": "New",
+        "label": "New",
+        "locality": "Soon Lee Rd",
+        "people": 6,
+        "previous_people": null,
+        "change": null,
+        "cluster_id": "529295"
+      },
+      {
+        "kind": "New",
+        "label": "New",
+        "locality": "Sembawang Cl (Blk 330, 339A)",
+        "people": 2,
+        "previous_people": null,
+        "change": null,
+        "cluster_id": "529293"
+      },
+      {
+        "kind": "New",
+        "label": "New",
+        "locality": "Pasir Ris Lk (Seastrand, Watercolours)",
+        "people": 2,
+        "previous_people": null,
+        "change": null,
+        "cluster_id": "529297"
+      },
+      {
+        "kind": "New",
+        "label": "New",
+        "locality": "Lentor Gdns",
+        "people": 2,
+        "previous_people": null,
+        "change": null,
+        "cluster_id": "529292"
+      },
+      {
+        "kind": "Growing",
+        "label": "Growing",
+        "locality": "Ho Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 333, 334, 335) / Tah Ching Rd (Blk 321, 322, 323, 324, 326, 329, 330, 331, 332) / Yuan Ching Rd / Yuan Ching Rd (Blk 122) / Yuan Ching Rd (Lakeside Twr) / Yung Sheng Rd (Blk 182)",
+        "people": 91,
+        "previous_people": 74,
+        "change": 17,
+        "cluster_id": "529290"
+      },
+      {
+        "kind": "Growing",
+        "label": "Growing",
+        "locality": "Bishan St 12 (Blk 107, 109, 110, 111, 115, 116, 118)",
+        "people": 12,
+        "previous_people": 5,
+        "change": 7,
+        "cluster_id": "529291"
+      },
+      {
+        "kind": "Growing",
+        "label": "Growing",
+        "locality": "Bt Batok St 21 (Blk 201, 207, 209, 210)",
+        "people": 5,
+        "previous_people": 2,
+        "change": 3,
+        "cluster_id": "529296"
+      },
+      {
+        "kind": "Closed",
+        "label": "Closed: no longer in snapshot",
+        "locality": "Kim Tian Rd (Blk 119B, 119D, 127D, 131B)",
+        "people": null,
+        "previous_people": 4,
+        "change": null,
+        "cluster_id": "527707"
+      },
+      {
+        "kind": "Closed",
+        "label": "Closed: no longer in snapshot",
+        "locality": "Upp Changi Rd East (Changi Ct)",
+        "people": null,
+        "previous_people": 3,
+        "change": null,
+        "cluster_id": "527703"
+      },
+      {
+        "kind": "Closed",
+        "label": "Closed: no longer in snapshot",
+        "locality": "Defu South St 1",
+        "people": null,
+        "previous_people": 3,
+        "change": null,
+        "cluster_id": "527701"
+      },
+      {
+        "kind": "Closed",
+        "label": "Closed: no longer in snapshot",
+        "locality": "Woodlands Dr 16 (Blk 573A, 573B)",
+        "people": null,
+        "previous_people": 2,
+        "change": null,
+        "cluster_id": "527705"
+      },
+      {
+        "kind": "Closed",
+        "label": "Closed: no longer in snapshot",
+        "locality": "Mandai Est",
+        "people": null,
+        "previous_people": 2,
+        "change": null,
+        "cluster_id": "527708"
+      },
+      {
+        "kind": "Closed",
+        "label": "Closed: no longer in snapshot",
+        "locality": "Canberra Rd (Blk 308) / Sembawang Vista (Blk 318)",
+        "people": null,
+        "previous_people": 2,
+        "change": null,
+        "cluster_id": "527698"
+      },
+      {
+        "kind": "Closed",
+        "label": "Closed: no longer in snapshot",
+        "locality": "Farleigh Ave / S'goon Gdn Way",
+        "people": null,
+        "previous_people": 2,
+        "change": null,
+        "cluster_id": "527699"
+      },
+      {
+        "kind": "Closed",
+        "label": "Closed: no longer in snapshot",
+        "locality": "Jln Papan",
+        "people": null,
+        "previous_people": 2,
+        "change": null,
+        "cluster_id": "527700"
+      }
+    ],
+    "summary": {
+      "new": 5,
+      "growing": 3,
+      "shrinking": 0,
+      "closed": 8,
+      "stable": 0,
+      "people_then": 101,
+      "people_now": 126,
+      "clusters_then": 11,
+      "clusters_now": 8
+    },
+    "note": "Compares the two latest saved snapshots. Totals are cumulative cluster sizes, not new weekly cases. Closed means absent from the newest snapshot."
+  },
+  "timeline": [
+    {
+      "date": "2026-09-24",
+      "clusters": [
+        {
+          "id": "527702",
+          "locality": "Bt Batok St 21 (Blk 207, 210)",
+          "people": 2,
+          "lat": 1.346198,
+          "lon": 103.74922
+        },
+        {
+          "id": "527703",
+          "locality": "Upp Changi Rd East (Changi Ct)",
+          "people": 3,
+          "lat": 1.342758,
+          "lon": 103.962477
+        },
+        {
+          "id": "527704",
+          "locality": "Ho Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 335) / Tah Ching Rd (Blk 321, 322, 323, 324, 326, 329, 330, 332) / Yuan Ching Rd / Yuan Ching Rd (Blk 122) / Yuan Ching Rd (Lakeside Twr)",
+          "people": 74,
+          "lat": 1.336445,
+          "lon": 103.723452
+        },
+        {
+          "id": "527705",
+          "locality": "Woodlands Dr 16 (Blk 573A, 573B)",
+          "people": 2,
+          "lat": 1.430766,
+          "lon": 103.797545
+        },
+        {
+          "id": "527706",
+          "locality": "Bishan St 12 (Blk 110, 115, 116)",
+          "people": 5,
+          "lat": 1.347281,
+          "lon": 103.848975
+        },
+        {
+          "id": "527707",
+          "locality": "Kim Tian Rd (Blk 119B, 119D, 127D, 131B)",
+          "people": 4,
+          "lat": 1.281799,
+          "lon": 103.828504
+        },
+        {
+          "id": "527708",
+          "locality": "Mandai Est",
+          "people": 2,
+          "lat": 1.407048,
+          "lon": 103.758599
+        },
+        {
+          "id": "527698",
+          "locality": "Canberra Rd (Blk 308) / Sembawang Vista (Blk 318)",
+          "people": 2,
+          "lat": 1.445288,
+          "lon": 103.821788
+        },
+        {
+          "id": "527699",
+          "locality": "Farleigh Ave / S'goon Gdn Way",
+          "people": 2,
+          "lat": 1.36644,
+          "lon": 103.862484
+        },
+        {
+          "id": "527700",
+          "locality": "Jln Papan",
+          "people": 2,
+          "lat": 1.321163,
+          "lon": 103.729475
+        },
+        {
+          "id": "527701",
+          "locality": "Defu South St 1",
+          "people": 3,
+          "lat": 1.344104,
+          "lon": 103.895631
+        }
+      ]
+    },
+    {
+      "date": "2026-10-10",
+      "clusters": [
+        {
+          "id": "529293",
+          "locality": "Sembawang Cl (Blk 330, 339A)",
+          "people": 2,
+          "lat": 1.446547,
+          "lon": 103.817709
+        },
+        {
+          "id": "529294",
+          "locality": "Old Choa Chu Kang Rd",
+          "people": 6,
+          "lat": 1.377609,
+          "lon": 103.718163
+        },
+        {
+          "id": "529295",
+          "locality": "Soon Lee Rd",
+          "people": 6,
+          "lat": 1.33095,
+          "lon": 103.700076
+        },
+        {
+          "id": "529296",
+          "locality": "Bt Batok St 21 (Blk 201, 207, 209, 210)",
+          "people": 5,
+          "lat": 1.346647,
+          "lon": 103.749131
+        },
+        {
+          "id": "529297",
+          "locality": "Pasir Ris Lk (Seastrand, Watercolours)",
+          "people": 2,
+          "lat": 1.376144,
+          "lon": 103.960346
+        },
+        {
+          "id": "529290",
+          "locality": "Ho Ching Rd (Blk 117, 119, 120) / Kang Ching Rd (Blk 333, 334, 335) / Tah Ching Rd (Blk 321, 322, 323, 324, 326, 329, 330, 331, 332) / Yuan Ching Rd / Yuan Ching Rd (Blk 122) / Yuan Ching Rd (Lakeside Twr) / Yung Sheng Rd (Blk 182)",
+          "people": 91,
+          "lat": 1.335889,
+          "lon": 103.723287
+        },
+        {
+          "id": "529291",
+          "locality": "Bishan St 12 (Blk 107, 109, 110, 111, 115, 116, 118)",
+          "people": 12,
+          "lat": 1.347174,
+          "lon": 103.849419
+        },
+        {
+          "id": "529292",
+          "locality": "Lentor Gdns",
+          "people": 2,
+          "lat": 1.383007,
+          "lon": 103.833308
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "NEA Dengue Clusters · data.gov.sg",
+      "url": "https://data.gov.sg/datasets/d_dbfabf16158d1b0e1c420627c0819168/view",
+      "dataset_id": "d_dbfabf16158d1b0e1c420627c0819168",
+      "retrieved_at": "2026-10-10T03:02:50.078454+00:00",
+      "snapshot_date": "2026-10-10",
+      "raw_sha256": "0d7c95ec19d0d0226ceef809873616a0cbd4ae89ea559b0d8213d72ca10c32a7"
+    }
+  ],
+  "methodology": {
+    "baseline": "Nearest saved snapshot at least 7 and at most 9 days earlier; no backfill.",
+    "matching": "At least 10% overlap of the smaller footprint and 25% Jaccard similarity of locality words. Both are required. Ambiguous splits/merges receive no growth value.",
+    "statuses": "New = unmatched active cluster; Growing/Stable/Shrinking compare cumulative reported counts. Closed = absent from the current snapshot, not confirmation that transmission ended.",
+    "limits": "Snapshot dates are retrieval dates, not onset dates. Differences are not weekly incident cases. Missing or ambiguous growth adds zero scoring points and is labelled unavailable."
+  }
+}

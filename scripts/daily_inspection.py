@@ -20,7 +20,7 @@ from denguesux.spatial import build_current
 from scripts.snapshot_clusters import snapshot
 
 
-def run_daily(root=ROOT, *, spark=None, offline=False, radius_m=300, top_n=8):
+def run_daily(root=ROOT, *, spark=None, offline=False, radius_m=300, top_n=8, send_alerts=False):
     root = Path(root)
     if not offline:
         snapshot(root)
@@ -35,7 +35,8 @@ def run_daily(root=ROOT, *, spark=None, offline=False, radius_m=300, top_n=8):
     inspection = build_inspection(root=root, radius_m=radius_m, top_n=top_n, offline=offline, spark=spark)
     notices = write_notices(root, spark=spark)
     from denguesux.alerts import write_alerts
-    alerts = write_alerts(root, spark=spark)
+    # Only the scheduled job sends alerts; manual and test runs never message anyone.
+    alerts = write_alerts(root, spark=spark, send=send_alerts)
     from denguesux.map_context import build_map_context
     build_map_context(root)
     dashboard_path = root / "output/web/dashboard.json"
@@ -51,7 +52,10 @@ def run_daily(root=ROOT, *, spark=None, offline=False, radius_m=300, top_n=8):
             if path.exists():
                 dashboard[name] = json.loads(path.read_text())
         dashboard["meta"]["generated_at"] = dt.datetime.now(dt.timezone.utc).isoformat()
-        _atomic_json(dashboard_path, dashboard)
+        # Compact like the gold export: footprints and boundaries are mostly coordinates.
+        temporary = dashboard_path.with_suffix(".json.tmp")
+        temporary.write_text(json.dumps(dashboard, ensure_ascii=False, separators=(",", ":"), allow_nan=False))
+        temporary.replace(dashboard_path)
     summary = {"completed_at": dt.datetime.now(dt.timezone.utc).isoformat(), "snapshot_date": growth["as_of_date"],
                "snapshot_count": growth["snapshot_count"], "growth_status": growth["status"],
                "notice_count": sum(len(value) for value in notices["notices"].values()),

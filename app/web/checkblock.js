@@ -90,16 +90,19 @@
       const ok = !window.DENGUESUX_DATA && (await (await fetch('/api/locate/status', {signal: AbortSignal.timeout(6000)})).json()).postal;
       $('#check-postal-form').hidden = !ok;
     } catch { $('#check-postal-form').hidden = true; }
+    let lookup = 0;
     $('#check-postal-form').addEventListener('submit', async e => {
       e.preventDefault();
-      const postal = $('#check-postal').value.trim();
-      if (!/^\d{6}$/.test(postal)) return status('Enter a 6-digit postal code.');
-      status('Looking up the postal code…');
+      const postal = $('#check-postal').value.trim(), request = ++lookup;
+      if (!/^\d{6}$/.test(postal)) return status('Enter a 6-digit Singapore postal code, for example 640117.');
+      status('Looking up the postal code with OneMap…');
       try {
-        const r = await fetch(`/api/locate?postal=${encodeURIComponent(postal)}`);
-        if (!r.ok) return status((await r.json()).detail || 'That postal code could not be located.');
-        const found = await r.json(); check(found.latitude, found.longitude, found.address);
-      } catch { status('The postal lookup is unavailable. Try “Use my location”.'); }
+        const r = await fetch(`/api/locate?postal=${encodeURIComponent(postal)}`, {signal: AbortSignal.timeout(15000)});
+        const body = await r.json().catch(() => ({}));
+        if (request !== lookup) return;  // A newer lookup has started; never show an older answer.
+        if (!r.ok) return status(body.detail || 'That postal code could not be located.');
+        check(body.latitude, body.longitude, body.address);
+      } catch { if (request === lookup) status('The postal lookup is unavailable right now. Try “Use my location” or the example.'); }
     });
   }
   window.CheckBlock = {init};
