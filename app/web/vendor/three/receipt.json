@@ -1,0 +1,11 @@
+{
+  "package": "three@0.169.0",
+  "source": "https://registry.npmjs.org/three/-/three-0.169.0.tgz",
+  "npm_integrity": "sha512-Ed906MA3dR4TS5riErd4QBsRGPcx+HBDX2O5yYE5GqJeFQTPU+M56Va/f/Oph9X7uZo3W3o4l2ZhBZ6f6qUv0w==",
+  "verified": true,
+  "files": {
+    "three.module.min.js": "sha256:f7cee3c7533449a1505cc12cb5128b89e3d4fd3d7ea62b05f9f5464a217472ee",
+    "LICENSE": "sha256:4c40a1ef62450b857c3b2aaf294936304cd552d965fbcd9d32d4c5bcf4ba4454"
+  },
+  "retrieved_at": "2026-10-10T16:10:39Z"
+}

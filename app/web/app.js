@@ -89,7 +89,10 @@
     // Re-rendering replaces the focused row; keep keyboard and screen-reader users where they were.
     if(fromList&&!drawerOpen)$(`#area-list [data-area="${CSS.escape(code)}"]`)?.focus({preventScroll:true});
     else if(fromList)requestAnimationFrame(()=>$('#area-detail .detail-title')?.focus({preventScroll:true}));
-    if(state.areaLayer){state.areaLayer.setStyle(styleArea);const layer=state.layers.get(code);if(layer){layer.bringToFront();if(pan){const p=area.centroid;if(p)state.map.flyTo(p,Math.max(state.map.getZoom(),12),{duration:.6,animate:!reducedMotion()});}}}
+    if(state.areaLayer){state.areaLayer.setStyle(styleArea);const layer=state.layers.get(code);if(layer){layer.bringToFront();if(pan){const p=area.centroid;if(p){
+      // A deep link can arrive while the map was hidden (zero size); Leaflet must measure it before flying.
+      state.map.invalidateSize({animate:false});const size=state.map.getSize(),zoom=Math.max(state.map.getZoom(),12);
+      if(size.x&&size.y&&!reducedMotion())state.map.flyTo(p,zoom,{duration:.6});else state.map.setView(p,zoom,{animate:false});}}}}
     setDrawer(false);window.Product?.selected(area);
   }
   function renderAreaDetail(area){
@@ -239,6 +242,31 @@
     renderLiveOutlook();
     setMode(state.mode);
   }
+  // Recent reported weeks, the model's past forecasts with their 80% ranges, and the live weeks ahead, in one picture.
+  function outlookChart(live){
+    const past=(state.data?.model?.prospective?.predictions||[]).filter(r=>finite(r.actual)).slice(-26),ahead=(live?.forecasts||[]).filter(r=>finite(r.prediction));
+    if(past.length<4||!ahead.length)return '';
+    const rows=[...past.map(r=>({...r,kind:'past'})),...ahead.map(r=>({...r,kind:'ahead'}))],W=640,H=210,L=34,R=18,T=18,B=30;
+    const top=Math.max(...rows.map(r=>Math.max(r.actual??0,r.upper??0,r.prediction??0,r.normal?.median??0)))*1.12||1;
+    const x=i=>L+i*(W-L-R)/(rows.length-1),y=v=>T+(H-T-B)*(1-v/top),pts=list=>list.map(([i,v])=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+    const band=(from,to)=>{const seg=rows.map((r,i)=>[i,r]).slice(from,to).filter(([,r])=>finite(r.lower)&&finite(r.upper));return seg.length?`${pts(seg.map(([i,r])=>[i,r.upper]))} ${pts(seg.map(([i,r])=>[i,r.lower]).reverse())}`:'';};
+    const split=past.length-1,actual=past.map((r,i)=>[i,r.actual]),model=rows.map((r,i)=>[i,r.prediction]).filter(([,v])=>finite(v));
+    const future=[[split,past.at(-1).actual],...ahead.map((r,i)=>[split+1+i,r.prediction])],last=ahead.at(-1),li=rows.length-1;
+    const ticks=[0,Math.round(top/2/10)*10,Math.round(top*.9/10)*10].filter((v,i,a)=>a.indexOf(v)===i);
+    const label=`Reported people per week for the last ${past.length} weeks, from ${number(past[0].actual)} to ${number(past.at(-1).actual)}; forecast about ${number(last.prediction)} for the week of ${date(last.target_date,{day:'numeric',month:'short'})}, 80% range ${number(last.lower)} to ${number(last.upper)}.`;
+    return `<figure class="outlook-chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${escape(label)}"><defs><linearGradient id="oc-ahead" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#f3b847" stop-opacity=".55"/><stop offset="1" stop-color="#f3b847" stop-opacity=".12"/></linearGradient><linearGradient id="oc-past" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2f6f58" stop-opacity=".16"/><stop offset="1" stop-color="#2f6f58" stop-opacity=".03"/></linearGradient></defs>
+      ${ticks.map(v=>`<line class="oc-grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="oc-axis" x="${L-6}" y="${y(v)+4}" text-anchor="end">${number(v)}</text>`).join('')}
+      <polygon class="oc-band-past" points="${band(0,split+1)}" fill="url(#oc-past)"/><polygon class="oc-band-ahead" points="${band(split,rows.length)}" fill="url(#oc-ahead)"/>
+      <line class="oc-now" x1="${x(split)}" x2="${x(split)}" y1="${T-6}" y2="${H-B}"/><text class="oc-now-label" x="${x(split)-6}" y="${T+4}" text-anchor="end">Latest report · ${date(past.at(-1).target_week_end||past.at(-1).target_date,{day:'numeric',month:'short'})}</text>
+      <polyline class="oc-model" points="${pts(model.filter(([i])=>i<=split))}"/>
+      <polyline class="oc-actual" pathLength="1" points="${pts(actual)}"/>
+      <polyline class="oc-ahead" points="${pts(future)}"/>
+      ${ahead.map((r,i)=>finite(r.normal?.median)?`<line class="oc-normal" x1="${x(split+1+i)-7}" x2="${x(split+1+i)+7}" y1="${y(r.normal.median)}" y2="${y(r.normal.median)}"/>`:'').join('')}
+      <circle class="oc-dot" cx="${x(split)}" cy="${y(past.at(-1).actual)}" r="4.5"/><circle class="oc-pulse" cx="${x(li)}" cy="${y(last.prediction)}" r="7"/><circle class="oc-dot ahead" cx="${x(li)}" cy="${y(last.prediction)}" r="5.5"/>
+      <text class="oc-value" x="${x(li)-10}" y="${y(last.prediction)-14}" text-anchor="end">${number(last.prediction)}</text>
+      <text class="oc-axis" x="${L}" y="${H-8}">${date(past[0].target_date,{day:'numeric',month:'short'})}</text><text class="oc-axis" x="${W-R}" y="${H-8}" text-anchor="end">${date(last.target_date,{day:'numeric',month:'short'})}</text></svg>
+      <figcaption><span><b class="oc-key actual"></b>Reported</span><span><b class="oc-key model"></b>Model at the time</span><span><b class="oc-key ahead"></b>Forecast · 80% range</span><span><b class="oc-key normal"></b>Typical for the week</span></figcaption></figure>`;
+  }
   function renderLiveOutlook(){
     const live=liveForecast(),h=live?.headline,box=$('#live-outlook');
     if(!h){box.hidden=true;return;}
@@ -249,7 +277,7 @@
     box.hidden=false;
     const word=versusNormal(p.predicted,n),chip=word==='lower than'?['quieter','Quieter than usual']:word==='higher than'?['busier','Busier than usual']:word?['usual','About usual']:null;
     box.innerHTML=`<div class="outlook-main"><div class="detail-top"><span class="eyebrow"></span>${chip?`<span class="usual-chip ${chip[0]}" title="Compared with the same week in ${escape(n.years)}">${chip[1]}</span>`:badge(p.label)}</div>
-      <h2>Week of ${date(p.target_date,{day:'numeric',month:'long'})}: about <strong>${number(p.predicted)}</strong> people</h2>
+      <h2>Week of ${date(p.target_date,{day:'numeric',month:'long'})}: about <strong>${number(p.predicted)}</strong> people</h2>${outlookChart(live)}
       <div class="outlook-range" role="img" aria-label="Likely between ${number(p.lower)} and ${number(p.upper)} people${n?`; typical for this week ${number(n.median)}`:''}">
         ${n?`<span class="normal-span" style="left:${pos(n.low)};width:calc(${pos(n.high)} - ${pos(n.low)})"></span><span class="normal-mark" style="left:${pos(n.median)}"><small>Typical ${number(n.median)}</small></span>`:''}
         <span class="range-span" style="left:${pos(p.lower)};width:calc(${pos(p.upper)} - ${pos(p.lower)})"></span><span class="range-mark" style="left:${pos(p.predicted)}"></span></div>

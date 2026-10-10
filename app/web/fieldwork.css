@@ -38,3 +38,6 @@
 .stop-report .report-status{flex-basis:100%;color:#4f7d5f}.stop-report .report-status:empty{display:none}
 .field-report-summary{font-size:12px;color:#3f5a45;background:#eef3ea;border-radius:8px;padding:8px 12px;margin:6px 0}
 @media print{.stop-report{display:none}}
+
+.walk-banner{display:flex;gap:12px;align-items:flex-start;background:var(--surface-3,#eef2ea);border:1px solid var(--border-subtle,#dfe5da);border-radius:8px;padding:14px 16px;margin:0 0 18px;font-size:13px;line-height:1.6;color:var(--text-2,#4f6152)}.walk-banner>i{font-size:20px;color:var(--accent,#2f6f58);margin-top:2px}.walk-banner strong{display:block;color:var(--text-1,#193e33);font-weight:600;margin-bottom:2px}.walk-banner p{margin:0}.legend-stop{width:10px;height:10px;border-radius:50%;background:var(--forest,#163f35);border:2px solid #fff;box-shadow:0 0 0 1px #163f3555}
+@media print{body.inspection-open .walk-banner{font-size:8pt;padding:6px 8px;margin:4px 0}}

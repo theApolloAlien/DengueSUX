@@ -35,10 +35,17 @@ def build():
     gl=WEB/'vendor/maplibre/maplibre-gl.js'
     if gl.exists():
         html=html.replace('<head>','<head><style>'+inline_css(gl.with_suffix('.css'))+'</style><script>'+gl.read_text().replace('</script','<\\/script')+'</script>',1)
+    # three.js is an ES module loaded on demand; the portable copy carries it as text and imports it from a blob URL.
+    three=WEB/'vendor/three/three.module.min.js'
+    if three.exists():
+        html=html.replace('</body>','<script type="text/plain" id="three-module-source">'+three.read_text().replace('</script','<\\/script')+'</script></body>',1)
     payload=json.loads((ROOT/'output/web/dashboard.json').read_text())
     for name in ('inspection', 'growth', 'notices', 'alerts', 'footprints', 'population', 'aedes', 'feed'):
         path=ROOT/'output/web'/f'{name}.json'
         if path.exists(): payload[name]=json.loads(path.read_text())
+    # Every area's saved 3D walk, so the portable copy keeps the walk preview for all 55 areas.
+    walks=sorted((ROOT/'output/web/walks').glob('[A-Z]*.json'))
+    if walks: payload['walks']={path.stem: json.loads(path.read_text()) for path in walks}
     data=json.dumps(payload,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     care=json.dumps(json.loads((WEB/'care-copy.json').read_text()),ensure_ascii=False).replace('<','\\u003c')
     html=html.replace('<head>','<head><script>window.DENGUESUX_DATA = '+data+';window.DENGUESUX_CARE = '+care+';</script>',1)

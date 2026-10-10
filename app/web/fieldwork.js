@@ -76,35 +76,82 @@
     if(map){map.stop();map.remove();map=null;}$('#inspection-view').hidden=true;document.body.classList.remove('inspection-open');
     $('.page-heading').hidden=false;$('.view-bar').hidden=false;
   }
+  // Every area has a saved 3D walk (output/web/walks/<CODE>.json): the cluster plan where NEA names exact blocks,
+  // otherwise a routine walk through official places. Loaded only when a plan or the 3D view needs it.
+  const walks=new Map();let planRequest=0;
+  function loadWalk(code){
+    if(window.DENGUESUX_DATA)return Promise.resolve(window.DENGUESUX_DATA.walks?.[code]||null);
+    if(!/^[A-Z]{2,3}$/.test(String(code)))return Promise.resolve(null);
+    if(!walks.has(code))walks.set(code,fetch(`/data/walks/${code}.json`,{cache:'no-cache',signal:AbortSignal.timeout(15000)}).then(r=>r.ok?r.json():null).catch(()=>{walks.delete(code);return null;}));
+    return walks.get(code);
+  }
   function openPlan(area){
     if(window.Product?.ready&&!window.Product.openingPlan)return window.Product.go('plan',area.code);
     window.RouteFlythrough?.dispose();
     selectedArea=area;actions.open();
     if(map){map.stop();map.remove();map=null;}
-    const inspection=data.inspection||{};
-    plan=inspection.areas?.[area.code]||{area_code:area.code,area_name:area.name,status:'unavailable',message:'Verified places are unavailable for this saved snapshot.',stops:[],cluster_blocks:[],search_rings:[],clusters:{type:'FeatureCollection',features:clusterFeatures(area.code)}};
-    const stops=plan.stops||[],radius=inspection.radius_m||300,route=plan.route||{};
+    const inspection=data.inspection||{},clusterPlan=inspection.areas?.[area.code];
+    const request=++planRequest;
+    if(clusterPlan?.stops?.length)return renderPlan(area,clusterPlan,{kind:'cluster'});
+    renderPlan(area,{area_code:area.code,area_name:area.name,status:'loading',stops:[],cluster_blocks:[],search_rings:[],clusters:{type:'FeatureCollection',features:clusterFeatures(area.code)}},{kind:'loading'});
+    loadWalk(area.code).then(walk=>{
+      if(request!==planRequest||selectedArea?.code!==area.code||$('#inspection-view').hidden)return;
+      const fallback={area_code:area.code,area_name:area.name,status:clusterPlan?.status||'unavailable',message:clusterPlan?.message||'Verified places are unavailable for this saved snapshot.',stops:[],cluster_blocks:[],search_rings:[],clusters:{type:'FeatureCollection',features:clusterFeatures(area.code)}};
+      if(!walk?.plan)return renderPlan(area,fallback,{kind:'empty'});
+      // Today's cluster footprints come from the live snapshot, not from when the walk was saved.
+      renderPlan(area,{...walk.plan,clusters:{type:'FeatureCollection',features:clusterFeatures(area.code)}},{kind:'walk',walk,clusterPlan,rerender:true});
+    });
+  }
+  function walkBanner(area,plan,ctx){
+    const features=clusterFeatures(area.code),snapshot=date(data.current?.as_of);
+    const why=!plan.stops?.length?(features.length?`NEA’s ${snapshot} snapshot lists ${features.length===1?'a cluster':'clusters'} here (${esc(features.map(f=>f.properties.name).join('; '))}).`:`No active cluster here in NEA’s ${snapshot} snapshot.`)
+      :plan.basis==='near_cluster'?`NEA’s ${snapshot} snapshot lists ${features.length===1?'a cluster':'clusters'} here (${esc(features.map(f=>f.properties.name).join('; '))}) without exact blocks, so this walk visits the official places nearest ${features.length===1?'its':'their'} footprint.`
+      :features.length?`NEA’s ${snapshot} snapshot lists ${features.length===1?'a cluster':'clusters'} here, but no verified block could be located. This is a routine walk; check the cluster footprint on the map too.`
+      :`No active cluster here in NEA’s ${snapshot} snapshot. A routine weekly walk keeps it that way.`;
+    return `<div class="walk-banner">${icon(plan.basis==='near_cluster'?'warning-circle':'path')}<div><strong>${plan.basis==='near_cluster'?'Walk near the cluster':plan.stops?.length?'Routine walk':'No places to walk here'}</strong><p>${why} ${esc(plan.basis_note||'')}</p></div></div>`;
+  }
+  function renderPlan(area,current,ctx){
+    plan=current;
+    const inspection=data.inspection||{},walk=ctx.walk,isWalk=ctx.kind==='walk',loading=ctx.kind==='loading';
+    const stops=plan.stops||[],radius=isWalk?(plan.radius_m||350):(inspection.radius_m||300),route=plan.route||{};
     // Show text that repeats across every stop once, not on each card.
     const same=key=>stops.length>1&&new Set(stops.map(s=>JSON.stringify(s[key]??null))).size===1;
     const opts={checklist:same('checklist')?stops[0].checklist||null:null,showScore:!same('score')};
     const sourceDates=[...new Set(clusterFeatures(area.code).map(f=>date(f.properties.updated_at)))];
+    const toolbar=$('#inspection-view .plan-toolbar');
     $('#signals-view').hidden=true;$('#forecast-view').hidden=true;$('#inspection-view').hidden=false;
     $('.page-heading').hidden=true;$('.view-bar').hidden=true;document.body.classList.add('inspection-open');
+    const formula=isWalk?walk.formula:inspection.formula,sources=isWalk?walk.sources:inspection.sources;
+    const stale=isWalk?walk.map_data_stale:inspection.map_data_stale;
+    const heading=loading?'Loading the walk…':stops.length?`${stops.length} stops to check`:plan.tour?'A 3D look at this area':'No verified stops yet';
+    const legend=isWalk?`${clusterFeatures(area.code).length?'<span><b class="legend-footprint"></b>Cluster footprint</span>':''}<span><b class="legend-stop"></b>Walk stop</span><span><b class="legend-route"></b>${route.method==='onemap_walk'?'Walking route':'Approximate order'}</span>`
+      :`<span><b class="legend-footprint"></b>Cluster footprint</span><span><b class="legend-radius"></b>${radius} m search</span><span><b class="legend-block"></b>Cluster block</span><span><b class="legend-route"></b>${route.method==='onemap_walk'?'Walking route':'Approximate order'}</span>`;
+    const limits=isWalk?`<p>Up to ${stops.length||7} official places within about ${radius} m of the walk centre. Block pins sit inside each block’s official HDB footprint; hawker and park points are official source points, not verified entrances. Inspect only publicly accessible places; never enter homes or climb to gutters.</p><p>${esc(walk.landuse_note||'')}</p>`
+      :`<p>Top ${inspection.top_n||8} available places; ${radius} m from exact cluster blocks. A place can be outside the selected area if it is near a shared cluster. Source points are approximate locations, not verified public entrances. Inspect only publicly accessible places; never enter homes or climb to gutters.</p>`;
     $('#inspection-view').innerHTML=`<div class="inspection-nav"><button id="back-to-areas" class="text-button">${icon('arrow-left')} Area signals</button><span>FIELD PLAN <span class="nav-step">/</span> ${esc(area.name)}</span><button id="print-plan" class="text-button" ${stops.length?'':'disabled'}>${icon('printer')} Print / save PDF</button></div>
-      <header class="inspection-heading"><div><h1 tabindex="-1">${stops.length} stops to check<span>${esc(area.name)}</span></h1></div><button class="outline-button" id="plan-notice">${icon('translate')} Resident notice</button></header>
-      <div class="plan-evidence"><span title="NEA source updated ${esc(sourceDates.join(' / ')||'unavailable')}">${icon('calendar-dots')} Saved ${date(inspection.as_of||data.current?.as_of)}</span><span title="Assumed search radius around each cluster block">${icon('circles-three')} ${radius} m radius</span>${plan.impact?`<span class="impact-chip" title="${esc(plan.impact.source)}. ${esc(plan.impact.note)}">${icon('house-line')} <strong>${num(plan.impact.homes_in_route_blocks)}</strong> homes on this route</span>`:''}</div>
-      ${inspection.map_data_stale?`<div class="field-warning">${icon('cloud-warning')}<span title="${esc(inspection.stale_note||'Cached geocodes are being used because OneMap could not be refreshed.')}">Saved map data · check access on site.</span></div>`:''}
-      <div class="inspection-layout"><div class="inspection-map-column"><section class="inspection-map-wrap" aria-label="Street level inspection map"><div id="inspection-map"></div><button id="fit-inspection" class="map-chip">${icon('arrows-out-simple')} Fit plan</button><div id="tile-warning" class="tile-warning" role="status" hidden>OneMap basemap is unavailable. Verified source locations remain visible; map data may be stale.</div></section><div class="inspection-legend"><span><b class="legend-footprint"></b>Cluster footprint</span><span><b class="legend-radius"></b>${radius} m search</span><span><b class="legend-block"></b>Cluster block</span><span><b class="legend-route"></b>${route.method==='onemap_walk'?'Walking route':'Approximate order'}</span></div><p class="route-disclaimer">${route.method==='onemap_walk'?'OneMap walking route · check access on site.':'Straight lines show order, not walkable paths. Check access on site.'}</p>
-      <details class="plan-sources"><summary>${icon('database')} Sources & limits</summary><div class="source-content"><h3>A transparent planning rule</h3><p>${esc(typeof inspection.formula==='string'?inspection.formula:inspection.formula?.expression||'Place type + proximity + cluster size + growth + elderly share. Each component is capped; unavailable inputs add no points.')}</p>${formulaDetails(inspection.formula)}<p>Top ${inspection.top_n||8} available places; ${radius} m from exact cluster blocks. A place can be outside the selected area if it is near a shared cluster. Source points are approximate locations, not verified public entrances. Inspect only publicly accessible places; never enter homes or climb to gutters.</p><div class="source-links">${(inspection.sources||[]).map(sourceLink).join('')}</div><ul>${(inspection.layer_status||[]).map(x=>`<li><strong>${esc(x.name||x.layer||x.dataset_id)}</strong>: ${esc(x.reason||x.note||x.status)}</li>`).join('')}</ul></div></details></div>
-      <section class="inspection-stops" aria-labelledby="stops-heading"><div class="stops-heading"><h2 id="stops-heading">${stops.length?`${stops.length} places to check`:'No verified stops yet'}</h2></div><p class="field-report-summary" id="field-report-summary" hidden></p><p class="stops-subtitle">${stops.length?`${route.method==='onemap_walk'&&route.distance_m?`${num(route.distance_m/1000,1)} km walking route`:'Approximate order'}`:'A route needs verified block coordinates.'}</p>${stops.length&&plan.unresolved_blocks?`<p class="coverage-note">${plan.unresolved_blocks} unlocated blocks; nearby stops may be missing.</p>`:''}${opts.checklist?`<div class="shared-checklist"><h3>At each stop</h3><ul>${opts.checklist.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>`:''}${stops.length?'<div class="stop-progress"><span id="stop-progress-label" role="status"></span><progress id="stop-progress" aria-label="Inspection checklist progress" max="1" value="0"></progress></div>':''}<ol class="stop-list">${stops.map(s=>renderStop(s,opts)).join('')}</ol>${stops.length?'':`<div class="inspection-empty"><img class="spot" src="/brand/no-clusters.png" width="112" height="112" alt=""><h3>${plan.status==='no_active_clusters'?'No active cluster in this area':'Exact block locations are unavailable'}</h3><p>${esc(plan.message||'No verified places match this saved snapshot.')}</p><p>Keep checking for standing water each week.</p></div>`}<p class="inspection-footnote">${FOOTNOTE}</p></section></div>`;
+      <header class="inspection-heading"><div><h1 tabindex="-1">${heading}<span>${esc(area.name)}${isWalk&&stops.length?' · routine walk':''}</span></h1></div><button class="outline-button" id="plan-notice">${icon('translate')} Resident notice</button></header>
+      <div class="plan-evidence">${isWalk?`<span title="Walk saved from official HDB, NEA and NParks layers">${icon('calendar-dots')} Walk saved ${date(walk.generated_at)}</span><span title="NEA cluster snapshot">${icon('crosshair')} Clusters as of ${date(data.current?.as_of)}</span>`:`<span title="NEA source updated ${esc(sourceDates.join(' / ')||'unavailable')}">${icon('calendar-dots')} Saved ${date(inspection.as_of||data.current?.as_of)}</span><span title="Assumed search radius around each cluster block">${icon('circles-three')} ${radius} m radius</span>`}${plan.impact?`<span class="impact-chip" title="${esc(plan.impact.source)}. ${esc(plan.impact.note)}">${icon('house-line')} <strong>${num(plan.impact.homes_in_route_blocks)}</strong> homes on this route</span>`:''}</div>
+      ${isWalk?walkBanner(area,plan,ctx):''}
+      ${stale?`<div class="field-warning">${icon('cloud-warning')}<span title="${esc(inspection.stale_note||'Cached geocodes are being used because OneMap could not be refreshed.')}">Saved map data · check access on site.</span></div>`:''}
+      <div class="inspection-layout"><div class="inspection-map-column"><section class="inspection-map-wrap" aria-label="Street level inspection map"><div id="inspection-map"></div><button id="fit-inspection" class="map-chip">${icon('arrows-out-simple')} Fit plan</button><div id="tile-warning" class="tile-warning" role="status" hidden>OneMap basemap is unavailable. Verified source locations remain visible; map data may be stale.</div></section><div class="inspection-legend">${legend}</div><p class="route-disclaimer">${route.method==='onemap_walk'?'OneMap walking route · check access on site.':stops.length>1?'Straight lines show order, not walkable paths. Check access on site.':''}</p>
+      <details class="plan-sources"><summary>${icon('database')} Sources & limits</summary><div class="source-content"><h3>A transparent planning rule</h3><p>${esc(typeof formula==='string'?formula:formula?.expression||'Place type + proximity + cluster size + growth + elderly share. Each component is capped; unavailable inputs add no points.')}</p>${isWalk?walkFormula(formula):formulaDetails(formula)}${limits}<div class="source-links">${(sources||[]).map(sourceLink).join('')}</div>${isWalk?'':`<ul>${(inspection.layer_status||[]).map(x=>`<li><strong>${esc(x.name||x.layer||x.dataset_id)}</strong>: ${esc(x.reason||x.note||x.status)}</li>`).join('')}</ul>`}</div></details></div>
+      <section class="inspection-stops" aria-labelledby="stops-heading" aria-busy="${loading}"><div class="stops-heading"><h2 id="stops-heading">${loading?'Loading…':stops.length?`${stops.length} places to check`:plan.tour?'No places to walk':'No verified stops yet'}</h2></div><p class="field-report-summary" id="field-report-summary" hidden></p><p class="stops-subtitle">${stops.length?`${route.method==='onemap_walk'&&route.distance_m?`${num(route.distance_m/1000,1)} km walking route`:'Approximate order'}`:loading?'':plan.tour?'The 3D view flies around instead.':'A route needs verified place locations.'}</p>${stops.length&&plan.unresolved_blocks?`<p class="coverage-note">${plan.unresolved_blocks} unlocated blocks; nearby stops may be missing.</p>`:''}${opts.checklist?`<div class="shared-checklist"><h3>At each stop</h3><ul>${opts.checklist.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>`:''}${stops.length?'<div class="stop-progress"><span id="stop-progress-label" role="status"></span><progress id="stop-progress" aria-label="Inspection checklist progress" max="1" value="0"></progress></div>':''}<ol class="stop-list">${loading?'<li class="inspection-stop skeleton" style="height:120px"></li><li class="inspection-stop skeleton" style="height:120px"></li>':stops.map(s=>renderStop(s,opts)).join('')}</ol>${stops.length||loading?'':`<div class="inspection-empty"><img class="spot" src="/brand/no-clusters.png" width="112" height="112" alt=""><h3>${plan.tour?'No official place to check here':plan.status==='no_active_clusters'?'No active cluster in this area':'Exact block locations are unavailable'}</h3><p>${esc(plan.message||'No verified places match this saved snapshot.')}</p><p>${plan.tour?'Open the 3D view for a flyover of the area. ':''}Keep checking for standing water each week.</p></div>`}<p class="inspection-footnote">${esc(plan.footnote||FOOTNOTE)}</p></section></div>`;
+    if(toolbar)$('#inspection-view').prepend(toolbar);
     $('#back-to-areas').addEventListener('click',()=>{closePlan();actions.back();$('#area-detail .plan-button')?.focus();});
     $('#print-plan').addEventListener('click',()=>window.print());$('#plan-notice').addEventListener('click',()=>openNotice(area));
     $('.stop-list').querySelectorAll('[data-stop]').forEach(b=>b.addEventListener('click',()=>focusStop(b.dataset.stop)));
-    $('.stop-list').querySelectorAll('input[type=checkbox]').forEach(c=>c.addEventListener('change',()=>{const key=`denguesux-check:${inspection.as_of}:${area.code}:${c.dataset.check}`;try{sessionStorage.setItem(key,String(c.checked));}catch{}updateProgress();}));
-    $('.stop-list').querySelectorAll('input[type=checkbox]').forEach(c=>{try{c.checked=sessionStorage.getItem(`denguesux-check:${inspection.as_of}:${area.code}:${c.dataset.check}`)==='true';}catch{}});
-    bindReports(area,inspection.as_of);loadReports(area);
-    updateProgress();renderPlanMap();window.RouteFlythrough?.mount(plan,area,id=>focusStop(id,true));$('#inspection-view').scrollIntoView({block:'start',behavior:'instant'});$('.inspection-heading h1').focus({preventScroll:true});
+    const asOf=isWalk?walk.generated_at:inspection.as_of;
+    $('.stop-list').querySelectorAll('input[type=checkbox]').forEach(c=>c.addEventListener('change',()=>{const key=`denguesux-check:${asOf}:${area.code}:${c.dataset.check}`;try{sessionStorage.setItem(key,String(c.checked));}catch{}updateProgress();}));
+    $('.stop-list').querySelectorAll('input[type=checkbox]').forEach(c=>{try{c.checked=sessionStorage.getItem(`denguesux-check:${asOf}:${area.code}:${c.dataset.check}`)==='true';}catch{}});
+    if(!loading){bindReports(area,asOf);loadReports(area);}
+    updateProgress();renderPlanMap();window.Checklist3D?.decorate($('#inspection-view'));
+    if(!loading)window.RouteFlythrough?.mount(plan,area,id=>focusStop(id,true),{buildings:isWalk?walk.buildings:null,margin:isWalk?walk.method?.context_margin_m:null,loadWalk,onMode:mode=>{if(mode==='2d')requestAnimationFrame(()=>map?.invalidateSize());},
+      // On desktop the plan opens in 3D: it is the clearest picture of the route. Phones, print and reduced motion stay 2D.
+      start3d:matchMedia('(min-width: 1000px)').matches&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!!window.Checklist3D?.supported(),outline:isWalk?(data.current?.boundaries?.features||[]).find(f=>f.properties?.code===area.code)||null:null});
+    if(!ctx.rerender)$('#inspection-view').scrollIntoView({block:'start',behavior:'instant'});
+    if(!ctx.rerender||document.activeElement===document.body)$('.inspection-heading h1').focus({preventScroll:true});
   }
+  function walkFormula(formula){if(!formula||typeof formula==='string')return '';return `<dl class="formula-rules"><div><dt>Place type · cap 25</dt><dd>Blocks 25 · hawker centres 20 · parks 15</dd></div>${['compactness','homes'].map(k=>`<div><dt>${k==='homes'?'Homes nearby':'Compactness'} · cap ${formula[k]?.cap}</dt><dd>${esc(formula[k]?.expression)}</dd></div>`).join('')}</dl><p>${esc(formula.missing)} This order is not a disease probability or proof of stagnant water.</p>`;}
   function updateProgress(){
     const checks=[...document.querySelectorAll('.stop-list input[type=checkbox]')];
     const meter=$('#stop-progress');if(!meter)return;
@@ -137,6 +184,9 @@
     const visitBounds=L.latLngBounds((plan.stops||[]).map(s=>[s.latitude,s.longitude]));
     const clusterLayer=L.geoJSON(plan.clusters||{type:'FeatureCollection',features:clusterFeatures(selectedArea.code)},{style:{color:'#b5412d',weight:1.5,fillColor:'#d65239',fillOpacity:.12},onEachFeature:(f,l)=>{const p=f.properties||{};l.bindPopup(`<strong>${num(p.cases??p.CASE_SIZE)} people associated with this cluster</strong><br>${esc(p.name||p.LOCALITY)}<br>${growthBadge(growthFor(p.id||p.OBJECTID))}<br><small>Cluster footprint, not a confirmed breeding location.</small>`);}}).addTo(map);
     if(!(plan.cluster_blocks||[]).length)bounds.addLayer(clusterLayer);
+    // With nothing to walk, outline the planning area itself so the map is never an empty street grid.
+    const outline=!(plan.stops||[]).length&&(data.current?.boundaries?.features||[]).find(f=>f.properties?.code===selectedArea.code);
+    if(outline)L.geoJSON(outline,{style:{color:'#163f35',weight:2,dashArray:'6 6',fill:false},interactive:false}).addTo(bounds);
     (plan.search_rings||[]).forEach(r=>L.circle([r.latitude,r.longitude],{radius:r.radius_m||data.inspection.radius_m,color:'#5c8c73',weight:1,dashArray:'4 5',fillColor:'#91b89b',fillOpacity:.035,interactive:false}).addTo(bounds));
     (plan.cluster_blocks||[]).forEach(b=>L.circleMarker([b.latitude,b.longitude],{radius:4,color:'#b5412d',weight:2,fillColor:'#fff',fillOpacity:1}).bindPopup(`<strong>Cluster block ${esc(b.block)}</strong><br>${esc(b.street)}<br><small>OneMap geocode · retrieved ${date(b.retrieved_at)}</small>`).addTo(bounds));
     if(plan.route?.geometry)L.geoJSON(plan.route.geometry,{style:{color:'#163f35',weight:3,opacity:.8,dashArray:plan.route.method==='onemap_walk'?null:'7 7'}}).addTo(bounds);
@@ -213,5 +263,5 @@
   }
   function typeNotice(text){const box=$('#notice-text');if(box){box.textContent=text;box.dataset.draft=text;}}
   function noticeExport(){return `Draft: review before sending\n\n${noticeDraft||noticeText(notice,language)}\n\nSource facts\n${JSON.stringify(notice.source_facts||notice.facts,null,2)}\nNEA: https://www.nea.gov.sg/dengue-zika/stop-dengue-now\n`;}
-  window.Fieldwork={load,areaActions,renderGrowth,openPlan,closePlan,openNotice,growthFor,growthBadge};
+  window.Fieldwork={load,areaActions,renderGrowth,openPlan,closePlan,openNotice,growthFor,growthBadge,loadWalk};
 })();

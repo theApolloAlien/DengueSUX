@@ -123,3 +123,37 @@ Fallback demo: `demo/denguesux_finishing_20261010-163531.mp4` (61.6 s, 1440×900
 - Heights are estimates from storeys, not surveyed heights.
 - Walking routes need a OneMap token; the cloud job reuses saved routes and marks the plan stale when it cannot refresh them. The local token expires 13 Oct 2026.
 - Growth classification still needs two snapshots 7–9 days apart (“Not enough history yet” is shown honestly).
+
+## Audit and 3D release — 11 October 2026
+
+Starting point: commit `3479379` (192 tests passing). Method: full test suite, local app on real data, headless Chromium at 1440×900 and 390×844, live Databricks app and job status (`--profile denguesux`, read-only), code review of the server, OneMap client and 3D views.
+
+### Findings and fixes
+
+| Severity | Finding | Fix | Evidence |
+|---|---|---|---|
+| High | Only 5 of 55 planning areas had a field plan or 3D view; the other 50 showed an empty state. | Every area now has a saved 3D walk (`output/web/walks/<CODE>.json`, built by `scripts/build_walks.py`): 49 OneMap walking routes and 6 flyovers (no official place close enough to walk). | `demo/verify_walks.py`: 55/55 areas open in 3D |
+| High | OneMap answers an unroutable leg (e.g. across water) with HTTP 404 + an `error` field; the client treated it as an authentication failure, forced a token renewal and marked the rest of the run "map data may be stale". | Routing 404s now mean "no route" only. | `test_unroutable_walking_leg_is_not_an_authentication_failure` |
+| High | Opening a map deep link while the map was hidden (e.g. Forecast → `#map/bedok`) threw `Invalid LatLng (NaN, NaN)` and aborted routing (title stuck on the old page). | Leaflet measures the map before flying; zero-size maps jump instead. | `deep_link_from_hidden_map` check |
+| Medium | 3D walk stops were snapped to the closest point anywhere later on the route; a route that passes a stop twice crammed the following stops into the last metres (Toa Payoh: stop 2 at 945 of 1,061 m). | Stops snap to the first close approach. Toa Payoh now 137 → 340 → 426 → 542 → 758 → 1,061 m. | browser check |
+| Medium | The 3D view waited for every OneMap tile (MapLibre `load`) before adding buildings: up to ~20 s on a slow network, while Walk/Next were already clickable on an empty scene. | Scene builds when the style is parsed; controls stay disabled until it is ready. | `ready` in `RouteFlythrough.snapshot()` |
+| Medium | Home said "Dengue is medium in Singapore this week" while Forecast said "Quieter than usual" for the same week (68 expected vs a typical 143). | Home uses the same five-year comparison as Forecast. | screenshot |
+| Low | "91 · 1 clusters", "1 areas need checking". | Plurals and units fixed. | — |
+| Low | Unhandled `InvalidStateError` from view transitions in background tabs. | Rejections handled; transitions skipped when hidden. | console clean |
+| Low | Field reports were accepted only for cluster-plan stops. | Walk stops are accepted too, still validated against the saved plan. | `test_reports_accept_a_stop_from_the_areas_saved_walk` |
+| Low | Offline export could not show walks or 3D illustrations. | The export embeds all walks and three.js. | `output/denguesux.html` |
+
+### What was added
+
+- **A 3D walk for every area.** Cluster plans keep their scoring; elsewhere a routine walk visits official places (HDB blocks pinned inside their own footprint, NEA hawker centres, NParks parks) around the area's busiest hub, or the places nearest a cluster footprint that names no exact blocks (Ang Mo Kio, Pasir Ris). Order = place type + compactness + HDB homes within 150 m; no case counts. Sparse areas widen the search in steps (and say so); walks over 2 km drop the stop that adds the most detour. Areas with no verified place within 1.5 km get a camera flyover around the cluster footprint or area outline, never a drawn route.
+- **3D checklist illustrations.** Each checklist item (gutters, planter trays, corridor pails, drains, unused containers, bin areas, pond edges, tree holes) has a procedural three.js diorama showing the problem and the fix, with larvae and a mosquito. Thumbnails sit beside each checklist line; the walk pauses at every stop with one illustration and highlights where to look on the block (roof edge, ground floor or corridor levels). Labelled as illustrations, not views of the place.
+- **Richer 3D scene.** URA Master Plan 2025 parks and water, roof caps, soft contact shadows, light beacons over stops, a walker marker and a pinned stop card.
+- **3D Singapore.** The home hero and the Map's new 3D view raise every planning area by people in active clusters (height = 900 m + 2,600 m × √(people/100)), coloured by priority, with cluster beacons and labels; tap an area to open it.
+- **Forecast chart.** The last 26 reported weeks, the model's forecasts at the time with their 80% ranges, and the weeks ahead with the typical level.
+
+### Open items before Demo Day (27 Oct)
+
+- The live outlook targets the week ending 17 Oct. Refresh MOH/CDA labels (`scripts/collect_moh_weekly.py`) and rerun the `pipeline` job when EW40/41 are published, or the headline card shows "Unavailable" on the day.
+- Area weather is dated 23 Sep; the daily job does not refresh it.
+- Walks are static artifacts built locally (OneMap refuses the Databricks network). The local OneMap token expires 13 Oct; `.env` email/password renew it.
+- `demo/verify_platform.py` and `demo/verify_saas_edges.py` predate the conversational home and fail on removed controls; `demo/verify_walks.py` covers this release.

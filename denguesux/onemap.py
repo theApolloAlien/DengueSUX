@@ -238,6 +238,10 @@ class OneMapClient:
                     self.map_data_stale, self.status = True, "service_unavailable"
                     return None
                 result = response.json()
+                if response.status_code == 404 and endpoint == "/api/public/routingsvc/route":
+                    # An unroutable pair (e.g. across water) is answered with 404 and an error message:
+                    # there is no walking route, but the service and token are fine.
+                    return None
                 # OneMap may return authentication errors in HTTP 200 responses.
                 if response.status_code in (401, 403) or (isinstance(result, dict) and "error" in result):
                     if allow_public:

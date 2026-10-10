@@ -47,6 +47,13 @@ def data(name:str):
     if not p.exists(): raise HTTPException(503,'Run the pipeline to prepare real data.')
     return FileResponse(p,media_type='application/json')
 
+@app.get('/data/walks/{area_code}.json')
+def walk(area_code: str = PathParam(pattern=r'^[A-Z]{2,3}$')):
+    """The saved 3D walk for one planning area: plan, official HDB footprints and parks/water context."""
+    p=ROOT/'output/web/walks'/f'{area_code}.json'
+    if not p.is_file(): raise HTTPException(404,'No saved walk for this area.')
+    return FileResponse(p,media_type='application/json')
+
 @app.get('/api/notices/{area_code}')
 def resident_notice(area_code: str = PathParam(pattern=r'^[A-Z]{2,3}$'), language: Literal['en','zh','ms','ta']='en'):
     _refresh_snapshot()
@@ -209,12 +216,15 @@ class FieldReportBody(BaseModel):
     plan_as_of: Optional[str] = Field(default=None, max_length=40)
 
 def _planned_stop(area_code, stop_id):
-    """Reports must refer to a stop in the saved public plan, so counts cannot be inflated with invented stops."""
-    try:
-        plan = json.loads((ROOT/'output/web/inspection.json').read_text()).get('areas', {}).get(area_code) or {}
-    except (OSError, json.JSONDecodeError):
-        return None
-    return next((stop for stop in plan.get('stops', []) if str(stop.get('id')) == stop_id), None)
+    """Reports must refer to a stop in a saved public plan (the cluster plan or the area's walk), so counts cannot be inflated with invented stops."""
+    plans = []
+    for path, pick in ((ROOT/'output/web/inspection.json', lambda d: d.get('areas', {}).get(area_code)),
+                       (ROOT/'output/web/walks'/f'{area_code}.json', lambda d: d.get('plan'))):
+        try:
+            plans.append(pick(json.loads(path.read_text())) or {})
+        except (OSError, json.JSONDecodeError, AttributeError):
+            continue
+    return next((stop for plan in plans for stop in plan.get('stops', []) if str(stop.get('id')) == stop_id), None)
 
 def _reports():
     from denguesux.field_reports import store

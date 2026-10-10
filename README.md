@@ -24,6 +24,8 @@ Built for the Databricks AI Social Impact (DAISI) Challenge Singapore 2026 · Pr
 
 - **Where to check first:** all 55 URA planning areas ranked by people in active NEA dengue clusters.
 - **Inspection plan:** one click turns an area into ranked places to check (cluster HDB blocks, parks, hawker centres) on a OneMap walking route, with a checklist per stop. *Places to check, not confirmed breeding sites.*
+- **A 3D walk for every area:** all 55 planning areas open in 3D. Cluster plans keep their scored stops; every other area gets a routine walk through official places (HDB blocks, hawker centres, parks) on a OneMap walking route, and the six areas with no verified place to walk get a flyover. Each stop pauses with a **3D illustration of what to look for** (gutters, planter trays, corridor pails, drains, containers, bin areas, pond edges, tree holes) and highlights where on the block. See `docs/PLATFORM_AUDIT.md` (11 October).
+- **3D Singapore:** the home page and the Map's 3D view raise every planning area by people in active clusters.
 - **3D walk preview:** the route in 3D with every official HDB block within about 160 m, not just the stops. **Walk the route** follows the whole OneMap path at a steady pace from a low follow camera, pausing at each stop with its checklist; a slider lets you drag along the route. Shapes are HDB's published footprints; heights are estimates from published storeys (2.8 m a floor + 1.3 m roof, the NUS Urban Analytics Lab HDB 3D convention). Blocks without a verified storey count stay flat, and non-HDB buildings are not modelled.
 - **Check a place privately:** enter a postal code in the conversational home, use the browser’s location, or try a public example. OneMap lookup and distances run in the browser; neither postal codes nor exact coordinates go to DengueSUX or its model. Four dated statuses include NEA’s high-mosquito areas. Remembered places stay on this device, with Forget controls.
 - **Resident notices:** English, 中文, Bahasa Melayu and தமிழ் drafts with NEA's Mozzie Wipeout steps; each passes 5 automatic fact checks. Drafts are for human review before sending.
@@ -214,6 +216,16 @@ Renewal is automatic when the pipeline runs, not a hidden background service. If
 ```
 
 The inspection stage publishes `bronze_inspection_sources`, `silver_inspection_cluster_blocks`, `silver_inspection_places`, `inspection_candidates` and `inspection_routes`. Small geographic joins run in shared Python/Shapely code; persistence uses explicit-schema PySpark/Delta, locally or in Databricks. JSON mirrors live in `output/gold/` and `output/web/inspection.json`.
+
+### Walks for every area
+
+```bash
+# Needs a OneMap token (email/password in .env renew it); verified answers are cached in data/cache/onemap/.
+.venv-prototype/bin/python scripts/build_walks.py
+.venv-prototype/bin/python scripts/build_walks.py --areas TP AM
+```
+
+Writes `output/web/walks/<CODE>.json` (plan, official HDB footprints around the route, URA Master Plan parks and water) and `index.json`. The order rule is place type (block 25, hawker centre 20, park 15) + compactness (35 × (1 − distance to the walk centre / 350 m)) + homes (40 × min(HDB homes within 150 m / 1,500, 1)); no case counts. Block pins sit inside the block's own HDB footprint. Walks are static artifacts: the daily job does not rebuild them, because OneMap refuses the Databricks network. `demo/verify_walks.py` opens all 55 areas in headless Chromium.
 
 ### 3D walk preview: how the buildings are built
 

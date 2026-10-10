@@ -146,6 +146,16 @@ def test_public_results_with_auth_error_are_rejected_even_with_coordinates(tmp_p
     assert len(session.gets) == 1
 
 
+def test_unroutable_walking_leg_is_not_an_authentication_failure(tmp_path):
+    session = Session(get=Response({"error": "Unable to compute walking route for the specified locations"}, status=404))
+    instance = client(tmp_path, session, env={"ONEMAP_TOKEN": jwt(NOW + 259200)})
+    assert instance.walking_leg((1.433, 104.053), (1.437, 104.046)) is None
+    assert instance.status == "ready" and not instance.map_data_stale
+    assert not session.posts  # no forced token renewal
+    session.get_result = Response({"status": 0, "route_geometry": "_p~iF~ps|U_ulLnnqC", "route_summary": {"total_distance": 10, "total_time": 8}})
+    assert instance.get_token()  # later requests in the same run still use the token
+
+
 def test_public_no_error_exact_result_is_cacheable(tmp_path):
     session = Session(get=Response({"found": 1, "results": [{"BLK_NO": "207", "ROAD_NAME": "BUKIT BATOK STREET 21", "LATITUDE": "1.346", "LONGITUDE": "103.75"}]}))
     instance = client(tmp_path, session, env={})

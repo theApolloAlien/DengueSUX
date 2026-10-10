@@ -1,0 +1,467 @@
+{
+  "passed": true,
+  "checks": {
+    "all_areas_3d": true,
+    "area_errors": [],
+    "walk_pauses_with_illustration": true,
+    "illustration_dialog": true,
+    "flyover_moves": true,
+    "hero_3d": true,
+    "home_overflow": false,
+    "forecast_chart": true,
+    "deep_link_from_hidden_map": true,
+    "map_3d": true,
+    "errors": [],
+    "phone_overflow": false,
+    "phone_plan_overflow": false,
+    "phone_errors": []
+  },
+  "areas": {
+    "JW": {
+      "name": "Jurong West",
+      "ok": true,
+      "mode": "walk",
+      "stops": 8,
+      "route_m": 1615,
+      "parks_and_water": 63
+    },
+    "JE": {
+      "name": "Jurong East",
+      "ok": true,
+      "mode": "walk",
+      "stops": 8,
+      "route_m": 1615,
+      "parks_and_water": 62
+    },
+    "BS": {
+      "name": "Bishan",
+      "ok": true,
+      "mode": "walk",
+      "stops": 8,
+      "route_m": 850,
+      "parks_and_water": 50
+    },
+    "WC": {
+      "name": "Western Water Catchment",
+      "ok": true,
+      "mode": "flyover",
+      "stops": 0,
+      "route_m": 2273,
+      "parks_and_water": 58
+    },
+    "BK": {
+      "name": "Bukit Batok",
+      "ok": true,
+      "mode": "walk",
+      "stops": 8,
+      "route_m": 1142,
+      "parks_and_water": 69
+    },
+    "SB": {
+      "name": "Sembawang",
+      "ok": true,
+      "mode": "walk",
+      "stops": 2,
+      "route_m": 252,
+      "parks_and_water": 65
+    },
+    "AM": {
+      "name": "Ang Mo Kio",
+      "ok": true,
+      "mode": "walk",
+      "stops": 5,
+      "route_m": 1514,
+      "parks_and_water": 62
+    },
+    "PR": {
+      "name": "Pasir Ris",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1222,
+      "parks_and_water": 43
+    },
+    "PN": {
+      "name": "Pioneer",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 331,
+      "parks_and_water": 14
+    },
+    "BL": {
+      "name": "Boon Lay",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1313,
+      "parks_and_water": 7
+    },
+    "SK": {
+      "name": "Sungei Kadut",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 619,
+      "parks_and_water": 45
+    },
+    "WI": {
+      "name": "Western Islands",
+      "ok": true,
+      "mode": "flyover",
+      "stops": 0,
+      "route_m": 26576,
+      "parks_and_water": 11
+    },
+    "PG": {
+      "name": "Punggol",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1820,
+      "parks_and_water": 97
+    },
+    "TH": {
+      "name": "Tengah",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 401,
+      "parks_and_water": 37
+    },
+    "BD": {
+      "name": "Bedok",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1947,
+      "parks_and_water": 66
+    },
+    "CL": {
+      "name": "Clementi",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1177,
+      "parks_and_water": 59
+    },
+    "MD": {
+      "name": "Mandai",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 765,
+      "parks_and_water": 6
+    },
+    "SM": {
+      "name": "Simpang",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 583,
+      "parks_and_water": 14
+    },
+    "YS": {
+      "name": "Yishun",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1186,
+      "parks_and_water": 44
+    },
+    "BT": {
+      "name": "Bukit Timah",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1223,
+      "parks_and_water": 23
+    },
+    "LK": {
+      "name": "Lim Chu Kang",
+      "ok": true,
+      "mode": "walk",
+      "stops": 3,
+      "route_m": 8216,
+      "parks_and_water": 43
+    },
+    "SE": {
+      "name": "Sengkang",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 821,
+      "parks_and_water": 29
+    },
+    "CK": {
+      "name": "Choa Chu Kang",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 874,
+      "parks_and_water": 44
+    },
+    "BP": {
+      "name": "Bukit Panjang",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 745,
+      "parks_and_water": 38
+    },
+    "HG": {
+      "name": "Hougang",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 824,
+      "parks_and_water": 38
+    },
+    "PL": {
+      "name": "Paya Lebar",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 902,
+      "parks_and_water": 8
+    },
+    "TM": {
+      "name": "Tampines",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 912,
+      "parks_and_water": 74
+    },
+    "WD": {
+      "name": "Woodlands",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 641,
+      "parks_and_water": 68
+    },
+    "CC": {
+      "name": "Central Water Catchment",
+      "ok": true,
+      "mode": "walk",
+      "stops": 4,
+      "route_m": 3126,
+      "parks_and_water": 28
+    },
+    "ME": {
+      "name": "Marina East",
+      "ok": true,
+      "mode": "walk",
+      "stops": 4,
+      "route_m": 4646,
+      "parks_and_water": 58
+    },
+    "MS": {
+      "name": "Marina South",
+      "ok": true,
+      "mode": "walk",
+      "stops": 4,
+      "route_m": 1799,
+      "parks_and_water": 115
+    },
+    "SG": {
+      "name": "Serangoon",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 705,
+      "parks_and_water": 33
+    },
+    "SV": {
+      "name": "Straits View",
+      "ok": true,
+      "mode": "walk",
+      "stops": 4,
+      "route_m": 1053,
+      "parks_and_water": 26
+    },
+    "BM": {
+      "name": "Bukit Merah",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1119,
+      "parks_and_water": 52
+    },
+    "DT": {
+      "name": "Downtown Core",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1125,
+      "parks_and_water": 99
+    },
+    "KL": {
+      "name": "Kallang",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 696,
+      "parks_and_water": 72
+    },
+    "MU": {
+      "name": "Museum",
+      "ok": true,
+      "mode": "walk",
+      "stops": 4,
+      "route_m": 1748,
+      "parks_and_water": 42
+    },
+    "NT": {
+      "name": "Newton",
+      "ok": true,
+      "mode": "walk",
+      "stops": 4,
+      "route_m": 2844,
+      "parks_and_water": 26
+    },
+    "NV": {
+      "name": "Novena",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1232,
+      "parks_and_water": 24
+    },
+    "OR": {
+      "name": "Orchard",
+      "ok": true,
+      "mode": "walk",
+      "stops": 4,
+      "route_m": 1728,
+      "parks_and_water": 34
+    },
+    "OT": {
+      "name": "Outram",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1922,
+      "parks_and_water": 30
+    },
+    "RV": {
+      "name": "River Valley",
+      "ok": true,
+      "mode": "walk",
+      "stops": 3,
+      "route_m": 910,
+      "parks_and_water": 34
+    },
+    "RC": {
+      "name": "Rochor",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 948,
+      "parks_and_water": 40
+    },
+    "SL": {
+      "name": "Seletar",
+      "ok": true,
+      "mode": "walk",
+      "stops": 4,
+      "route_m": 2380,
+      "parks_and_water": 21
+    },
+    "SR": {
+      "name": "Singapore River",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 816,
+      "parks_and_water": 68
+    },
+    "SI": {
+      "name": "Southern Islands",
+      "ok": true,
+      "mode": "flyover",
+      "stops": 1,
+      "route_m": 11005,
+      "parks_and_water": 9
+    },
+    "TN": {
+      "name": "Tanglin",
+      "ok": true,
+      "mode": "walk",
+      "stops": 6,
+      "route_m": 1838,
+      "parks_and_water": 34
+    },
+    "CB": {
+      "name": "Changi Bay",
+      "ok": true,
+      "mode": "flyover",
+      "stops": 0,
+      "route_m": 15561,
+      "parks_and_water": 4
+    },
+    "MP": {
+      "name": "Marine Parade",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1039,
+      "parks_and_water": 16
+    },
+    "GL": {
+      "name": "Geylang",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 656,
+      "parks_and_water": 43
+    },
+    "QT": {
+      "name": "Queenstown",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1205,
+      "parks_and_water": 63
+    },
+    "TP": {
+      "name": "Toa Payoh",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1061,
+      "parks_and_water": 23
+    },
+    "NE": {
+      "name": "North-Eastern Islands",
+      "ok": true,
+      "mode": "flyover",
+      "stops": 2,
+      "route_m": 31509,
+      "parks_and_water": 3
+    },
+    "TS": {
+      "name": "Tuas",
+      "ok": true,
+      "mode": "flyover",
+      "stops": 0,
+      "route_m": 38366,
+      "parks_and_water": 62
+    },
+    "CH": {
+      "name": "Changi",
+      "ok": true,
+      "mode": "walk",
+      "stops": 7,
+      "route_m": 1184,
+      "parks_and_water": 24
+    }
+  },
+  "summary": {
+    "areas": 55,
+    "walks": 49,
+    "flyovers": 6,
+    "failed": []
+  }
+}
