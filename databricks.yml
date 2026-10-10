@@ -67,6 +67,14 @@ resources:
           max_retries: 1
           min_retry_interval_millis: 60000
 
+        - task_key: official_and_news_feed
+          depends_on: [{task_key: snapshot_growth_inspection_notices}]
+          notebook_task:
+            notebook_path: ./notebooks/08_activity_feed.py
+            base_parameters: {repo_root: "${workspace.file_path}", data_root: "${var.data_root}", table_prefix: "${var.table_prefix}"}
+          timeout_seconds: 600
+          max_retries: 1
+
 targets:
   dev:
     default: true
