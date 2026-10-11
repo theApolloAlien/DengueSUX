@@ -324,6 +324,18 @@ def tool_schemas() -> list[dict]:
     return [{'type': 'function', 'function': {'name': k, 'description': v['description'], 'parameters': v['parameters']}} for k, v in TOOLS.items()]
 
 
+
+def language_notes(language: str) -> str:
+    """Words for one answer language, from DengueSUX's reviewed resident notices. English answers get none, so they never recite them."""
+    if language not in ('zh', 'ms', 'ta'):
+        return ''
+    name = {'zh': 'Chinese', 'ms': 'Malay', 'ta': 'Tamil'}[language]
+    keep = [l.strip() for l in GLOSSARY if not l.strip().startswith(('Chinese:', 'Malay:', 'Tamil:')) or l.strip().startswith(name + ':')]
+    return '\n'.join(['Words to use in this answer:'] + keep)
+
+
+GLOSSARY = ['Chinese: dengue 骨痛热症 (never 疟疾, which is malaria); dengue cluster 骨痛热症感染群; Aedes mosquito 伊蚊; mosquito bite 蚊子叮咬; stagnant water 积水.', 'Malay: dengue denggi; dengue cluster kelompok denggi; Aedes mosquito nyamuk Aedes; mosquito bite gigitan nyamuk; stagnant water air bertakung.', 'Tamil: dengue டெங்கி; dengue cluster டெங்கி நோய்த்தொற்றுக் குழுமம்; mosquito கொசு; Aedes mosquito ஏடிஸ் கொசு; mosquito bite கொசுக்கடி (dengue spreads only through the bite); stagnant water தேங்கிய நீர்.', 'Keep NEA campaign names in English in every language: Mozzie Wipeout; Spray, Apply, Wear.', 'Forecast words (forecast_vs_latest_reported_week / forecast_vs_typical_week), and the error measure:', 'Chinese: higher 高于上周 · lower 低于上周 · about the same 与上周大致相同 · quieter than usual 低于往年同期 · busier than usual 高于往年同期 · about usual 与往年同期相近 · average error 平均误差 (not 准确率).', 'Malay: higher lebih tinggi daripada minggu lepas · lower lebih rendah daripada minggu lepas · about the same hampir sama dengan minggu lepas · quieter than usual lebih rendah daripada biasa · busier than usual lebih tinggi daripada biasa · about usual seperti biasa · average error ralat purata.', 'Tamil: higher கடந்த வாரத்தை விட அதிகம் · lower கடந்த வாரத்தை விடக் குறைவு · about the same கடந்த வாரத்தைப் போலவே · quieter than usual வழக்கத்தை விடக் குறைவு · busier than usual வழக்கத்தை விட அதிகம் · about usual வழக்கம் போல · average error சராசரிப் பிழை (not துல்லியம்).']
+
 # ---------------------------------------------------------------- prompt and loop
 def system_prompt(data: dict, now: datetime | None = None) -> str:
     now = now or datetime.now(SGT)
@@ -357,15 +369,6 @@ How to answer
 - Whether cases will rise or fall: use only forecast_vs_latest_reported_week (higher, lower or about the same as the latest reported week) and forecast_vs_typical_week. Never infer a direction yourself.
 - For a live outlook, name the target week start and repeat the displayed whole-person point and 80% range exactly. Do not truncate or recalculate the tool values. The range is not a guarantee.
 - Answer in the language the user writes in: English, Chinese, Bahasa Melayu or Tamil. Keep planning area and street names in English, as in the data.
-- When answering in Chinese, Malay or Tamil, use these words, as in DengueSUX's reviewed resident notices (never mention them in an English answer):
-  Chinese: dengue 骨痛热症 (never 疟疾, which is malaria); dengue cluster 骨痛热症感染群; Aedes mosquito 伊蚊; mosquito bite 蚊子叮咬; stagnant water 积水.
-  Malay: dengue denggi; dengue cluster kelompok denggi; Aedes mosquito nyamuk Aedes; mosquito bite gigitan nyamuk; stagnant water air bertakung.
-  Tamil: dengue டெங்கி; dengue cluster டெங்கி நோய்த்தொற்றுக் குழுமம்; mosquito கொசு; Aedes mosquito ஏடிஸ் கொசு; mosquito bite கொசுக்கடி (dengue spreads only through the bite); stagnant water தேங்கிய நீர்.
-  Keep NEA campaign names in English in every language: Mozzie Wipeout; Spray, Apply, Wear.
-  Forecast words (forecast_vs_latest_reported_week / forecast_vs_typical_week), and the error measure:
-  Chinese: higher 高于上周 · lower 低于上周 · about the same 与上周大致相同 · quieter than usual 低于往年同期 · busier than usual 高于往年同期 · about usual 与往年同期相近 · average error 平均误差 (not 准确率).
-  Malay: higher lebih tinggi daripada minggu lepas · lower lebih rendah daripada minggu lepas · about the same hampir sama dengan minggu lepas · quieter than usual lebih rendah daripada biasa · busier than usual lebih tinggi daripada biasa · about usual seperti biasa · average error ralat purata.
-  Tamil: higher கடந்த வாரத்தை விட அதிகம் · lower கடந்த வாரத்தை விடக் குறைவு · about the same கடந்த வாரத்தைப் போலவே · quieter than usual வழக்கத்தை விடக் குறைவு · busier than usual வழக்கத்தை விட அதிகம் · about usual வழக்கம் போல · average error சராசரிப் பிழை (not துல்லியம்).
 - Never diagnose or predict personal dengue risk. Never make block-level predictions. If the data cannot answer, say so and point to NEA.
 - Lead with the answer. Plain language for non-technical officers, usually under 120 words (a route or ranking may be longer). Say "people", not "cases", for cluster counts.
 - Write dates like "22 May 2022". When asked what you can do, give at most four short bullets. When you explain what drove a forecast, say these are associations, not causes.
@@ -573,7 +576,7 @@ def run_chat(messages, llm, root: Path, genie=None, now: datetime | None = None,
             from .chat_cards import NoticeCard
             card=NoticeCard(code=area['code'],name=area['name'],language=lang,text=notice['text'])
             return {'answer':'','cards':[card.model_dump()],'sources':[registry['clusters']],'steps':[],'trace':[],'actions':[],'mode':'Saved resident notice'}
-    convo = [{'role': 'system', 'content': system_prompt(data, now) + f'\nAnswer the latest question in this language: {LANGUAGE_NAMES.get(language, "English")}, even if earlier turns used another language.'}] + clean_messages(messages)
+    convo = [{'role': 'system', 'content': system_prompt(data, now) + f'\nAnswer the latest question in this language: {LANGUAGE_NAMES.get(language, "English")}, even if earlier turns used another language.' + ('\n' + language_notes(language) if language_notes(language) else '')}] + clean_messages(messages)
     calls, used = [], []
     for step in range(max_steps + 1):
         reply = llm(convo, tool_schemas() if step < max_steps else None)

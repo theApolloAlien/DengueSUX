@@ -266,4 +266,6 @@ def test_live_outlook_states_its_direction_from_the_numbers(current_outlook_data
     has_normal = bool((current_outlook_data['model']['live_forecast']['headline'].get('normal') or {}).get('median'))
     assert result['forecast_vs_typical_week'] in (('quieter than usual', 'about usual', 'busier than usual') if has_normal else (None,))
     prompt = A.system_prompt(current_outlook_data)
-    assert '疟疾' in prompt and 'கொசுக்கடி' in prompt and 'Never infer a direction yourself' in prompt
+    assert 'Never infer a direction yourself' in prompt and '疟疾' not in prompt
+    assert '疟疾' in A.language_notes('zh') and 'கொசுக்கடி' in A.language_notes('ta') and '疟疾' not in A.language_notes('ta')
+    assert A.language_notes('en') == '' and 'Spray, Apply, Wear' in A.language_notes('ms')
