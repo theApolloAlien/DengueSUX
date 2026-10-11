@@ -29,3 +29,18 @@ body[data-boot-view=week]:not(.is-ready) .page-heading{display:none}.ask-slot{wi
 .chat-followups{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 8px}
 .chat-followups .ask-chip{font-size:12.5px;background:#fff;border:1px solid var(--border-subtle);border-radius:20px;padding:6px 12px;min-height:34px;color:var(--text-1);cursor:pointer}
 .chat-followups .ask-chip:hover{border-color:var(--border-strong)}
+
+/* A saved conversation, folded under the home stage until it is opened again. */
+#conversation.is-collapsed .chat-tools{display:none}
+.chat-resume{display:flex;align-items:center;gap:10px;margin:0 0 14px;view-transition-name:chat-resume}
+.chat-resume-open{flex:1;min-width:0;display:flex;align-items:center;gap:14px;text-align:left;background:var(--surface-2);border:1px solid var(--border-subtle);border-radius:14px;padding:12px 16px;color:var(--text-1);cursor:pointer;font:inherit;transition:border-color var(--dur-base) var(--ease-out),box-shadow var(--dur-base) var(--ease-out)}
+.chat-resume-open:hover{border-color:var(--border-strong);box-shadow:var(--elevation-2)}
+.chat-resume-open:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chat-resume-open>i:first-child{font-size:22px;color:var(--accent);flex-shrink:0}
+.chat-resume-open span{flex:1;min-width:0}
+.chat-resume-open strong{display:block;font-size:13px;font-weight:600}
+.chat-resume-open small{display:block;font-size:12px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.chat-resume-open em{font-style:normal;font-size:11px;color:var(--text-3);background:var(--surface-3);border-radius:999px;padding:3px 9px;white-space:nowrap}
+.chat-resume-open>i:last-child{font-size:14px;color:var(--text-3)}
+.chat-resume-new{display:flex;align-items:center;gap:6px;font-size:12px;white-space:nowrap}
+@media(max-width:760px){.chat-resume{flex-wrap:wrap;gap:4px}.chat-resume-open{padding:10px 12px;gap:10px}.chat-resume-open em{display:none}.chat-resume-new{margin-left:auto}}

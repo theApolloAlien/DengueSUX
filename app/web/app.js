@@ -414,7 +414,7 @@
     $('#about-done').addEventListener('click',()=>{$('#about-dialog').close();switchView('signals');});
 
     $$('[data-view]').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.view)));
-    $$('.wordmark,.brand-mark').forEach(a=>a.addEventListener('click',()=>switchView('signals')));
+    $$('.wordmark').forEach(a=>a.addEventListener('click',()=>switchView('signals')));
     $$('[data-methodology]').forEach(b=>b.addEventListener('click',()=>$('#methodology-dialog').showModal()));
     $('#close-methodology').addEventListener('click',()=>$('#methodology-dialog').close());$('#methodology-done').addEventListener('click',()=>$('#methodology-dialog').close());
     $('#methodology-dialog').addEventListener('click',e=>{if(e.target===$('#methodology-dialog')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close();}});
