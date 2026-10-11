@@ -8,15 +8,15 @@
  const safeUrl=v=>{try{const u=new URL(v);return u.protocol==='https:'?esc(u.href):'#';}catch{return '#';}};
  const scrub=t=>String(t).replace(/(?<!\d)\d{6}(?!\d)/g,'[private postal code]').replace(/\b1\.\d+\s*[, /]\s*103\.\d+\b/g,'[private coordinates]');
  const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
- let data,hooks,engine,root,home,turns=[],history=[],controller=null,language='en',panelOpen=false,lastQuestion='',context='';
+ let data,hooks,engine,root,home,turns=[],history=[],controller=null,language='en',panelOpen=false,lastQuestion='',context='',asked=[],checked=0,etag='';
  const TEXT={
-  en:{placeholder:'Ask about dengue, or enter a postal code…',locate:'Use my location',new:'New chat',send:'Send',stop:'Stop',example:'Try an example',chips:['Where should we check this weekend?','Will cases rise next week?','写一份中文居民通知','I have a fever, what now?']},
-  zh:{placeholder:'询问骨痛热症，或输入邮政编码…',locate:'使用我的位置',new:'新对话',send:'发送',stop:'停止',example:'试用示例',chips:['周末应该先检查哪里？','下周病例会增加吗？','写一份中文居民通知','我发烧了，该怎么办？']},
-  ms:{placeholder:'Tanya tentang denggi, atau masukkan poskod…',locate:'Guna lokasi saya',new:'Sembang baharu',send:'Hantar',stop:'Henti',example:'Cuba contoh',chips:['Di mana patut kami periksa hujung minggu ini?','Adakah kes akan meningkat minggu depan?','Tulis notis penduduk dalam Bahasa Melayu','Saya demam, apa perlu dibuat?']},
-  ta:{placeholder:'டெங்கி பற்றி கேளுங்கள் அல்லது அஞ்சல் குறியீட்டை உள்ளிடுங்கள்…',locate:'எனது இருப்பிடம்',new:'புதிய உரையாடல்',send:'அனுப்பு',stop:'நிறுத்து',example:'எடுத்துக்காட்டு',chips:['இந்த வார இறுதியில் எங்கு ஆய்வு செய்யலாம்?','அடுத்த வாரம் பாதிப்புகள் அதிகரிக்குமா?','தமிழில் குடியிருப்பாளர் அறிவிப்பு எழுதவும்','எனக்கு காய்ச்சல், என்ன செய்வது?']}
+  en:{placeholder:'Ask about dengue, or enter a postal code…',locate:'Use my location',new:'New chat',send:'Send',stop:'Stop',example:'Try an example'},
+  zh:{placeholder:'询问骨痛热症，或输入邮政编码…',locate:'使用我的位置',new:'新对话',send:'发送',stop:'停止',example:'试用示例'},
+  ms:{placeholder:'Tanya tentang denggi, atau masukkan poskod…',locate:'Guna lokasi saya',new:'Sembang baharu',send:'Hantar',stop:'Henti',example:'Cuba contoh'},
+  ta:{placeholder:'டெங்கி பற்றி கேளுங்கள் அல்லது அஞ்சல் குறியீட்டை உள்ளிடுங்கள்…',locate:'எனது இருப்பிடம்',new:'புதிய உரையாடல்',send:'அனுப்பு',stop:'நிறுத்து',example:'எடுத்துக்காட்டு'}
  };
- function save(){try{sessionStorage.setItem('denguesux:conversation',JSON.stringify({turns:turns.filter(t=>!t.private).slice(-12),history:history.slice(-8),language,context}));}catch{}}
- function restore(){try{const s=JSON.parse(sessionStorage.getItem('denguesux:conversation'));if(s&&Array.isArray(s.turns)&&Array.isArray(s.history)){turns=s.turns.filter(t=>typeof t.question==='string').slice(-12);history=s.history.filter(m=>['user','assistant'].includes(m.role)&&typeof m.content==='string').slice(-8).map(m=>({...m,content:scrub(m.content)}));language=TEXT[s.language]?s.language:'en';context=scrub(s.context||'');lastQuestion=scrub(turns.at(-1)?.question||'');}}catch{}}
+ function save(){try{sessionStorage.setItem('denguesux:conversation',JSON.stringify({turns:turns.filter(t=>!t.private).slice(-12),history:history.slice(-8),language,context,asked}));}catch{}}
+ function restore(){try{const s=JSON.parse(sessionStorage.getItem('denguesux:conversation'));if(s&&Array.isArray(s.turns)&&Array.isArray(s.history)){turns=s.turns.filter(t=>typeof t.question==='string').slice(-12);history=s.history.filter(m=>['user','assistant'].includes(m.role)&&typeof m.content==='string').slice(-8).map(m=>({...m,content:scrub(m.content)}));language=TEXT[s.language]?s.language:'en';context=scrub(s.context||'');asked=Array.isArray(s.asked)?s.asked.filter(v=>typeof v==='string'):[];lastQuestion=scrub(turns.at(-1)?.question||'');}}catch{}}
  // Same comparison as the Forecast page (a five-year median for the week), so the two never disagree.
  function outlookHeadline(h){if(!h)return 'The latest dengue picture, in one place.';const median=h.normal?.median,ratio=Number.isFinite(h.prediction)&&Number.isFinite(median)?h.prediction/Math.max(median,1):null;const word=ratio==null?String(h.risk||'').toLowerCase():ratio<.8?'quieter than usual':ratio>1.25?'busier than usual':'about usual';return word?`Dengue is ${word} in Singapore this week.`:'The latest dengue picture, in one place.';}
  function checkingLine(areas){const high=areas.filter(a=>a.risk==='High').length,active=areas.filter(a=>a.cluster_count>0).length;if(!active)return 'No active clusters in the latest NEA snapshot.';return high?`${high} ${high===1?'area needs':'areas need'} checking first, ${active} with active clusters.`:`${active} ${active===1?'area has':'areas have'} active clusters.`;}
@@ -30,14 +30,15 @@
  function greeting(){const hour=Number(new Intl.DateTimeFormat('en-SG',{hour:'numeric',hourCycle:'h23',timeZone:'Asia/Singapore'}).format(new Date()));return hour<12?'Good morning.':hour<18?'Good afternoon.':'Good evening.';}
  function sourcesHTML(sources=[]){return `<div class="ask-sources">${sources.map((s,i)=>`<span>[${i+1}] ${s.url?`<a href="${safeUrl(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>`:esc(s.name)} · ${date(s.date)}</span>`).join('')}</div>`;}
  const bullet=/^\s*(?:[-*•]|\d+[.)])\s+/;
- function markdown(text){return esc(text).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\[\[[^\]]*\]\]/g,'').split(/\n{2,}/).map(block=>{const lines=block.split('\n').filter(l=>l.trim()),items=lines.filter(l=>bullet.test(l));
+ // Models sometimes echo ISO dates from the tools; show them the way the rest of the app does.
+ function markdown(text){return esc(text).replace(/\b(20\d\d-[01]\d-[0-3]\d)\b/g,(_,d)=>date(d)).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\[\[[^\]]*\]\]/g,'').split(/\n{2,}/).map(block=>{const lines=block.split('\n').filter(l=>l.trim()),items=lines.filter(l=>bullet.test(l));
   const listed=bullet.test(lines[0]||'')?lines:lines.slice(1);
   if(listed.length&&listed.every(l=>bullet.test(l))){const lead=listed===lines?'':`<p>${lines[0]}</p>`,tag=/^\s*\d/.test(items[0])?'ol':'ul';return `${lead}<${tag} class="ask-list">${items.map(l=>`<li>${l.replace(bullet,'')}</li>`).join('')}</${tag}>`;}
   return `<p>${lines.join('<br>')}</p>`;}).join('');}
  function renderTurn(t){
-  const el=document.createElement('article');el.className='conversation-turn';el.innerHTML=`<div class="chat-question">${esc(t.question)}</div><div class="chat-answer"><h2 tabindex="-1">${icon('chat-circle-text')} DengueSUX <small>${esc(t.mode||'Local, no AI')}</small></h2><div class="chat-answer-body">${t.answer?markdown(t.answer):'<p role="status">Reading the saved data…</p>'}</div></div>`;
+  const el=document.createElement('article');el.className='conversation-turn';el.innerHTML=`<div class="chat-question">${esc(t.question)}</div><div class="chat-answer"><h2 tabindex="-1">${icon('chat-circle-text')} DengueSUX <small>${esc(t.mode||'Local, no AI')}</small></h2><div class="chat-answer-body">${t.answer==null?'<p role="status">Reading the latest data…</p>':markdown(t.answer)}</div></div>`;
   $('#ask-log').append(el);if(t.html)el.querySelector('.chat-answer-body').innerHTML=t.html;
-  if(t.visual)window.Showcase?.render(el.querySelector('.chat-answer-body'),t.visual,t);
+  for(const v of t.visuals||(t.visual?[t.visual+(t.area?':'+t.area:'')]:[]))window.Showcase?.render(el.querySelector('.chat-answer-body'),v);
   if(t.cards)window.AnswerCards?.render(el.querySelector('.chat-answer-body'),t.cards,data,language);
   if(t.sources)el.querySelector('.chat-answer-body').insertAdjacentHTML('beforeend',sourcesHTML(t.sources));
   if(t.followups?.length){const row=document.createElement('div');row.className='chat-followups';row.innerHTML=t.followups.map(q=>`<button type="button" class="ask-chip">${esc(q)}</button>`).join('');row.onclick=e=>{const b=e.target.closest('button');if(b)ask(b.textContent);};el.querySelector('.chat-answer-body').append(row);}
@@ -53,9 +54,8 @@
   window.LocationCheck?.resize();$('#ask-input').focus();
  }
  function syncRoute(){if(!home)return;const week=['','#week'].includes(location.hash);if(week&&panelOpen)mountPanel(false);document.querySelector('.app-shell').inert=panelOpen&&matchMedia('(max-width:720px)').matches;window.LocationCheck?.resize();if(!week&&!panelOpen&&root.parentElement!==$('#home-conversation'))$('#home-conversation').append(root);}
- function localQuestion(q){const t=TEXT[language],i=t.chips.indexOf(q);return i>=0?TEXT.en.chips[i]:q;}
- async function answerLocal(question){
-  let q=localQuestion(question);const placeArea=context.match(/^Planning area: ([^;]+)/)?.[1];if(placeArea&&placeArea!=='unavailable'&&/here|there|my (place|area)|plan|route|nearby|那里|这里/i.test(q))q+=' '+placeArea;const res=await engine.respond(q,()=>{});
+ async function answerLocal(question,pick){
+  let q=pick?.en||question;const placeArea=context.match(/^Planning area: ([^;]+)/)?.[1];if(placeArea&&placeArea!=='unavailable'&&/here|there|my (place|area)|plan|route|nearby|那里|这里/i.test(q))q+=' '+placeArea;const res=await engine.respond(q,()=>{});
   const cards=window.AnswerCards?.fromTools(res.results,data)||[];
   // Keep paragraph breaks and list items; a list the cards already draw is not repeated as text.
   const text=res.answer.paragraphs.map(html=>{const b=document.createElement('div');b.innerHTML=html;b.querySelectorAll('.ask-cite').forEach(n=>n.remove());const items=[...b.querySelectorAll('li')];return items.length?(cards.length?'':items.map(li=>'- '+li.textContent.trim()).join('\n')):b.textContent.trim();}).filter(Boolean).join('\n\n');
@@ -82,36 +82,52 @@
   const r=await fetch('/api/chat',{method:'POST',headers:{'content-type':'application/json'},body,signal});if(!r.ok)throw Error('Assistant unavailable');return {...await r.json(),mode:'AI · dated sources'};
  }
  function finish(t,el){el.remove();const answer=renderTurn(t);setConversation();save();answer.querySelector('h2').focus({preventScroll:true});answer.scrollIntoView({block:'nearest',behavior:reduced()?'instant':'smooth'});}
- async function ask(question){
-  if(controller||!question.trim())return;lastQuestion=scrub(question);
+ // Re-read the published data at most every few minutes, so visuals and suggestions follow the daily refresh.
+ async function fresh(){
+  if(window.DENGUESUX_DATA||Date.now()-checked<180000)return;checked=Date.now();
+  try{const r=await fetch('/data/dashboard.json',{cache:'no-cache',signal:AbortSignal.timeout(8000)}),tag=r.headers.get('etag')||r.headers.get('last-modified')||'';
+   if(!r.ok||!tag||tag===etag){etag=tag||etag;return;}const first=!etag;etag=tag;if(first&&performance.now()<180000)return;
+   data=await r.json();window.Showcase?.init(data);renderSuggestions();}catch{}
+ }
+ async function ask(question,pick=null){
+  if(controller||!question.trim())return;lastQuestion=scrub(question);if(pick){done(pick.id);renderSuggestions();}
   if(window.CareActions?.symptoms.test(question)){window.CareActions.handle(question);return;}
   const postal=question.match(/(?<!\d)\d{6}(?!\d)/);if(postal&&window.LocationCheck)return window.LocationCheck.lookup(postal[0],question);
   // Do not forward coordinates or a postal code in any branch, even if lookup is unavailable.
   if(postal||/\b1\.\d+\s*[, /]\s*103\.\d+\b/.test(question))return privateAnswer('Location check',{answer:'Use a six-digit postal code or “Use my location”. Precise location stays in your browser.'});
   if(window.CareActions?.handle(question))return;
   if(/(block|home|house|street).*(predict|forecast|risk|chance)|(predict|forecast|risk|chance).*(block|home|house|street)/i.test(question))return privateAnswer('Local prediction',{answer:'DengueSUX cannot predict dengue at block level. The dated map shows places to check, not confirmed breeding sites. Check NEA for current cluster information.',sources:[{name:'NEA dengue clusters',url:'https://www.nea.gov.sg/dengue-zika/dengue/dengue-clusters',date:data.current.as_of}]});
-  const want=window.Showcase?.match(question);if(want==='demo'){window.Showcase.startDemo();return;}
   const t={question:scrub(question)},el=renderTurn(t);turns.push(t);const apply=()=>setConversation();if(document.startViewTransition&&!reduced()&&document.visibilityState==='visible'){const v=document.startViewTransition(apply);[v.ready,v.finished,v.updateCallbackDone].forEach(p=>p?.catch(()=>{}));}else apply();
   controller=new AbortController();setBusy(true);
-  try{let result;try{result=await answerRemote(question,AbortSignal.any([controller.signal,AbortSignal.timeout(150000)]),el);}catch(e){if(controller.signal.aborted)throw e;}result||=await answerLocal(question);Object.assign(t,result);if(want)attachVisual(t,want);history.push({role:'user',content:scrub(question)},{role:'assistant',content:scrub(t.answer||'')});history=history.slice(-8);}
-  catch(e){const stopped=controller.signal.aborted;t.answer=stopped?'Stopped. You can ask again when ready.':want?window.Showcase.lead(want.split(':')[0],{area:want.split(':')[1]}):'The saved data could not answer this. Please check NEA for the latest information.';t.mode=want&&!stopped?'From saved data':'Local, no AI';if(want&&!stopped)attachVisual(t,want);}
-  finally{controller=null;setBusy(false);finish(t,el);}
+  try{await fresh();let result;try{result=await answerRemote(question,AbortSignal.any([controller.signal,AbortSignal.timeout(150000)]),el);}catch(e){if(controller.signal.aborted)throw e;}result||=await answerLocal(question,pick);Object.assign(t,result);attachVisuals(t,question,pick);history.push({role:'user',content:scrub(question)},{role:'assistant',content:scrub(t.answer||'')});history=history.slice(-8);}
+  catch(e){const stopped=controller.signal.aborted,want=stopped?[]:window.Showcase?.visualsFor(question,[],pick?.visual)||[];t.answer=stopped?'Stopped. You can ask again when ready.':want.length?window.Showcase.lead(want[0].id,want[0]):'The data could not answer this. Please check NEA for the latest information.';t.mode=want.length?'From the latest data':'Local, no AI';if(want.length){t.visuals=want;t.sources=window.Showcase.sources(want[0].id);}}
+  finally{controller=null;setBusy(false);finish(t,el);renderSuggestions();}
  }
  function setBusy(busy){$('#chat-stop').hidden=!busy;$('.chat-send').hidden=busy;$('#chat-location').disabled=busy;root.setAttribute('aria-busy',String(busy));}
  function privateAnswer(question,result){const t={question,...result,private:true,mode:'On this device'};turns.push(t);const el=renderTurn(t);setConversation();el.querySelector('h2').focus({preventScroll:true});return el;}
- // A visual answer drawn from the saved data, with no model call.
- function visual(id,question,opts={}){
-  if(controller||!window.Showcase)return;
-  const t={question:scrub(question),visual:id,area:opts.area,demo:opts.demo,answer:window.Showcase.lead(id,{area:opts.area}),sources:window.Showcase.sources(id),mode:'From saved data'};
-  turns.push(t);const el=renderTurn(t);const apply=()=>setConversation();
-  // Scroll once the layout has settled; the home intro disappears inside the transition's update.
-  const show=()=>requestAnimationFrame(()=>{el.querySelector('h2').focus({preventScroll:true});el.scrollIntoView({block:'start',behavior:reduced()?'instant':'smooth'});});
-  if(document.startViewTransition&&!reduced()&&document.visibilityState==='visible'){const v=document.startViewTransition(apply);[v.ready,v.finished].forEach(p=>p?.catch(()=>{}));v.updateCallbackDone.then(show,show);}else{apply();show();}
-  history.push({role:'user',content:t.question},{role:'assistant',content:scrub(t.answer)});history=history.slice(-8);save();
+ // Visuals follow what the answer is about: the pressed prompt, the wording and the data tools it used.
+ function attachVisuals(t,question,pick){
+  // The suggestion row below already offers what to ask next.
+  t.followups=[];
+  const want=window.Showcase?.visualsFor(question,t.trace,pick?.visual)||[];if(!want.length)return;t.visuals=want;
+  // A drawn view answers the suggestion that would have drawn it (same view, same area).
+  const all=window.Showcase.suggestions(language);want.forEach(v=>{const p=all.find(p=>p.visual?.id===v.id&&(p.visual.area==null||p.visual.area===v.area));if(p)done(p.id);});
+  // The offline engine had no data tool for this question; let the drawn view lead with its own dated sentence.
+  if(t.mode==='Local, no AI'&&!(t.trace||[]).length){t.answer=window.Showcase.lead(want[0].id,want[0]);t.sources=window.Showcase.sources(want[0].id);t.mode='From the latest data';}
+  // A drawn view replaces the smaller card that shows the same thing.
+  const drop=want.map(v=>({outlook:'forecast',drivers:'forecast',replay:'forecast',hotspots:'top_areas',route:'plan',area:'area'}[v.id])).filter(Boolean);if(t.cards)t.cards=t.cards.filter(c=>!drop.includes(c.type));
  }
- function attachVisual(t,want){const [id,area]=want.split(':'),drop={outlook:'forecast',hotspots:'top_areas',route:'plan'}[id];t.visual=id;if(area)t.area=area;if(drop&&t.cards)t.cards=t.cards.filter(c=>c.type!==drop);}
- function clear(keepDemo){controller?.abort();if(controller)return;if(keepDemo!==true)window.Showcase?.stopDemo();window.LocationCheck?.reset();turns=[];history=[];context='';$('#ask-log').replaceChildren();setConversation();save();$('#ask-input').focus();}
- function languageUI(){const t=TEXT[language];$('#ask-input').placeholder=t.placeholder;$('#chat-location').innerHTML=icon('crosshair-simple')+esc(t.locate);$('#chat-stop').textContent=t.stop;$('.chat-send').setAttribute('aria-label',t.send);$('.chat-new').innerHTML=icon('plus')+esc(t.new);$('.chat-suggestions').innerHTML=`<button class="ask-chip" data-example>${icon('house-line')}${esc(t.example)}</button>`+t.chips.map(q=>`<button class="ask-chip">${esc(q)}</button>`).join('');$('.chat-suggestions').querySelectorAll('button').forEach(b=>b.onclick=()=>b.hasAttribute('data-example')?window.LocationCheck?.example():ask(b.textContent));save();}
+ function done(id){if(id&&!asked.includes(id))asked.push(id);}
+ // The next few suggestions not yet answered, worded from the current data.
+ function renderSuggestions(){
+  const box=root?.querySelector('.chat-suggestions');if(!box)return;const t=TEXT[language],all=window.Showcase?.suggestions(language)||[],next=all.filter(p=>!asked.includes(p.id)).slice(0,4);
+  box.innerHTML=next.map((p,i)=>`<button class="ask-chip${i===0?' is-next':''}" data-suggest="${esc(p.id)}">${icon(p.icon)}${esc(p.q)}</button>`).join('')+(turns.length?'':`<button class="ask-chip" data-example>${icon('house-line')}${esc(t.example)}</button>`);
+  box.hidden=!box.children.length;
+  box.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.hasAttribute('data-example'))return window.LocationCheck?.example();const p=all.find(x=>x.id===b.dataset.suggest);if(!p||controller)return;
+   ask(p.q,p);};
+ }
+ function clear(){controller?.abort();if(controller)return;window.LocationCheck?.reset();turns=[];history=[];context='';asked=[];$('#ask-log').replaceChildren();setConversation();renderSuggestions();save();$('#ask-input').focus();}
+ function languageUI(){const t=TEXT[language];$('#ask-input').placeholder=t.placeholder;$('#chat-location').innerHTML=icon('crosshair-simple')+esc(t.locate);$('#chat-stop').textContent=t.stop;$('.chat-send').setAttribute('aria-label',t.send);$('.chat-new').innerHTML=icon('plus')+esc(t.new);renderSuggestions();save();}
  function init(payload,callbacks,localEngine){data=payload;hooks=callbacks;engine=localEngine;window.Showcase?.init(payload);restore();
   root=document.createElement('div');root.id='conversation';root.innerHTML=`<div class="chat-tools"><button class="text-button chat-new" type="button">New chat</button></div><div id="ask-log" class="conversation-log" role="log" aria-live="polite" aria-relevant="additions text"></div><div class="composer-wrap"><form id="ask-form" class="home-composer"><label class="sr-only" for="ask-input">Your question</label><textarea id="ask-input" rows="2" maxlength="600" autocomplete="off"></textarea><div class="composer-actions"><button type="button" id="chat-location" class="text-button"></button><label class="sr-only" for="chat-language">Answer language</label><select id="chat-language"><option value="en">EN</option><option value="zh">中文</option><option value="ms">BM</option><option value="ta">தமிழ்</option></select><span class="composer-space"></span><button type="button" id="chat-stop" class="outline-button" hidden>Stop</button><button class="solid-button chat-send" type="submit" aria-label="Send">${icon('arrow-up')}</button></div></form><p class="composer-privacy">Postal codes go directly to OneMap. Your location stays in this browser.</p><div class="chat-suggestions"></div></div>`;
   const panel=document.createElement('aside');panel.id='ask-panel';panel.className='ask-panel';panel.hidden=true;panel.setAttribute('aria-label','Ask DengueSUX');panel.innerHTML=`<header class="ask-head"><strong>Ask DengueSUX</strong><button class="icon-button" id="close-chat" aria-label="Close assistant">${icon('x')}</button></header><div class="panel-chat"></div>`;document.body.append(panel);panel.querySelector('.panel-chat').append(root);
@@ -124,9 +140,9 @@
   panel.addEventListener('keydown',e=>{if(e.key==='Tab'&&panel.hasAttribute('aria-modal')){const nodes=[...panel.querySelectorAll('button,textarea,select,a,summary')].filter(n=>!n.disabled&&n.getClientRects().length),first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
   root.querySelector('.chat-new').onclick=clear;$('#chat-language').value=language;$('#chat-language').onchange=e=>{language=e.target.value;languageUI();};$('#chat-location').onclick=()=>window.LocationCheck?.locate();languageUI();turns.forEach(renderTurn);window.addEventListener('hashchange',syncRoute);matchMedia('(max-width:720px)').addEventListener('change',()=>{if(panelOpen)mountPanel(true);});
  }
- function mount(api){home=$('#week-view');home.classList.add('chat-home');home.insertAdjacentHTML('afterbegin',`<div class="home-intro"><div class="hero-stage"><img class="home-neighbourhood" src="/brand/neighbourhood-hero.webp" alt="Illustration of green Singapore housing blocks and a cared-for courtyard" width="1536" height="1024"></div><div class="home-intro-copy"><div class="home-greeting">${greeting()}</div><h1>${esc(outlookHeadline(api.liveForecast()?.headline))}</h1><p>${esc(checkingLine(data.current.areas))} A little care starts close to home.</p>${heroStats()}<div id="saved-places"></div></div></div><div id="home-conversation"></div>`);mountStage();$('#home-conversation').append(root);window.Showcase?.gallery($('#home-conversation'));setConversation();
+ function mount(api){home=$('#week-view');home.classList.add('chat-home');home.insertAdjacentHTML('afterbegin',`<div class="home-intro"><div class="hero-stage"><img class="home-neighbourhood" src="/brand/neighbourhood-hero.webp" alt="Illustration of green Singapore housing blocks and a cared-for courtyard" width="1536" height="1024"></div><div class="home-intro-copy"><div class="home-greeting">${greeting()}</div><h1>${esc(outlookHeadline(api.liveForecast()?.headline))}</h1><p>${esc(checkingLine(data.current.areas))} A little care starts close to home.</p>${heroStats()}<div id="saved-places"></div></div></div><div id="home-conversation"></div>`);mountStage();$('#home-conversation').append(root);setConversation();
   const grid=home.querySelector('.week-grid');grid.insertAdjacentHTML('beforeend',`<section class="week-activity"><header><h2>Recent activity</h2><span class="feed-status">Saved data</span></header><div id="activity-feed"><p>Cluster snapshot · ${date(data.current.as_of)}</p><a href="#map">View the latest clusters ${icon('arrow-up-right')}</a></div></section>`);
   window.LocationCheck?.init(data);window.CareActions?.init(data);window.ActivityFeed?.init(data,api);window.AedesLayer?.init(data,api);window.AnswerCards?.sparklines(home,data);syncRoute();
  }
- window.ChatHome={init,mount,ask,privateAnswer,scrub,get language(){return language;},get data(){return data;},get hooks(){return hooks;},setContext(v){context=scrub(v.replace(/cluster ID: (\d{6})/g,(_,id)=>'cluster ID (digit groups): '+id.slice(0,3)+'-'+id.slice(3)));save();},sourcesHTML,number,date,esc,icon,clear,visual};
+ window.ChatHome={init,mount,ask,privateAnswer,scrub,get language(){return language;},get data(){return data;},get hooks(){return hooks;},setContext(v){context=scrub(v.replace(/cluster ID: (\d{6})/g,(_,id)=>'cluster ID (digit groups): '+id.slice(0,3)+'-'+id.slice(3)));save();},sourcesHTML,number,date,esc,icon,clear};
 })();

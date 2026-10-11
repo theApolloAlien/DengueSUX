@@ -1,4 +1,5 @@
-/* Showcase answers: tappable prompts answered with maps, charts and diagrams drawn from the saved, dated data.
+/* Visual answers: maps, charts and diagrams drawn from the latest dated data, attached to any chat answer they fit.
+   Suggested prompts are built from the same data, so they always name current areas, dates and counts.
    Nothing here calls a model or invents a number; every figure is read from the dashboard bundle. */
 (() => {
  'use strict';
@@ -10,8 +11,7 @@
  const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
  const slug=n=>String(n).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-$/,'');
  const RISK={High:'#ff7a5c',Medium:'#f3b847',Low:'#2c6150'};
- const DEMO=['hotspots','outlook','drivers','route','accuracy','how'];
- let data,geo,seq=0,demo=null,narrow=false;
+ let data,geo,seq=0,narrow=false;
  const uid=p=>p+(++seq);
  const live=()=>data?.model?.live_forecast?.available!==false?data?.model?.live_forecast:null;
  const head=()=>live()?.headline;
@@ -19,28 +19,45 @@
  const active=()=>data.current.areas.filter(a=>a.cluster_count>0);
  function usual(h){const m=h?.normal?.median,r=fin(h?.prediction)&&fin(m)?h.prediction/Math.max(m,1):null;return r==null?null:r<.8?['quieter','Quieter than usual']:r>1.25?['busier','Busier than usual']:['usual','About usual'];}
 
- function prompts(){
-  const t=data.current.totals||{},a=topArea(),h=head(),stops=a?data.inspection.areas[a.code].stops.length:0;
+ const TITLE={hotspots:'Map of this week’s clusters',outlook:'National outlook',drivers:'What drives the forecast',route:'Walking route',changes:'Cluster changes',accuracy:'Forecast accuracy',how:'How DengueSUX works',area:'Planning area close-up',replay:'2022 outbreak replay',freshness:'How recent the data is',table:'Database result'};
+ const ICON={area:'map-pin-area',replay:'clock-counter-clockwise',freshness:'clock',hotspots:'map-trifold',outlook:'chart-line-up',drivers:'chart-bar-horizontal',route:'path',changes:'arrows-clockwise',accuracy:'target',how:'flow-arrow',notice:'megaphone',fever:'first-aid'};
+ // Prompt wording per language; every value in it comes from the current data.
+ const ASK={
+  en:{hotspots:v=>`Where are the ${v.clusters} active dengue clusters?`,area:v=>`Why is ${v.top} ${v.topRisk} priority?`,replay:v=>`How early did the model warn before the ${v.peak} peak?`,freshness:v=>`How recent is each of the ${v.feeds} data sources?`,outlook:v=>`How many cases are expected in the week of ${v.week}?`,drivers:v=>`Why is the forecast about ${v.prediction}?`,route:v=>`Plan a check walk in ${v.area}`,changes:v=>`What changed in the clusters since ${v.since}?`,accuracy:v=>`How accurate has the forecast been over ${v.weeks} weeks?`,notice:v=>`Draft a resident notice for ${v.top}`,how:v=>`How does DengueSUX build the ${v.snapshot} plan from open data?`,fever:()=>'I have a fever, what now?'},
+  zh:{hotspots:v=>`目前这${v.clusters}个活跃病例群在哪里？`,area:v=>`为什么${v.top}是${v.topRisk}优先级？`,replay:v=>`模型在${v.peak}高峰前多早发出预警？`,freshness:v=>`这${v.feeds}个数据源各有多新？`,outlook:v=>`${v.week}那一周预计有多少病例？`,drivers:v=>`为什么预测大约是${v.prediction}？`,route:v=>`规划在${v.area}的检查步行路线`,changes:v=>`自${v.since}以来病例群有什么变化？`,accuracy:v=>`过去${v.weeks}周的预测有多准确？`,notice:v=>`为${v.top}写一份中文居民通知`,how:v=>`DengueSUX如何用公开数据制定${v.snapshot}的计划？`,fever:()=>'我发烧了，该怎么办？'},
+  ms:{hotspots:v=>`Di mana ${v.clusters} kluster denggi aktif?`,area:v=>`Mengapa ${v.top} berkeutamaan ${v.topRisk}?`,replay:v=>`Berapa awal model memberi amaran sebelum puncak ${v.peak}?`,freshness:v=>`Sejauh mana terkini setiap ${v.feeds} sumber data?`,outlook:v=>`Berapa kes dijangka pada minggu ${v.week}?`,drivers:v=>`Mengapa ramalan kira-kira ${v.prediction}?`,route:v=>`Rancang laluan pemeriksaan di ${v.area}`,changes:v=>`Apa yang berubah pada kluster sejak ${v.since}?`,accuracy:v=>`Sejauh mana tepat ramalan dalam ${v.weeks} minggu?`,notice:v=>`Tulis notis penduduk dalam Bahasa Melayu untuk ${v.top}`,how:v=>`Bagaimana DengueSUX membina pelan ${v.snapshot} daripada data terbuka?`,fever:()=>'Saya demam, apa perlu dibuat?'},
+  ta:{hotspots:v=>`செயலில் உள்ள ${v.clusters} டெங்கி தொகுப்புகள் எங்கே?`,area:v=>`${v.top} ஏன் ${v.topRisk} முன்னுரிமை?`,replay:v=>`${v.peak} உச்சத்திற்கு முன் மாதிரி எவ்வளவு முன்பே எச்சரித்தது?`,freshness:v=>`${v.feeds} தரவு மூலங்கள் ஒவ்வொன்றும் எவ்வளவு புதியவை?`,outlook:v=>`${v.week} வாரத்தில் எத்தனை பாதிப்புகள் எதிர்பார்க்கப்படுகின்றன?`,drivers:v=>`முன்னறிவிப்பு ஏன் சுமார் ${v.prediction}?`,route:v=>`${v.area} இல் ஆய்வு நடைப்பாதையைத் திட்டமிடவும்`,changes:v=>`${v.since} முதல் தொகுப்புகளில் என்ன மாறியது?`,accuracy:v=>`${v.weeks} வாரங்களில் முன்னறிவிப்பு எவ்வளவு துல்லியம்?`,notice:v=>`${v.top} க்கு தமிழில் குடியிருப்பாளர் அறிவிப்பு எழுதவும்`,how:v=>`திறந்த தரவிலிருந்து ${v.snapshot} திட்டத்தை DengueSUX எப்படி உருவாக்குகிறது?`,fever:()=>'எனக்கு காய்ச்சல், என்ன செய்வது?'}
+ };
+ const LOCALE={en:'en-SG',zh:'zh-SG',ms:'ms-MY',ta:'ta-SG'};
+ // A visual is {id, area?, week?, columns?, rows?, sql?, title?}; "route:JW" strings from older saved chats still work.
+ const spec=v=>typeof v==='string'?(([id,area])=>area?{id,area}:{id})(v.split(':')):v||{};
+ const key=v=>[v.id,v.area,v.week,v.sql].filter(x=>x!=null).join(':');
+ // Each visual is offered only when the data can draw it.
+ function drawable(v){
+  const {id,area:code,week,rows}=spec(v);
+  if(id==='hotspots')return active().length>0;
+  if(id==='outlook')return !!head();
+  if(id==='drivers')return !!head()?.top_features?.length;
+  if(id==='accuracy')return !!data.model?.prospective?.overall;
+  if(id==='changes')return !!data.growth?.changes?.summary;
+  if(id==='route')return !!data.inspection?.areas?.[code||topArea()?.code]?.stops?.length;
+  if(id==='area')return !!code&&data.current.areas.some(a=>a.code===code);
+  if(id==='replay')return replayRows().length>2&&(week==null||!!replayRows()[week]);
+  if(id==='freshness')return freshRows().length>0;
+  if(id==='table')return Array.isArray(rows)&&rows.length>0;
+  return id==='how';
+ }
+ // Suggested prompts in presentation order, worded from the current data. Press them one after another.
+ function suggestions(lang='en'){
+  if(!data)return [];
+  const t=data.current.totals||{},a=topArea(),h=head(),ranked=active().sort((x,y)=>y.cluster_cases-x.cluster_cases),g=data.growth?.changes,o=data.model?.prospective?.overall,words=ASK[lang]||ASK.en,loc=LOCALE[lang]||'en-SG',peak=data.model?.peak_lead_time?.peak_week;
+  const when=(v,o={day:'numeric',month:'long'})=>v?new Date(String(v).length===10?v+'T12:00:00+08:00':v).toLocaleDateString(loc,{...o,timeZone:'Asia/Singapore'}):'';
+  const v={clusters:num(t.clusters??data.current.clusters?.features?.length),week:when(h?.target_date),prediction:num(h?.prediction),area:a?.name,since:when(g?.from_date),weeks:num(o?.n),top:ranked[0]?.name,topRisk:ranked[0]?.risk,feeds:num(freshRows().length),snapshot:when(data.current.as_of),peak:when(peak,{month:'long',year:'numeric'})};
   return [
-   {id:'demo',featured:true,icon:'play',title:'Play the demo briefing',sub:`${DEMO.length} visual steps: hotspots, forecast, a field walk and how it works. Press Next as you talk.`,q:'Walk me through this week'},
-   {id:'hotspots',icon:'map-trifold',title:'Map this week’s hotspots',sub:`${num(t.clusters)} clusters across ${active().length} areas`,q:'Show this week’s hotspots on a map'},
-   {id:'outlook',icon:'chart-line-up',title:'Forecast for next week',sub:h?`About ${num(h.prediction)} people, with its range`:'Latest official reports',q:'Show next week’s forecast',hide:!h},
-   a&&{id:'route',icon:'path',title:`Walk a check in ${a.name}`,sub:`${stops} stops on a saved walking route`,q:`Plan a walk in ${a.name}`,area:a.code},
-   {id:'drivers',icon:'chart-bar-horizontal',title:'What drives the forecast?',sub:'From the model’s average week to this one',q:'What is driving the forecast?',hide:!h?.top_features?.length},
-   {id:'accuracy',icon:'target',title:'How accurate is it?',sub:`${num(data.model.prospective?.overall?.n)} weeks checked since 2023`,q:'How accurate is the forecast?',hide:!data.model.prospective?.overall},
-   {id:'changes',icon:'arrows-clockwise',title:'What changed lately?',sub:'New, growing and closed clusters',q:'What changed since the last snapshot?',hide:!data.growth?.changes?.summary},
-   {id:'how',icon:'flow-arrow',title:'How does DengueSUX work?',sub:'Open data to field plan, on Databricks',q:'How does DengueSUX work?'},
-  ].filter(p=>p&&!p.hide);
- }
- function gallery(host){
-  if(!host||host.querySelector('.showcase'))return;
-  const box=document.createElement('section');box.className='showcase';box.setAttribute('aria-labelledby','showcase-title');
-  box.innerHTML=`<h2 id="showcase-title">Explore visually</h2><div class="showcase-grid">${prompts().map((p,i)=>`<button type="button" class="showcase-card${p.featured?' is-featured':''}" data-showcase="${p.id}" style="--i:${i}"><span class="showcase-icon">${icon(p.icon)}</span><span class="showcase-copy"><strong>${esc(p.title)}</strong><small>${esc(p.sub)}</small></span>${p.featured?'<span class="showcase-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>':icon('arrow-right')}</button>`).join('')}</div>`;
-  host.append(box);box.addEventListener('click',e=>{const b=e.target.closest('[data-showcase]');if(b)press(b.dataset.showcase);});
- }
- function press(id){
-  if(id==='demo')return startDemo();
-  const p=prompts().find(p=>p.id===id);if(p)C().visual(id,p.q,{area:p.area});
+   ['hotspots',{id:'hotspots'}],['outlook',{id:'outlook'}],['drivers',{id:'drivers'}],ranked[0]&&['area',{id:'area',area:ranked[0].code}],a&&['route',{id:'route',area:a.code}],['changes',{id:'changes'}],['accuracy',{id:'accuracy'}],
+   peak&&['replay',{id:'replay'}],['freshness',{id:'freshness'}],ranked[0]&&data.notices?.notices?.[ranked[0].code]&&['notice',null],['how',{id:'how'}],['fever',null]
+  ].filter(Boolean).filter(([,vis])=>!vis||drawable(vis))
+   .map(([id,visual])=>({id,visual,icon:ICON[id],q:words[id](v),en:ASK.en[id](v),area:visual?.area}));
  }
  function lead(id,t={}){
   const tot=data.current.totals||{},h=head(),u=usual(h);
@@ -51,12 +68,16 @@
   if(id==='accuracy'){const o=data.model.prospective.overall;return `Across ${num(o.n)} weeks since 2023, the forecast was off by ${num(o.selected.mae,1)} people a week on average, ${num(o.error_reduction*100)}% less than a four-week average.`;}
   if(id==='changes'){const g=data.growth.changes,s=g.summary;return `Between ${day(g.from_date)} and ${day(g.to_date)}: ${s.new} new, ${s.growing} growing and ${s.closed} closed clusters.`;}
   if(id==='how')return 'DengueSUX turns Singapore’s open data into a weekly plan. Daily serverless jobs on Databricks keep it current.';
+  if(id==='area'){const a=data.current.areas.find(x=>x.code===t.area);return a?`${a.name} is ${a.risk} priority: ${a.cluster_count?`${num(a.cluster_cases)} people in ${a.cluster_count} active ${a.cluster_count===1?'cluster':'clusters'}`:'no active cluster in the latest snapshot'}.`:'';}
+  if(id==='replay'){const l=data.model.peak_lead_time||{},s=l.selected||{};return s.first_high_issue_date?`In the 2022 replay, the first High warning came on ${day(s.first_high_issue_date,{day:'numeric',month:'long'})}, ${num(s.weeks_before_peak)} weeks before the peak of ${num(l.peak_people)} people.`:'The 2022 replay is shown below.';}
+  if(id==='freshness'){const r=freshRows();return r.length?`${r.length} sources: the newest is ${Math.min(...r.map(x=>x.age))} days old and the oldest ${Math.max(...r.map(x=>x.age))} days.`:'';}
+  if(id==='table')return t.title||'Here is what the database returned.';
   return '';
  }
  function sources(id){
   const meta=n=>(data.meta?.sources||[]).find(s=>s.name.includes(n))?.url;
   const nea={name:'NEA dengue clusters',url:'https://www.nea.gov.sg/dengue-zika/dengue/dengue-clusters',date:data.current.as_of},moh={name:'Weekly national infectious disease bulletin (MOH/CDA)',url:meta('infectious disease'),date:live()?.issued_from_week_end||data.model.latest_label};
-  return {hotspots:[nea],outlook:[moh],drivers:[moh],accuracy:[moh],route:[nea,{name:'OneMap walking route · HDB footprints',url:'https://www.onemap.gov.sg/',date:data.inspection?.generated_at}],changes:[nea],how:[nea,moh]}[id]||[];
+  return {hotspots:[nea],area:[nea],outlook:[moh],drivers:[moh],accuracy:[moh],replay:[moh],freshness:[nea,moh],route:[nea,{name:'OneMap walking route · HDB footprints',url:'https://www.onemap.gov.sg/',date:data.inspection?.generated_at}],changes:[nea],how:[nea,moh],table:[{name:'Databricks Genie · gold tables',date:data.meta?.generated_at}]}[id]||[];
  }
 
  // ---- Map geometry: URA planning areas, projected once and lightly simplified for SVG. ----
@@ -68,8 +89,8 @@
   const lon0=103.6,lon1=104.09,lat0=1.155,lat1=1.475,k=Math.cos(1.33*Math.PI/180),W=800,s=W/((lon1-lon0)*k),H=Math.round((lat1-lat0)*s),P=projector(lon0,lat1,k,s);
   const by=new Map(data.current.areas.map(a=>[a.code,a]));
   const areas=feats.map(f=>{const a=by.get(f.properties.code)||{};return {code:f.properties.code,name:a.name||f.properties.name,risk:a.risk||'Low',people:a.cluster_cases||0,clusters:a.cluster_count||0,d:pathFor(f.geometry,P),c:a.centroid?P([a.centroid[1],a.centroid[0]]):null};});
-  const clusters=(data.current.clusters?.features||[]).map(f=>{const pts=polys(f.geometry).flat(2);return {name:f.properties.name,people:f.properties.cases,c:P([pts.reduce((t,p)=>t+p[0],0)/pts.length,pts.reduce((t,p)=>t+p[1],0)/pts.length])};});
-  return geo={W,H,areas,clusters};
+  const clusters=(data.current.clusters?.features||[]).map(f=>{const pts=polys(f.geometry).flat(2);return {name:f.properties.name,people:f.properties.cases,codes:f.properties.area_codes||[],c:P([pts.reduce((t,p)=>t+p[0],0)/pts.length,pts.reduce((t,p)=>t+p[1],0)/pts.length])};});
+  return geo={W,H,P,areas,clusters};
  }
  // Nudge numbered markers apart so neighbouring areas (Jurong West and East) never overlap (viewBox units).
  function place(items){const r=17,done=[];return items.map(it=>{for(const [dx,dy] of [[0,0],[0,-2*r],[2*r,0],[-2*r,0],[0,2*r],[1.6*r,-1.6*r],[-1.6*r,-1.6*r]]){const x=it.c[0]+dx,y=it.c[1]+dy;if(!done.some(o=>Math.hypot(o.x-x,o.y-y)<2*r+2)){done.push({x,y});return {...it,x,y};}}return {...it,x:it.c[0],y:it.c[1]};});}
@@ -118,6 +139,8 @@
    ${ahead.map((r,i)=>fin(r.normal?.median)?`<line class="wk-normal" x1="${(x(split+1+i)-8).toFixed(1)}" x2="${(x(split+1+i)+8).toFixed(1)}" y1="${y(r.normal.median).toFixed(1)}" y2="${y(r.normal.median).toFixed(1)}"/>`:'').join('')}
    <circle class="wk-pulse" cx="${x(li).toFixed(1)}" cy="${y(last.prediction).toFixed(1)}" r="8"/><circle class="wk-dot ahead" cx="${x(li).toFixed(1)}" cy="${y(last.prediction).toFixed(1)}" r="6"/><text class="wk-value" x="${(x(li)+2).toFixed(1)}" y="${(y(last.prediction)-16).toFixed(1)}" text-anchor="middle">${num(last.prediction)}</text>`:''}
    <circle class="wk-dot" cx="${x(split).toFixed(1)}" cy="${y(past.at(-1).actual).toFixed(1)}" r="4.5"/>
+   ${fin(opt.threshold)&&opt.threshold<top?`<line class="wk-threshold" x1="${L}" x2="${W-R}" y1="${y(opt.threshold).toFixed(1)}" y2="${y(opt.threshold).toFixed(1)}"/><text class="wk-now-label" x="${L+6}" y="${(y(opt.threshold)-5).toFixed(1)}">High from ${num(opt.threshold)}</text>`:''}
+   ${fin(opt.mark)&&rows[opt.mark]?`<line class="wk-mark" x1="${x(opt.mark).toFixed(1)}" x2="${x(opt.mark).toFixed(1)}" y1="${T}" y2="${H-B}"/><circle class="wk-dot ahead" cx="${x(opt.mark).toFixed(1)}" cy="${y(rows[opt.mark].prediction??rows[opt.mark].actual).toFixed(1)}" r="6"/>`:''}
    <line class="wk-cursor" x1="0" x2="0" y1="${T}" y2="${H-B}" hidden/>
    <text class="wk-axis" x="${L}" y="${H-8}">${day(rows[0].target_date,{month:'short',year:'numeric'})}</text><text class="wk-axis" x="${W-R}" y="${H-8}" text-anchor="end">${day(rows.at(-1).target_date,{day:'numeric',month:'short'})}</text></svg>`;
   return `<figure class="viz-chart${narrow?' is-narrow':''}" data-l="${L}" data-r="${R}">${svg}<div class="viz-tip" hidden></div><figcaption><span><b class="k actual"></b>Reported</span><span><b class="k model"></b>Model at the time</span><span><b class="k band"></b>80% range</span>${ahead.length?'<span><b class="k ahead"></b>Forecast</span><span><b class="k normal"></b>Typical week</span>':''}</figcaption></figure>`;
@@ -207,13 +230,77 @@
    <div class="viz-stats">${stat(t.areas||55,'planning areas scored')}${stat(t.clusters,'clusters tracked today')}${stat(pr?.n,'weeks back-tested')}${stat(notices,'notice drafts')}</div>
    <p class="viz-source">Same open data, same numbers, from the field sheet to the forecast. Each number carries its source date.</p>`;
  }
- const RENDER={hotspots,outlook,drivers,accuracy,route,changes,how};
- function render(container,id,t={}){
-  if(!RENDER[id]||!data)return;narrow=!!container.closest('.ask-panel')||innerWidth<1100;const el=document.createElement('section');el.className=`viz viz-${id}`;el.setAttribute('aria-label',(prompts().find(p=>p.id===id)?.title)||'Visual answer');
-  try{RENDER[id](el,t);}catch(e){console.error('DengueSUX visual:',e);el.innerHTML='<p class="viz-empty">This view could not be drawn from the saved data.</p>';}
-  if(!demo||!t.demo){const next=prompts().filter(p=>p.id!==id&&p.id!=='demo').slice(0,8),i=next.findIndex(p=>DEMO.indexOf(p.id)>DEMO.indexOf(id));const pick=[...next.slice(Math.max(0,i)),...next.slice(0,Math.max(0,i))].slice(0,3);
-   el.insertAdjacentHTML('beforeend',`<div class="viz-next"><span>Explore next</span>${pick.map(p=>`<button type="button" data-showcase="${p.id}">${icon(p.icon)}${esc(p.title)}</button>`).join('')}</div>`);
-   el.querySelector('.viz-next').addEventListener('click',e=>{const b=e.target.closest('[data-showcase]');if(b)press(b.dataset.showcase);});}
+
+ // ---- One planning area, cropped from the island map: its clusters, priority reasons and residents. ----
+ function area(el,t={}){
+  const a=data.current.areas.find(x=>x.code===t.area),g=island(),f=(data.current.boundaries?.features||[]).find(x=>x.properties.code===t.area);
+  if(!a||!g||!f){el.innerHTML='<p class="viz-empty">This area is not in the latest map data.</p>';return;}
+  const pts=polys(f.geometry).flat(2).map(g.P),xs=pts.map(q=>q[0]),ys=pts.map(q=>q[1]);
+  let x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);const cx=(x0+x1)/2,cy=(y0+y1)/2;
+  let w=Math.max(150,(x1-x0)*1.9),h=Math.max(95,(y1-y0)*1.9);if(w/h<1.6)w=h*1.6;else h=w/1.6;
+  const vb=[cx-w/2,cy-h/2,w,h].map(v=>v.toFixed(1)).join(' '),k=w/800,grad=uid('halo');
+  const mine=(data.current.clusters?.features||[]).map(c=>c.properties).filter(c=>(c.area_codes||[c.area_code]).includes(a.code)).sort((p,q)=>q.cases-p.cases);
+  const plan=data.inspection?.areas?.[a.code]?.stops?.length,reasons=(a.reasons||[]).filter(r=>fin(r.contribution)&&r.contribution>0),rmax=Math.max(1,...reasons.map(r=>r.contribution));
+  el.innerHTML=`<div class="viz-head"><div><span class="viz-kicker">${esc(a.region||'Planning area')}</span><div class="viz-hero small"><b>${esc(a.name)}</b></div><p>${a.cluster_count?`${num(a.cluster_cases)} people in ${a.cluster_count} active ${a.cluster_count===1?'cluster':'clusters'}.`:'No active cluster in the latest snapshot. Low is not the same as no risk.'}</p></div><span class="viz-chip ${a.risk==='High'?'busier':a.risk==='Medium'?'usual':'quieter'}">${esc(a.risk)} priority</span></div>
+   <div class="viz-split"><figure class="viz-map viz-area-map" style="aspect-ratio:1.6"><svg viewBox="${vb}" role="img" aria-label="Map of ${esc(a.name)} and its neighbours with ${mine.length} active clusters"><defs><radialGradient id="${grad}"><stop offset="0" stop-color="#ff5a3c" stop-opacity=".75"/><stop offset="1" stop-color="#ff5a3c" stop-opacity="0"/></radialGradient></defs>
+    <g class="viz-areas">${g.areas.map(x=>`<path d="${x.d}" class="area risk-${x.risk.toLowerCase()}${x.code===a.code?' is-focus':' is-dim'}" data-code="${esc(x.code)}" style="stroke-width:${(.8*k).toFixed(2)}"/>`).join('')}</g>
+    <g class="viz-clusters">${g.clusters.filter(c=>c.codes.includes(a.code)).map((c,i)=>{const r=(5+Math.sqrt(c.people)*1.9)*k*1.6;return `<g transform="translate(${c.c[0].toFixed(1)} ${c.c[1].toFixed(1)})" style="--d:${500+i*120}ms"><circle class="halo" r="${(r*2.4).toFixed(2)}" fill="url(#${grad})"/><circle class="ring" r="${r.toFixed(2)}" style="stroke-width:${(2*k).toFixed(2)}"/><circle class="core" r="${Math.max(2*k,r*.4).toFixed(2)}"/></g>`;}).join('')}</g>
+    ${g.areas.filter(x=>x.c&&Math.abs(x.c[0]-cx)<w/2.4&&Math.abs(x.c[1]-cy)<h/2.4).map(x=>`<text class="viz-area-label${x.code===a.code?' is-focus':''}" x="${x.c[0].toFixed(1)}" y="${x.c[1].toFixed(1)}" text-anchor="middle" style="font-size:${((x.code===a.code?13:10)*k*1.6).toFixed(2)}px;stroke-width:${(2.4*k).toFixed(2)}px">${esc(x.name)}</text>`).join('')}</svg></figure>
+   <div class="viz-side">${mine.length?`<h4>Active clusters</h4><ol class="viz-bars">${mine.slice(0,6).map((c,i)=>`<li style="--i:${i}"><a href="#map/${slug(a.name)}"><span>${esc(String(c.name).split(' / ')[0])}</span><b>${num(c.cases)}</b><i style="--w:${(c.cases/mine[0].cases).toFixed(3)};--c:${RISK[c.cases>=10?'High':'Medium']}"></i></a></li>`).join('')}</ol>`:''}
+    ${reasons.length?`<h4>What sets the priority</h4><ol class="viz-bars">${reasons.map((r,i)=>`<li style="--i:${i}"><a href="#map/${slug(a.name)}"><span>${esc(r.label)}</span><b>${num(r.contribution,1)}</b><i style="--w:${(r.contribution/rmax).toFixed(3)};--c:#8fd1ab"></i></a></li>`).join('')}</ol>`:''}</div></div>
+   <div class="viz-stats">${stat(a.cluster_cases,'people in clusters')}${stat(a.cluster_count,'active clusters')}${fin(a.resident_population)?stat(a.resident_population,'residents'):''}${fin(a.cluster_cases_per_10000_residents)?stat(a.cluster_cases_per_10000_residents,'per 10,000 residents',1):''}</div>
+   <p class="viz-source">NEA clusters saved ${day(data.current.as_of,{day:'numeric',month:'short',year:'numeric'})}. A cluster that crosses a boundary counts in every area it touches.</p>
+   <div class="viz-actions"><a class="viz-button" href="#map/${slug(a.name)}">${icon('map-trifold')} Open on the map</a>${plan?`<a class="viz-button ghost" href="#plan/${slug(a.name)}">${icon('footprints')} ${plan} places to check</a>`:''}</div>`;
+ }
+ // ---- The 2022 outbreak replay: what the model said each week, with the chosen week marked. ----
+ function replayRows(){return (data.model?.predictions||[]).filter(r=>fin(r.actual)).map(r=>({...r,prediction:r.selected_prediction??r.prediction}));}
+ function replay(el,t={}){
+  const rows=replayRows(),lead=data.model.peak_lead_time||{},hi=data.model.thresholds?.high??lead.high_threshold;if(rows.length<3){el.innerHTML='<p class="viz-empty">The 2022 replay is unavailable.</p>';return;}
+  const i=fin(t.week)&&rows[t.week]?t.week:rows.findIndex(r=>r.issue_date===lead.selected?.first_high_issue_date),r=rows[i],sel=lead.selected||{};
+  el.innerHTML=`<div class="viz-stats">${r?stat(r.prediction,`forecast for the week of ${day(r.target_date)}`):''}${r?stat(r.actual,'reported that week'):''}${fin(sel.weeks_before_peak)?stat(sel.weeks_before_peak,'weeks of warning before the peak'):''}${fin(lead.peak_people)?stat(lead.peak_people,`at the peak, week of ${day(lead.peak_week)}`):''}</div>
+   ${weekly(rows,[],{mark:i>=0?i:null,threshold:hi,label:`Reported weekly cases in 2022 and the model’s forecast at the time${r?`, week of ${day(r.target_date)} marked`:''}`})}
+   <p class="viz-source">2022 replay, kept separate from the live outlook. ${sel.first_high_issue_date?`First High warning issued ${day(sel.first_high_issue_date,{day:'numeric',month:'short',year:'numeric'})}. `:''}Official weekly reports (MOH).</p>
+   <div class="viz-actions"><a class="viz-button" href="#forecast">${icon('chart-line-up')} Open the forecast</a></div>`;
+  chartHover(el,rows);
+ }
+ // ---- How recent each source is, as of today in Singapore. ----
+ function freshRows(){
+  const lf=live(),sgt=v=>v?new Date(String(v).length===10?v+'T12:00:00+08:00':v):null;
+  return [['NEA cluster snapshot',data.current.as_of,'daily'],['Cluster history',data.growth?.as_of_date,'daily'],['Field plans and routes',data.inspection?.generated_at,'daily'],['NEA weather stations',data.current.weather_date,'as collected'],['MOH/CDA weekly report',data.model?.latest_label,'weekly'],['Forecast issued from',lf?.issued_from_week_end,'weekly']]
+   .map(([name,v,cadence])=>({name,date:sgt(v),cadence})).filter(r=>r.date&&!isNaN(r.date)).map(r=>({...r,age:Math.max(0,Math.floor((Date.now()-r.date)/864e5))}));
+ }
+ function freshness(el){
+  const rows=freshRows();if(!rows.length){el.innerHTML='<p class="viz-empty">Source dates are unavailable.</p>';return;}const max=Math.max(14,...rows.map(r=>r.age)),newest=Math.min(...rows.map(r=>r.age));
+  el.innerHTML=`<div class="viz-stats">${stat(rows.length,'sources checked')}${stat(newest,newest===1?'day since the newest':'days since the newest')}${stat(Math.max(...rows.map(r=>r.age)),'days since the oldest')}</div>
+   <ol class="viz-bars viz-fresh">${rows.sort((p,q)=>p.age-q.age).map((r,i)=>`<li style="--i:${i}"><a href="#week"><span>${esc(r.name)} <small>· ${esc(r.cadence)}</small></span><b>${r.age===0?'today':r.age===1?'1 day':r.age+' days'} · ${day(r.date,{day:'numeric',month:'short'})}</b><i style="--w:${Math.max(.02,r.age/max).toFixed(3)};--c:${r.age<=2?'#8fd1ab':r.age<=10?'#f3b847':'#ff7a5c'}"></i></a></li>`).join('')}</ol>
+   <div class="viz-legend"><span><b style="background:#8fd1ab"></b>Up to 2 days</span><span><b style="background:#f3b847"></b>Up to 10 days</span><span><b style="background:#ff7a5c"></b>Older</span></div>
+   <p class="viz-source">Ages as of ${day(new Date().toISOString(),{day:'numeric',month:'short',year:'numeric'})} in Singapore. Weekly reports lag by design; daily jobs refresh the rest.</p>`;
+ }
+ // ---- Any table an answer returned (Databricks Genie SQL): picks a stat, bar or line chart from the column types. ----
+ const label=c=>String(c).replace(/_/g,' ').replace(/^./,m=>m.toUpperCase());
+ function table(el,t={}){
+  const cols=t.columns||[],rows=(t.rows||[]).slice(0,25).map(r=>Array.isArray(r)?r:cols.map(c=>r?.[c]));
+  if(!cols.length||!rows.length){el.innerHTML='<p class="viz-empty">The query returned no rows.</p>';return;}
+  const isNum=j=>rows.every(r=>r[j]==null||r[j]===''||fin(Number(r[j])))&&rows.some(r=>r[j]!=null&&r[j]!==''),nums=cols.map((c,j)=>j).filter(isNum),lab=cols.findIndex((c,j)=>!nums.includes(j));
+  const isDate=j=>j>=0&&rows.every(r=>/^\d{4}-\d{2}(-\d{2})?/.test(String(r[j]??'')));
+  const when=v=>/^\d{4}-\d{2}-\d{2}/.test(String(v))?day(String(v).slice(0,10),{day:/-01$/.test(String(v).slice(0,10))?undefined:'numeric',month:'short',year:'numeric'}):String(v).slice(0,10);
+  let chart='';
+  if(rows.length===1&&nums.length)chart=`<div class="viz-stats">${nums.slice(0,4).map(j=>stat(Number(rows[0][j]),label(cols[j]),Number(rows[0][j])%1?1:0)).join('')}</div>`;
+  else if(nums.length&&isDate(lab)&&rows.length>=4){
+   const j=nums[0],pts=[...rows].sort((p,q)=>String(p[lab]).localeCompare(String(q[lab]))),W=760,H=230,L=46,R=14,T=16,B=28,vals=pts.map(r=>Number(r[j])||0),top=Math.max(...vals)*1.1||1,lo=Math.min(0,...vals);
+   const x=i=>L+i*(W-L-R)/Math.max(1,pts.length-1),y=v=>T+(H-T-B)*(1-(v-lo)/(top-lo)),line=vals.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+   chart=`<figure class="viz-chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label(cols[j]))} by ${esc(label(cols[lab]))}"><line class="wk-grid" x1="${L}" x2="${W-R}" y1="${y(lo).toFixed(1)}" y2="${y(lo).toFixed(1)}"/><text class="wk-axis" x="${L-8}" y="${(y(Math.max(...vals))+4).toFixed(1)}" text-anchor="end">${num(Math.max(...vals))}</text><polygon class="wk-fill" points="${x(0)},${y(lo)} ${line} ${x(pts.length-1)},${y(lo)}" fill="#cfe6d622"/><polyline class="wk-actual" pathLength="1" points="${line}"/>${vals.map((v,i)=>`<circle class="wk-dot" cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="3"><title>${esc(pts[i][lab])}: ${num(v,v%1?1:0)}</title></circle>`).join('')}<text class="wk-axis" x="${L}" y="${H-8}">${esc(when(pts[0][lab]))}</text><text class="wk-axis" x="${W-R}" y="${H-8}" text-anchor="end">${esc(when(pts.at(-1)[lab]))}</text></svg><figcaption><span><b class="k actual"></b>${esc(label(cols[j]))}</span></figcaption></figure>`;}
+  else if(nums.length){const j=nums[0],max=Math.max(1,...rows.map(r=>Math.abs(Number(r[j])||0)));
+   chart=`<div class="viz-side"><h4>${esc(label(cols[j]))}${lab>=0?` by ${esc(label(cols[lab]).toLowerCase())}`:''}</h4><ol class="viz-bars">${rows.slice(0,15).map((r,i)=>{const v=Number(r[j])||0,name=lab>=0?r[lab]:`Row ${i+1}`,area=data.current.areas.find(a=>a.name.toLowerCase()===String(name).toLowerCase());return `<li style="--i:${i}"><a href="${area?'#map/'+slug(area.name):'#week'}"><span>${esc(name)}</span><b>${num(v,v%1?1:0)}</b><i style="--w:${(Math.abs(v)/max).toFixed(3)};--c:${area?RISK[area.risk]:'#8fd1ab'}"></i></a></li>`;}).join('')}</ol></div>`;}
+  el.innerHTML=`${t.title?`<div class="viz-head"><div><span class="viz-kicker">From the database</span><p>${esc(t.title)}</p></div></div>`:''}${chart}
+   <details class="viz-rows"${chart?'':' open'}><summary>${rows.length} ${rows.length===1?'row':'rows'}${t.truncated?' (first rows only)':''}</summary><div class="viz-table"><table><thead><tr>${cols.map(c=>`<th>${esc(label(c))}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((v,j)=>`<td${nums.includes(j)?' class="n"':''}>${esc(nums.includes(j)&&v!=null&&v!==''?num(Number(v),Number(v)%1?2:0):v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details>
+   ${t.sql?`<details class="viz-rows"><summary>Show the SQL · AI-generated</summary><pre>${esc(t.sql)}</pre></details>`:''}
+   <p class="viz-source">Databricks Genie over the gold Delta tables, refreshed by the daily job.</p>`;
+ }
+ const RENDER={hotspots,outlook,drivers,accuracy,route,changes,how,area,replay,freshness,table};
+ function render(container,v){
+  const sp=spec(v),id=sp.id;if(!RENDER[id]||!data)return;narrow=!!container.closest('.ask-panel')||innerWidth<1100;const el=document.createElement('section');el.className=`viz viz-${id}`;el.setAttribute('aria-label',TITLE[id]||'Visual answer');
+  try{RENDER[id](el,sp);}catch(e){console.error('DengueSUX visual:',e);el.innerHTML='<p class="viz-empty">This view could not be drawn from the latest data.</p>';}
   container.append(el);animate(el);
  }
  // Count numbers up once the view is on screen. The final value is in the HTML first, so a paused tab still shows it.
@@ -224,36 +311,47 @@
     const tick=now=>{const k=Math.min(1,(now-t0)/dur),v=end*(1-Math.pow(1-k,3));n.textContent=num(v,dp);if(k<1)requestAnimationFrame(tick);else n.textContent=num(end,dp);};requestAnimationFrame(tick);});}),{threshold:.15});
   io.observe(el);
  }
- // Typed questions that clearly ask for one of these views get it too (English phrasing only).
+ // Typed questions that clearly ask for one of these views get it too (English phrasing; other languages use the tools the answer called).
  function match(q){
-  const s=String(q).toLowerCase();
-  if(/\b(walk me through|briefing|demo)\b/.test(s))return 'demo';
-  if(/how (does|do|is) (dengue ?sux|this|it|the app)\b.*(work|built|made)|architecture|pipeline|databricks|data flow/.test(s))return 'how';
-  if(/accura|how good|reliab|how wrong|track record|back.?test/.test(s))return 'accuracy';
-  if(/driv(es|ing|er)|what shapes|why .*(forecast|outlook|prediction)|explain .*(forecast|outlook)/.test(s))return 'drivers';
-  if(/what changed|what'?s new|new clusters?|since (the )?last|growing clusters?/.test(s))return 'changes';
-  if(/\b(map|hotspots?)\b/.test(s))return 'hotspots';
-  if(/(walk|route|plan).*\b(in|for|around)\b/.test(s)){const a=data.current.areas.find(a=>s.includes(a.name.toLowerCase()));if(a&&data.inspection?.areas?.[a.code]?.stops?.length)return 'route:'+a.code;}
-  if(/forecast|outlook|next week|cases (rise|go up|increase)|will cases/.test(s))return 'outlook';
+  const s=String(q).toLowerCase(),named=data.current.areas.filter(a=>new RegExp(`\\b${a.name.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}\\b`).test(s)).sort((p,q)=>q.name.length-p.name.length)[0];
+  if(/how (does|do|is) (dengue ?sux|this|it|the app)\b.*(work|built|made)|architecture|pipeline|databricks|data flow/.test(s))return {id:'how'};
+  if(/how (recent|fresh|old|up.?to.?date|current)|last updated|when .*(updated|refreshed)|data (age|freshness)|stale/.test(s))return {id:'freshness'};
+  if(/2022|replay|outbreak peak|early warning|warn(ed)? before/.test(s))return {id:'replay'};
+  if(/accura|how good|reliab|how wrong|track record|back.?test/.test(s))return {id:'accuracy'};
+  if(/driv(es|ing|er)|what shapes|why .*(forecast|outlook|prediction)|explain .*(forecast|outlook)/.test(s))return {id:'drivers'};
+  if(named&&/(walk|route|plan|visit|inspect)/.test(s)&&data.inspection?.areas?.[named.code]?.stops?.length)return {id:'route',area:named.code};
+  if(named)return {id:'area',area:named.code};
+  if(/what changed|what'?s new|new clusters?|since (the )?last|growing clusters?|clusters? (grow|grew|chang)/.test(s))return {id:'changes'};
+  if(/\b(map|hotspots?)\b|where (are|is) .*clusters?|active clusters?|which areas?|check first|top \d|worst|highest/.test(s))return {id:'hotspots'};
+  if(/forecast|outlook|next week|expected|cases (rise|go up|increase)|will cases/.test(s))return {id:'outlook'};
   return null;
  }
- // ---- Demo briefing: one visual per step; the presenter advances. ----
- function startDemo(){
-  stopDemo();demo={step:0};const bar=document.createElement('div');bar.className='demo-bar';bar.setAttribute('role','region');bar.setAttribute('aria-label','Demo briefing');
-  bar.innerHTML=`<span class="demo-dots">${DEMO.map(()=>'<i></i>').join('')}</span><span class="demo-label"></span><button type="button" class="demo-next solid-button"></button><button type="button" class="icon-button demo-end" aria-label="End the briefing">${icon('x')}</button>`;
-  document.body.append(bar);bar.querySelector('.demo-next').onclick=nextDemo;bar.querySelector('.demo-end').onclick=stopDemo;
-  demo.key=e=>{if(e.target.closest('input,textarea,select,[contenteditable]'))return;if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();nextDemo();}if(e.key==='Escape')stopDemo();};document.addEventListener('keydown',demo.key);
-  document.body.classList.add('demo-on');if(!['','#week'].includes(location.hash))location.hash='#week';C().clear?.(true);showDemo();
+ // Which visuals fit an answer: the pressed prompt, the question's wording and every data tool the answer called.
+ // Each tool result maps to the view that draws it, and any table from the database gets a chart, so new questions need no new rules.
+ function visualsFor(question,trace=[],hint=null){
+  const out=[],add=v=>{v=v&&spec(v);if(!v?.id)return;
+   // Views drawn once per answer take the most specific version (the replay with its week).
+   const same=!['area','route','table'].includes(v.id)&&out.find(o=>o.id===v.id);if(same){if(drawable({...same,...v}))Object.assign(same,v);return;}
+   if(out.some(o=>key(o)===key(v))||(v.id==='outlook'&&out.some(o=>o.id==='drivers'))||(v.id==='area'&&out.some(o=>o.id==='route'&&o.area===v.area))||!drawable(v))return;
+   // A route already shows its area, and the drivers view already shows the forecast.
+   if(v.id==='route'||v.id==='drivers')for(let i=out.length-1;i>=0;i--)if((v.id==='route'&&out[i].id==='area'&&out[i].area===v.area)||(v.id==='drivers'&&out[i].id==='outlook'))out.splice(i,1);
+   out.push(v);};
+  const areaOf=r=>{const code=r.area_code||r.args?.code||r.result?.code;if(code&&data.current.areas.some(a=>a.code===code))return code;const name=String(r.result?.name||r.result?.area||r.args?.area||'').toLowerCase();return data.current.areas.find(a=>a.code.toLowerCase()===name||a.name.toLowerCase()===name)?.code;};
+  add(hint);add(match(question));
+  for(const r of trace||[]){
+   const tool=r.tool||r.name,res=r.result||{};if(!res||res.error)continue;
+   if(tool==='top_areas')add({id:'hotspots'});
+   else if(tool==='get_area'){const code=areaOf(r);if(code)add({id:'area',area:code});}
+   else if(tool==='cluster_growth'){const code=r.args?.area||r.args?.code?areaOf(r):null;add(code?{id:'area',area:code}:{id:'changes'});}
+   else if(tool==='inspection_plan'){const code=areaOf(r);if(code)add(drawable({id:'route',area:code})?{id:'route',area:code}:{id:'area',area:code});}
+   else if(tool==='live_outlook')add({id:'outlook'});
+   else if(['forecast_week','forecast_replay','explain_forecast'].includes(tool))add({id:'replay',week:fin(res.week_index)?res.week_index:fin(r.args?.week)&&r.args.week>=0?r.args.week:undefined});
+   else if(tool==='forecast_evaluation')add({id:'accuracy'});
+   else if(tool==='data_status')add({id:'freshness'});
+   else if(tool==='query_database'&&res.rows?.length)add({id:'table',columns:res.columns,rows:res.rows.slice(0,25),sql:res.sql,title:String(res.genie_answer||'').replace(/\*\*|__|`/g,'').slice(0,400),truncated:res.truncated});
+  }
+  return out.slice(0,2);
  }
- function showDemo(){
-  const id=DEMO[demo.step],p=prompts().find(p=>p.id===id);if(!p){nextDemo();return;}const bar=document.querySelector('.demo-bar');
-  bar.querySelectorAll('.demo-dots i').forEach((d,i)=>d.className=i<demo.step?'done':i===demo.step?'on':'');
-  bar.querySelector('.demo-label').innerHTML=`<b>${demo.step+1} of ${DEMO.length}</b> ${esc(p.title)}`;
-  const last=demo.step===DEMO.length-1;bar.querySelector('.demo-next').innerHTML=last?`Finish ${icon('check')}`:`Next ${icon('arrow-right')}`;
-  C().visual(id,p.q,{area:p.area,demo:true});
- }
- function nextDemo(){if(!demo)return;if(demo.step>=DEMO.length-1){stopDemo();return;}demo.step++;showDemo();}
- function stopDemo(){document.body.classList.remove('demo-on');if(!demo)return;document.removeEventListener('keydown',demo.key);document.querySelector('.demo-bar')?.remove();demo=null;}
  function init(payload){data=payload;geo=null;}
- window.Showcase={init,gallery,render,lead,sources,match,press,prompts,startDemo,stopDemo,get demo(){return !!demo;}};
+ window.Showcase={init,render,lead,sources,match,suggestions,visualsFor,drawable,spec};
 })();

@@ -121,6 +121,8 @@ def tool_cluster_growth(data, area=None):
         rows = _clusters_in(data, a['code'])
     return {'history_available': g.get('history_available') is True, 'snapshots_saved': g.get('snapshot_count', 1), 'baseline_date': g.get('baseline_date'),
             'rule': 'Growth compares two snapshots at least 7 days apart.',
+            **({'snapshot_changes': {k: changes.get(k) for k in ('from_date', 'to_date', 'days', 'summary', 'note')} | {'items': (changes.get('items') or [])[:10]}}
+               if not area and (changes := g.get('changes') or {}).get('summary') else {}),
             'clusters': [{'locality': p['name'], 'people': p['cases'], 'status': p.get('growth_label') or 'Not enough history yet', 'change': p.get('growth_cases')} for p in sorted(rows, key=lambda p: -p['cases'])[:10]]}, ['growth']
 
 
@@ -274,7 +276,7 @@ TOOLS = {
                   'parameters': {'type': 'object', 'properties': {'n': {'type': 'integer', 'description': 'How many areas, 1-20. Default 5.'}}}},
     'get_area': {'fn': tool_get_area, 'description': 'Priority level, active clusters (with people counts and shared areas) and nearby weather for one planning area. Use to explain why an area is High/Medium/Low.',
                  'parameters': {'type': 'object', 'properties': {'area': {'type': 'string', 'description': 'Planning area name, e.g. Jurong East.'}}, 'required': ['area']}},
-    'cluster_growth': {'fn': tool_cluster_growth, 'description': 'Whether active clusters are growing, from daily snapshots. Optional area filter.',
+    'cluster_growth': {'fn': tool_cluster_growth, 'description': 'What changed between the two latest NEA cluster snapshots (new, growing, shrinking and closed clusters) and whether active clusters are growing. Use for "what changed", "since last week" and growth questions. Optional area filter.',
                        'parameters': {'type': 'object', 'properties': {'area': {'type': 'string'}}}},
     'inspection_plan': {'fn': tool_inspection_plan, 'description': 'Ordered places to check (blocks, parks, hawker centres) near active clusters in an area, with walking distance and checklist. Use for route and volunteer-session questions.',
                         'parameters': {'type': 'object', 'properties': {'area': {'type': 'string'}}, 'required': ['area']}},
@@ -316,7 +318,8 @@ What is true about this data (never contradict it)
 - Official national weekly labels extend to {data.get('model', {}).get('latest_label', 'an unavailable date')}. Use live_outlook for the current forecast and always give its target week and 80% range. If unavailable, say so; do not substitute a historical prediction. Feature effects are associations, not causes.
 - Use forecast_evaluation for 2023+ accuracy: a retrospective check of the fixed recipe with annual refits on earlier labels, revised counts and assumed immediate publication. It is not recorded real-time performance. Use forecast_week only for the separate 2022 replay. Ask query_database for later historical weeks, keeping segment='prospective' separate from replay_2022 and live.
 - Missing weather is not an observed zero. When weather_inputs_imputed is true, disclose that the estimator used training-set medians internally while missing observations stayed missing. Ranges are empirical uncertainty, not guarantees.
-- Growth needs two cluster snapshots at least 7 days apart; say when history is not there yet.
+- Growth needs two cluster snapshots at least 7 days apart; say when history is not there yet. snapshot_changes compares the two latest saved snapshots and answers "what changed".
+- How DengueSUX works, if asked: daily serverless Databricks jobs land NEA clusters, MOH/CDA weekly reports, NEA weather, URA/HDB/OneMap maps and SingStat population in a Unity Catalog Volume; Auto Loader feeds Bronze, Silver and Gold Delta tables; a weekly model logged in MLflow gives the national outlook with an 80% range; areas are ranked by people in active clusters and get walking routes and resident notices. Answer this in a few sentences, without tools.
 - Cluster numbers are people in NEA clusters on the snapshot date. Forecast and peak numbers are national weekly reported people (MOH), a different measure; never call them "people in clusters".
 - Database (Genie) tables are refreshed daily and may be newer than the snapshot the other tools use. When you quote a database figure, say it is from the database.
 
@@ -406,7 +409,7 @@ def run_chat(messages, llm, root: Path, genie=None, now: datetime | None = None,
                     if on_event: on_event({'type':'delta','text':delta})
             if not answer:
                 answer = "I couldn't put an answer together. Try rephrasing, or ask about an area, a route or the national forecast."
-            return {'answer': answer, 'steps': [{'tool': c['tool'], 'args': c['args']} for c in calls], 'trace': [{'tool': c['tool'], 'args': c['args'], 'result': c['result']} for c in calls],
+            return {'answer': answer, 'steps': [{'tool': c['tool'], 'args': c['args']} for c in calls], 'trace': [{'tool': c['tool'], 'args': c['args'], 'result': c['result'], **({'area_code': c['area_code']} if c.get('area_code') else {})} for c in calls],
                     'sources': [registry[s] for s in used if s in registry], 'actions': _actions(calls), 'cards': build_cards(calls, data)}
         convo.append({'role': 'assistant', 'content': _text(reply) or None, 'tool_calls': wanted})
         for tc in wanted:

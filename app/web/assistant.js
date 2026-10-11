@@ -86,7 +86,7 @@
     },
     cluster_growth({area}) {
       const g = data.growth || {}, rows = area ? clustersIn(area) : (current().clusters?.features || []).map(f => f.properties);
-      return {result:{history_available:g.history_available === true, snapshots_saved:g.snapshot_count ?? 1, baseline_date:g.baseline_date, growing_count:g.growing_count, clusters:rows.map(p => ({id:p.id, locality:p.name, people:p.cases, status:p.growth_label || 'Not enough history yet', change:p.growth_cases}))}, sources:[SOURCES.growth()]};
+      return {result:{history_available:g.history_available === true, snapshots_saved:g.snapshot_count ?? 1, baseline_date:g.baseline_date, growing_count:g.growing_count, snapshot_changes:!area && g.changes?.summary ? g.changes : null, clusters:rows.map(p => ({id:p.id, locality:p.name, people:p.cases, status:p.growth_label || 'Not enough history yet', change:p.growth_cases}))}, sources:[SOURCES.growth()]};
     },
     inspection_plan({area}) {
       const plan = data.inspection?.areas?.[area] || {};
@@ -122,12 +122,13 @@
     const n = Number(t.match(/\btop\s+(\d{1,2})\b/)?.[1] || t.match(/\b(\d{1,2})\s+(areas|places)\b/)?.[1] || 5);
     if (area && /route|walk|volunteer|inspect|plan|visit|check first|where .*look/.test(t)) return {intent:'route', area, calls:[['get_area', {code:area.code}], ['inspection_plan', {area:area.code}]]};
     if(!area&&!/2022|replay/.test(t)&&/accura|reliab|trust|error|how (well|good)|since 2023/.test(t))return {intent:'evaluation',calls:[['forecast_evaluation',{}]]};
+    if (!area && !/2022|replay|peak/.test(t) && /driv(es|ing|er)|why .*(forecast|outlook)|expected in the week/.test(t)) return {intent:'live', calls:[['live_outlook', {}]]};
     if (!area && !/2022|replay|peak/.test(t) && /(next|this|coming) (week|fortnight)|right now|currently|latest|live|expect|national/.test(t)) return {intent:'live', calls:[['live_outlook', {}]]};
     if (/forecast|warning|predict|outlook|drove|driver|shap|replay|2022|peak/.test(t) && !area) {
       const w = week >= 0 ? week : /20\d\d/.test(t)?-1:weekIndex('first high warning');
       return {intent:'forecast', calls:[['forecast_replay', {week:w}], ['explain_forecast', {week:w}]]};
     }
-    if (/grow|growing|spread|increas|rising|shrink/.test(t)) return {intent:'growth', area, calls:[['cluster_growth', {area:area?.code}]]};
+    if (/grow|growing|spread|increas|rising|shrink|what changed|new clusters|since/.test(t)) return {intent:'growth', area, calls:[['cluster_growth', {area:area?.code}]]};
     if (area) return {intent:'area', area, calls:[['get_area', {code:area.code}], ['cluster_growth', {area:area.code}]]};
     if (/top|worst|highest|most|which areas?|where|priorit|rank|hotspot/.test(t)) return {intent:'top', calls:[['top_areas', {n:Math.min(Math.max(n,1),20)}]]};
     return {intent:'help', calls:[]};
@@ -235,6 +236,9 @@
         const growing = g.clusters.filter(c => /grow/i.test(c.status));
         out.paragraphs.push(`${growing.length} of ${g.clusters.length} clusters${plan.area ? ` in ${esc(plan.area.name)}` : ''} grew since ${date(g.baseline_date)}.${C('cluster_growth','growth')}`);
         if (growing.length) out.paragraphs.push(`<ol class="ask-list">${growing.map(c => `<li>${esc(c.locality.split(' / ')[0])} · +${num(c.change)}</li>`).join('')}</ol>`);
+      } else if (g.snapshot_changes) {
+        const c = g.snapshot_changes, s = c.summary;
+        out.paragraphs.push(`Between ${date(c.from_date)} and ${date(c.to_date)}, active clusters went from <b>${num(s.clusters_then)}</b> to <b>${num(s.clusters_now)}</b>: ${num(s.new)} new, ${num(s.growing)} growing and ${num(s.closed)} closed.${C('cluster_growth','growth')} People in clusters went from ${num(s.people_then)} to ${num(s.people_now)}; these are cumulative cluster sizes, not new weekly cases.`);
       } else {
         out.paragraphs.push(`Not yet. Growth compares two snapshots at least 7 days apart, and ${g.snapshots_saved} ${g.snapshots_saved === 1 ? 'snapshot is' : 'snapshots are'} saved so far (${date(data.growth?.as_of_date || current().as_of)}).${C('cluster_growth','growth')} The daily job keeps collecting, so this will fill in automatically.`);
         const biggest = [...g.clusters].sort((x,y) => y.people-x.people).slice(0,3);
