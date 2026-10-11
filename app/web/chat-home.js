@@ -38,7 +38,7 @@
  function renderTurn(t){
   const el=document.createElement('article');el.className='conversation-turn';el.innerHTML=`<div class="chat-question">${esc(t.question)}</div><div class="chat-answer"><h2 tabindex="-1">${icon('chat-circle-text')} DengueSUX <small>${esc(t.mode||'Local, no AI')}</small></h2><div class="chat-answer-body">${t.answer==null?'<p role="status">Reading the latest data…</p>':markdown(t.answer)}</div></div>`;
   $('#ask-log').append(el);if(t.html)el.querySelector('.chat-answer-body').innerHTML=t.html;
-  for(const v of t.visuals||(t.visual?[t.visual+(t.area?':'+t.area:'')]:[]))window.Showcase?.render(el.querySelector('.chat-answer-body'),v);
+  for(const v of t.visuals||(t.visual?[t.visual+(t.area?':'+t.area:'')]:[]))window.Showcase?.render(el.querySelector('.chat-answer-body'),v,t.lang);
   if(t.cards)window.AnswerCards?.render(el.querySelector('.chat-answer-body'),t.cards,data,language);
   if(t.sources)el.querySelector('.chat-answer-body').insertAdjacentHTML('beforeend',sourcesHTML(t.sources));
   if(t.followups?.length){const row=document.createElement('div');row.className='chat-followups';row.innerHTML=t.followups.map(q=>`<button type="button" class="ask-chip">${esc(q)}</button>`).join('');row.onclick=e=>{const b=e.target.closest('button');if(b)ask(b.textContent);};el.querySelector('.chat-answer-body').append(row);}
@@ -61,11 +61,11 @@
   const text=res.answer.paragraphs.map(html=>{const b=document.createElement('div');b.innerHTML=html;b.querySelectorAll('.ask-cite').forEach(n=>n.remove());const items=[...b.querySelectorAll('li')];return items.length?(cards.length?'':items.map(li=>'- '+li.textContent.trim()).join('\n')):b.textContent.trim();}).filter(Boolean).join('\n\n');
   const localLang=/[\u0b80-\u0bff]/.test(question)?'ta':/[\u4e00-\u9fff]/.test(question)?'zh':/\b(denggi|minggu|kawasan)\b/i.test(question)?'ms':language;const copy={zh:res.results.length?'以下是已保存数据中的信息。':'已保存数据无法回答这个问题。请使用建议问题，或向新加坡国家环境局查询最新信息。',ms:res.results.length?'Maklumat berikut daripada data yang disimpan.':'Data yang disimpan tidak dapat menjawab soalan ini. Cuba soalan cadangan atau rujuk NEA.',ta:res.results.length?'சேமிக்கப்பட்ட தரவிலிருந்து கிடைக்கும் தகவல்.':'சேமிக்கப்பட்ட தரவால் பதிலளிக்க முடியவில்லை. பரிந்துரைக்கப்பட்ட கேள்விகளைப் பயன்படுத்தவும் அல்லது NEA ஐ அணுகவும்.'};return {answer:copy[localLang]||text,cards,followups:localLang==='en'?res.answer.actions.filter(a=>a.ask).map(a=>a.label).slice(0,4):[],sources:res.answer.sources.length?res.answer.sources:[{name:'NEA dengue information',url:'https://www.nea.gov.sg/dengue-zika',date:data.current.as_of}],trace:res.results,mode:'Local, no AI'};
  }
- async function answerRemote(question,signal,el){
+ async function answerRemote(question,signal,el,lang=language){
   if(window.DENGUESUX_DATA)return null;
   const status=await fetch('/api/chat/status',{signal}).then(r=>r.json());if(!status.enabled)return null;
   const messages=[...history,{role:'user',content:scrub(question+(context?'\nPlace context: '+context:''))}].slice(-8);
-  const body=JSON.stringify({messages:messages.map(m=>({...m,content:m.content.slice(0,2000)})),language});
+  const body=JSON.stringify({messages:messages.map(m=>({...m,content:m.content.slice(0,2000)})),language:lang});
   try{
    const r=await fetch('/api/chat/stream',{method:'POST',headers:{'content-type':'application/json'},body,signal});if(!r.ok||!r.body)throw Error('Streaming unavailable');
    const reader=r.body.getReader(),decoder=new TextDecoder();let buffer='',text='',done;
@@ -95,11 +95,11 @@
   const postal=question.match(/(?<!\d)\d{6}(?!\d)/);if(postal&&window.LocationCheck)return window.LocationCheck.lookup(postal[0],question);
   // Do not forward coordinates or a postal code in any branch, even if lookup is unavailable.
   if(postal||/\b1\.\d+\s*[, /]\s*103\.\d+\b/.test(question))return privateAnswer('Location check',{answer:'Use a six-digit postal code or “Use my location”. Precise location stays in your browser.'});
-  if(window.CareActions?.handle(question))return;
+  if(window.CareActions?.handle(question,{prevent:false}))return;
   if(/(block|home|house|street).*(predict|forecast|risk|chance)|(predict|forecast|risk|chance).*(block|home|house|street)/i.test(question))return privateAnswer('Local prediction',{answer:'DengueSUX cannot predict dengue at block level. The dated map shows places to check, not confirmed breeding sites. Check NEA for current cluster information.',sources:[{name:'NEA dengue clusters',url:'https://www.nea.gov.sg/dengue-zika/dengue/dengue-clusters',date:data.current.as_of}]});
-  const t={question:scrub(question)},el=renderTurn(t);turns.push(t);const apply=()=>setConversation();if(document.startViewTransition&&!reduced()&&document.visibilityState==='visible'){const v=document.startViewTransition(apply);[v.ready,v.finished,v.updateCallbackDone].forEach(p=>p?.catch(()=>{}));}else apply();
+  const t={question:scrub(question),lang:pick?language:langOf(question)},el=renderTurn(t);turns.push(t);const apply=()=>setConversation();if(document.startViewTransition&&!reduced()&&document.visibilityState==='visible'){const v=document.startViewTransition(apply);[v.ready,v.finished,v.updateCallbackDone].forEach(p=>p?.catch(()=>{}));}else apply();
   controller=new AbortController();setBusy(true);
-  try{await fresh();let result;try{result=await answerRemote(question,AbortSignal.any([controller.signal,AbortSignal.timeout(150000)]),el);}catch(e){if(controller.signal.aborted)throw e;}result||=await answerLocal(question,pick);Object.assign(t,result);attachVisuals(t,question,pick);history.push({role:'user',content:scrub(question)},{role:'assistant',content:scrub(t.answer||'')});history=history.slice(-8);}
+  try{await fresh();let result;try{result=await answerRemote(question,AbortSignal.any([controller.signal,AbortSignal.timeout(150000)]),el,t.lang);}catch(e){if(controller.signal.aborted)throw e;}if(!result&&!pick&&window.CareActions?.preventQuestion.test(question)){window.CareActions.prevent();result={answer:'Here is NEA’s Mozzie Wipeout guidance: a few minutes each week around your home.',mode:'Fixed guidance · no AI',sources:[{name:'NEA dengue prevention',url:'https://www.nea.gov.sg/dengue-zika/stop-dengue-now',date:data.current.as_of}],trace:[]};}result||=await answerLocal(question,pick);Object.assign(t,result);attachVisuals(t,question,pick);history.push({role:'user',content:scrub(question)},{role:'assistant',content:scrub(t.answer||'')});history=history.slice(-8);}
   catch(e){const stopped=controller.signal.aborted,want=stopped?[]:window.Showcase?.visualsFor(question,[],pick?.visual)||[];t.answer=stopped?'Stopped. You can ask again when ready.':want.length?window.Showcase.lead(want[0].id,want[0]):'The data could not answer this. Please check NEA for the latest information.';t.mode=want.length?'From the latest data':'Local, no AI';if(want.length){t.visuals=want;t.sources=window.Showcase.sources(want[0].id);}}
   finally{controller=null;setBusy(false);finish(t,el);renderSuggestions();}
  }
@@ -109,7 +109,7 @@
  function attachVisuals(t,question,pick){
   // The suggestion row below already offers what to ask next.
   t.followups=[];
-  const want=window.Showcase?.visualsFor(question,t.trace,pick?.visual)||[];if(!want.length)return;t.visuals=want;
+  const want=window.Showcase?.visualsFor(question,t.trace,pick?.visual,t.diagram)||[];if(!want.length)return;t.visuals=want;
   // A drawn view answers the suggestion that would have drawn it (same view, same area).
   const all=window.Showcase.suggestions(language);want.forEach(v=>{const p=all.find(p=>p.visual?.id===v.id&&(p.visual.area==null||p.visual.area===v.area));if(p)done(p.id);});
   // The offline engine had no data tool for this question; let the drawn view lead with its own dated sentence.
@@ -117,6 +117,8 @@
   // A drawn view replaces the smaller card that shows the same thing.
   const drop=want.map(v=>({outlook:'forecast',drivers:'forecast',replay:'forecast',hotspots:'top_areas',route:'plan',area:'area'}[v.id])).filter(Boolean);if(t.cards)t.cards=t.cards.filter(c=>!drop.includes(c.type));
  }
+ // The language an answer (and its visuals) will be in: the question's script, common Malay words, else the chosen language.
+ function langOf(q){return /[\u0b80-\u0bff]/.test(q)?'ta':/[\u4e00-\u9fff]/.test(q)?'zh':/\b(denggi|kawasan|minggu|adakah|bagaimana|mengapa|kenapa|tunjukkan|rancang|kes|nyamuk|peta|apakah)\b/i.test(q)?'ms':/^[\x00-\x7f\s’]*$/.test(q)&&/\b(the|what|where|how|why|is|are|show|which|will|when)\b/i.test(q)?'en':language;}
  function done(id){if(id&&!asked.includes(id))asked.push(id);}
  // The next few suggestions not yet answered, worded from the current data.
  function renderSuggestions(){

@@ -34,3 +34,13 @@ def test_http_rejects_private_location_before_model(monkeypatch,text):
     monkeypatch.setattr(server,'_llm_endpoint',forbidden)
     for route in ('/api/chat','/api/chat/stream'):
         assert TestClient(server.app).post(route,json={'messages':[{'role':'user','content':text}]}).status_code==422
+
+
+@pytest.mark.parametrize('question',['What are the symptoms of dengue?','Is fever a symptom of dengue?','What are the warning signs of severe dengue?','Why is dengue so bad?'])
+def test_general_questions_about_the_illness_reach_the_assistant(question):
+    assert not symptom_question(question)
+
+
+@pytest.mark.parametrize('question',['fever and rash for 3 days, is it dengue?','What should I do if my child has a fever?','What are my symptoms of dengue?'])
+def test_personal_symptoms_still_get_fixed_guidance(question):
+    assert symptom_question(question)

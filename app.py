@@ -149,10 +149,11 @@ def chat(body: ChatBody):
     if not endpoint:
         raise HTTPException(503, 'The assistant model is not configured for this deployment.')
     _refresh_snapshot()
-    from denguesux.assistant import run_chat, make_llm
+    from denguesux.assistant import run_chat, make_llm, make_diagrammer
     try:
-        return run_chat([m.model_dump() for m in body.messages], make_llm(endpoint), ROOT,
-                        genie=(lambda q: _genie_ask(q)) if _genie_space() else None, language=body.language)
+        llm = make_llm(endpoint)
+        return run_chat([m.model_dump() for m in body.messages], llm, ROOT,
+                        genie=(lambda q: _genie_ask(q)) if _genie_space() else None, language=body.language, diagram=make_diagrammer(llm))
     except (OSError, KeyError, json.JSONDecodeError):
         raise HTTPException(503, 'Build the dated gold facts before using the assistant.') from None
     except ValueError:
@@ -175,7 +176,7 @@ async def chat_stream(body: ChatBody, request: Request):
     import asyncio
     import queue
     import threading
-    from denguesux.assistant import run_chat, make_llm, make_final_stream
+    from denguesux.assistant import run_chat, make_llm, make_final_stream, make_diagrammer
     pending=queue.Queue(maxsize=64)
     stopped=threading.Event()
     def emit(event):
@@ -185,9 +186,10 @@ async def chat_stream(body: ChatBody, request: Request):
         raise InterruptedError('Client stopped')
     def work():
         try:
-            result=run_chat([m.model_dump() for m in body.messages],make_llm(endpoint),ROOT,
+            llm=make_llm(endpoint)
+            result=run_chat([m.model_dump() for m in body.messages],llm,ROOT,
                 genie=(lambda q:_genie_ask(q)) if _genie_space() else None,
-                on_event=emit,stream_final=make_final_stream(endpoint),language=body.language)
+                on_event=emit,stream_final=make_final_stream(endpoint),language=body.language,diagram=make_diagrammer(llm))
             emit({'type':'done',**result})
         except InterruptedError: pass
         except Exception:

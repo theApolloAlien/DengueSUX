@@ -200,3 +200,70 @@ assert.equal(r.answer.actions.length,0);
     result = subprocess.run(['node', '-e', script], input=json.dumps(current_outlook_data), text=True,
                             cwd=ROOT, capture_output=True, timeout=15)
     assert result.returncode == 0, result.stderr
+
+
+def test_accuracy_figures_are_named_for_what_they_measure():
+    result, _ = A.tool_forecast_evaluation(DATA)
+    plain, overall = result['plain_overall'], DATA['model']['prospective']['overall']
+    assert plain['average_error_people_per_week'] == round(overall['selected']['mae'], 1)
+    assert plain['weeks_risk_level_matched_percent'] == round(overall['selected']['accuracy'] * 100, 1)
+    assert 'Not an overall accuracy score' in result['definitions']['weeks_risk_level_matched_percent']
+    assert 'no single accuracy percentage' in A.system_prompt(DATA)
+
+
+def test_unsupported_percentages_are_corrected_then_dropped():
+    calls = [{'tool': 'forecast_evaluation', 'result': A.tool_forecast_evaluation(DATA)[0]}]
+    mae = calls[0]['result']['plain_overall']['average_error_people_per_week']
+    good = f'Average error was {mae} people a week; the level matched in {calls[0]["result"]["plain_overall"]["weeks_risk_level_matched_percent"]}% of weeks.'
+    assert A.unsupported_figures(good, calls) == []
+    assert A.unsupported_figures('The model is 94.5% accurate.', calls) == ['94.5%']
+    # One correction pass with the model.
+    fixed = A.checked_answer('The model is 94.5% accurate.', calls, [{'role': 'user', 'content': 'How accurate?'}], scripted(say(good)))
+    assert fixed == good
+    # If the correction still invents a figure, the sentence carrying it is dropped.
+    kept = A.checked_answer(f'Error is {mae} people a week. It is 94.5% accurate.', calls, [{'role': 'user', 'content': 'q'}], scripted(say('Still 97.1% accurate.')))
+    assert kept == f'Error is {mae} people a week.'
+    # General answers (no tools) are not checked against tool results.
+    assert A.checked_answer('Most people recover in about 1.5 weeks.', [], [], None) == 'Most people recover in about 1.5 weeks.'
+
+
+def test_general_answer_gets_a_shape_checked_diagram():
+    diagram_json = json.dumps({'kind': 'cycle', 'title': 'How dengue spreads', 'related_view': 'hotspots', 'items': [
+        {'label': 'Infected person', 'detail': 'An Aedes mosquito bites someone with dengue.', 'icon': 'person'},
+        {'label': 'Virus grows', 'detail': 'It multiplies in the mosquito for about a week.', 'icon': 'bug'},
+        {'label': 'Next bite', 'detail': 'The mosquito passes it on.', 'icon': 'not-an-icon'},
+        {'label': 'Fake stat', 'detail': '87% of cases', 'icon': 'warning'}]})
+    llm = scripted(say('Dengue spreads through Aedes mosquito bites.'), say('Here you go:\n' + diagram_json))
+    out = ask('How does dengue spread?', llm, diagram=A.make_diagrammer(llm))
+    d = out['diagram']
+    assert d['kind'] == 'cycle' and d['related_view'] == 'hotspots' and len(d['items']) == 3
+    assert d['items'][2]['icon'] is None  # unknown icons are dropped, percentages are refused
+    assert out['trace'] == []
+    # Greetings and invalid JSON draw nothing.
+    llm = scripted(say('Hello! I can help.'))
+    assert 'diagram' not in ask('Hello', llm, diagram=A.make_diagrammer(llm))
+    llm = scripted(say('Dengue is a viral infection.'), say('not json'))
+    assert 'diagram' not in ask('What is dengue?', llm, diagram=A.make_diagrammer(llm))
+    assert A.clean_diagram({'kind': 'facts', 'items': [{'label': 'Only one'}]}) is None
+
+
+def test_parallel_chats_share_one_data_load(tmp_path):
+    from concurrent.futures import ThreadPoolExecutor
+    (tmp_path / 'output/web').mkdir(parents=True)
+    (tmp_path / 'output/web/dashboard.json').write_text(json.dumps(DATA))
+    with ThreadPoolExecutor(16) as pool:
+        loaded = list(pool.map(lambda _: A.load_data(tmp_path), range(64)))
+    assert all(d is loaded[0] for d in loaded)
+
+
+def test_live_outlook_states_its_direction_from_the_numbers(current_outlook_data):
+    result, _ = A.tool_live_outlook(current_outlook_data, datetime(2026, 10, 11, tzinfo=A.SGT))
+    if 'error' in result:
+        pytest.skip(result['note'])
+    latest, point = result['latest_reported_people'], current_outlook_data['model']['live_forecast']['headline']['prediction']
+    want = 'about the same' if abs(point - latest) <= max(5, .1 * latest) else 'higher' if point > latest else 'lower'
+    assert result['forecast_vs_latest_reported_week'] == want
+    has_normal = bool((current_outlook_data['model']['live_forecast']['headline'].get('normal') or {}).get('median'))
+    assert result['forecast_vs_typical_week'] in (('quieter than usual', 'about usual', 'busier than usual') if has_normal else (None,))
+    prompt = A.system_prompt(current_outlook_data)
+    assert '疟疾' in prompt and 'கொசுக்கடி' in prompt and 'Never infer a direction yourself' in prompt

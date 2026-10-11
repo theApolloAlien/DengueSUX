@@ -115,3 +115,32 @@ assert(!ids.includes('outlook')&&!ids.includes('drivers'),ids.join());
 assert.equal(S.visualsFor('Will cases rise next week?',[{tool:'live_outlook',result:{}}]).length,0);
 assert(S.lead('outlook').includes('unavailable'));
 """, json.dumps(data))
+
+
+def test_every_visual_label_has_all_three_translations():
+    import re
+    src = (ROOT / 'app/web/showcase.js').read_text()
+    table = json.loads(src[src.index(' const STR=') + len(' const STR='):src.index(';\n let LANG')])
+    keys = set(re.findall(r"tr\('((?:[^'\\]|\\.)+)'", src))
+    keys |= set(re.findall(r"stat\([^,()]+(?:\([^()]*\))?,'([^']+)'", src))
+    keys |= {'High', 'Medium', 'Low', 'Quieter than usual', 'Busier than usual', 'About usual', 'Recent cases', 'Time of year', 'Rain', 'Heat'}
+    for lang in ('zh', 'ms', 'ta'):
+        missing = sorted(k for k in keys if k not in table[lang])
+        assert not missing, (lang, missing)
+
+
+def test_visuals_draw_in_the_answer_language():
+    run(r"""
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const data=JSON.parse(fs.readFileSync(0,'utf8'));
+const made=[];const node=()=>({className:'',innerHTML:'',setAttribute(){},append(){},classList:{add(){}},querySelector:()=>null,querySelectorAll:()=>[],insertAdjacentHTML(){},addEventListener(){}});
+const context={window:{},document:{createElement:()=>{const n=node();made.push(n);return n;}},matchMedia:()=>({matches:true}),innerWidth:1280,console,IntersectionObserver:class{observe(){}},CSS:{escape:s=>s}};
+vm.runInNewContext(fs.readFileSync('app/web/showcase.js','utf8'),context);
+const S=context.window.Showcase;S.init(data);
+const box={closest:()=>null,append(){}};
+S.render(box,{id:'changes'},'zh');assert(made.at(-1).innerHTML.includes('个感染群 ·'),'Chinese labels');
+S.render(box,{id:'freshness'},'ta');assert(made.at(-1).innerHTML.includes('சரிபார்த்த மூலங்கள்'),'Tamil labels');
+S.render(box,{id:'freshness'},'ms');assert(made.at(-1).innerHTML.includes('sumber disemak'),'Malay labels');
+S.render(box,{id:'changes'},'en');assert(made.at(-1).innerHTML.includes('clusters ·'),'English stays English');
+assert(!made.some(n=>n.innerHTML.includes('viz-empty')),'every view drew');
+""")
