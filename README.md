@@ -12,13 +12,23 @@ Built for the Databricks AI Social Impact (DAISI) Challenge Singapore 2026 · Pr
 
 ## Screenshots
 
-| Where to check first | Street-level inspection plan |
-|---|---|
-| ![This week: conversation, national outlook and areas to check](output/verification/chat/final-home-1440.png) | ![Field plan with the saved route and checklist](output/design/saas/branded-plan-jurong-west-1440.png) |
-| **Resident notice in 4 languages** | **Ask DengueSUX** |
-| ![Resident notice in Chinese with 5/5 automatic checks passed](output/design/saas/after-notice-1440.png) | ![Assistant answer with dated sources](output/design/saas/after-ask-1440.png) |
+Captured from the running app on 12 Oct 2026 with the local saved-data fallback (the answer cards read "Local, no AI"); the hosted-model path words answers differently.
 
-![National outlook and retrospective checks](output/design/saas/branded-forecast-1440.png)
+| Home: this week, with the 3D Singapore card | National forecast with 80% range |
+|---|---|
+| ![Home with 3D Singapore card, ask box and suggested prompts](output/screenshots/tour/01-home.png) | ![Forecast chart: about 68 people expected, 50–93 range](output/screenshots/tour/05-forecast.png) |
+| **2D map of 55 planning areas** | **3D map: height = people in active clusters** |
+| ![2D planning-area map with clusters](output/screenshots/tour/04-map.png) | ![3D map raised by people in active clusters](output/screenshots/tour/07-map-3d.png) |
+| **Field plan with 3D walk preview** | **Area table** |
+| ![Jurong West field plan with a 3D walk preview and checklist](output/screenshots/tour/06-plan-3d-walk.png) | ![Area table](output/screenshots/tour/08-table.png) |
+
+### Ask DengueSUX: answers with their visuals
+
+| Where are the clusters? | Why is the forecast about 68? |
+|---|---|
+| ![Chat answer with cluster map and ranking](output/screenshots/tour/02-chat-1-answer.png) | ![Chat answer with forecast driver bars](output/screenshots/tour/02-chat-3-answer.png) |
+| **Plan a check walk** | **How many cases are expected?** |
+| ![Chat answer with the OneMap walking route and stops](output/screenshots/tour/02-chat-5-answer.png) | ![Chat answer with the national outlook card](output/screenshots/tour/02-chat-2-answer.png) |
 
 ## What it does
 
