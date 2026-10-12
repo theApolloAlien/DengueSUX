@@ -2,7 +2,9 @@
 
 ![DengueSUX home: this week, with the 3D Singapore card and the ask box](output/screenshots/tour/readme-hero-home.png)
 
-![DengueSUX 3D walk preview: Jurong West HDB blocks modelled in 3D from official footprints and storeys, with the numbered check route](output/screenshots/tour/readme-hero-3d.png)
+![Zoomed 3D walk through Jurong West: HDB blocks modelled from official footprints and storeys, with the numbered check route](output/screenshots/tour/readme-hero-3d.png)
+
+![The walk pauses at each stop with a 3D illustration of what to look for](output/screenshots/tour/3d-walk-checklist.png)
 
 **Where should we look for mosquitoes this week?** DengueSUX turns Singapore's open data into a weekly dengue plan: which areas to check first, which blocks to walk, and what to tell residents, backed by a live national forecast with ranges and a retrospective check through 2026.
 
