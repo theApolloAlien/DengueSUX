@@ -1,8 +1,8 @@
 # DengueSUX: Surveillance Using eXplainable AI
 
-![DengueSUX — neighbourhood care](app/web/brand/neighbourhood-hero.webp)
+![DengueSUX home: this week, with the 3D Singapore card and the ask box](output/screenshots/tour/readme-hero-home.png)
 
-![DengueSUX application: This week](app/web/brand/hero.webp)
+![DengueSUX home after asking about the forecast: answer, national outlook and where to check first](output/screenshots/tour/readme-hero-chat.png)
 
 **Where should we look for mosquitoes this week?** DengueSUX turns Singapore's open data into a weekly dengue plan: which areas to check first, which blocks to walk, and what to tell residents, backed by a live national forecast with ranges and a retrospective check through 2026.
 
