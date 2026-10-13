@@ -119,6 +119,13 @@ def alert_feed(request: Request, area: Optional[str] = Query(default=None, patte
     body.append('</feed>')
     return Response('\n'.join(body), media_type='application/atom+xml')
 
+@app.get('/data/walks/index.json')
+def walks_index():
+    """What each area's saved 3D scene holds (stops, HDB blocks, context buildings), so the app can skip empty scenes."""
+    p=ROOT/'output/web/walks/index.json'
+    if not p.is_file(): raise HTTPException(404,'No walks index.')
+    return FileResponse(p,media_type='application/json')
+
 @app.get('/data/walks/{area_code}.json')
 def walk(area_code: str = PathParam(pattern=r'^[A-Z]{2,3}$')):
     """The saved 3D walk for one planning area: plan, official HDB footprints and parks/water context."""

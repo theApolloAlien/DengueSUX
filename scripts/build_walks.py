@@ -25,6 +25,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     summary = build_walks(ROOT, offline=args.offline, areas=set(args.areas or []) or None, log=lambda line: print(line, flush=True))
     rows = summary["areas"].values()
-    print(json.dumps({"areas": len(summary["areas"]), "ready": sum(r["status"] == "ready" for r in rows),
-                      "onemap_walk": sum(r["route_method"] == "onemap_walk" for r in rows),
+    print(json.dumps({"areas": len(summary["areas"]), "ready": sum(r.get("status") == "ready" for r in rows),
+                      "onemap_walk": sum(r.get("route_method") == "onemap_walk" for r in rows),
                       "onemap_status": summary["onemap_status"], "bytes": sum(r["bytes"] for r in rows)}, indent=2))

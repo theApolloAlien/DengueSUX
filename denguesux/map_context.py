@@ -103,7 +103,8 @@ def hdb_block_details(rows):
         details[(str(row["block"]).upper(), canonical_street(row["street"]))] = {
             "max_floor_lvl": int(floors) if floors.isdigit() and int(floors) > 0 else None,
             "uses": [label for key, label in USES if str(source.get(key, "")).strip().upper() == "Y"],
-            "year_completed": int(source["year_completed"]) if str(source.get("year_completed", "")).isdigit() else None}
+            "year_completed": int(source["year_completed"]) if str(source.get("year_completed", "")).isdigit() else None,
+            "dwelling_units": int(source["total_dwelling_units"]) if str(source.get("total_dwelling_units", "")).strip().isdigit() else None}
     return details
 
 
@@ -229,7 +230,9 @@ def route_footprints(inspection, payload, street_codes=None, details=None, margi
                 "stop_number": stops.get(key, {}).get("number") or previous.get("stop_number"),
                 "max_floor_lvl": floors if estimated_height(floors) else None, "height_m": estimated_height(floors),
                 "height_method": HEIGHT_METHOD if estimated_height(floors) else "unavailable",
-                "uses": (details.get((block, entry["road"] or road)) or {}).get("uses", []), "join_method": method}}
+                "uses": (details.get((block, entry["road"] or road)) or {}).get("uses", []),
+                "dwelling_units": (details.get((block, entry["road"] or road)) or {}).get("dwelling_units"),
+                "year_completed": (details.get((block, entry["road"] or road)) or {}).get("year_completed"), "join_method": method}}
             counts["matched_blocks"] += 1
         route = (plan.get("route") or {}).get("geometry") or {}
         if route.get("type") == "LineString":
@@ -253,7 +256,7 @@ def route_footprints(inspection, payload, street_codes=None, details=None, margi
                     "postal": entry["postal"] or None, "source_objectid": source_id, "role": "context", "cluster_block": False,
                     "stop_number": None, "max_floor_lvl": floors, "height_m": estimated_height(floors),
                     "height_method": HEIGHT_METHOD if estimated_height(floors) else "unavailable",
-                    "uses": (fact or {}).get("uses", []),
+                    "uses": (fact or {}).get("uses", []), "dwelling_units": (fact or {}).get("dwelling_units"), "year_completed": (fact or {}).get("year_completed"),
                     "join_method": "exact_block_and_verified_road" if fact else "storeys_unavailable_no_verified_road_join"}}
                 counts["context_blocks"] += 1
                 counts["context_blocks_with_storeys"] += bool(estimated_height(floors))

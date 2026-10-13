@@ -19,7 +19,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 P = 'workspace.denguesux'
 T = {n: f'{P}.{n}' for n in ('dim_planning_area', 'gold_area_priorities', 'gold_cluster_growth', 'gold_national_predictions', 'inspection_places', 'silver_national_weekly',
-                              'gold_area_forecast', 'gold_forecast_ledger', 'silver_area_cluster_history', 'gold_ai_forecast_benchmark', 'gold_alerts')}
+                              'gold_area_forecast', 'gold_forecast_ledger', 'silver_area_cluster_history', 'gold_ai_forecast_benchmark', 'gold_alerts',
+                              'forecast_performance', 'gold_field_outcomes')}
 TITLE = 'DengueSUX Ask'
 DESCRIPTION = ('Singapore dengue inspection planning: where to check first (areas ranked by people in active NEA clusters), active clusters and whether they are growing, '
                'places to check near clusters, a current national outlook with ranges, the 2023+ retrospective evaluation, and a separate 2022 replay. '
@@ -49,6 +50,7 @@ SAMPLE_QUESTIONS = [
     'How did the forecasts we published turn out?',
     'How does Databricks ai_forecast compare with the DengueSUX model?',
     'Which areas have had dengue clusters most often since 2019?',
+    'How many stops did volunteers check this week, and where was water found?',
 ]
 
 # (table, column, description, synonyms, entity_matching, format_assistance, exclude)
@@ -129,9 +131,14 @@ COLUMNS.update({
         ('kind', None, ['alert type', 'rule'], True, True, False),
         ('source_tables_json', None, [], False, False, True),
     ],
+    'gold_field_outcomes': [
+        ('place_type', None, ['kind of place', 'block or park or hawker centre'], True, True, False),
+        ('water_found_reports', 'Unverified volunteer reports that found stagnant water at a planned stop; not confirmed breeding sites.', ['water found', 'stagnant water'], False, False, False),
+    ],
 })
 
 JOINS = [  # left, left column, right, right column, relationship
+    ('gold_field_outcomes', 'area_code', 'dim_planning_area', 'area_code', 'MANY_TO_ONE'),
     ('gold_area_forecast', 'area_code', 'dim_planning_area', 'area_code', 'ONE_TO_ONE'),
     ('silver_area_cluster_history', 'area_code', 'dim_planning_area', 'area_code', 'MANY_TO_ONE'),
     ('gold_area_priorities', 'area_code', 'dim_planning_area', 'area_code', 'ONE_TO_ONE'),
@@ -196,6 +203,10 @@ EXAMPLES = [
      f"SELECT kind, target, published_at, ROUND(prediction) AS forecast, ROUND(lower) AS range_low, ROUND(upper) AS range_high, actual, covered, abs_error FROM {T['gold_forecast_ledger']} WHERE kind = 'national' ORDER BY target"),
     ('How does Databricks ai_forecast compare with the DengueSUX model?',
      f"SELECT COUNT(*) AS weeks, ROUND(AVG(ABS(actual - denguesux)), 1) AS denguesux_error, ROUND(AVG(ABS(actual - four_week_average)), 1) AS four_week_average_error, ROUND(AVG(ABS(actual - ai_forecast)), 1) AS ai_forecast_error FROM {T['gold_ai_forecast_benchmark']}"),
+    ('How many stops did volunteers check, and where was water found?',
+     f"SELECT dim_planning_area.area_name, gold_field_outcomes.place_type, SUM(gold_field_outcomes.reports) AS reports, SUM(gold_field_outcomes.stops_reported) AS stops_checked, SUM(gold_field_outcomes.water_found_reports) AS water_found FROM {T['gold_field_outcomes']} JOIN {T['dim_planning_area']} ON gold_field_outcomes.area_code = dim_planning_area.area_code GROUP BY dim_planning_area.area_name, gold_field_outcomes.place_type ORDER BY water_found DESC, reports DESC"),
+    ('What is the forecast error and range coverage since 2023, from the governed metric view?',
+     f"SELECT `Forecast Kind`, MEASURE(`Forecasts Published`) AS forecasts_published, MEASURE(`Forecasts Scored`) AS forecasts_scored, ROUND(MEASURE(`National Mean Absolute Error`), 1) AS national_mean_abs_error, ROUND(MEASURE(`Range Coverage`), 2) AS range_coverage, ROUND(MEASURE(`Area Band Accuracy`), 2) AS area_band_accuracy FROM {T['forecast_performance']} GROUP BY `Forecast Kind`"),
     ('Which areas have had dengue clusters most often since 2019?',
      f"SELECT area_name, COUNT(DISTINCT date) AS listed_days_with_a_cluster, MAX(people) AS most_people_on_one_day FROM {T['silver_area_cluster_history']} WHERE clusters > 0 GROUP BY area_name ORDER BY listed_days_with_a_cluster DESC LIMIT 10"),
     ('How did weekly dengue cases move with rainfall in 2022?',

@@ -7,6 +7,9 @@ env:
   # Resource key "llm-endpoint" is a Foundation Model serving endpoint attached with CAN_QUERY; it powers the Assistant tab.
   - name: LLM_ENDPOINT
     valueFrom: llm-endpoint
+  # The same endpoint drafts a resident notice on request; every draft must pass the fact checks or the template is used.
+  - name: DATABRICKS_NOTICE_ENDPOINT
+    valueFrom: llm-endpoint
   # Resource key "sql-warehouse" (CAN_USE) stores field reports in a Unity Catalog table.
   - name: DATABRICKS_WAREHOUSE_ID
     valueFrom: sql-warehouse

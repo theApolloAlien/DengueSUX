@@ -20,7 +20,10 @@
   };
   const PALETTE = {plinth: '#e8e2d3', plinthTop: '#f3efe4', concrete: '#d9d4c5', wall: '#f4efe2', forest: '#163f35', sage: '#8fb39a', leaf: '#5f8f52',
     terracotta: '#c0643f', soil: '#5b4632', water: '#4f9fc4', amber: '#e3ad3c', red: '#c2523c', dark: '#2a2c26', bark: '#7a5a3c', sand: '#d8c49a', blue: '#3f7fb5'};
-  let THREE = null, loading = null, thumbRenderer = null;
+  let THREE = null, loading = null, thumbRenderer = null, liveRenderer = null;
+  // One offscreen renderer serves every live illustration; each host shows a 2D copy, so a walk with eight stops
+  // never opens eight WebGL contexts (browsers drop the oldest, which used to knock the 3D map back to 2D).
+  function sharedLive() { if (!liveRenderer) { const c = document.createElement('canvas'); liveRenderer = makeRenderer(c); liveRenderer.setPixelRatio(1); liveRenderer.setSize(720, 450, false); } return liveRenderer; }
   const thumbs = new Map();
 
   function keyFor(text) { const found = KEYS.find(([pattern]) => pattern.test(String(text || ''))); return found ? found[1] : null; }
@@ -305,7 +308,8 @@
   function live(host, key, {onPhase} = {}) {
     let renderer = null, current = null, raf = 0, t0 = performance.now(), closed = false, orbit = 0, drag = null, phase = null, fixedStill = 0;
     const canvas = document.createElement('canvas'); canvas.className = 'look3d-canvas'; canvas.setAttribute('aria-hidden', 'true'); host.prepend(canvas);
-    const resize = () => { if (!renderer) return; const w = host.clientWidth || 320, h = Math.round(w / 1.6); renderer.setSize(w, h, false); canvas.style.height = h + 'px'; if (current) { current.camera.aspect = w / h; current.camera.updateProjectionMatrix(); if (reduced.matches) { cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); } } };
+    const ctx2d = canvas.getContext('2d'), dpr = Math.min(2, window.devicePixelRatio || 1);
+    const resize = () => { if (!renderer) return; const w = host.clientWidth || 320, h = Math.round(w / 1.6); canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr); canvas.style.width = w + 'px'; canvas.style.height = h + 'px'; if (current) { current.camera.aspect = 1.6; current.camera.updateProjectionMatrix(); if (reduced.matches) { cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); } } };
     const observer = new ResizeObserver(resize); observer.observe(host);
     canvas.addEventListener('pointerdown', e => { drag = {x: e.clientX, orbit}; canvas.setPointerCapture(e.pointerId); });
     canvas.addEventListener('pointermove', e => { if (drag) orbit = drag.orbit + (e.clientX - drag.x) / 160; });
@@ -317,18 +321,19 @@
       if (next !== phase) { phase = next; onPhase?.(phase, current.key); }
       current.frame(reduced.matches ? 1 : elapsed, fixed, orbit + (reduced.matches || drag ? 0 : Math.sin(elapsed * .35) * .22));
       renderer.render(current.scene, current.camera);
+      ctx2d.clearRect(0, 0, canvas.width, canvas.height); ctx2d.drawImage(renderer.domElement, 0, 0, canvas.width, canvas.height);
       if (!reduced.matches) raf = requestAnimationFrame(draw);
     }
     const api = {
       async setKey(next) {
         await load(); if (closed) return;
-        if (!renderer) { renderer = makeRenderer(canvas); resize(); }
+        if (!renderer) { renderer = sharedLive(); resize(); }
         cancelAnimationFrame(raf); current?.dispose(); current = {...stage(next), key: next}; t0 = performance.now(); phase = null; fixedStill = 0; resize();
         raf = requestAnimationFrame(draw);
       },
       showFix(on) { fixedStill = on ? 1 : 0; phase = null; cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); },
       replay() { t0 = performance.now(); phase = null; cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); },
-      dispose() { closed = true; cancelAnimationFrame(raf); observer.disconnect(); current?.dispose(); renderer?.dispose(); renderer?.forceContextLoss?.(); canvas.remove(); },
+      dispose() { closed = true; cancelAnimationFrame(raf); observer.disconnect(); current?.dispose(); canvas.remove(); },
     };
     api.setKey(key).catch(() => { api.failed = true; host.classList.add('look3d-failed'); });
     return api;
@@ -400,5 +405,5 @@
     pending.forEach(button => io.observe(button));
   }
 
-  window.Checklist3D = {keyFor, supported, decorate, open, live, thumbnail, copy: key => COPY[key] || null, LOOP};
+  window.Checklist3D = {keyFor, supported, decorate, open, live, thumbnail, copy: key => COPY[key] || null, LOOP, three: load};
 })();

@@ -19,11 +19,13 @@
       { title: 'This week in Singapore', text: `${c.clusters ?? '—'} active dengue clusters, ${c.cluster_cases ?? '—'} people in them${live ? `, and about ${Math.round(live.prediction)} new cases expected nationally next week` : ''}. All from NEA, MOH and URA open data, refreshed daily on Databricks.`,
         run: async () => { window.Product.go('week'); await wait(5200); } },
       { title: 'Seven years, area by area', text: h?.dates?.length ? `data.gov.sg keeps no cluster history, so we rebuilt it: ${h.dates.length} archived NEA listings since ${h.dates[0].slice(0, 4)}, placed block by block.` : 'Every saved cluster snapshot, replayed by planning area.',
-        run: async () => { location.hash = '#map/3d'; await window.Map3DExtras.whenReady(); window.Map3DExtras.setMode('history'); await wait(reduced() ? 4000 : 15000); } },
+        run: async () => { location.hash = '#map/3d'; await window.Map3DExtras.whenReady(); if (reduced()) { window.Map3DExtras.setMode('history'); await wait(4000); } else await window.Map3DExtras.runTimelapse({speed: 4, maxMs: 26000}); } },
       { title: 'In about two weeks', text: o ? `A two-week outlook for every planning area, trained on ${o.training?.examples?.toLocaleString('en-SG')} area examples. Height is the chance of 10 or more people in clusters — chances, not certainties.` : 'The two-week area outlook.',
         run: async () => { window.Map3DExtras.setMode('outlook'); await wait(6500); window.Map3DExtras.setMode('now'); await wait(1600); } },
       { title: `From the island to a doorstep in ${t?.name || 'one area'}`, text: 'Dive from the national picture into one area, then walk its route on official HDB block shapes, the rest of the neighbourhood in grey, with what to check at each stop.',
-        run: async () => { if (t) { await window.Map3DExtras.diveTo(t.code); } await wait(700); document.querySelector('.inspection-map-column')?.scrollIntoView({ behavior: reduced() ? 'instant' : 'smooth', block: 'start' }); await wait(reduced() ? 5000 : 25000); } },
+        run: async () => { if (t) { await window.Map3DExtras.diveTo(t.code); } await wait(700); document.querySelector('.inspection-map-column')?.scrollIntoView({ behavior: reduced() ? 'instant' : 'smooth', block: 'start' });
+          // Let the whole walk play at double speed so the story reaches "Route complete" instead of cutting it off.
+          if (reduced()) await wait(5000); else { await wait(1500); window.RouteFlythrough?.setSpeed(2); await window.RouteFlythrough?.whenDone(95000); await wait(1800); } } },
       { title: 'A notice residents will read', text: 'A lift-lobby poster in English, Chinese, Malay and Tamil, with a QR code back to the live plan.',
         run: async () => { if (t) window.Product.go('poster', t.code); await wait(6000); } },
       { title: 'What we said, what happened', text: l?.national?.length ? `Every forecast is written once to an append-only Delta table and scored when CDA publishes. First entry: ${new Date(l.first_published).toLocaleDateString('en-SG', { day: 'numeric', month: 'short' })}.` : 'An append-only ledger of every published forecast.',
@@ -81,7 +83,18 @@
     api = e.detail.api;
     const menu = $('.help-menu > div');
     if (menu && !$('#story-open')) { const b = document.createElement('button'); b.id = 'story-open'; b.textContent = 'Play the story (2 min)'; b.onclick = () => { $('.help-menu').open = false; play(); }; menu.prepend(b); }
-    if (new URLSearchParams(location.search).get('story') === '1') setTimeout(() => play(), 900);
+    const params = new URLSearchParams(location.search);
+    if (params.get('story') === '1') setTimeout(() => play(), 900);
+    // ?kiosk=1: no chrome, large captions, the story on a loop, and a QR code so a visitor can continue on a phone.
+    if (params.get('kiosk') === '1') {
+      document.body.classList.add('kiosk');
+      const url = location.origin + location.pathname;
+      const loop = async () => { if (!document.body.classList.contains('kiosk')) return; await play(); await wait(3500); loop(); };
+      setTimeout(loop, 600);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('kiosk')) { document.body.classList.remove('kiosk'); stop(); } });
+      const badge = document.createElement('div'); badge.className = 'kiosk-badge'; badge.innerHTML = `<strong>DengueSUX</strong><span>Open on your phone</span>${window.Poster?.qrSvg ? window.Poster.qrSvg(url) : ''}<small>${esc(url.replace(/^https?:\/\//, ''))}</small>`;
+      document.body.append(badge);
+    }
   });
   window.Story = { play, stop, running: () => running };
 })();

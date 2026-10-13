@@ -38,7 +38,7 @@
         <header><img src="/brand/logo-mark.svg" width="36" height="36" alt=""><span>${esc(area.name)} · ${esc(date)}</span></header>
         <h1>${esc(head[0])}</h1>
         <p class="poster-sub">${esc(head[1])}</p>
-        <div class="poster-figure"><strong>${esc(area.cluster_cases)}</strong><span>${language === 'en' ? `people in active dengue clusters around ${esc(area.name)}` : esc(area.name)}</span></div>
+        <div class="poster-figure"><strong>${esc(area.cluster_cases)}</strong><span>${language === 'en' ? `${area.cluster_cases === 1 ? 'person' : 'people'} in active dengue clusters around ${esc(area.name)}` : esc(area.name)}</span></div>
         <ul class="poster-actions">${ACTIONS.map(([i, t]) => `<li><i class="ph ph-${i}" aria-hidden="true"></i><span>${esc(t)}</span></li>`).join('')}</ul>
         ${notice ? `<p class="poster-notice">${esc(notice.text)}</p>` : ''}
         <footer><div class="poster-qr" role="img" aria-label="QR code to the field plan for ${esc(area.name)}">${qrSvg(url)}</div><div><strong>${esc(head[2])}</strong><span>${esc(url.replace(/^https?:\/\//, ''))}</span>${telegram ? `<span class="poster-telegram"><i class="ph ph-telegram-logo" aria-hidden="true"></i> ${esc(TELEGRAM[language])}: ${esc(telegram.replace(/^https?:\/\//, ''))}</span>` : ''}<small>Feeling unwell with fever? See a doctor. Places to check are not confirmed breeding sites. Data: NEA via data.gov.sg. Draft notice: review before posting.</small></div>${telegram ? `<div class="poster-qr poster-qr-telegram" role="img" aria-label="QR code for Telegram alerts about ${esc(area.name)}">${qrSvg(telegram)}</div>` : ''}</footer>
@@ -58,4 +58,5 @@
   document.addEventListener('denguesux:ready', e => { api = e.detail.api; mount(); });
   document.addEventListener('denguesux:route', e => { document.body.classList.toggle('poster-mode', e.detail.view === 'poster'); if (e.detail.view === 'poster') { mount(); render(e.detail.area); } });
   document.addEventListener('denguesux:telegram', () => { if (document.body.classList.contains('poster-mode')) render(api?.state?.selected); });
+  window.Poster = {qrSvg};
 })();

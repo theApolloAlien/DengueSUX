@@ -145,7 +145,7 @@ def generate_notice(area_code, language="en", root=ROOT, provider=None):
     facts = facts_for_area(area_code, root)
     notice = _template_notice(area_code, language, facts)
     sentences = _approved_sentences(facts, language)
-    if provider is None and os.environ.get("DATABRICKS_RUNTIME_VERSION"):
+    if provider is None and os.environ.get("DATABRICKS_NOTICE_ENDPOINT"):
         provider = DatabricksFoundationModel()
     if provider is not None:
         try:

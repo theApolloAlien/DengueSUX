@@ -74,7 +74,7 @@
   function closePlan(){
     window.RouteFlythrough?.dispose();printFit=null;
     if(map){map.stop();map.remove();map=null;}$('#inspection-view').hidden=true;document.body.classList.remove('inspection-open');
-    $('.page-heading').hidden=false;$('.view-bar').hidden=false;
+    $('.page-heading').hidden=false;
   }
   // Every area has a saved 3D walk (output/web/walks/<CODE>.json): the cluster plan where NEA names exact blocks,
   // otherwise a routine walk through official places. Loaded only when a plan or the 3D view needs it.
@@ -120,7 +120,7 @@
     const sourceDates=[...new Set(clusterFeatures(area.code).map(f=>date(f.properties.updated_at)))];
     const toolbar=$('#inspection-view .plan-toolbar');
     $('#signals-view').hidden=true;$('#forecast-view').hidden=true;$('#inspection-view').hidden=false;
-    $('.page-heading').hidden=true;$('.view-bar').hidden=true;document.body.classList.add('inspection-open');
+    $('.page-heading').hidden=true;document.body.classList.add('inspection-open');
     const formula=isWalk?walk.formula:inspection.formula,sources=isWalk?walk.sources:inspection.sources;
     const stale=isWalk?walk.map_data_stale:inspection.map_data_stale;
     const heading=loading?'Loading the walk…':stops.length?`${stops.length} stops to check`:plan.tour?'A 3D look at this area':'No verified stops yet';
@@ -128,7 +128,7 @@
       :`<span><b class="legend-footprint"></b>Cluster footprint</span><span><b class="legend-radius"></b>${radius} m search</span><span><b class="legend-block"></b>Cluster block</span><span><b class="legend-route"></b>${route.method==='onemap_walk'?'Walking route':'Approximate order'}</span>`;
     const limits=isWalk?`<p>Up to ${stops.length||7} official places within about ${radius} m of the walk centre. Block pins sit inside each block’s official HDB footprint; hawker and park points are official source points, not verified entrances. Inspect only publicly accessible places; never enter homes or climb to gutters.</p><p>${esc(walk.landuse_note||'')}</p>`
       :`<p>Top ${inspection.top_n||8} available places; ${radius} m from exact cluster blocks. A place can be outside the selected area if it is near a shared cluster. Source points are approximate locations, not verified public entrances. Inspect only publicly accessible places; never enter homes or climb to gutters.</p>`;
-    $('#inspection-view').innerHTML=`<div class="inspection-nav"><button id="back-to-areas" class="text-button">${icon('arrow-left')} Area signals</button><span>FIELD PLAN <span class="nav-step">/</span> ${esc(area.name)}</span><button id="print-plan" class="text-button" ${stops.length?'':'disabled'}>${icon('printer')} Print / save PDF</button></div>
+    $('#inspection-view').innerHTML=`<div class="inspection-nav"><button id="back-to-areas" class="text-button">${icon('arrow-left')} Map</button><span>FIELD PLAN <span class="nav-step">/</span> ${esc(area.name)}</span><button id="print-plan" class="text-button" ${stops.length?'':'disabled'}>${icon('printer')} Print / save PDF</button></div>
       <header class="inspection-heading"><div><h1 tabindex="-1">${heading}<span>${esc(area.name)}${isWalk&&stops.length?' · routine walk':''}</span></h1></div><button class="outline-button" id="plan-notice">${icon('translate')} Resident notice</button></header>
       <div class="plan-evidence">${isWalk?`<span title="Walk saved from official HDB, NEA and NParks layers">${icon('calendar-dots')} Walk saved ${date(walk.generated_at)}</span><span title="NEA cluster snapshot">${icon('crosshair')} Clusters as of ${date(data.current?.as_of)}</span>`:`<span title="NEA source updated ${esc(sourceDates.join(' / ')||'unavailable')}">${icon('calendar-dots')} Saved ${date(inspection.as_of||data.current?.as_of)}</span><span title="Assumed search radius around each cluster block">${icon('circles-three')} ${radius} m radius</span>`}${plan.impact?`<span class="impact-chip" title="${esc(plan.impact.source)}. ${esc(plan.impact.note)}">${icon('house-line')} <strong>${num(plan.impact.homes_in_route_blocks)}</strong> homes on this route</span>`:''}</div>
       ${isWalk?walkBanner(area,plan,ctx):''}
@@ -145,9 +145,12 @@
     $('.stop-list').querySelectorAll('input[type=checkbox]').forEach(c=>{try{c.checked=sessionStorage.getItem(`denguesux-check:${asOf}:${area.code}:${c.dataset.check}`)==='true';}catch{}});
     if(!loading){bindReports(area,asOf);loadReports(area);}
     updateProgress();renderPlanMap();window.Checklist3D?.decorate($('#inspection-view'));
-    if(!loading)window.RouteFlythrough?.mount(plan,area,id=>focusStop(id,true),{buildings:isWalk?walk.buildings:null,margin:isWalk?walk.method?.context_margin_m:null,loadWalk,onMode:mode=>{if(mode==='2d')requestAnimationFrame(()=>map?.invalidateSize());},
+    // An area with no official place, HDB block or mapped building (Tuas, the islands) has no 3D scene; say so instead of a blank plane.
+    const noScene=isWalk&&!stops.length&&!(walk?.buildings?.features?.length);
+    if(noScene)$('.inspection-map-column')?.insertAdjacentHTML('afterbegin',`<p class="no-scene-note">${icon('cube')} Nothing to show in 3D here: no official HDB block, hawker centre, park or mapped building lies in ${esc(area.name)}. The map shows the area outline.</p>`);
+    if(!loading&&!noScene)window.RouteFlythrough?.mount(plan,area,id=>focusStop(id,true),{buildings:isWalk?walk.buildings:null,margin:isWalk?walk.method?.context_margin_m:null,loadWalk,onMode:mode=>{if(mode==='2d')requestAnimationFrame(()=>map?.invalidateSize());},
       // On desktop the plan opens in 3D: it is the clearest picture of the route. Phones, print and reduced motion stay 2D.
-      start3d:matchMedia('(min-width: 1000px)').matches&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!!window.Checklist3D?.supported(),outline:isWalk?(data.current?.boundaries?.features||[]).find(f=>f.properties?.code===area.code)||null:null});
+      start3d:(matchMedia('(min-width: 1000px)').matches||!!window.RouteFlythrough?.force3d)&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!!window.Checklist3D?.supported(),outline:isWalk?(data.current?.boundaries?.features||[]).find(f=>f.properties?.code===area.code)||null:null});
     if(!ctx.rerender)$('#inspection-view').scrollIntoView({block:'start',behavior:'instant'});
     if(!ctx.rerender||document.activeElement===document.body)$('.inspection-heading h1').focus({preventScroll:true});
   }

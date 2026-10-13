@@ -24,8 +24,13 @@ def test_all_score_components_capped_and_missing_explicit():
     assert score == sum(c["contribution"] for c in components)
     score, components = score_candidate("block", 150, 300, 74)
     assert score == 57.3
-    assert components[-1]["value"] is None and components[-1]["contribution"] == 0
-    assert components[-2]["value"] is None and components[-2]["status"] == "not_enough_history"
+    assert components[-1]["key"] == "field" and components[-1]["value"] is None and components[-1]["contribution"] == 0
+    assert components[-2]["value"] is None and components[-2]["contribution"] == 0
+    assert components[-3]["value"] is None and components[-3]["status"] == "not_enough_history"
+    # A recent water finding at the place adds 15 points so it is re-checked first; an old one adds nothing.
+    assert score_candidate("block", 150, 300, 74, field_outcome="water_found", field_days=3)[0] == score + 15
+    assert score_candidate("block", 150, 300, 74, field_outcome="water_found", field_days=40)[0] == score
+    assert score_candidate("block", 150, 300, 74, field_outcome="cleared", field_days=1)[0] == score
     assert score_candidate("block", 300, 300, 74, growth_cases=-5)[0] == 39.8
     with pytest.raises(ValueError):
         score_candidate("block", 301, 300, 74)

@@ -48,7 +48,7 @@
     return `<section class="insight-card ledger-card" aria-labelledby="ledger-title">
       <header><h2 id="ledger-title">${icon('notebook')} What we said, what happened</h2><a href="#forecast">Forecast →</a></header>
       <table class="ledger-table"><thead><tr><th scope="col">Week</th><th scope="col">We said</th><th scope="col">Reported</th></tr></thead><tbody>
-      ${rows.map(r => `<tr><td>${esc(r.target.replace('-W', ' W'))}<small>${day(r.issued_for)}</small></td><td>${num(r.prediction)}<small>${num(r.lower)}–${num(r.upper)}</small></td><td>${r.actual == null ? '<span class="pending">Awaiting report</span>' : `${num(r.actual)} <span class="${r.covered ? 'hit' : 'miss'}">${r.covered ? 'in range' : 'outside'}</span>`}</td></tr>`).join('')}
+      ${rows.map(r => `<tr><td>${esc(String(r.target).replace(/^(\d{4})-W0?(\d+)$/, 'Week $2, $1'))}<small>${day(r.issued_for)}</small></td><td>${num(r.prediction)}<small>${num(r.lower)}–${num(r.upper)}</small></td><td>${r.actual == null ? '<span class="pending">Awaiting report</span>' : `${num(r.actual)} <span class="${r.covered ? 'hit' : 'miss'}">${r.covered ? 'in range' : 'outside'}</span>`}</td></tr>`).join('')}
       </tbody></table>
       <p class="insight-foot">Append-only ledger since ${day(l.first_published)}; predictions are never edited.${scored.length ? '' : ' Outcomes fill in as CDA publishes each week.'}${l.area_scored ? ` Area outlooks scored: ${num(l.area_scored)} (${pct(l.area_band_accuracy)} band accuracy).` : ''}</p>
     </section>`;
@@ -126,7 +126,7 @@
     const reports = community?.by_area?.[area.code];
     if (reports) pieces.push(`<p class="outreach-note">${icon('check-circle')} <span><strong>${num(reports.stops_checked)}</strong> stops checked here${reports.water_found ? `, ${num(reports.water_found)} with water found` : ''}.<small>Last report ${day(reports.last_reported_at)}</small></span></p>`);
     const feed = `/feeds/alerts.xml?area=${encodeURIComponent(area.code)}`;
-    const share = `DengueSUX: ${area.name} has ${area.cluster_cases} people in active dengue clusters. Check for stagnant water today. ${location.origin}/#plan/${slug(area.name)}`;
+    const share = `DengueSUX: ${area.name} has ${area.cluster_cases} ${area.cluster_cases === 1 ? 'person' : 'people'} in active dengue clusters. Check for stagnant water today. ${location.origin}/#plan/${slug(area.name)}`;
     pieces.push(`<div class="follow-row">${telegramLink(area)}<a class="text-button" href="${feed}" title="Atom feed: follow in any feed reader or chat bot. We store no contact details.">${icon('rss')} Follow alerts</a><a class="text-button" href="https://wa.me/?text=${encodeURIComponent(share)}" target="_blank" rel="noopener">${icon('whatsapp-logo')} Share</a><a class="text-button" href="#poster/${slug(area.name)}">${icon('printer')} Lift poster</a></div>`);
     node.insertAdjacentHTML('beforeend', pieces.join(''));
   }

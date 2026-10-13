@@ -33,11 +33,12 @@ CHECKLISTS = {
 }
 FORMULA = {
     "label": "Inspection priority / 100 (assumed operational rule, not a prediction)",
-    "expression": "min(100, type + proximity + cluster_size + growth + elderly)",
+    "expression": "min(100, type + proximity + cluster_size + growth + elderly + field)",
     "place_type": {"cap": 25, "weights": TYPE_POINTS},
     "proximity": {"cap": 35, "expression": "35 × max(0, 1 − distance_m / radius_m)"},
     "cluster_size": {"cap": 20, "expression": "20 × min(cases, 100) / 100"},
     "growth": {"cap": 10, "expression": "10 × min(max(7-day case change, 0), 20) / 20; unavailable → 0 points"},
+    "field": {"cap": 15, "expression": "15 when the latest field report at this place (within 14 days) found stagnant water, so it is re-checked first; otherwise 0"},
     "elderly": {"cap": 10, "expression": "10 × min(share aged 65+ / 0.30, 1); unavailable → 0 points"},
     "missing": "Missing components add zero priority points and remain unavailable, not an observed zero. Weights are not redistributed.",
     "cluster_choice": "Use the nearest verified cluster block; break ties by larger cluster, then source cluster ID. No double-counting cases across nearby clusters.",
@@ -206,18 +207,24 @@ def plan_impact(anchors, stops, facts):
             "note": "Homes are flats in HDB blocks only; private housing is not counted. Not a count of residents at risk."}
 
 
-def score_candidate(place_type, distance_m, radius_m, cases, *, growth_cases=None, elderly_share=None):
+FIELD_RECHECK_DAYS = 14
+
+
+def score_candidate(place_type, distance_m, radius_m, cases, *, growth_cases=None, elderly_share=None, field_outcome=None, field_days=None):
     if radius_m <= 0 or not 0 <= distance_m <= radius_m:
         raise ValueError("Candidate must be within a positive search radius")
     if place_type not in TYPE_POINTS:
         raise ValueError("Unsupported place type")
     cases = max(0, int(cases))
+    recent_water = field_outcome == "water_found" and field_days is not None and 0 <= field_days <= FIELD_RECHECK_DAYS
     components = [
         {"key": "place_type", "label": "Place type", "value": place_type, "contribution": TYPE_POINTS[place_type], "cap": 25, "status": "assumed_weight"},
         {"key": "proximity", "label": "Distance to a verified cluster block", "value": round(distance_m, 1), "unit": "m", "contribution": round(35 * max(0, 1 - distance_m / radius_m), 2), "cap": 35, "status": "observed_coordinates"},
         {"key": "cluster_size", "label": "People in the associated cluster", "value": cases, "contribution": round(20 * min(cases, 100) / 100, 2), "cap": 20, "status": "source_snapshot"},
         {"key": "growth", "label": "Seven-day cluster change", "value": growth_cases, "contribution": round(10 * min(max(growth_cases or 0, 0), 20) / 20, 2), "cap": 10, "status": "source_snapshot" if growth_cases is not None else "not_enough_history"},
         {"key": "elderly", "label": "Share of residents aged 65+", "value": elderly_share, "contribution": round(10 * min(max(elderly_share or 0, 0) / .30, 1), 2), "cap": 10, "status": "source_snapshot" if elderly_share is not None else "unavailable_no_valid_area_join"},
+        {"key": "field", "label": "Latest field report here", "value": field_outcome, "unit": "days ago" if field_days is not None else None, "days": field_days,
+         "contribution": 15.0 if recent_water else 0.0, "cap": 15, "status": "water_found_recheck_first" if recent_water else "field_report" if field_outcome else "no_field_report"},
     ]
     return round(min(100, sum(c["contribution"] for c in components)), 2), components
 
@@ -271,8 +278,45 @@ def _source_snapshot(root):
     return json.loads(payload), receipt, {"kind": "clusters", "payload": payload, "source": receipt}
 
 
+def latest_field_outcomes(root, spark=None, rows=None, limit=5000):
+    """Latest unverified field outcome per planned stop (Unity Catalog table on Databricks, local JSONL otherwise).
+
+    Notes are never read; only stop id, outcome and time. Any failure returns an empty map so planning never stalls."""
+    try:
+        if rows is None:
+            if spark is not None:
+                from .runtime import TABLE_PREFIX
+                rows = [r.asDict() for r in spark.sql(
+                    f"SELECT stop_id, outcome, CAST(reported_at AS STRING) AS reported_at FROM {TABLE_PREFIX}.field_reports "
+                    f"ORDER BY reported_at DESC LIMIT {int(limit)}").collect()]
+            else:
+                from .field_reports import LocalStore
+                rows = LocalStore(root).recent(limit=limit)
+    except Exception:
+        return {}
+    latest = {}
+    for row in sorted(rows or [], key=lambda r: str(r.get("reported_at") or ""), reverse=True):
+        stop_id = str(row.get("stop_id") or "")
+        if stop_id and stop_id not in latest and row.get("outcome"):
+            latest[stop_id] = {"outcome": str(row["outcome"]), "reported_at": str(row.get("reported_at") or "")}
+    return latest
+
+
+def _days_between(as_of, reported_at):
+    try:
+        a = dt.datetime.fromisoformat(str(as_of).replace("Z", "+00:00"))
+        b = dt.datetime.fromisoformat(str(reported_at).replace("Z", "+00:00"))
+        if a.tzinfo is None:
+            a = a.replace(tzinfo=dt.timezone.utc)
+        if b.tzinfo is None:
+            b = b.replace(tzinfo=dt.timezone.utc)
+        return max(0, (a - b).days)
+    except (TypeError, ValueError):
+        return None
+
+
 def build_inspection(root=ROOT, *, radius_m=300, top_n=8, offline=False, spark=None,
-                     refresh_geocodes=False, client=None, max_extra_geocodes=16):
+                     refresh_geocodes=False, client=None, max_extra_geocodes=16, field_rows=None):
     root = Path(root)
     if not 50 <= radius_m <= 1000 or not 1 <= top_n <= 20 or not 0 <= max_extra_geocodes <= 500:
         raise ValueError("Radius must be 50–1000 m, top N 1–20, and extra geocode budget 0–500")
@@ -360,6 +404,12 @@ def build_inspection(root=ROOT, *, radius_m=300, top_n=8, offline=False, spark=N
         sources.append({**_source_receipt(elderly_path), "usage": "Audited and dropped: historical HDB town counts lack a valid all-age denominator; SingStat 2026 planning-area ages are used instead"})
     # Only use a growth export generated for this same snapshot day.
     growth_rows = _growth_rows(root, as_of)
+    # Close the loop with the field: a stop where volunteers found water in the last two weeks is re-checked first.
+    field_latest = latest_field_outcomes(root, spark=spark, rows=field_rows)
+    recent_water = sum(1 for v in field_latest.values() if v["outcome"] == "water_found" and (_days_between(as_of, v["reported_at"]) or 99) <= FIELD_RECHECK_DAYS)
+    statuses.append({"layer": "Field reports", "status": "used" if field_latest else "none",
+                     "reason": (f"{len(field_latest)} planned stops have an unverified field outcome; {recent_water} found water within {FIELD_RECHECK_DAYS} days and score up to 15 extra points so they are re-checked first."
+                                if field_latest else "No field reports yet; the field component adds no points.")})
     candidates, area_results = [], {}
     for area in current["areas"]:
         code = area["code"]
@@ -376,8 +426,11 @@ def build_inspection(root=ROOT, *, radius_m=300, top_n=8, offline=False, spark=N
                 continue
             grow = growth_rows.get(anchor["cluster_id"], {})
             delta = grow.get("growth_cases") if grow.get("history_available") else None
+            report = field_latest.get(str(place["id"]))
             score, components = score_candidate(place["place_type"], metres, radius_m, anchor["cluster_cases"], growth_cases=delta,
-                                                elderly_share=elderly_by_area.get(code))
+                                                elderly_share=elderly_by_area.get(code),
+                                                field_outcome=report["outcome"] if report else None,
+                                                field_days=_days_between(as_of, report["reported_at"]) if report else None)
             distance_label = "At a verified block associated with" if metres < 5 else f"About {max(10, round(metres / 10) * 10):,} m from a verified block associated with"
             reason = f"{distance_label} the {anchor['cluster_cases']}-person cluster. {place['place_type'].title()} checks may reveal stagnant water; no breeding site is confirmed."
             if place["place_type"] == "park":
@@ -404,7 +457,8 @@ def build_inspection(root=ROOT, *, radius_m=300, top_n=8, offline=False, spark=N
         area_results[code] = {"area_code": code, "area_name": area["name"], "status": status, "message": message,
                              "as_of": as_of, "cluster_blocks": anchors, "clusters": {"type": "FeatureCollection", "features": features},
                              "search_rings": [{"latitude": block["latitude"], "longitude": block["longitude"], "radius_m": radius_m, "cluster_id": block["cluster_id"], "block_id": block["id"]} for block in anchors],
-                             "unresolved_blocks": missing, "candidate_count": len(selected_candidates), "stops": stops, "route": route, "impact": impact}
+                             "unresolved_blocks": missing, "candidate_count": len(selected_candidates), "stops": stops, "route": route, "impact": impact,
+                             "recheck_first": [stop["id"] for stop in stops if any(c["key"] == "field" and c["contribution"] > 0 for c in stop.get("components", []))]}
     public_geocode_source = {"name": "SLA OneMap Search and Routing", "url": "https://www.onemap.gov.sg/apidocs/",
                              "retrieved_at": max((block["retrieved_at"] for block in blocks), default=None),
                              "status": client.status, "attribution": "© OneMap, Singapore Land Authority"}

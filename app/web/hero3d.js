@@ -66,8 +66,8 @@
       if (state.closed) return;
       const map = state.map = new gl.Map({container: box, style: {version: 8, sources: {}, layers: [{id: 'background', type: 'background', paint: {'background-color': theme.background}}]},
         center: [103.82, 1.352], zoom: 10, pitch: 58, bearing: -22, maxPitch: 75, minZoom: 9, maxZoom: 14, attributionControl: false, antialias: true,
-        interactive: opts.interactive !== false, dragRotate: true, touchPitch: false});
-      map.scrollZoom.disable(); map.keyboard.disable();
+        interactive: opts.interactive !== false, dragRotate: true, touchPitch: false, cooperativeGestures: !!opts.gestures});
+      if (!opts.gestures) map.scrollZoom.disable(); map.keyboard.disable();
       const ready = () => {
         if (state.closed || state.built) return; state.built = true;
         try { map.setSky({'sky-color': theme.sky, 'horizon-color': theme.horizon, 'fog-color': theme.background, 'sky-horizon-blend': .8, 'horizon-fog-blend': .5, 'fog-ground-blend': .55, 'atmosphere-blend': 0}); } catch {}
@@ -76,22 +76,28 @@
         if (!reduced.matches && opts.rise !== false) areas.features.forEach(f => { f.properties.height = 0; });
         map.addSource('areas', {type: 'geojson', data: areas});
         map.addSource('beacons', {type: 'geojson', data: beacons});
-        const risk = ['match', ['get', 'risk'], 'High', COLOR.High, 'Medium', COLOR.Medium, theme.low];
+        const riskOf = ['coalesce', ['feature-state', 'risk'], ['get', 'risk']];
+        const risk = ['match', riskOf, 'High', COLOR.High, 'Medium', COLOR.Medium, theme.low];
         map.addLayer({id: 'areas-prism', type: 'fill-extrusion', source: 'areas', paint: {
-          'fill-extrusion-color': ['case', ['boolean', ['feature-state', 'hover'], false], ['match', ['get', 'risk'], 'High', '#ffa48c', 'Medium', '#ffd37a', '#4f957a'], risk],
-          'fill-extrusion-height': ['get', 'height'], 'fill-extrusion-base': 0, 'fill-extrusion-opacity': .94, 'fill-extrusion-vertical-gradient': true}});
+          'fill-extrusion-color': ['case', ['boolean', ['feature-state', 'hover'], false], ['match', riskOf, 'High', '#ffa48c', 'Medium', '#ffd37a', '#4f957a'], risk],
+          'fill-extrusion-height': ['coalesce', ['feature-state', 'height'], ['get', 'height']], 'fill-extrusion-base': 0, 'fill-extrusion-opacity': .94, 'fill-extrusion-vertical-gradient': true}});
         map.addLayer({id: 'areas-edge', type: 'line', source: 'areas', paint: {'line-color': theme.edge, 'line-width': .8, 'line-opacity': .7}});
         map.addLayer({id: 'areas-selected', type: 'line', source: 'areas', filter: ['==', ['get', 'code'], ''], paint: {'line-color': opts.theme === 'day' ? '#163f35' : '#fff6dc', 'line-width': 3}});
         map.addLayer({id: 'cluster-beacons', type: 'fill-extrusion', source: 'beacons', paint: {'fill-extrusion-color': COLOR.cluster, 'fill-extrusion-height': ['get', 'top'], 'fill-extrusion-base': ['get', 'base'], 'fill-extrusion-opacity': .9}});
         // Persistent padding keeps the island (and the orbit's pivot) in the open part of the frame. It is measured
         // when the stage has a real size (the view may still be hidden at mount) and again after every resize.
         const bounds = new gl.LngLatBounds([103.6, 1.21], [104.04, 1.47]);
-        const frame = () => {
+        const frame = (animate = false) => {
           const w = box.clientWidth, h = box.clientHeight; if (!w || !h) return false;
           const pad = typeof opts.padding === 'function' ? opts.padding(w, h) : opts.padding || {top: 30, bottom: 30, left: 30, right: 30};
           map.setPadding({top: 0, bottom: 0, left: 0, right: 0});
           const cam = map.cameraForBounds(bounds, {padding: pad, bearing: -22});
-          map.setPadding(pad); map.jumpTo({center: [103.82, 1.352], zoom: (cam?.zoom ?? 10) - (opts.zoomOut ?? .02), pitch: 58, bearing: state.framed ? map.getBearing() : -22});
+          map.setPadding(pad);
+          const view = {center: [103.82, 1.352], zoom: (cam?.zoom ?? 10) - (opts.zoomOut ?? .02), pitch: 58, bearing: state.framed ? map.getBearing() : -22};
+          // First frame: a short descent from high above while the island rises; later frames (resize, re-frame) jump or ease.
+          if (!state.framed && !reduced.matches && opts.intro !== false) { map.jumpTo({...view, zoom: view.zoom - 1.3, pitch: 14, bearing: -58}); map.easeTo({...view, duration: 2300, easing: x => 1 - Math.pow(1 - x, 3)}); }
+          else if (animate && !reduced.matches) map.easeTo({...view, duration: 900});
+          else map.jumpTo(view);
           state.framed = true; state.width = w; return true;
         };
         frame();
@@ -156,9 +162,10 @@
           if (state.closed) return resolve();
           const k = duration ? Math.min(1, (now - start) / duration) : 1, e = ease(k);
           state.areas.features.forEach(f => { const t = target.get(f.properties.code) || {height: 90, risk: 'Low'}; const h0 = from.get(f.properties.code) ?? 90;
-            f.properties.height = Math.round(h0 + (t.height - h0) * e); if (k >= .5 || h0 <= 100) { f.properties.risk = t.risk; if (t.people != null) f.properties.people = t.people; if (t.clusters != null) f.properties.clusters = t.clusters; } });
-          state.map.getSource('areas').setData(state.areas);
-          if (k < 1) state.morph = requestAnimationFrame(tick); else { state.ready = true; resolve(); }
+            f.properties.height = Math.round(h0 + (t.height - h0) * e); if (k >= .5 || h0 <= 100) { f.properties.risk = t.risk; if (t.people != null) f.properties.people = t.people; if (t.clusters != null) f.properties.clusters = t.clusters; }
+            // Heights and colours move through feature-state: 55 cheap state writes a frame instead of re-uploading 42k vertices.
+            state.map.setFeatureState({source: 'areas', id: f.id}, {height: f.properties.height, risk: f.properties.risk}); });
+          if (k < 1) state.morph = requestAnimationFrame(tick); else { state.map.getSource('areas').setData(state.areas); state.ready = true; resolve(); }
         };
         state.morph = requestAnimationFrame(tick);
       });
@@ -197,6 +204,15 @@
         if (!reduced.matches) await new Promise(r => setTimeout(r, ms * .35));
       },
       resize() { state.map?.resize(); },
+      /** The conversation named an area: glide towards it, pulse it twice, keep orbiting around it. */
+      focus(code, ms = 1300) {
+        const f = state.areas?.features.find(x => x.properties.code === code); if (!f || !state.map || !state.ready) return;
+        this.select(code); state.idleSince = performance.now() + 5000;
+        const [lng, lat] = centroid(f.geometry);
+        state.map.easeTo({center: [lng, lat], zoom: Math.min(11.6, state.map.getZoom() + .7), pitch: 62, duration: reduced.matches ? 0 : ms, easing: x => 1 - Math.pow(1 - x, 3)});
+        let n = 0; const blink = () => { if (state.closed || n++ >= 6) return; state.map.setFeatureState({source: 'areas', id: f.id}, {hover: n % 2 === 1}); setTimeout(blink, 260); };
+        if (!reduced.matches) setTimeout(blink, ms * .6); else state.map.setFeatureState({source: 'areas', id: f.id}, {hover: true});
+      },
       dispose() { state.closed = true; state.observer?.disconnect(); cancelAnimationFrame(state.frame); state.markers.forEach(m => m.remove()); state.map?.remove(); box.remove(); tip.remove(); host.querySelector('.landscape-legend')?.remove(); },
     };
   }

@@ -24,6 +24,80 @@
   };
   const OUTCOME_COLORS={water_found:token('--walk-outcome-water','#2f8fd8'),cleared:token('--walk-outcome-cleared','#3faa6b'),nothing:token('--walk-outcome-nothing','#9aa59a')};
   let current=null,library=null,footprints=null;
+  // Sun position over Singapore (1.35°N, 103.82°E) for a clock hour today (NOAA approximation). Singapore keeps UTC+8
+  // at 103.8°E, so solar noon falls near 13:05 clock time; the light and the estimated shadows follow it.
+  const SG=[103.82,1.352],PRESET_HOURS={day:13,dusk:18.75,dawn:7};
+  function sunAt(hour,date=new Date()){
+    const day=Math.floor((Date.UTC(date.getFullYear(),date.getMonth(),date.getDate())-Date.UTC(date.getFullYear(),0,0))/864e5);
+    const g=2*Math.PI/365*(day-1+(hour-12)/24);
+    const decl=0.006918-0.399912*Math.cos(g)+0.070257*Math.sin(g)-0.006758*Math.cos(2*g)+0.000907*Math.sin(2*g)-0.002697*Math.cos(3*g)+0.00148*Math.sin(3*g);
+    const eqt=229.18*(0.000075+0.001868*Math.cos(g)-0.032077*Math.sin(g)-0.014615*Math.cos(2*g)-0.040849*Math.sin(2*g));
+    const solar=hour+(eqt+4*SG[0]-480)/60,H=(solar-12)*15*Math.PI/180,lat=SG[1]*Math.PI/180;
+    const alt=Math.asin(Math.sin(lat)*Math.sin(decl)+Math.cos(lat)*Math.cos(decl)*Math.cos(H));
+    const az=Math.atan2(Math.sin(H),Math.cos(H)*Math.sin(lat)-Math.tan(decl)*Math.cos(lat))+Math.PI;
+    return {altitude:alt*180/Math.PI,azimuth:((az*180/Math.PI)%360+360)%360};
+  }
+  const clock=h=>`${String(Math.floor(h)).padStart(2,'0')}:${String(Math.round((h%1)*60)).padStart(2,'0')}`;
+  // Convex hull (Andrew's monotone chain) of lon/lat points: the shadow a block casts is its footprint swept along the sun's direction.
+  function hull(points){
+    const p=[...points].sort((a,b)=>a[0]-b[0]||a[1]-b[1]);if(p.length<3)return p;
+    const cross=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);
+    const lower=[];for(const q of p){while(lower.length>=2&&cross(lower[lower.length-2],lower[lower.length-1],q)<=0)lower.pop();lower.push(q);}
+    const upper=[];for(let i=p.length-1;i>=0;i--){const q=p[i];while(upper.length>=2&&cross(upper[upper.length-2],upper[upper.length-1],q)<=0)upper.pop();upper.push(q);}
+    upper.pop();lower.pop();return lower.concat(upper);
+  }
+  function shadows(state,sun){
+    const map=state.map;if(!map?.getSource('shadows'))return;
+    if(sun.altitude<4){map.getSource('shadows').setData(empty());return;}
+    const dir=sun.azimuth+180,tan=Math.tan(sun.altitude*Math.PI/180),features=[];
+    for(const f of state.buildings?.features||[]){const h=Number(f.properties.height_m)||0;if(h<=0)continue;const L=Math.min(260,h/tan);
+      const rings=f.geometry.type==='Polygon'?[f.geometry.coordinates[0]]:f.geometry.coordinates.map(p=>p[0]);
+      for(const ring of rings){const pts=[];for(const p of ring){pts.push(p);pts.push(offset(p,dir,L));}const h2=hull(pts);if(h2.length>=3)features.push({type:'Feature',properties:{},geometry:{type:'Polygon',coordinates:[[...h2,h2[0]]]}});}}
+    map.getSource('shadows').setData({type:'FeatureCollection',features});
+  }
+  function setHour(state,hour){
+    state.hour=hour;const map=state.map,sun=sunAt(hour),up=Math.max(0,sun.altitude),warm=Math.min(1,Math.max(0,(16-up)/16));
+    const lerp=(a,b,k)=>Math.round(a+(b-a)*k),hex=(r,g,b)=>'#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+    const color=hex(255,lerp(246,178,warm),lerp(230,122,warm)),intensity=up<=0?.12:.24+.34*Math.min(1,up/35);
+    const preset=up<=2?'night':warm>.55?(hour<12.5?'dawn':'dusk'):'day';
+    const SKY={day:{sky:{'sky-color':'#cfe3ec','horizon-color':'#f1f3ea','fog-color':'#eef0e8'},bg:'#eef0e8',raster:{'raster-brightness-max':1,'raster-saturation':-.6},label:'Day'},
+      dawn:{sky:{'sky-color':'#8fb6d9','horizon-color':'#ffcfa3','fog-color':'#f2d7c2'},bg:'#e9d2bf',raster:{'raster-brightness-max':.85,'raster-saturation':-.45},label:'Dawn'},
+      dusk:{sky:{'sky-color':'#5b4a7c','horizon-color':'#f5a26b','fog-color':'#d9a17e'},bg:'#cf9f83',raster:{'raster-brightness-max':.72,'raster-saturation':-.35},label:'Dusk'},
+      night:{sky:{'sky-color':'#182a3d','horizon-color':'#3b4a62','fog-color':'#2d3a4c'},bg:'#2b3747',raster:{'raster-brightness-max':.45,'raster-saturation':-.7},label:'Night'}}[preset];
+    state.light=preset;
+    const button=state.tour.querySelector('[data-tour=light]');if(button){button.querySelector('span').textContent=`${SKY.label} · ${clock(hour)}`;button.setAttribute('aria-label',`Light: ${SKY.label.toLowerCase()} at ${clock(hour)}. Aedes bite most around dawn and dusk.`);}
+    const slider=state.tour.querySelector('#route-hour-input');if(slider&&Number(slider.value)!==hour)slider.value=String(hour);
+    const text=state.tour.querySelector('#route-hour-text');if(text)text.textContent=clock(hour);
+    ['dusk','dawn','night'].forEach(k=>state.container.classList.toggle('is-'+k,preset===k));
+    const note=state.container.querySelector('.route-light-note');if(note)note.hidden=preset==='day';
+    if(!map)return;
+    map.setLight({anchor:'map',color,intensity,position:[1.3,sun.azimuth,Math.min(88,90-up)]});
+    try{map.setSky({...SKY.sky,'sky-horizon-blend':.6,'horizon-fog-blend':.7,'fog-ground-blend':.3,'atmosphere-blend':0});}catch{}
+    map.setPaintProperty('background','background-color',SKY.bg);
+    if(map.getLayer('onemap'))Object.entries(SKY.raster).forEach(([k,v])=>map.setPaintProperty('onemap',k,v));
+    cancelAnimationFrame(state.shadowFrame);state.shadowFrame=requestAnimationFrame(()=>shadows(state,sun));
+  }
+  // Street-level look at the current stop (an illustration of what a volunteer sees): 1.7 m up, a few metres back on the path.
+  function eyeView(state,index){
+    if(reduced.matches||state.isTour||!state.track)return null;const stop=state.plan.stops[index];if(!stop)return null;
+    const p=state.track.at(state.along),target=[stop.longitude,stop.latitude],heading=bearingOf(p,target);
+    const from=offset(p,heading+180,9);if(heightAt(state,from)>0||heightAt(state,p)>0||distance(p,target)>120)return null;
+    const feature=state.buildings?.features.find(f=>f.properties.stop_id===stop.id),h=Number(feature?.properties.height_m)||0,kind=BANDS[state.bandKey]||'ring';
+    const look=kind==='roof'?Math.max(4,h-1):kind==='corridors'?Math.max(3,h*.45):kind==='ground'?2:1.5;
+    return state.map.calculateCameraOptionsFromTo(from,1.7,target,look);
+  }
+  // Arriving from the island: blocks grow out of the ground in the order of their distance from the route start.
+  function riseIn(state){
+    const map=state.map,feats=(state.buildings?.features||[]).filter(f=>Number(f.properties.height_m)>0);if(!feats.length||!map)return;
+    const origin=state.plan.stops[0]?[state.plan.stops[0].longitude,state.plan.stops[0].latitude]:state.track?.centre;if(!origin)return;
+    const first=f=>f.geometry.type==='Polygon'?f.geometry.coordinates[0][0]:f.geometry.coordinates[0][0][0];
+    const dist=feats.map(f=>distance(first(f),origin)),max=Math.max(...dist,1),start=performance.now(),span=1300,grow=600;
+    feats.forEach(f=>map.setFeatureState({source:'buildings',id:f.properties.id},{rise:0.001}));
+    const tick=now=>{if(state.closed||!state.map)return;const t=now-start;let done=true;
+      feats.forEach((f,i)=>{const k=Math.min(1,Math.max(0,(t-dist[i]/max*span)/grow));if(k<1)done=false;map.setFeatureState({source:'buildings',id:f.properties.id},{rise:Math.max(0.001,1-Math.pow(1-k,3))});});
+      if(!done)requestAnimationFrame(tick);};
+    requestAnimationFrame(tick);
+  }
 
   function loadLibrary(){
     if(window.maplibregl)return Promise.resolve(window.maplibregl);
@@ -136,11 +210,13 @@
     const tour=document.createElement('section');tour.className='route-tour';tour.hidden=true;tour.setAttribute('aria-label','Route preview controls');
     const legend=isTour?`<li><b style="background:${COLORS.cluster};opacity:.5"></b>Cluster footprint</li><li><b style="background:${COLORS.context}"></b>HDB blocks</li><li><b style="background:${COLORS.city}"></b>Other buildings (context)</li><li><b style="background:${COLORS.green}"></b>Parks (URA zoning)</li><li><b style="background:${COLORS.water}"></b>Water</li>`
       :`<li><b style="background:${COLORS.selected}"></b>Current stop</li><li><b style="background:${COLORS.stop}"></b>Other stops</li><li><b style="background:${COLORS.cluster}"></b>Cluster blocks</li><li><b style="background:${COLORS.context}"></b>Other HDB blocks</li><li><b class="is-flat" style="background:${COLORS.flat}"></b>Storeys unverified (flat)</li><li><b style="background:${COLORS.city}"></b>Other buildings (context)</li><li><b style="background:${COLORS.green}"></b>Parks (URA zoning)</li><li><b style="background:${COLORS.water}"></b>Water</li><li><b style="background:${COLORS.glow}"></b>Where to look</li><li><b class="is-line" style="background:${COLORS.walked}"></b>Walked so far</li><li><b style="background:${OUTCOME_COLORS.water_found}"></b>Water found (field report)</li><li><b style="background:${OUTCOME_COLORS.cleared}"></b>Cleared</li><li><b style="background:#8a63c9;opacity:.5"></b>High Aedes area (NEA)</li>`;
-    tour.innerHTML=`<div class="route-tour-controls"><button type="button" data-tour="previous" aria-label="Previous inspection stop"><i class="ph ph-caret-left" aria-hidden="true"></i></button><button type="button" data-tour="play" class="route-tour-play"><i class="ph ph-play" aria-hidden="true"></i><span>Walk the route</span></button><button type="button" data-tour="next" aria-label="Next inspection stop"><i class="ph ph-caret-right" aria-hidden="true"></i></button><button type="button" data-tour="speed" class="route-tour-speed" aria-label="Walking preview speed: normal">1×</button><button type="button" data-tour="fit" aria-label="Show the whole route from above"><i class="ph ph-arrows-out-simple" aria-hidden="true"></i><span>${isTour?'Whole area':'Whole route'}</span></button><button type="button" data-tour="light" class="route-tour-light" aria-label="Light: day. Aedes bite most around dawn and dusk." title="Aedes mosquitoes bite most around dawn and dusk"><i class="ph ph-sun-horizon" aria-hidden="true"></i><span>Day</span></button><button type="button" data-tour="record" class="route-tour-record" aria-label="Record the walk as a video" ${typeof MediaRecorder==='undefined'?'hidden':''}><i class="ph ph-record" aria-hidden="true"></i><span>Record</span></button></div>
+    tour.innerHTML=`<div class="route-tour-controls"><button type="button" data-tour="previous" aria-label="Previous inspection stop"><i class="ph ph-caret-left" aria-hidden="true"></i></button><button type="button" data-tour="play" class="route-tour-play"><i class="ph ph-play" aria-hidden="true"></i><span>Walk the route</span></button><button type="button" data-tour="next" aria-label="Next inspection stop"><i class="ph ph-caret-right" aria-hidden="true"></i></button><button type="button" data-tour="speed" class="route-tour-speed" aria-label="Walking preview speed: normal">1×</button><button type="button" data-tour="fit" aria-label="Show the whole route from above"><i class="ph ph-arrows-out-simple" aria-hidden="true"></i><span>${isTour?'Whole area':'Whole route'}</span></button></div><div class="route-tour-scene" aria-label="Scene"><button type="button" data-tour="light" class="route-tour-light" aria-label="Light: day. Aedes bite most around dawn and dusk." title="Aedes mosquitoes bite most around dawn and dusk"><i class="ph ph-sun-horizon" aria-hidden="true"></i><span>Day</span></button><label class="route-hour" title="Time of day: the light and estimated shadows follow the sun over Singapore"><span class="sr-only">Time of day</span><input type="range" id="route-hour-input" min="6" max="19.5" step="0.25" value="13" aria-label="Time of day"><span id="route-hour-text" aria-hidden="true">13:00</span></label><button type="button" data-tour="rain" class="route-tour-rain" aria-pressed="false" hidden><i class="ph ph-cloud-rain" aria-hidden="true"></i><span>Rain</span></button><button type="button" data-tour="record" class="route-tour-record" aria-label="Record the walk as a video" ${typeof MediaRecorder==='undefined'?'hidden':''}><i class="ph ph-record" aria-hidden="true"></i><span>Record</span></button></div>
       <div class="route-scrub"><label for="route-scrub-input" class="route-scrub-label">${isTour?'Around the area':'Along the route'}</label><input id="route-scrub-input" type="range" min="0" max="1000" step="1" value="0"><span class="route-scrub-text" aria-hidden="true"></span></div>
       <div class="route-tour-stop"><span role="status" aria-live="polite"></span><button type="button" data-tour="checklist">Checklist <i class="ph ph-arrow-down" aria-hidden="true"></i></button></div><ul class="route-3d-legend" aria-label="3D colours">${legend}</ul><p class="route-3d-note"></p><p class="route-3d-status" role="status"></p>`;
     wrap.after(tour);
     if(isTour){tour.querySelectorAll('[data-tour=previous],[data-tour=next],[data-tour=checklist]').forEach(b=>b.hidden=true);}
+    // Flyovers and rain: the toggle only means something along a walked route with a nearby station reading.
+    if(isTour)tour.querySelector('[data-tour=rain]').hidden=true;
     const state={plan,area,onSelect,opts,wrap,toolbar,container,tour,isTour,map:null,mode:'2d',index:0,playing:false,phase:'idle',frame:0,timer:0,track,along:0,heading:0,eye:WALK.eye,scale:1,speedFactor:1,multiplier:1,dwellUntil:0,nextStop:0,lastFrame:0,lastPaint:0,markers:[],walker:null,callout:null,look:null,lookHost:null,loading:false,closed:false,selectedFeature:null,popup:null,solids:[],pulse:0,bandKey:null};
     if(isTour){const length=track.total;state.cfg={...WALK,eye:Math.max(180,Math.min(900,length/22)),speed:Math.max(60,length/48),clearance:40};}else state.cfg=WALK;
     current=state;
@@ -151,7 +227,9 @@
     tour.querySelector('[data-tour=play]').onclick=()=>togglePlay(state);
     tour.querySelector('[data-tour=speed]').onclick=()=>{state.multiplier=state.multiplier===1?2:1;const b=tour.querySelector('[data-tour=speed]');b.textContent=`${state.multiplier}×`;b.setAttribute('aria-label',`Walking preview speed: ${state.multiplier===1?'normal':'double'}`);};
     tour.querySelector('[data-tour=fit]').onclick=()=>{pause(state);fit(state);};
-    tour.querySelector('[data-tour=light]').onclick=()=>{const order=['day','dusk','dawn'];setLight(state,order[(order.indexOf(state.light||'day')+1)%order.length]);};
+    tour.querySelector('[data-tour=light]').onclick=()=>{const order=['day','dusk','dawn'];setHour(state,PRESET_HOURS[order[(order.indexOf(state.light||'day')+1)%order.length]]);};
+    tour.querySelector('#route-hour-input').oninput=e=>setHour(state,Number(e.target.value));
+    tour.querySelector('[data-tour=rain]').onclick=()=>toggleRain(state);
     tour.querySelector('[data-tour=record]').onclick=()=>toggleRecord(state);
     tour.querySelector('[data-tour=checklist]').onclick=()=>{const card=document.getElementById('stop-'+state.plan.stops[state.index]?.id);card?.scrollIntoView({block:'center',behavior:reduced.matches?'instant':'smooth'});card?.querySelector('.stop-number')?.focus({preventScroll:true});};
     const scrub=tour.querySelector('#route-scrub-input');
@@ -163,7 +241,15 @@
     update(state);
     if(opts.start3d||window.RouteFlythrough.autoplay)setMode(state,'3d');
   }
-  function setLight(state,name){
+  function setLight(state,name){return setHour(state,PRESET_HOURS[name]??13);}
+  // Observed rain at the area's nearest station, drawn as falling streaks (a custom three.js layer); never a forecast.
+  function toggleRain(state){
+    const button=state.tour.querySelector('[data-tour=rain]'),on=button.getAttribute('aria-pressed')!=='true';
+    if(!window.Weather3D||!state.map||!state.rain)return;
+    button.setAttribute('aria-pressed',String(on));button.classList.toggle('is-on',on);
+    window.Weather3D.set(state.map,{on,mm:state.rain.value,center:state.plan.stops[0]?[state.plan.stops[0].longitude,state.plan.stops[0].latitude]:state.track?.centre});
+  }
+  function setLightLegacy(state,name){
     const preset=LIGHTS[name]||LIGHTS.day,map=state.map;state.light=name;
     const button=state.tour.querySelector('[data-tour=light]');button.querySelector('span').textContent=preset.label;
     button.setAttribute('aria-label',`Light: ${preset.label.toLowerCase()}. Aedes bite most around dawn and dusk.`);
@@ -250,9 +336,14 @@
   function pulse(state){
     cancelAnimationFrame(state.pulse);
     const map=state.map;if(!map||reduced.matches)return;
-    const loop=now=>{if(state.closed||!state.map||state.mode!=='3d')return;const k=(Math.sin(now/380)+1)/2;
+    const loop=now=>{if(state.closed||!state.map||state.mode!=='3d')return;
+      if(document.hidden||!state.container.offsetParent){state.pulse=requestAnimationFrame(loop);return;}
+      const k=(Math.sin(now/380)+1)/2;
       if(map.getLayer('inspect-bands'))map.setPaintProperty('inspect-bands','fill-extrusion-opacity',.45+k*.45);
       if(map.getLayer('stop-beacons'))map.setPaintProperty('stop-beacons','fill-extrusion-opacity',.22+k*.14);
+      // The 300 m search rings pulse outward from each verified cluster block (the plan's real search radius, not an estimate).
+      if(state.rings&&map.getSource('rings')&&now-(state.ringAt||0)>50){state.ringAt=now;const f=(now/3400)%1;
+        map.getSource('rings').setData({type:'FeatureCollection',features:state.rings.map(r=>({type:'Feature',properties:{opacity:(1-f)*.75},geometry:{type:'Polygon',coordinates:[circle([r.longitude,r.latitude],Math.max(6,(r.radius_m||300)*f),36)]}}))});}
       state.pulse=requestAnimationFrame(loop);};
     state.pulse=requestAnimationFrame(loop);
   }
@@ -308,7 +399,13 @@
     const bounds=new maplibregl.LngLatBounds();state.plan.stops.forEach(stop=>bounds.extend([stop.longitude,stop.latitude]));
     (state.track?.points||[]).forEach(point=>bounds.extend(point));
     if(bounds.isEmpty())return;
-    state.map.fitBounds(bounds,{padding:{top:60,bottom:36,left:36,right:36},maxZoom:17.4,pitch:state.isTour?55:48,bearing:-18,duration});
+    try{state.map.fitBounds(bounds,{padding:{top:60,bottom:36,left:36,right:36},maxZoom:17.4,pitch:state.isTour?55:48,bearing:-18,duration});}
+    catch(error){
+      // MapLibre occasionally cannot frame bounds while the container is still being laid out; show the route centre now and frame again next frame.
+      state.fitDebug={error:String(error&&error.message||error).slice(0,200),size:[state.container.clientWidth,state.container.clientHeight]};
+      try{state.map.jumpTo({center:bounds.getCenter(),zoom:state.isTour?13.5:16.4,pitch:state.isTour?55:48,bearing:-18});}catch{}
+      if(!state.fitRetried){state.fitRetried=true;requestAnimationFrame(()=>{if(!state.closed&&state.map)fit(state,duration);});}
+    }
   }
   // The stop callout: the checklist, with one item shown as a live 3D illustration and highlighted on the block.
   function showCallout(state,index){
@@ -352,7 +449,10 @@
     if(state.closed||!state.playing||state.mode!=='3d')return;
     const t=state.track,c=state.cfg,dt=Math.min(.12,(now-state.lastFrame)/1000);state.lastFrame=now;
     if(state.phase==='dwell'){
-      // A slow quarter-turn around the stop while the checklist shows, then ease back onto the route.
+      // First a street-level look at the stop (the camera eases down and holds), then a slow quarter-turn while the checklist shows.
+      if(now<state.eyeUntil){state.frame=requestAnimationFrame(next=>step(state,next));return;}
+      if(state.eyeUntil){state.eyeUntil=0;state.eyeReturn=now+640;state.map.easeTo({...streetView(state,state.along,state.heading,state.eye),duration:620,easing:x=>x*(2-x)});}
+      if(now<state.eyeReturn){state.frame=requestAnimationFrame(next=>step(state,next));return;}
       if(!state.isTour)state.heading+=7*dt;
       if(now>=state.dwellUntil){closeCallout(state);state.phase='walking';}
     }else{
@@ -366,6 +466,9 @@
         if(state.nextStop>=0&&state.nextStop<t.stopDistances.length){
           const looking=!!stopKey(state,state.nextStop)&&looksAvailable();
           select(state,state.nextStop);showCallout(state,state.nextStop);state.target=t.legHeading(state.along);state.nextStop++;state.phase='dwell';state.dwellUntil=now+(looking?WALK.lookDwell:WALK.dwell)*1000/Math.sqrt(state.multiplier);
+          const eye=eyeView(state,state.index);state.eyeUntil=0;state.eyeReturn=0;
+          // The street-level ease must not be cancelled by this frame's follow-camera jump: schedule the next frame and leave.
+          if(eye){state.eyeUntil=now+2400/Math.sqrt(state.multiplier);state.dwellUntil+=1200;state.map.easeTo({...eye,duration:700,easing:x=>1-Math.pow(1-x,2)});paintProgress(state);progressText(state);state.frame=requestAnimationFrame(next=>step(state,next));return;}
         }else if(state.along>=t.total-.01){finishWalk(state);return;}
       }
     }
@@ -383,10 +486,14 @@
     state.along=state.track.total;paintProgress(state);update(state);
     fit(state,WALK.outroMs);
     state.tour.querySelector('.route-tour-stop span').innerHTML=state.isTour?`<b>Flyover complete</b> · ${esc(state.area.name)}`:`<b>Route complete</b> · ${esc(km(state.track.total))}, ${state.plan.stops.length} stops`;
+    (state.done||[]).splice(0).forEach(r=>r());
   }
+  // For the story and automated checks: resolves when the current walk reaches its end (or after maxMs).
+  function whenDone(maxMs=120000){const s=current;if(!s)return Promise.resolve();return new Promise(resolve=>{(s.done||(s.done=[])).push(resolve);setTimeout(resolve,maxMs);});}
+  function setSpeed(m){const s=current;if(!s)return;s.multiplier=m===2?2:1;const b=s.tour.querySelector('[data-tour=speed]');if(b){b.textContent=`${s.multiplier}×`;b.setAttribute('aria-label',`Walking preview speed: ${s.multiplier===1?'normal':'double'}`);}}
   function fallback(state,message){
     if(state.closed)return;
-    setMode(state,'2d');state.tour.hidden=false;state.tour.querySelector('.route-tour-controls').hidden=true;state.tour.querySelector('.route-tour-stop').hidden=true;state.tour.querySelector('.route-scrub').hidden=true;
+    setMode(state,'2d');state.tour.hidden=false;state.tour.querySelector('.route-tour-controls').hidden=true;state.tour.querySelector('.route-tour-scene').hidden=true;state.tour.querySelector('.route-tour-stop').hidden=true;state.tour.querySelector('.route-scrub').hidden=true;
     state.tour.querySelector('.route-3d-legend').hidden=true;state.tour.querySelector('.route-3d-note').hidden=true;state.tour.querySelector('.route-3d-status').textContent=message;
     state.toolbar.querySelector('[data-map-mode="3d"]').disabled=true;
     state.map?.remove();state.map=null;
@@ -396,8 +503,9 @@
     const name=`Blk ${esc(p.block)}${p.road?` ${esc(p.road)}`:''}`;
     const role=p.role==='stop'?`Stop ${esc(p.stop_number??'')}${p.cluster_block?' · cluster block':''}`:p.cluster_block?'Cluster block':'Nearby HDB block';
     const height=Number(p.height_m)>0?`${esc(p.max_floor_lvl)} storeys · about ${Math.round(p.height_m)} m (estimate)`:'Storeys not verified · shown flat';
+    const homes=Number(p.dwelling_units)>0?`<span>${Number(p.dwelling_units).toLocaleString('en-SG')} homes${Number(p.year_completed)>0?` · completed ${esc(p.year_completed)}`:''}</span>`:'';
     let uses=p.uses;if(typeof uses==='string'){try{uses=JSON.parse(uses);}catch{uses=[];}}
-    return `<strong>${name}</strong><span>${role}</span><span>${height}</span>${Array.isArray(uses)&&uses.length?`<span>${esc(uses.join(', '))}</span>`:''}<small>HDB footprint · data.gov.sg</small>`;
+    return `<strong>${name}</strong><span>${role}</span><span>${height}</span>${homes}${Array.isArray(uses)&&uses.length?`<span>${esc(uses.join(', '))}</span>`:''}<small>HDB footprint · data.gov.sg</small>`;
   }
   function chevron(){
     const size=32,canvas=document.createElement('canvas');canvas.width=canvas.height=size;const c=canvas.getContext('2d');
@@ -430,8 +538,8 @@
       const landuse=walk?.landuse||empty();
       state.solids=buildings.features.filter(f=>Number(f.properties.height_m)>0).map(f=>{const rings=f.geometry.type==='Polygon'?[f.geometry.coordinates[0]]:f.geometry.coordinates.map(p=>p[0]);const xs=rings.flat().map(c=>c[0]),ys=rings.flat().map(c=>c[1]);return {h:Number(f.properties.height_m),rings,box:[Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys)],center:[(Math.min(...xs)+Math.max(...xs))/2,(Math.min(...ys)+Math.max(...ys))/2]};});
       const start=state.plan.stops[0]?[state.plan.stops[0].longitude,state.plan.stops[0].latitude]:state.track.centre;
-      state.map=new gl.Map({container:state.container,style:{version:8,sources:{onemap:{type:'raster',tiles:['https://www.onemap.gov.sg/maps/tiles/Default/{z}/{x}/{y}.png'],tileSize:256,maxzoom:19,attribution:'<a href="https://www.onemap.gov.sg/" target="_blank" rel="noopener">OneMap</a> © Singapore Land Authority · HDB footprints & storeys / NEA / URA via data.gov.sg · other buildings © OpenStreetMap contributors via Overture Maps'}},layers:[{id:'background',type:'background',paint:{'background-color':'#eef0e8'}},{id:'onemap',type:'raster',source:'onemap',paint:{'raster-saturation':-.6,'raster-contrast':-.1,'raster-brightness-min':.1,'raster-opacity':.9}}]},center:start,zoom:state.isTour?13.5:16.6,pitch:48,bearing:-18,maxZoom:22,minZoom:10,maxPitch:82,antialias:true,attributionControl:{compact:true}});
-      state.map.addControl(new gl.NavigationControl({visualizePitch:true}),"bottom-right");state.map.scrollZoom.disable();state.map.keyboard.disable();
+      state.map=new gl.Map({container:state.container,style:{version:8,sources:{onemap:{type:'raster',tiles:['https://www.onemap.gov.sg/maps/tiles/Default/{z}/{x}/{y}.png'],tileSize:256,maxzoom:19,attribution:'<a href="https://www.onemap.gov.sg/" target="_blank" rel="noopener">OneMap</a> © Singapore Land Authority · HDB footprints & storeys / NEA / URA via data.gov.sg · other buildings © OpenStreetMap contributors via Overture Maps'}},layers:[{id:'background',type:'background',paint:{'background-color':'#eef0e8'}},{id:'onemap',type:'raster',source:'onemap',paint:{'raster-saturation':-.6,'raster-contrast':-.1,'raster-brightness-min':.1,'raster-opacity':.9}}]},...(window.RouteFlythrough.arrival?{center:window.RouteFlythrough.arrival.center,zoom:Math.max(10,window.RouteFlythrough.arrival.zoom),pitch:Math.min(82,window.RouteFlythrough.arrival.pitch),bearing:window.RouteFlythrough.arrival.bearing}:{center:start,zoom:state.isTour?13.5:16.6,pitch:48,bearing:-18}),maxZoom:22,minZoom:10,maxPitch:82,antialias:true,attributionControl:{compact:true},cooperativeGestures:true});
+      state.map.addControl(new gl.NavigationControl({visualizePitch:true}),"bottom-right");state.map.keyboard.disable();
       state.map.on('error',event=>{if(event.sourceId!=='onemap'||state.tileError)return;state.tileError=true;const status=state.tour.querySelector('.route-3d-status');status.textContent=`${status.textContent} OneMap street tiles are unavailable; building shapes, stops and the saved route remain visible.`.trim();});
       state.map.getCanvas().addEventListener('webglcontextlost',()=>fallback(state,'3D graphics became unavailable. Continue with the 2D map and numbered checklist.'),{once:true});
       ['dragstart','rotatestart','pitchstart'].forEach(name=>state.map.on(name,event=>{if(event.originalEvent)pause(state);}));state.map.on('zoomstart',event=>{if(event.originalEvent)pause(state);});
@@ -441,10 +549,11 @@
       let built=false;const whenReady=()=>{const m=state.map;if(built||state.closed||!m||!(m.style?._loaded??m.isStyleLoaded()))return false;built=true;build();return true;};
       state.map.once('load',whenReady);state.map.once('style.load',whenReady);state.map.on('styledata',whenReady);
       const poll=setInterval(()=>{if(built||state.closed||whenReady())clearInterval(poll);},250);
-      const build=()=>{
+      const build=()=>{try{buildScene();}catch(error){state.buildError=String(error&&error.stack||error).slice(0,400);state.container.classList.remove('is-loading');state.tour.querySelector('.route-3d-status').textContent='The 3D scene could not be built on this device. Continue with the 2D map and numbered checklist.';setMode(state,'2d');}};
+      const buildScene=()=>{
         if(state.closed||!state.map)return;
         state.map.off('styledata',whenReady);
-        const map=state.map,roofAt=['max',0,['-',['get','height_m'],WALK.roof]];
+        const map=state.map,rise=['coalesce',['feature-state','rise'],1],roofAt=['*',['max',0,['-',['get','height_m'],WALK.roof]],rise],fullH=['*',['get','height_m'],rise];
         const color=['case',['boolean',['feature-state','selected'],false],COLORS.selected,['==',['get','cluster_block'],true],COLORS.cluster,['==',['get','role'],'stop'],COLORS.stop,COLORS.context];
         const roof=['case',['boolean',['feature-state','selected'],false],COLORS.roofSelected,['==',['get','cluster_block'],true],COLORS.roofCluster,['==',['get','role'],'stop'],COLORS.roofStop,COLORS.roofContext];
         map.setLight({anchor:'viewport',color:'#fff6e6',intensity:.38,position:[1.25,200,35]});
@@ -459,6 +568,9 @@
         map.addSource('buildings',{type:'geojson',data:buildings,promoteId:'id'});
         // A blurred line along each footprint grounds the blocks with a soft contact shadow.
         map.addLayer({id:'building-shadow',type:'line',source:'buildings',filter:['>',['coalesce',['get','height_m'],0],0],paint:{'line-color':'#26332b','line-width':['interpolate',['linear'],['zoom'],14,2,17,9,19,26],'line-blur':['interpolate',['linear'],['zoom'],14,2,17,8,19,22],'line-opacity':.2}});
+        // Shadows cast by the estimated block heights along today's sun (an estimate of an estimate; labelled as such).
+        map.addSource('shadows',{type:'geojson',data:empty()});
+        map.addLayer({id:'shadows',type:'fill',source:'shadows',paint:{'fill-color':'#16231c','fill-opacity':.17,'fill-antialias':false}},'building-shadow');
         map.addLayer({id:'building-flat',type:'fill',source:'buildings',filter:['!',['>',['coalesce',['get','height_m'],0],0]],paint:{'fill-color':['case',['==',['get','role'],'city'],COLORS.city,['==',['get','role'],'context'],COLORS.flat,color],'fill-opacity':.9,'fill-outline-color':'#a59f8e'}});
         map.addLayer({id:'building-base',type:'line',source:'buildings',filter:['all',['!=',['get','role'],'context'],['!=',['get','role'],'city']],paint:{'line-color':['case',['==',['get','cluster_block'],true],COLORS.cluster,COLORS.stop],'line-width':1.4}});
         // Surrounding blocks are see-through so they never hide the stop being previewed. A lighter roof cap
@@ -466,11 +578,11 @@
         const raised=['>',['coalesce',['get','height_m'],0],0];
         // Non-HDB buildings first (lowest), in a neutral grey so the official data stands out.
         map.addLayer({id:'city-heights',type:'fill-extrusion',source:'buildings',filter:['all',raised,['==',['get','role'],'city']],paint:{'fill-extrusion-color':COLORS.city,'fill-extrusion-height':roofAt,'fill-extrusion-base':0,'fill-extrusion-opacity':.55,'fill-extrusion-vertical-gradient':true}});
-        map.addLayer({id:'city-roofs',type:'fill-extrusion',source:'buildings',filter:['all',raised,['==',['get','role'],'city']],paint:{'fill-extrusion-color':COLORS.roofCity,'fill-extrusion-height':['get','height_m'],'fill-extrusion-base':roofAt,'fill-extrusion-opacity':.55,'fill-extrusion-vertical-gradient':false}});
+        map.addLayer({id:'city-roofs',type:'fill-extrusion',source:'buildings',filter:['all',raised,['==',['get','role'],'city']],paint:{'fill-extrusion-color':COLORS.roofCity,'fill-extrusion-height':fullH,'fill-extrusion-base':roofAt,'fill-extrusion-opacity':.55,'fill-extrusion-vertical-gradient':false}});
         map.addLayer({id:'context-heights',type:'fill-extrusion',source:'buildings',filter:['all',raised,['==',['get','role'],'context']],paint:{'fill-extrusion-color':COLORS.context,'fill-extrusion-height':roofAt,'fill-extrusion-base':0,'fill-extrusion-opacity':.62,'fill-extrusion-vertical-gradient':true}});
-        map.addLayer({id:'context-roofs',type:'fill-extrusion',source:'buildings',filter:['all',raised,['==',['get','role'],'context']],paint:{'fill-extrusion-color':COLORS.roofContext,'fill-extrusion-height':['get','height_m'],'fill-extrusion-base':roofAt,'fill-extrusion-opacity':.62,'fill-extrusion-vertical-gradient':false}});
+        map.addLayer({id:'context-roofs',type:'fill-extrusion',source:'buildings',filter:['all',raised,['==',['get','role'],'context']],paint:{'fill-extrusion-color':COLORS.roofContext,'fill-extrusion-height':fullH,'fill-extrusion-base':roofAt,'fill-extrusion-opacity':.62,'fill-extrusion-vertical-gradient':false}});
         map.addLayer({id:'building-heights',type:'fill-extrusion',source:'buildings',filter:['all',raised,['!=',['get','role'],'context'],['!=',['get','role'],'city']],paint:{'fill-extrusion-color':color,'fill-extrusion-height':roofAt,'fill-extrusion-base':0,'fill-extrusion-opacity':.95,'fill-extrusion-vertical-gradient':true}});
-        map.addLayer({id:'building-roofs',type:'fill-extrusion',source:'buildings',filter:['all',raised,['!=',['get','role'],'context'],['!=',['get','role'],'city']],paint:{'fill-extrusion-color':roof,'fill-extrusion-height':['get','height_m'],'fill-extrusion-base':roofAt,'fill-extrusion-opacity':.95,'fill-extrusion-vertical-gradient':false}});
+        map.addLayer({id:'building-roofs',type:'fill-extrusion',source:'buildings',filter:['all',raised,['!=',['get','role'],'context'],['!=',['get','role'],'city']],paint:{'fill-extrusion-color':roof,'fill-extrusion-height':fullH,'fill-extrusion-base':roofAt,'fill-extrusion-opacity':.95,'fill-extrusion-vertical-gradient':false}});
         // Where to look on the current stop (roof edge, ground floor, corridor levels or a ground ring).
         map.addSource('inspect',{type:'geojson',data:empty()});
         map.addLayer({id:'inspect-bands',type:'fill-extrusion',source:'inspect',paint:{'fill-extrusion-color':['get','color'],'fill-extrusion-height':['get','top'],'fill-extrusion-base':['get','base'],'fill-extrusion-opacity':.8}});
@@ -478,6 +590,7 @@
           // The cluster as a translucent volume: its height grows with the people in it (2 m a person, capped at 160 m).
           map.addLayer({id:'cluster-volume',type:'fill-extrusion',source:'clusters',paint:{'fill-extrusion-color':COLORS.cluster,'fill-extrusion-height':['min',160,['*',2,['coalesce',['get','cases'],0]]],'fill-extrusion-base':0,'fill-extrusion-opacity':.13,'fill-extrusion-vertical-gradient':false}});
           state.plan.clusters.features.forEach(f=>{const p=f.properties||{};if(!Number.isFinite(p.longitude)||!Number.isFinite(p.latitude))return;const label=document.createElement('span');label.className='route-cluster-label';label.innerHTML=`<b>${Number(p.cases)||0}</b> people in this cluster<small>${esc(String(p.name||'NEA cluster').split('/')[0].replace(/\s*\(.*$/,'').slice(0,38))}${p.growth_cases>0?` · +${p.growth_cases} in a week`:''}</small>`;(state.labels||(state.labels=[])).push(new gl.Marker({element:label,anchor:'bottom',offset:[0,-6]}).setLngLat([p.longitude,p.latitude]).addTo(map));});}
+        if(state.plan.search_rings?.length&&!state.isTour){map.addSource('rings',{type:'geojson',data:empty()});map.addLayer({id:'rings-pulse',type:'line',source:'rings',paint:{'line-color':COLORS.cluster,'line-width':1.5,'line-opacity':['coalesce',['get','opacity'],.5]}},'city-heights');state.rings=state.plan.search_rings;}
         // NEA areas with a high Aedes population, as faint violet volumes, where they fall inside this view.
         const aedes=window.DengueData?.aedes;
         if(aedes?.available!==false&&aedes?.features?.length){const box=[...(state.track?.points||[]),...state.plan.stops.map(s=>[s.longitude,s.latitude])];
@@ -502,11 +615,20 @@
         if(state.isTour)state.tour.querySelector('.route-3d-status').textContent=(state.tileError?'OneMap street tiles are unavailable. ':'')+`${(()=>{const s=summary(buildings,state.plan);return (s.count?`${s.count} official HDB block shapes`:'No HDB blocks here')+(s.city?` and ${s.city} other buildings in grey (context).`:'.');})()}${scene}`;
         else{const s=summary(buildings,state.plan),walkText=state.track?` Walk: ${km(state.track.total)}${state.plan.route?.walking_seconds?`, about ${Math.round(state.plan.route.walking_seconds/60)} min on foot`:''}.`:'';
           state.tour.querySelector('.route-3d-status').textContent=(state.tileError?'OneMap street tiles are unavailable. ':'')+(s.count?`${s.count} official HDB block shapes${state.margin?` within about ${state.margin} m of the route`:''} · ${s.raised} raised from published storeys · ${s.flat} flat (storeys unverified)${s.city?` · ${s.city} other buildings in grey (Overture/OpenStreetMap, context only)`:''}${s.missing.length?` · no footprint matched for stop ${s.missing.join(', ')}`:''}.${scene}${walkText} Tap a block for details.`:`Building shapes are unavailable for this area. The verified stops and saved route remain visible.${scene}${walkText}`);}
-        if(!state.isTour)select(state,state.index);fit(state,0);paintProgress(state);if(state.mode==='3d')map.resize();
+        if(!state.isTour)select(state,state.index);
+        // Arriving from the 3D island: the camera is still up where the island left it, so descend onto the route while
+        // the blocks rise out of the ground; otherwise cut straight to the overview.
+        const arriving=!!window.RouteFlythrough.arrival&&!reduced.matches;window.RouteFlythrough.arrival=null;
+        if(arriving){riseIn(state);fit(state,1900);}else fit(state,0);
+        paintProgress(state);if(state.mode==='3d')map.resize();
         state.container.classList.remove('is-loading');state.ready=true;update(state);pulse(state);
         const note=document.createElement('p');note.className='route-light-note';note.hidden=true;note.textContent='Aedes mosquitoes bite most in the two hours after sunrise and before sunset.';state.container.append(note);
-        if(state.light&&state.light!=='day')setLight(state,state.light);
-        if(window.RouteFlythrough.autoplay){window.RouteFlythrough.autoplay=false;setTimeout(()=>{if(!state.closed&&state.mode==='3d')togglePlay(state);},350);}
+        setHour(state,state.hour??13);
+        const rain=window.DengueData?.current?.areas?.find(a=>a.code===state.area.code)?.weather?.rainfall;
+        if(rain&&Number.isFinite(rain.value)&&window.Weather3D){state.rain=rain;const b=state.tour.querySelector('[data-tour=rain]');b.hidden=false;b.querySelector('span').textContent=`Rain · ${rain.value} mm`;b.title=`${rain.value} mm on ${new Date(rain.date+'T12:00:00+08:00').toLocaleDateString('en-SG',{day:'numeric',month:'short'})} at ${rain.station_name} (nearest NEA station, ${rain.distance_km} km away). Observed, not forecast.`;b.setAttribute('aria-label',b.title);}
+        const openStop=window.RouteFlythrough.openStop;window.RouteFlythrough.openStop=null;
+        if(openStop!=null&&!state.isTour&&openStop>=1&&openStop<=state.plan.stops.length)setTimeout(()=>{if(!state.closed)goToStop(state,openStop-1);},arriving?2100:400);
+        else if(window.RouteFlythrough.autoplay){window.RouteFlythrough.autoplay=false;setTimeout(()=>{if(!state.closed&&state.mode==='3d')togglePlay(state);},arriving?2000:350);}
       };
     }catch{state.container.classList.remove('is-loading');fallback(state,'3D is unavailable on this device. Continue with the 2D map and numbered checklist.');}
     finally{state.loading=false;}
@@ -517,10 +639,10 @@
     goToStop(current,index);return true;
   }
   function dispose(){
-    if(!current)return;const state=current;if(state.recorder){try{state.recorder.stop();}catch{}}pause(state);state.closed=true;cancelAnimationFrame(state.pulse);reduced.removeEventListener('change',state.motionChange);document.removeEventListener('visibilitychange',state.visibility);
+    if(!current)return;const state=current;if(state.recorder){try{state.recorder.stop();}catch{}}pause(state);state.closed=true;(state.done||[]).splice(0).forEach(r=>r());cancelAnimationFrame(state.pulse);reduced.removeEventListener('change',state.motionChange);document.removeEventListener('visibilitychange',state.visibility);
     state.popup?.remove();closeCallout(state);state.map?.remove();state.toolbar.remove();state.tour.remove();state.container.remove();$('.inspection-legend')?.classList.remove('is-hidden-3d');current=null;
   }
   // Read-only state for automated checks and support; exposes no data beyond what is on screen.
-  function snapshot(){const s=current;if(!s)return null;return {mode:s.mode,tour:s.isTour,phase:s.phase,playing:s.playing,along:s.along,total:s.track?.total??null,stop:s.index+1,stops:s.plan.stops.length,bearing:s.map?.getBearing()??null,pitch:s.map?.getPitch()??null,zoom:s.map?.getZoom()??null,look:s.callout?stopKey(s,s.index):null,bands:s.bandKey,landuse:s.map?.getSource("landuse")?._data?.features?.length??null,city:s.buildings?.features.filter(f=>f.properties.role==='city').length??null,ready:!!s.ready};}
-  window.RouteFlythrough={mount,focusStop,dispose,snapshot,autoplay:false};
+  function snapshot(){const s=current;if(!s)return null;return {mode:s.mode,tour:s.isTour,phase:s.phase,playing:s.playing,along:s.along,total:s.track?.total??null,stop:s.index+1,stops:s.plan.stops.length,bearing:s.map?.getBearing()??null,pitch:s.map?.getPitch()??null,zoom:s.map?.getZoom()??null,look:s.callout?stopKey(s,s.index):null,bands:s.bandKey,eye:!!(s.eyeUntil&&performance.now()<s.eyeUntil),buildError:s.buildError||null,fitDebug:s.fitDebug||null,hour:s.hour??null,rain:!!s.rain,shadows:s.map?.getSource('shadows')?._data?.features?.length??null,landuse:s.map?.getSource("landuse")?._data?.features?.length??null,city:s.buildings?.features.filter(f=>f.properties.role==='city').length??null,ready:!!s.ready};}
+  window.RouteFlythrough={mount,focusStop,dispose,snapshot,whenDone,setSpeed,setHour:h=>current&&setHour(current,h),sunAt,autoplay:false,arrival:null,openStop:null};
 })();

@@ -56,9 +56,10 @@ resources:
       email_notifications:
         on_failure: ["${var.alert_email}"]
       schedule:
-        # CDA publishes each week's bulletin about a week after it ends; Tuesday and Friday runs pick it up
-        # well before the live outlook's 21-day label-freshness gate closes.
-        quartz_cron_expression: "0 30 10 ? * TUE,FRI"
+        # CDA publishes each week's bulletin about a week after it ends; Monday and Friday runs pick it up
+        # well before the live outlook's 21-day label-freshness gate closes. Not Tuesday: Demo Day is Tue 27 Oct 2026
+        # and a retraining run that morning would spend the shared Free Edition quota before the live demo.
+        quartz_cron_expression: "0 30 10 ? * MON,FRI"
         timezone_id: Asia/Singapore
         pause_status: UNPAUSED
       tasks:

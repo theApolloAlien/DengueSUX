@@ -39,7 +39,6 @@
     status.title=`Cluster snapshot saved ${date(c.as_of)} · weather ${date(c.weather_date||meta().current_weather_date)} · national weekly cases to ${date(latest)} (official weekly bulletin).`;
   }
   const modelLabel=()=>state.data?.model?.selected_baseline?'Four-week average':'Weather + recent trends';
-  const TITLES={signals:'Area signals',forecast:'Forecast lab'};
   const reducedMotion=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
   function setDrawer(open,restoreFocus=false){$('.explorer').classList.toggle('show-areas',open);$('#toggle-areas').setAttribute('aria-expanded',String(open));if(open)$('#area-search').focus();else if(restoreFocus)$('#toggle-areas').focus();}
 
@@ -59,7 +58,6 @@
     if(state.view!=='forecast')stopReplay();
     $$('.view-tab,.rail-button[data-view]').forEach(button=>{const active=button.dataset.view===state.view;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
     if(ready){$('#signals-view').hidden=state.view!=='signals';$('#forecast-view').hidden=state.view!=='forecast';}
-    $('#page-title').textContent=TITLES[state.view];
     $('#page-description').textContent=state.view==='forecast'?'The national outlook and a retrospective check using earlier reports only.':'Find an area. Understand the signals. Plan your next check.';
     if(state.view==='signals' && state.map)setTimeout(()=>{state.map.invalidateSize();state.map.fitBounds(state.areaLayer.getBounds(),{padding:[24,24],animate:false});},40);
     if(state.view==='forecast')requestAnimationFrame(drawChart);
@@ -284,7 +282,7 @@
         ${n?`<span class="normal-span" style="left:${pos(n.low)};width:calc(${pos(n.high)} - ${pos(n.low)})"></span><span class="normal-mark" style="left:${pos(n.median)}"><small>Typical ${number(n.median)}</small></span>`:''}
         <span class="range-span" style="left:${pos(p.lower)};width:calc(${pos(p.upper)} - ${pos(p.lower)})"></span><span class="range-mark" style="left:${pos(p.predicted)}"></span></div>
       <p><strong>${number(p.lower)}–${number(p.upper)}</strong> people · 80% range. Past error, not a guarantee.</p><details class="outlook-explanation"><summary>What shapes it</summary><p>${normalSentence(p)} ${escape(driverSentence(groupedFeatures(p.top_features)))}</p></details>${weatherNote}</div>
-      <div class="outlook-facts"><img class="forecast-art" src="/brand/weekly-outlook.webp" width="112" height="112" alt=""><div><span>Last reported</span><strong>${number(live.latest_reported_people)} people</strong><small>Week to ${date(live.issued_from_week_end)} · ${escape(live.latest_epi_week)}</small></div>
+      <div class="outlook-facts"><img class="forecast-art" src="/brand/weekly-outlook.webp" width="112" height="112" alt=""><div><span>Last reported</span><strong>${number(live.latest_reported_people)} people</strong><small>Week to ${date(live.issued_from_week_end)} · epi week ${escape(String(live.latest_epi_week||'').replace(/^(\d{4})-W0?(\d+)$/,'$2 of $1'))}</small></div>
       <div><span>Earlier unreported week</span><strong>about ${number(live.forecasts[0]?.prediction)}</strong><small>Week of ${date(live.forecasts[0]?.target_date,{day:'numeric',month:'short'})}</small></div>
       <div><span>Source</span><strong>Official weekly bulletin</strong><small>MOH / Communicable Diseases Agency</small></div></div>`;
   }
@@ -362,7 +360,7 @@
     if(!rows.length){ctx.fillStyle='#93a183';ctx.font='11px "DM Sans", sans-serif';ctx.textAlign='center';ctx.fillText('Historical predictions will appear here.',width/2,height/2);return;}
     const maxValue=Math.max(...rows.flatMap(p=>[p.actual,p.predicted,live?p.upper:p.baseline,live?p.normalMedian:null]).filter(finite),1);const step=10**Math.floor(Math.log10(maxValue));const yMax=Math.ceil(maxValue/step)*step;
     const x=i=>pad.left+i/Math.max(1,rows.length-1)*chartWidth;const y=v=>pad.top+(1-Math.min(v,yMax)/yMax)*chartHeight;
-    ctx.font='9px "DM Sans", sans-serif';ctx.lineWidth=1;ctx.textAlign='right';ctx.fillStyle='#a0aa94';
+    ctx.font='11px "DM Sans", sans-serif';ctx.lineWidth=1;ctx.textAlign='right';ctx.fillStyle='#66745c';
     for(let i=0;i<=4;i++){const value=yMax*i/4;const lineY=y(value);ctx.beginPath();ctx.strokeStyle='#edf1e7';ctx.moveTo(pad.left,lineY);ctx.lineTo(width-pad.right,lineY);ctx.stroke();ctx.fillText(number(value),pad.left-10,lineY+3);}
     ctx.textAlign='center';const tickCount=Math.min(live?8:6,rows.length);for(let i=0;i<tickCount;i++){const index=Math.round(i/(tickCount-1||1)*(rows.length-1));ctx.fillText(date(rows[index].target_date,live?{month:'short',year:'2-digit'}:{month:'short'}),x(index),height-5);}
     const pendingStart=rows.findIndex(p=>!finite(p.actual));

@@ -638,6 +638,9 @@ def _lead_sentence(item):
 REGISTERED_NAME = os.environ.get("DENGUE_MODEL_NAME", "national_forecast")
 
 
+PROMOTION_TOLERANCE = 0.5  # people a week; small data, so a marginally worse refit still refreshes the champion
+
+
 def _register(run_id, prospective, feature_sets):
     """Register champion and challenger; aliases tell the scorer which version to load.
 
@@ -650,24 +653,41 @@ def _register(run_id, prospective, feature_sets):
     name = f"{prefix}.{REGISTERED_NAME}" if prefix and on_databricks else REGISTERED_NAME
     try:
         client = MlflowClient()
-        versions = {}
+        versions, promotion = {}, {"rule": f"The new weather model takes @champion only if its 2023+ prospective MAE is within {PROMOTION_TOLERANCE} of the current champion's; otherwise the champion is kept and the new version is tagged 'held'."}
+        # The incumbent champion's recorded error, if any; the new run must not be clearly worse to replace it.
+        incumbent, incumbent_mae = None, None
+        try:
+            incumbent = client.get_model_version_by_alias(name, "champion")
+            incumbent_mae = float((incumbent.tags or {}).get("prospective_mae"))
+        except Exception:
+            incumbent = None
         for alias in ("champion", "challenger"):
             version = mlflow.register_model(f"runs:/{run_id}/{alias}", name)
-            client.set_registered_model_alias(name, alias, version.version)
             tags = {"role": alias, "feature_set": "all" if alias == "champion" else "no_weather", "horizon_weeks": "2"}
+            new_mae = None
             if feature_sets:
                 fs = feature_sets["all" if alias == "champion" else "no_weather"]
                 if fs.get("prospective_mae") is not None:
-                    tags["prospective_mae"] = f"{fs['prospective_mae']:.2f}"
+                    new_mae = float(fs["prospective_mae"])
+                    tags["prospective_mae"] = f"{new_mae:.2f}"
+            promote = True
+            if alias == "champion" and incumbent is not None and incumbent_mae is not None and new_mae is not None:
+                promote = new_mae <= incumbent_mae + PROMOTION_TOLERANCE
+                promotion.update({"incumbent_version": str(incumbent.version), "incumbent_mae": round(incumbent_mae, 2), "candidate_version": str(version.version),
+                                  "candidate_mae": round(new_mae, 2), "promoted": promote})
+            if promote:
+                client.set_registered_model_alias(name, alias, version.version)
+            else:
+                tags["role"] = "held"
             for key, value in tags.items():
                 client.set_model_version_tag(name, version.version, key, value)
-            versions[alias] = str(version.version)
+            versions[alias] = str(incumbent.version) if (alias == "champion" and not promote) else str(version.version)
         try:
             client.update_registered_model(name, description="DengueSUX national two-week dengue forecast. champion = locked 2019–2021 selection "
                                            "with weather; challenger = same recipe without weather. Scored in Spark by the gold stage.")
         except Exception:
             pass
-        return {"name": name, "versions": versions, "registry": "unity_catalog" if on_databricks else "local", "status": "registered"}
+        return {"name": name, "versions": versions, "registry": "unity_catalog" if on_databricks else "local", "status": "registered", "promotion": promotion}
     except Exception as error:
         if on_databricks:
             raise

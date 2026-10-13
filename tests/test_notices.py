@@ -63,7 +63,7 @@ def test_llm_error_content_is_never_exposed(notice_root):
 
 
 def test_static_exports_never_invoke_workspace_model(notice_root, monkeypatch):
-    monkeypatch.setenv("DATABRICKS_RUNTIME_VERSION", "fixture")
+    monkeypatch.setenv("DATABRICKS_NOTICE_ENDPOINT", "fixture-endpoint")
     result = write_notices(notice_root)
     assert len(result["notices"]) == 2
     assert all(notice["mode"] == "template" for languages in result["notices"].values() for notice in languages.values())

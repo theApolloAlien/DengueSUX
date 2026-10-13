@@ -46,18 +46,6 @@ def run_daily(root=ROOT, *, spark=None, offline=False, radius_m=300, top_n=8, se
         except Exception as error:
             print(f"Field outcomes not attached: {type(error).__name__}")
     notices = write_notices(root, spark=spark)
-    from denguesux.alerts import write_alerts
-    # Only the scheduled job sends alerts; manual and test runs never message anyone.
-    alerts = write_alerts(root, spark=spark, send=send_alerts)
-    telegram = {"status": "not_sent"}
-    if send_alerts:
-        # Telegram subscribers get their areas' signals (High, new or growing cluster, forecast High); counts only are logged.
-        from denguesux.telegram import push_daily
-        try:
-            telegram = push_daily(root, spark=spark)
-        except Exception as error:
-            telegram = {"status": "error", "error": type(error).__name__}
-        print({"telegram": telegram})
     from denguesux.map_context import build_map_context
     build_map_context(root)
     # Two-week area outlook from today's snapshot, recorded in the append-only ledger, then scored when due.
@@ -69,6 +57,18 @@ def run_daily(root=ROOT, *, spark=None, offline=False, radius_m=300, top_n=8, se
         print(f"Area outlook skipped: {type(error).__name__}: {str(error)[:200]}")
     from denguesux.ledger import update as update_ledger
     update_ledger(root, area_result=area, model_version="area-logistic", spark=spark)
+    # Alerts read today's outlook, so they are written only after it exists. Only the scheduled job sends them.
+    from denguesux.alerts import write_alerts
+    alerts = write_alerts(root, spark=spark, send=send_alerts)
+    telegram = {"status": "not_sent"}
+    if send_alerts:
+        # Telegram subscribers get their areas' signals (High, new or growing cluster, forecast High); counts only are logged.
+        from denguesux.telegram import push_daily
+        try:
+            telegram = push_daily(root, spark=spark)
+        except Exception as error:
+            telegram = {"status": "error", "error": type(error).__name__}
+        print({"telegram": telegram})
     dashboard_path = root / "output/web/dashboard.json"
     if dashboard_path.exists():
         dashboard = json.loads(dashboard_path.read_text())

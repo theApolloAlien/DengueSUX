@@ -140,19 +140,19 @@ def gold(spark):
     write_growth(spark=spark)
     build_inspection(spark=spark)
     write_notices(spark=spark)
-    from .alerts import write_alerts
-    write_alerts(spark=spark)
     from .map_context import build_map_context
     build_map_context()
     area=None
     try:
         from .area_forecast import build_area_forecast
-        area=build_area_forecast(spark=spark)
+        area=build_area_forecast(spark=spark,register=True)
     except ValueError as error:
         print(f'AREA OUTLOOK: skipped ({error})')
     from .ledger import update as update_ledger
     versions=(result.get('registry') or {}).get('versions') or {}
     update_ledger(model_result=result,area_result=area,model_version=f"champion v{versions['champion']}" if versions.get('champion') else result.get('run_id'),spark=spark)
+    from .alerts import write_alerts  # after the outlook, so "forecast High" alerts use today's area outlook
+    write_alerts(spark=spark)
     import json as _json
     from .runtime import ROOT as _ROOT
     (_ROOT/'output/web/model.json').write_text(_json.dumps(result,indent=2,allow_nan=False))

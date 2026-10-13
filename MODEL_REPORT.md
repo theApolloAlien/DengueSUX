@@ -25,7 +25,7 @@ Observed peak: **1567 people**, week starting **2022-05-22**.
 - Selected model: first High issued 2022-03-06, 11 weeks before peak.
 - Four-week average: first High issued 2022-03-13, 10 weeks before peak.
 
-Lead time uses the date a forecast would be issued, measured to the start of the observed peak week. If the first replay issue is already High, its earlier crossing is unobserved and only a lower bound is reported. This single-year descriptive measure is not a validated outbreak detection rate. The t+2 target starts one week after issue and ends almost two weeks after issue. Historical issue dates assume preceding-week case data is immediately available; actual publication delays are unknown.
+Lead time uses the date a forecast would be issued, measured to the start of the observed peak week. If the first replay issue is already High, its earlier crossing is unobserved and only a lower bound is reported. This single-year descriptive measure is not a validated outbreak detection rate. The t+2 target starts one week after issue and ends almost two weeks after issue. Historical issue dates assume preceding-week case data is immediately available; actual publication delays are unknown. In practice MOH/CDA publish a week's count about a week after it ends, so a forecast issued the day after the labels end has a real lead of about one to seven days to the start of the target week, not two weeks. The live card and the ledger show the issue date and the target week so the actual lead is visible.
 
 ## Explanations and reproducibility
 

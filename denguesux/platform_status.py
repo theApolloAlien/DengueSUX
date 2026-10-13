@@ -3,7 +3,8 @@
 Everything here is read from the platform itself at run time: job runs (Jobs API), Delta table versions and
 row counts (DESCRIBE HISTORY / DETAIL), Lakeflow expectation results (pipeline event log), registered model
 versions and aliases (Unity Catalog registry), the published-forecast ledger and the ai_forecast benchmark.
-Nothing is typed in by hand; a part that cannot be read is reported as unavailable, not guessed.
+The stage descriptions below are the only typed text; every number, version, run and status is read live, and a
+part that cannot be read is reported as unavailable, not guessed.
 """
 from __future__ import annotations
 
@@ -115,12 +116,15 @@ def model_facts(prefix):
 
 
 def benchmark_facts(spark, prefix):
-    row = spark.sql(f"""SELECT count(*) AS weeks, min(target_week_end) AS first_week, max(target_week_end) AS last_week,
+    base = f"""count(*) AS weeks, min(target_week_end) AS first_week, max(target_week_end) AS last_week,
         avg(abs(actual - denguesux)) AS denguesux_mae, avg(abs(actual - four_week_average)) AS four_week_average_mae,
         avg(abs(actual - ai_forecast)) AS ai_forecast_mae,
         avg(CASE WHEN actual BETWEEN denguesux_lower AND denguesux_upper THEN 1 ELSE 0 END) AS denguesux_coverage,
-        avg(CASE WHEN actual BETWEEN ai_lower AND ai_upper THEN 1 ELSE 0 END) AS ai_forecast_coverage
-        FROM {prefix}.gold_ai_forecast_benchmark""").first().asDict()
+        avg(CASE WHEN actual BETWEEN ai_lower AND ai_upper THEN 1 ELSE 0 END) AS ai_forecast_coverage"""
+    try:  # the fairer ai_forecast variant (log counts, 104-week window) exists once the pipeline job has rebuilt the table
+        row = spark.sql(f"SELECT {base}, avg(abs(actual - ai_forecast_log104)) AS ai_forecast_log104_mae FROM {prefix}.gold_ai_forecast_benchmark").first().asDict()
+    except Exception:
+        row = spark.sql(f"SELECT {base} FROM {prefix}.gold_ai_forecast_benchmark").first().asDict()
     return {k: (float(v) if isinstance(v, (int, float)) else str(v)) for k, v in row.items()}
 
 

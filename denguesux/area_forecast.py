@@ -269,7 +269,9 @@ def explain(models, rows):
     return out
 
 
-def build_area_forecast(root=ROOT, *, save=True, spark=None):
+def build_area_forecast(root=ROOT, *, save=True, spark=None, register=False):
+    """Train, evaluate and publish the two-week area outlook. With register=True (the pipeline job) the run is logged to
+    MLflow and the High model is registered as `area_outlook@champion` in Unity Catalog; the daily job only scores."""
     root = Path(root)
     panel, coverage = build_panel(root)
     national, rain = national_weekly(root), national_rain(root)
@@ -343,7 +345,73 @@ def build_area_forecast(root=ROOT, *, save=True, spark=None):
             separators=(",", ":")))
     if spark is not None:
         _publish(spark, featured, examples, live, scored, result)
+    if register:
+        result["registry"] = _track(models, examples, evaluation, result)
     return result
+
+
+AREA_REGISTERED_NAME = "area_outlook"
+
+
+def _track(models, examples, evaluation, result):
+    """Log the outlook to MLflow (params, leave-one-year-out metrics, both models) and register the High model with a
+    champion alias, so the headline A2 feature has the same lineage as the national forecast. Failures propagate on
+    Databricks; locally they are reported, never hidden."""
+    import os
+    on_databricks = bool(os.environ.get("DATABRICKS_RUNTIME_VERSION"))
+    try:
+        import mlflow
+        from mlflow import MlflowClient
+        tracking = os.environ.get("MLFLOW_TRACKING_URI")
+        if not tracking and not on_databricks:
+            tracking = "sqlite:///" + str(ROOT / "output/mlflow.db")
+        if tracking:
+            mlflow.set_tracking_uri(tracking)
+        mlflow.set_experiment(os.environ.get("DENGUE_MLFLOW_AREA_EXPERIMENT", "DengueSUX-area-outlook"))
+        with mlflow.start_run(run_name="area_outlook_logistic_loyo") as run:
+            mlflow.log_params({"features": ",".join(FEATURES), "horizon_days": PAIR_TARGET_DAYS, "pair_window_days": f"{PAIR_MIN_DAYS}-{PAIR_MAX_DAYS}",
+                               "high_people": HIGH_PEOPLE, "estimator": "LogisticRegression(C=0.5, L2) on standardised features",
+                               "validation": "leave one origin year out", "examples": int(len(examples)), "origin_dates": int(examples.date.nunique()),
+                               "min_located_share": MIN_LOCATED_SHARE, "seed": SEED})
+            metrics = {}
+            for who in ("model", "persistence", "track_record"):
+                for key, value in (evaluation.get(who) or {}).items():
+                    if isinstance(value, (int, float)) and value is not None:
+                        metrics[f"{who}_{key}"] = float(value)
+            new_high = evaluation.get("new_high") or {}
+            metrics["new_high_count"] = float(new_high.get("count") or 0)
+            metrics["new_high_caught_by_model"] = float(new_high.get("caught_by_model") or 0)
+            mlflow.log_metrics(metrics)
+            example = examples[FEATURES].head(3)
+            logged = {}
+            for target, model in models.items():
+                if model is None:
+                    continue
+                signature = mlflow.models.infer_signature(example, model.predict_proba(example)[:, 1])
+                mlflow.sklearn.log_model(model, name=target, signature=signature, input_example=example)
+                logged[target] = f"runs:/{run.info.run_id}/{target}"
+            out = {"run_id": run.info.run_id, "models": logged, "experiment": "DengueSUX-area-outlook"}
+        prefix = os.environ.get("DENGUE_TABLE_PREFIX", "")
+        name = f"{prefix}.{AREA_REGISTERED_NAME}" if prefix and on_databricks else AREA_REGISTERED_NAME
+        if logged.get("y_high"):
+            client = MlflowClient()
+            version = mlflow.register_model(logged["y_high"], name)
+            client.set_registered_model_alias(name, "champion", version.version)
+            for key, value in {"target": "10+ people in clusters in about two weeks", "brier_high": f"{evaluation['model']['brier_high']:.4f}",
+                               "auc_high": f"{evaluation['model'].get('auc_high') or 0:.3f}", "examples": str(len(examples))}.items():
+                client.set_model_version_tag(name, version.version, key, value)
+            try:
+                client.update_registered_model(name, description="DengueSUX two-week planning-area outlook: chance an area has 10+ people in active NEA clusters "
+                                               "about two weeks ahead (logistic regression on archived NEA listings since 2019). champion = latest pipeline run.")
+            except Exception:
+                pass
+            out.update({"name": name, "version": str(version.version), "alias": "champion", "registry": "unity_catalog" if on_databricks else "local", "status": "registered"})
+            result["model_version"] = f"{AREA_REGISTERED_NAME} v{version.version}"
+        return out
+    except Exception as error:
+        if on_databricks:
+            raise
+        return {"status": "unavailable", "reason": type(error).__name__}
 
 
 def _publish(spark, featured, examples, live, scored, result):

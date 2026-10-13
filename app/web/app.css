@@ -3495,3 +3495,49 @@
     .map-tools .segmented{margin-left:auto}
   }
 }
+/* 14 Oct 2026: tour chip, sun slider and rain in the 3D walk, time-lapse pace, kiosk mode, chat-to-3D links. */
+@layer views{
+  .tour-chip{display:inline-flex;align-items:center;gap:2px;margin-right:6px;border:1px solid #d7deca;border-radius:999px;background:#fffdf5;padding:2px 2px 2px 12px;font-size:12px;color:#163f35;box-shadow:0 1px 2px #1b2b2010}
+  .tour-chip-go{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:inherit;font:inherit;font-weight:600;cursor:pointer;padding:4px 2px}
+  .tour-chip-go i{color:#c9921f}
+  .tour-chip .tour-chip-close{width:26px;height:26px}
+  @media (max-width:760px){.tour-chip-go span,.tour-chip{font-size:12px}.tour-chip{margin-right:2px;padding-left:8px}}
+  .route-hour{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 8px;border:1px solid #d7deca;border-radius:6px;background:#fff;font-size:12px;color:#44584a;min-width:150px}
+  .route-hour input[type=range]{width:88px;accent-color:#c9921f;margin:0}
+  .route-hour span{font-variant-numeric:tabular-nums;min-width:38px}
+  .route-tour-rain{padding:0 10px;font-size:12px}
+  .route-tour-rain.is-on{background:#2f6a55;color:#fff;border-color:#2f6a55}
+  .route-tour-rain[hidden]{display:none !important}
+  #route-3d.is-night::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;mix-blend-mode:multiply;background:linear-gradient(180deg,#1d2a4055,#2b374733)}
+  .no-scene-note{display:flex;gap:8px;align-items:flex-start;margin:0 0 10px;padding:10px 12px;border:1px solid #e0e5d6;border-radius:8px;background:#f6f7ee;font-size:12px;line-height:1.55;color:#4d5f52}
+  .no-scene-note i{color:#7d8a72;margin-top:1px}
+  .timelapse-row{display:flex;align-items:center;gap:10px}
+  .timelapse-speed{height:30px;min-width:38px;border:1px solid #d7deca;border-radius:6px;background:#fff;font:600 12px "DM Sans",sans-serif;color:#163f35;cursor:pointer}
+  .timelapse-spark{display:block;width:100%;height:44px;margin:6px 0 2px}
+  .timelapse-player.is-peak .timelapse-date strong{color:#c2523c}
+  .card-actions .text-button i{margin-right:4px}
+  /* Dark surfaces: the forest focus ring vanished on forest cards; a pale ring reads everywhere. */
+  .home-intro :is(a,button):focus-visible,.week-outlook :is(a,button):focus-visible,.landscape3d :focus-visible,.landscape-label:focus-visible,.viz-dark :is(a,button):focus-visible{outline:3px solid #f6d58a;outline-offset:3px}
+  /* Kiosk: a booth screen loops the story with no app chrome and a QR to continue on a phone. */
+  body.kiosk .nav-rail,body.kiosk .topbar,body.kiosk footer,body.kiosk .page-heading,body.kiosk #tour-chip,body.kiosk .plan-toolbar{display:none !important}
+  body.kiosk .page-shell{margin:0;width:100%}
+  body.kiosk main{padding:18px 24px}
+  body.kiosk .story-card{font-size:1.15em;padding:22px 26px;max-width:720px}
+  body.kiosk .story-card .story-title{font-size:28px}
+  body.kiosk .story-card .story-text{font-size:16px;line-height:1.55}
+  body.kiosk .story-actions{display:none}
+  .kiosk-badge{position:fixed;right:20px;bottom:20px;z-index:60;display:grid;justify-items:center;gap:4px;padding:12px 14px;border-radius:12px;background:#fffdf5;box-shadow:0 10px 30px #13302633;font-size:12px;color:#163f35;text-align:center}
+  .kiosk-badge strong{font-size:14px}
+  .kiosk-badge svg{width:128px;height:128px}
+  .kiosk-badge small{color:#7d8a72}
+  @media (max-width:760px){.route-hour{min-width:0}.route-hour input[type=range]{width:70px}}
+}
+@layer views{
+  .route-tour-scene{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+  .route-tour-scene button{height:34px;display:inline-flex;align-items:center;gap:6px;padding:0 10px;border:1px solid #d7deca;border-radius:6px;background:#fff;font:600 12px "DM Sans",sans-serif;color:#163f35;white-space:nowrap;cursor:pointer}
+  .route-tour-scene button[hidden],.route-tour-scene[hidden]{display:none !important}
+  .route-tour-scene .route-tour-record.is-recording{background:#c2523c;color:#fff;border-color:#c2523c}
+  .route-tour-scene .route-tour-rain.is-on{background:#2f6a55;color:#fff;border-color:#2f6a55}
+  .route-tour-scene .route-hour{height:34px;margin-left:auto}
+  .route-tour-controls .route-tour-light{display:none}
+}

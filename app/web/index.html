@@ -14,7 +14,7 @@
   <meta property="og:description" content="Singapore dengue outlook, maps and practical field plans. Real open data, dated sources.">
   <meta property="og:image" content="/brand/og-card.png">
   <link rel="preconnect" href="https://www.onemap.gov.sg" crossorigin>
-  <link rel="preload" href="/data/dashboard.json" as="fetch" fetchpriority="low" crossorigin>
+  <link rel="preload" href="/data/dashboard.json" as="fetch" fetchpriority="high" crossorigin>
   <link rel="preload" href="/vendor/fonts/dm-sans-400.ttf" as="font" type="font/ttf" crossorigin>
   <!-- Pre-paint skeleton. It declares the same cascade layers as app.css so the real stylesheet, not this fallback, wins. -->
   <style>@layer tokens, base, components, product, theme, views, overrides;@layer base{html{background:#f7f8f4}body{margin:0;color:#193e33;font-family:sans-serif}[hidden]{display:none!important}.app-shell{display:flex;min-height:100vh}.nav-rail{position:fixed;inset:0 auto 0 0;width:208px;background:#eff2ea}.page-shell{margin-left:208px;width:calc(100% - 208px)}.topbar{height:72px}main{padding:32px}.page-heading{min-height:50px;margin-bottom:28px}.boot-grid{display:grid;grid-template-columns:.9fr 1.2fr;gap:28px;width:100%}.boot-hero{height:355px;background:#e1e8dc;border-radius:12px}.boot-list{border:1px solid #e1e6dc;border-radius:12px;padding:24px;background:white;display:grid;gap:16px}.boot-list>div{height:40px;background:#edf1ea;border-radius:6px}.loading-copy{visibility:hidden}@media(max-width:760px){.nav-rail{inset:auto 0 0;width:100%;height:68px}.page-shell{margin:0;width:100%}main{padding:24px 16px}.boot-grid{grid-template-columns:1fr;gap:20px}.boot-hero{height:300px}.page-heading{min-height:68px;margin-bottom:24px}}}</style>
@@ -46,7 +46,7 @@
         <div class="topbar-actions">
           <button class="data-status" id="data-timestamp" data-methodology aria-label="View snapshot dates and sources"><span class="status-dot"></span> Saved data</button>
           <button class="icon-button mobile-command" id="mobile-command" aria-label="Find anything"><i class="ph ph-magnifying-glass" aria-hidden="true"></i></button>
-          <details class="help-menu"><summary aria-label="Help"><i class="ph ph-question" aria-hidden="true"></i><span>Help</span></summary><div><button data-methodology>How to read this</button><button id="shortcuts-open">Keyboard shortcuts</button><button id="tour-replay">Replay tour</button><button id="help-export">Export data</button><button data-about>Our story</button></div></details><span class="ask-slot" aria-hidden="true"></span>
+          <details class="help-menu"><summary aria-label="Help"><i class="ph ph-question" aria-hidden="true"></i><span>Help</span></summary><div><button data-methodology>How to read this</button><button id="shortcuts-open">Keyboard shortcuts</button><button id="tour-replay">Replay tour</button><button data-about>Our story</button></div></details><span class="ask-slot" aria-hidden="true"></span>
         </div>
       </header>
 
@@ -56,12 +56,6 @@
           <button class="outline-button" id="download-data" aria-label="Export dashboard data"><i class="ph ph-download-simple" aria-hidden="true"></i> Export data</button>
         </div>
 
-        <div class="view-bar" hidden>
-          <nav class="view-tabs" aria-label="Dashboard views">
-            <button class="view-tab active" data-view="signals" aria-pressed="true"><i class="ph ph-map-trifold" aria-hidden="true"></i> Area signals</button>
-            <button class="view-tab" data-view="forecast" aria-pressed="false"><i class="ph ph-chart-line-up" aria-hidden="true"></i> Forecast lab</button>
-          </nav>
-        </div>
 
         <div id="loading-state" class="loading-state" role="status" aria-live="polite"><div class="chat-boot" aria-hidden="true"><div class="chat-boot-intro"><span class="skeleton"></span><b class="skeleton"></b><small class="skeleton"></small></div><div class="chat-boot-composer skeleton"></div><div class="chat-boot-chips"><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton"></span></div></div>
           <div class="boot-grid" aria-hidden="true"><div class="boot-hero skeleton"><span class="skeleton"></span><b class="skeleton"></b></div><div class="boot-list"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div><div class="boot-detail skeleton"></div></div>
@@ -205,6 +199,7 @@
   <script src="/fieldwork.js" defer></script>
   <script src="/embedded.js" defer></script>
   <script src="/checklist3d.js" defer></script>
+  <script src="/weather3d.js" defer></script>
   <script src="/hero3d.js" defer></script>
   <script src="/flythrough.js" defer></script>
   <script src="/answer-cards.js" defer></script>

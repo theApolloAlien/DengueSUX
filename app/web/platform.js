@@ -68,8 +68,8 @@
   function bench(status) {
     const b = status?.benchmark;
     if (!b || !Number.isFinite(Number(b.ai_forecast_mae))) return '';
-    return `<section class="platform-card"><h3>${icon('scales')} One-query benchmark with ai_forecast</h3><p class="platform-note">${num(b.weeks)} weeks from ${esc(String(b.first_week).slice(0, 10))}, two weeks ahead, each fitted only on earlier weeks.</p>
-      <dl class="bench-dl"><div><dt>DengueSUX</dt><dd>${num(b.denguesux_mae, 1)}</dd></div><div><dt>Four-week average</dt><dd>${num(b.four_week_average_mae, 1)}</dd></div><div><dt>ai_forecast</dt><dd>${num(b.ai_forecast_mae, 1)}</dd></div></dl><p class="platform-note">Mean absolute error, people a week.</p></section>`;
+    return `<section class="platform-card"><h3>${icon('scales')} One-query benchmark with ai_forecast</h3><p class="platform-note">${num(b.weeks)} weeks from epi week ${esc(String(b.first_week).replace(/^(\d{4})-W0?(\d+)$/, '$2 of $1'))}, two weeks ahead, each fitted only on earlier weeks.</p>
+      <dl class="bench-dl"><div><dt>DengueSUX</dt><dd>${num(b.denguesux_mae, 1)}</dd></div><div><dt>Four-week average</dt><dd>${num(b.four_week_average_mae, 1)}</dd></div><div><dt>ai_forecast</dt><dd>${num(b.ai_forecast_mae, 1)}</dd></div>${Number.isFinite(Number(b.ai_forecast_log104_mae)) ? `<div><dt>ai_forecast, log counts · 104 weeks</dt><dd>${num(b.ai_forecast_log104_mae, 1)}</dd></div>` : ''}</dl><p class="platform-note">Mean absolute error, people a week.</p></section>`;
   }
 
   function links(status) {

@@ -335,7 +335,6 @@
   function init(payload, callbacks) {
     data = payload; hooks = callbacks || {};
     window.ChatHome?.init(data, hooks, {respond, tools, sqlFor});
-    renderGrowthModel();
   }
   window.Assistant = {init, tools, respond, sqlFor};
 })();

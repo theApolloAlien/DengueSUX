@@ -24,9 +24,14 @@
   const cells=[[clusters,'active clusters'],[people,'people in clusters'],[active,'areas affected']].filter(([v])=>Number.isFinite(v));
   return cells.length?`<dl class="hero-stats">${cells.map(([v,l])=>`<div><dt>${esc(l)}</dt><dd>${number(v)}</dd></div>`).join('')}</dl><a class="hero-explore" href="#map/3d">Explore the 3D map <i class="ph ph-arrow-right" aria-hidden="true"></i></a>`:'';}
  // The home stage: a live 3D Singapore raised by people in active clusters (falls back to the illustration).
+ let stageApi=null;
  function mountStage(){const intro=home.querySelector('.home-intro'),stage=intro?.querySelector('.hero-stage');if(!stage||!window.Landscape3D?.supported())return;intro.classList.add('has-stage');
-  window.Landscape3D.mount(stage,data.current,{theme:'night',zoomOut:-.18,labels:w=>w>820?5:3,onPick:code=>window.Product?.go('map',code),
-   padding:(w,h)=>w>820?{top:40,bottom:60,left:Math.round(w*.44),right:10}:{top:Math.round(h*.52),bottom:16,left:16,right:16}});}
+  stageApi=window.Landscape3D.mount(stage,data.current,{theme:'night',zoomOut:-.18,labels:w=>w>820?5:3,onPick:code=>window.Product?.go('map',code),
+   padding:(w,h)=>w>820?{top:40,bottom:60,left:Math.round(w*.44),right:10}:{top:Math.round(h*.52),bottom:16,left:16,right:16}});
+  // The conversation drives the island: an answer about an area glides to it and pulses it.
+  document.addEventListener('denguesux:chat-area',e=>{if(['','#week'].includes(location.hash))stageApi?.focus(e.detail.code);});}
+ function areaOf(t){const byCode=(t.cards||[]).find(c=>c.code&&['area','plan','notice'].includes(c.type))?.code;if(byCode)return byCode;
+  const q=`${t.question||''} ${t.answer||''}`.toLowerCase();const hit=data.current.areas.filter(a=>q.includes(a.name.toLowerCase())).sort((a,b)=>b.name.length-a.name.length)[0];return hit?.code||null;}
  function greeting(){const hour=Number(new Intl.DateTimeFormat('en-SG',{hour:'numeric',hourCycle:'h23',timeZone:'Asia/Singapore'}).format(new Date()));return hour<12?'Good morning.':hour<18?'Good afternoon.':'Good evening.';}
  function sourcesHTML(sources=[]){return `<div class="ask-sources">${sources.map((s,i)=>`<span>[${i+1}] ${s.url?`<a href="${safeUrl(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>`:esc(s.name)} · ${date(s.date)}</span>`).join('')}</div>`;}
  const bullet=/^\s*(?:[-*•]|\d+[.)])\s+/;
@@ -37,12 +42,12 @@
   return `<p>${lines.join('<br>')}</p>`;}).join('');}
  function renderTurn(t){
   const el=document.createElement('article');el.className='conversation-turn';el.innerHTML=`<div class="chat-question">${esc(t.question)}</div><div class="chat-answer"><h2 tabindex="-1">${icon('chat-circle-text')} DengueSUX <small>${esc(t.mode||'Local, no AI')}</small></h2><div class="chat-answer-body">${t.answer==null?'<p role="status">Reading the latest data…</p>':markdown(t.answer)}</div></div>`;
-  $('#ask-log').append(el);if(t.html)el.querySelector('.chat-answer-body').innerHTML=t.html;
+  if(t.lang&&t.lang!=='en')el.lang=t.lang;$('#ask-log').append(el);if(t.html)el.querySelector('.chat-answer-body').innerHTML=t.html;
   for(const v of t.visuals||(t.visual?[t.visual+(t.area?':'+t.area:'')]:[]))window.Showcase?.render(el.querySelector('.chat-answer-body'),v,t.lang);
   if(t.cards)window.AnswerCards?.render(el.querySelector('.chat-answer-body'),t.cards,data,language);
   if(t.sources)el.querySelector('.chat-answer-body').insertAdjacentHTML('beforeend',sourcesHTML(t.sources));
   if(t.followups?.length){const row=document.createElement('div');row.className='chat-followups';row.innerHTML=t.followups.map(q=>`<button type="button" class="ask-chip">${esc(q)}</button>`).join('');row.onclick=e=>{const b=e.target.closest('button');if(b)ask(b.textContent);};el.querySelector('.chat-answer-body').append(row);}
-  if(t.trace?.length)el.querySelector('.chat-answer-body').insertAdjacentHTML('beforeend',`<details class="ask-trace"><summary>Sources & tool details</summary>${t.trace.map(r=>`<p>${esc(r.tool||r.name)}</p>${r.result?.sql?`<details><summary>Show Genie SQL · AI-generated</summary><pre>${esc(r.result.sql)}</pre></details>`:''}`).join('')}</details>`);
+  if(t.trace?.length)el.querySelector('.chat-answer-body').insertAdjacentHTML('beforeend',`<details class="ask-trace" ${document.body.classList.contains('judge')?'open':''}><summary>Sources & tool details</summary>${t.trace.map(r=>`<p>${esc(r.tool||r.name)}</p>${r.result?.sql?`<details ${document.body.classList.contains('judge')?'open':''}><summary>Show Genie SQL · AI-generated</summary><pre>${esc(r.result.sql)}</pre></details>`:''}`).join('')}</details>`);
   return el;
  }
  // On the home a saved conversation can fold away behind the stage; the side panel always shows it in full.
@@ -79,9 +84,9 @@
    try{while(true){const chunk=await reader.read();buffer+=decoder.decode(chunk.value||new Uint8Array(),{stream:!chunk.done});let end;
     while((end=buffer.indexOf('\n\n'))>=0){const block=buffer.slice(0,end);buffer=buffer.slice(end+2);for(const line of block.split('\n')){if(!line.startsWith('data:'))continue;const event=JSON.parse(line.slice(5));
      if(event.type==='step'){const labels={get_area:'Looking up the area',top_areas:'Checking area priorities',cluster_growth:'Comparing cluster snapshots',inspection_plan:'Reading the field plan',live_outlook:'Checking the national outlook',forecast_week:'Reading the dated forecast',data_status:'Checking source dates',query_database:'Querying the gold tables',forecast_evaluation:'Checking past forecast error',area_outlook:'Reading the two-week area outlook'};el.querySelector('.chat-answer-body').textContent=(labels[event.tool]||'Reading data')+'…';}
-     if(event.type==='delta'){text+=event.text;el.querySelector('.chat-answer-body').textContent=text;el.querySelector('h2 small').textContent='AI · streaming';}
+     if(event.type==='delta'){text+=event.text;el.querySelector('.chat-answer-body').innerHTML=markdown(text);el.querySelector('h2 small').textContent='AI · streaming';}
      if(event.type==='reset'){text='';el.querySelector('.chat-answer-body').textContent='Reading data…';}
-     if(event.type==='replace'){text=event.text;el.querySelector('.chat-answer-body').textContent=text;el.querySelector('h2 small').textContent='AI · checked against the data';}
+     if(event.type==='replace'){text=event.text;el.querySelector('.chat-answer-body').innerHTML=markdown(text);el.querySelector('h2 small').textContent='AI · checked against the data';}
      if(event.type==='done')done=event;
      if(event.type==='error')throw Error(event.message);
     }}if(chunk.done)break;}
@@ -90,7 +95,8 @@
   }catch(e){if(signal.aborted)throw e;}
   const r=await fetch('/api/chat',{method:'POST',headers:{'content-type':'application/json'},body,signal});if(!r.ok)throw Error('Assistant unavailable');return {...await r.json(),mode:'AI · dated sources'};
  }
- function finish(t,el){el.remove();const answer=renderTurn(t);setConversation();save();answer.querySelector('h2').focus({preventScroll:true});answer.scrollIntoView({block:'nearest',behavior:reduced()?'instant':'smooth'});}
+ function finish(t,el){el.remove();const answer=renderTurn(t);setConversation();save();answer.querySelector('h2').focus({preventScroll:true});answer.scrollIntoView({block:'nearest',behavior:reduced()?'instant':'smooth'});
+  const code=!t.private&&areaOf(t);if(code)document.dispatchEvent(new CustomEvent('denguesux:chat-area',{detail:{code}}));}
  // Re-read the published data at most every few minutes, so visuals and suggestions follow the daily refresh.
  async function fresh(){
   if(window.DENGUESUX_DATA||Date.now()-checked<180000)return;checked=Date.now();
@@ -116,8 +122,8 @@
  function privateAnswer(question,result){collapsed=false;const t={question,...result,private:true,mode:'On this device'};turns.push(t);const el=renderTurn(t);setConversation();el.querySelector('h2').focus({preventScroll:true});return el;}
  // Visuals follow what the answer is about: the pressed prompt, the wording and the data tools it used.
  function attachVisuals(t,question,pick){
-  // The suggestion row below already offers what to ask next.
-  t.followups=[];
+  // Up to three follow-ups from the answer itself; the suggestion row below offers the rest.
+  t.followups=Array.isArray(t.followups)?t.followups.filter(q=>typeof q==='string'&&q.length<120).slice(0,3):[];
   const want=window.Showcase?.visualsFor(question,t.trace,pick?.visual,t.diagram)||[];if(!want.length)return;t.visuals=want;
   // A drawn view answers the suggestion that would have drawn it (same view, same area).
   const all=window.Showcase.suggestions(language);want.forEach(v=>{const p=all.find(p=>p.visual?.id===v.id&&(p.visual.area==null||p.visual.area===v.area));if(p)done(p.id);});
