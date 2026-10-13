@@ -3627,3 +3627,8 @@
   body.walk-fullscreen-open .route-tour.is-fullscreen{position:fixed;left:0;right:0;bottom:0;height:40vh;overflow:auto;z-index:91;margin:0;border:0;border-radius:0}
   @media (max-width:760px){body.walk-fullscreen-open .inspection-map-wrap.is-fullscreen{bottom:44vh}body.walk-fullscreen-open .route-tour.is-fullscreen{height:44vh}}
 }
+@layer overrides{
+  body.walk-fullscreen-open .nav-rail,body.walk-fullscreen-open .topbar,body.walk-fullscreen-open #tour-chip,body.walk-fullscreen-open .ask-fab{display:none !important}
+  body.walk-fullscreen-open .walk-fullscreen-head{z-index:1002}
+  body.walk-fullscreen-open .inspection-map-wrap.is-fullscreen,body.walk-fullscreen-open .route-tour.is-fullscreen{z-index:1001}
+}
