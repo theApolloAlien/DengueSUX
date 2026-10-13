@@ -367,7 +367,10 @@ def _track(models, examples, evaluation, result):
             tracking = "sqlite:///" + str(ROOT / "output/mlflow.db")
         if tracking:
             mlflow.set_tracking_uri(tracking)
-        mlflow.set_experiment(os.environ.get("DENGUE_MLFLOW_AREA_EXPERIMENT", "DengueSUX-area-outlook"))
+        # On Databricks an experiment is a workspace path: sit next to the national one (DENGUE_MLFLOW_EXPERIMENT=/Users/<me>/DengueSUX).
+        base = os.environ.get("DENGUE_MLFLOW_EXPERIMENT", "")
+        experiment = os.environ.get("DENGUE_MLFLOW_AREA_EXPERIMENT") or (f"{base}-area-outlook" if base.startswith("/") else "DengueSUX-area-outlook")
+        mlflow.set_experiment(experiment)
         with mlflow.start_run(run_name="area_outlook_logistic_loyo") as run:
             mlflow.log_params({"features": ",".join(FEATURES), "horizon_days": PAIR_TARGET_DAYS, "pair_window_days": f"{PAIR_MIN_DAYS}-{PAIR_MAX_DAYS}",
                                "high_people": HIGH_PEOPLE, "estimator": "LogisticRegression(C=0.5, L2) on standardised features",
@@ -390,7 +393,7 @@ def _track(models, examples, evaluation, result):
                 signature = mlflow.models.infer_signature(example, model.predict_proba(example)[:, 1])
                 mlflow.sklearn.log_model(model, name=target, signature=signature, input_example=example)
                 logged[target] = f"runs:/{run.info.run_id}/{target}"
-            out = {"run_id": run.info.run_id, "models": logged, "experiment": "DengueSUX-area-outlook"}
+            out = {"run_id": run.info.run_id, "models": logged, "experiment": experiment}
         prefix = os.environ.get("DENGUE_TABLE_PREFIX", "")
         name = f"{prefix}.{AREA_REGISTERED_NAME}" if prefix and on_databricks else AREA_REGISTERED_NAME
         if logged.get("y_high"):
