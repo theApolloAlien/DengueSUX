@@ -341,9 +341,6 @@
       const k=(Math.sin(now/380)+1)/2;
       if(map.getLayer('inspect-bands'))map.setPaintProperty('inspect-bands','fill-extrusion-opacity',.45+k*.45);
       if(map.getLayer('stop-beacons'))map.setPaintProperty('stop-beacons','fill-extrusion-opacity',.22+k*.14);
-      // The 300 m search rings pulse outward from each verified cluster block (the plan's real search radius, not an estimate).
-      if(state.rings&&map.getSource('rings')&&now-(state.ringAt||0)>50){state.ringAt=now;const f=(now/3400)%1;
-        map.getSource('rings').setData({type:'FeatureCollection',features:state.rings.map(r=>({type:'Feature',properties:{opacity:(1-f)*.75},geometry:{type:'Polygon',coordinates:[circle([r.longitude,r.latitude],Math.max(6,(r.radius_m||300)*f),36)]}}))});}
       state.pulse=requestAnimationFrame(loop);};
     state.pulse=requestAnimationFrame(loop);
   }
@@ -590,7 +587,6 @@
           // The cluster as a translucent volume: its height grows with the people in it (2 m a person, capped at 160 m).
           map.addLayer({id:'cluster-volume',type:'fill-extrusion',source:'clusters',paint:{'fill-extrusion-color':COLORS.cluster,'fill-extrusion-height':['min',160,['*',2,['coalesce',['get','cases'],0]]],'fill-extrusion-base':0,'fill-extrusion-opacity':.13,'fill-extrusion-vertical-gradient':false}});
           state.plan.clusters.features.forEach(f=>{const p=f.properties||{};if(!Number.isFinite(p.longitude)||!Number.isFinite(p.latitude))return;const label=document.createElement('span');label.className='route-cluster-label';label.innerHTML=`<b>${Number(p.cases)||0}</b> people in this cluster<small>${esc(String(p.name||'NEA cluster').split('/')[0].replace(/\s*\(.*$/,'').slice(0,38))}${p.growth_cases>0?` · +${p.growth_cases} in a week`:''}</small>`;(state.labels||(state.labels=[])).push(new gl.Marker({element:label,anchor:'bottom',offset:[0,-6]}).setLngLat([p.longitude,p.latitude]).addTo(map));});}
-        if(state.plan.search_rings?.length&&!state.isTour){map.addSource('rings',{type:'geojson',data:empty()});map.addLayer({id:'rings-pulse',type:'line',source:'rings',paint:{'line-color':COLORS.cluster,'line-width':1.5,'line-opacity':['coalesce',['get','opacity'],.5]}},'city-heights');state.rings=state.plan.search_rings;}
         // NEA areas with a high Aedes population, as faint violet volumes, where they fall inside this view.
         const aedes=window.DengueData?.aedes;
         if(aedes?.available!==false&&aedes?.features?.length){const box=[...(state.track?.points||[]),...state.plan.stops.map(s=>[s.longitude,s.latitude])];
