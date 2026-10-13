@@ -7,7 +7,8 @@
   function wrap(c, text, x, y, max, lh) { const words = text.split(' '); let line = ''; for (const w of words) { const test = line ? line + ' ' + w : w; if (c.measureText(test).width > max && line) { c.fillText(line, x, y); line = w; y += lh; } else line = test; } if (line) c.fillText(line, x, y); return y + lh; }
   async function qrImage(url) {
     if (!window.Poster?.qrSvg) return null;
-    const svg = window.Poster.qrSvg(url).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ');
+    let svg = window.Poster.qrSvg(url); if (!svg) return null;
+    svg = svg.replace(/<svg([^>]*)>/, (m, attrs) => `<svg${attrs.replace(/\s(width|height)="[^"]*"/g, '')} width="216" height="216">`);
     const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
     await new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
     return img;
@@ -23,8 +24,9 @@
     c.fillStyle = '#9fd4bd'; c.font = '600 26px "DM Sans", sans-serif'; c.fillText('DengueSUX · ' + date, 70, 90);
     c.fillStyle = '#ffffff'; c.font = '700 76px "DM Sans", sans-serif'; wrap(c, area.name, 70, 180, 700, 80);
     const risk = area.risk || 'Low', colour = risk === 'High' ? '#ff7a5c' : risk === 'Medium' ? '#f3b847' : '#8fd1b4';
-    c.fillStyle = colour; roundRect(c, 70, 215, 60 + c.measureText(risk).width * .45, 44, 22); c.fill();
-    c.fillStyle = '#163f35'; c.font = '700 26px "DM Sans", sans-serif'; c.fillText(risk + ' priority', 86, 246);
+    c.font = '700 26px "DM Sans", sans-serif'; const label = risk + ' priority';
+    c.fillStyle = colour; roundRect(c, 70, 215, c.measureText(label).width + 36, 44, 22); c.fill();
+    c.fillStyle = '#163f35'; c.fillText(label, 88, 246);
     c.fillStyle = '#ffffff'; c.font = '700 120px "DM Sans", sans-serif'; c.fillText(String(area.cluster_cases ?? 0), 70, 400);
     c.fillStyle = '#dfe8de'; c.font = '400 30px "DM Sans", sans-serif';
     let y = wrap(c, `${area.cluster_cases === 1 ? 'person' : 'people'} in ${area.cluster_count ?? 0} active dengue ${area.cluster_count === 1 ? 'cluster' : 'clusters'} (NEA)`, 70, 445, 700, 38);

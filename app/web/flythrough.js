@@ -532,27 +532,28 @@
   }
   async function enterFullscreen(state){
     if(state.fullscreen||state.closed)return;
-    const overlay=document.createElement('div');overlay.className='walk-fullscreen';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-label',`3D walk, ${state.area.name}`);
-    overlay.innerHTML=`<header class="walk-fullscreen-head"><strong>${esc(state.area.name)}</strong><span>${state.isTour?'3D flyover':'Swipe for the next stop'}</span><button type="button" class="icon-button walk-fullscreen-close" aria-label="Close full screen"><i class="ph ph-x" aria-hidden="true"></i></button></header><div class="walk-fullscreen-stage"></div><div class="walk-fullscreen-tools"></div>`;
-    document.body.append(overlay);state.fullscreen=overlay;document.body.classList.add('walk-fullscreen-open');
-    overlay.querySelector('.walk-fullscreen-stage').append(state.container);overlay.querySelector('.walk-fullscreen-tools').append(state.tour);
-    state.container.hidden=false;state.tour.hidden=false;
-    overlay.querySelector('.walk-fullscreen-close').onclick=()=>exitFullscreen(state);
+    // Nothing moves in the DOM (a reparented WebGL canvas stops painting): the map wrap and the controls become fixed layers.
+    const head=document.createElement('div');head.className='walk-fullscreen-head';head.setAttribute('role','dialog');head.setAttribute('aria-label',`3D walk, ${state.area.name}`);
+    head.innerHTML=`<strong>${esc(state.area.name)}</strong><span>${state.isTour?'3D flyover':'Swipe for the next stop'}</span><button type="button" class="icon-button walk-fullscreen-close" aria-label="Close full screen"><i class="ph ph-x" aria-hidden="true"></i></button>`;
+    document.body.append(head);state.fullscreen=head;document.body.classList.add('walk-fullscreen-open');state.wrap.classList.add('is-fullscreen');state.tour.classList.add('is-fullscreen');
+    head.querySelector('.walk-fullscreen-close').onclick=()=>exitFullscreen(state);
     state.fsKey=e=>{if(e.key==='Escape'){e.preventDefault();exitFullscreen(state);}};document.addEventListener('keydown',state.fsKey);
     // Swipe left or right for the next or previous stop (a tap or drag on the map itself still rotates it).
-    let sx=null,sy=null;const stage=overlay.querySelector('.walk-fullscreen-stage');
-    stage.addEventListener('touchstart',e=>{if(e.touches.length===1){sx=e.touches[0].clientX;sy=e.touches[0].clientY;}},{passive:true});
-    stage.addEventListener('touchend',e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5&&!state.isTour)goToStop(state,state.index+(dx<0?1:-1));},{passive:true});
+    let sx=null,sy=null;
+    state.fsStart=e=>{if(e.touches.length===1){sx=e.touches[0].clientX;sy=e.touches[0].clientY;}};
+    state.fsEnd=e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5&&!state.isTour)goToStop(state,state.index+(dx<0?1:-1));};
+    state.wrap.addEventListener('touchstart',state.fsStart,{passive:true});state.wrap.addEventListener('touchend',state.fsEnd,{passive:true});
     try{state.wakeLock=await navigator.wakeLock?.request('screen');}catch{}
-    try{await overlay.requestFullscreen?.();}catch{}
-    requestAnimationFrame(()=>{state.map?.resize();if(!state.map)setMode(state,'3d');});
+    try{await document.documentElement.requestFullscreen?.();}catch{}
+    const settle=()=>{state.map?.resize();};requestAnimationFrame(settle);setTimeout(settle,350);setTimeout(settle,900);
   }
   function exitFullscreen(state){
-    const overlay=state.fullscreen;if(!overlay)return;state.fullscreen=null;
-    document.removeEventListener('keydown',state.fsKey);try{state.wakeLock?.release();}catch{}state.wakeLock=null;
-    if(document.fullscreenElement===overlay)document.exitFullscreen?.().catch(()=>{});
-    state.wrap.prepend(state.container);state.wrap.after(state.tour);overlay.remove();document.body.classList.remove('walk-fullscreen-open');
-    requestAnimationFrame(()=>state.map?.resize());
+    const head=state.fullscreen;if(!head)return;state.fullscreen=null;
+    document.removeEventListener('keydown',state.fsKey);state.wrap.removeEventListener('touchstart',state.fsStart);state.wrap.removeEventListener('touchend',state.fsEnd);
+    try{state.wakeLock?.release();}catch{}state.wakeLock=null;
+    if(document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});
+    head.remove();document.body.classList.remove('walk-fullscreen-open');state.wrap.classList.remove('is-fullscreen');state.tour.classList.remove('is-fullscreen');
+    requestAnimationFrame(()=>state.map?.resize());setTimeout(()=>state.map?.resize(),300);
   }
   async function setMode(state,mode){
     if(state.closed)return;
