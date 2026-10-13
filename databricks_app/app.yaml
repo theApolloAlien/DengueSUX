@@ -14,3 +14,13 @@ env:
     value: workspace.denguesux
   - name: DENGUE_DATA_VOLUME
     value: /Volumes/workspace/denguesux/files/denguesux
+  # Resource key "trace-experiment" (CAN_EDIT): every Ask DengueSUX answer is traced to this MLflow experiment.
+  - name: MLFLOW_EXPERIMENT_ID
+    valueFrom: trace-experiment
+  - name: MLFLOW_TRACKING_URI
+    value: databricks
+  # Resource key "telegram-token" (READ) is the bot token in secret scope denguesux; the app answers subscribers while it runs.
+  - name: TELEGRAM_BOT_TOKEN
+    valueFrom: telegram-token
+  - name: DENGUE_PUBLIC_URL
+    value: https://denguesux-7474658048209156.aws.databricksapps.com

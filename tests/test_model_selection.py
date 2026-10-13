@@ -108,7 +108,8 @@ def test_exported_metrics_names_and_logged_predictor_use_same_selection(monkeypa
     for name in ('set_tracking_uri', 'set_experiment', 'log_params', 'log_metrics', 'log_dict'):
         monkeypatch.setattr(model.mlflow, name, lambda *args, **kwargs: None)
     monkeypatch.setattr(model.mlflow, 'start_run', lambda **kwargs: Run())
-    monkeypatch.setattr(model.mlflow.sklearn, 'log_model', lambda predictor, **kwargs: calls.update(predictor=predictor))
+    monkeypatch.setattr(model.mlflow.sklearn, 'log_model', lambda predictor, **kwargs: calls.setdefault('predictor', predictor) if kwargs.get('name') == 'selected_national_model' else calls.setdefault(kwargs.get('name'), predictor))
+    monkeypatch.setattr(model, '_register', lambda *args, **kwargs: {'status': 'test'})
     result, _ = model.train_and_evaluate(frame)
     assert result['selected_model'] == calls['predictor'].model_key == 'ridge'
     assert result['metrics'] == result['selected_metrics']

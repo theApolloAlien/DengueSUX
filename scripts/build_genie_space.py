@@ -18,7 +18,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 P = 'workspace.denguesux'
-T = {n: f'{P}.{n}' for n in ('dim_planning_area', 'gold_area_priorities', 'gold_cluster_growth', 'gold_national_predictions', 'inspection_places', 'silver_national_weekly')}
+T = {n: f'{P}.{n}' for n in ('dim_planning_area', 'gold_area_priorities', 'gold_cluster_growth', 'gold_national_predictions', 'inspection_places', 'silver_national_weekly',
+                              'gold_area_forecast', 'gold_forecast_ledger', 'silver_area_cluster_history', 'gold_ai_forecast_benchmark', 'gold_alerts')}
 TITLE = 'DengueSUX Ask'
 DESCRIPTION = ('Singapore dengue inspection planning: where to check first (areas ranked by people in active NEA clusters), active clusters and whether they are growing, '
                'places to check near clusters, a current national outlook with ranges, the 2023+ retrospective evaluation, and a separate 2022 replay. '
@@ -44,6 +45,10 @@ SAMPLE_QUESTIONS = [
     'How accurate was the 2022 forecast compared with the four-week average?',
     'Which weeks of 2022 did the forecast say High?',
     'Which was the busiest week of 2022?',
+    'Which areas are likely to reach 10 or more people in clusters in two weeks?',
+    'How did the forecasts we published turn out?',
+    'How does Databricks ai_forecast compare with the DengueSUX model?',
+    'Which areas have had dengue clusters most often since 2019?',
 ]
 
 # (table, column, description, synonyms, entity_matching, format_assistance, exclude)
@@ -96,7 +101,39 @@ COLUMNS = {
     ],
 }
 
+COLUMNS.update({
+    'gold_area_forecast': [
+        ('area_name', None, ['town', 'estate', 'planning area', 'area'], True, False, False),
+        ('band', None, ['outlook', 'two-week outlook', 'future level', 'expected level'], True, True, False),
+        ('band_now', None, ['current level', 'level today'], True, True, False),
+        ('p_high', None, ['chance of high', 'probability of 10 or more people'], False, False, False),
+        ('p_any', None, ['chance of a cluster', 'probability of any cluster'], False, False, False),
+    ],
+    'gold_forecast_ledger': [
+        ('kind', None, ['forecast type'], True, True, False),
+        ('prediction', None, ['published forecast', 'what we said'], False, False, False),
+        ('actual', None, ['what happened', 'reported'], False, False, False),
+        ('covered', None, ['inside the range', 'range hit'], False, False, False),
+        ('record_id', None, [], False, False, True), ('run_id', None, [], False, False, True),
+    ],
+    'silver_area_cluster_history': [
+        ('area_name', None, ['town', 'estate', 'planning area', 'area'], True, False, False),
+        ('people', None, ['people in clusters', 'cluster size'], False, False, False),
+        ('date', None, ['listing date', 'snapshot date', 'day'], False, False, False),
+    ],
+    'gold_ai_forecast_benchmark': [
+        ('ai_forecast', 'Databricks ai_forecast two-week-ahead prediction, fitted on weeks up to its origin.', ['ai forecast', 'databricks forecast'], False, False, False),
+        ('denguesux', 'DengueSUX model two-week-ahead prediction for the same week (2023+ retrospective).', ['our model', 'denguesux model'], False, False, False),
+    ],
+    'gold_alerts': [
+        ('kind', None, ['alert type', 'rule'], True, True, False),
+        ('source_tables_json', None, [], False, False, True),
+    ],
+})
+
 JOINS = [  # left, left column, right, right column, relationship
+    ('gold_area_forecast', 'area_code', 'dim_planning_area', 'area_code', 'ONE_TO_ONE'),
+    ('silver_area_cluster_history', 'area_code', 'dim_planning_area', 'area_code', 'MANY_TO_ONE'),
     ('gold_area_priorities', 'area_code', 'dim_planning_area', 'area_code', 'ONE_TO_ONE'),
     ('inspection_places', 'area_code', 'gold_area_priorities', 'area_code', 'MANY_TO_ONE'),
     ('inspection_places', 'cluster_id', 'gold_cluster_growth', 'cluster_id', 'MANY_TO_ONE'),
@@ -153,6 +190,14 @@ EXAMPLES = [
      f"WITH peak AS (SELECT target_date AS peak_week, actual AS peak_people FROM {T['gold_national_predictions']} WHERE segment = 'replay_2022' ORDER BY actual DESC LIMIT 1), first_high AS (SELECT MIN(issue_date) AS first_high_issue_date FROM {T['gold_national_predictions']} WHERE segment = 'replay_2022' AND risk = 'High') SELECT first_high.first_high_issue_date, peak.peak_week, peak.peak_people, DATEDIFF(CAST(peak.peak_week AS DATE), CAST(first_high.first_high_issue_date AS DATE)) / 7 AS weeks_before_peak FROM first_high CROSS JOIN peak"),
     ('What places should we inspect in Jurong West?',
      f"SELECT place_rank, place_name, place_type, distance_m, cluster_people FROM {T['inspection_places']} WHERE area_name = 'Jurong West' ORDER BY place_rank"),
+    ('Which areas are likely to reach 10 or more people in clusters in about two weeks?',
+     f"SELECT area_name, band_now, band, ROUND(p_high, 2) AS chance_of_high, ROUND(p_any, 2) AS chance_of_any_cluster, people_now, top_driver, as_of FROM {T['gold_area_forecast']} WHERE band = 'High' OR p_high >= 0.2 ORDER BY p_high DESC"),
+    ('How did the forecasts we published turn out?',
+     f"SELECT kind, target, published_at, ROUND(prediction) AS forecast, ROUND(lower) AS range_low, ROUND(upper) AS range_high, actual, covered, abs_error FROM {T['gold_forecast_ledger']} WHERE kind = 'national' ORDER BY target"),
+    ('How does Databricks ai_forecast compare with the DengueSUX model?',
+     f"SELECT COUNT(*) AS weeks, ROUND(AVG(ABS(actual - denguesux)), 1) AS denguesux_error, ROUND(AVG(ABS(actual - four_week_average)), 1) AS four_week_average_error, ROUND(AVG(ABS(actual - ai_forecast)), 1) AS ai_forecast_error FROM {T['gold_ai_forecast_benchmark']}"),
+    ('Which areas have had dengue clusters most often since 2019?',
+     f"SELECT area_name, COUNT(DISTINCT date) AS listed_days_with_a_cluster, MAX(people) AS most_people_on_one_day FROM {T['silver_area_cluster_history']} WHERE clusters > 0 GROUP BY area_name ORDER BY listed_days_with_a_cluster DESC LIMIT 10"),
     ('How did weekly dengue cases move with rainfall in 2022?',
      f"SELECT epi_week, cases, ROUND(rainfall, 1) AS rainfall_mm, ROUND(temperature, 1) AS temperature_c FROM {T['silver_national_weekly']} WHERE epi_year = 2022 ORDER BY week_start"),
 ]
@@ -178,6 +223,9 @@ BENCHMARKS = [
     ('What was the average error of the four-week average in 2022?', f"SELECT ROUND(AVG(ABS(baseline - actual)), 1) AS mean_abs_error FROM {T['gold_national_predictions']} WHERE segment = 'replay_2022'"),
     ('How many hawker centres are on the inspection shortlist?', f"SELECT COUNT(*) AS hawker_centres FROM {T['inspection_places']} WHERE place_type = 'hawker'"),
     ('How many people were reported in total in 2021?', f'SELECT SUM(cases) AS people FROM {T["silver_national_weekly"]} WHERE epi_year = 2021'),
+    ('How many planning areas does the two-week outlook rate High?', f"SELECT COUNT(*) AS areas FROM {T['gold_area_forecast']} WHERE band = 'High'"),
+    ('What was the mean absolute error of ai_forecast in the benchmark?', f"SELECT ROUND(AVG(ABS(actual - ai_forecast)), 1) AS mean_abs_error FROM {T['gold_ai_forecast_benchmark']}"),
+    ('How many national forecasts have been published?', f"SELECT COUNT(*) AS forecasts FROM {T['gold_forecast_ledger']} WHERE kind = 'national'"),
 ]
 
 TEXT = """## PURPOSE
@@ -198,8 +246,13 @@ TEXT = """## PURPOSE
 - A cluster spanning areas counts in each area, so never add cluster_cases across areas for a national total; use SUM(gold_cluster_growth.case_size).
 - Clusters link to areas only through inspection_places; some areas have clusters but no listed places.
 
+- Two-week area outlook: gold_area_forecast gives probabilities (p_any, p_high) from logistic models trained on archived NEA listings since 2019. Say "chance", never "will". band is the most likely band; band_now is today's band by the same rule.
+- "What we said" or "track record" means gold_forecast_ledger (forecasts as first published, never edited); actual is filled only once observed.
+- The ai_forecast comparison (gold_ai_forecast_benchmark) is a rolling two-week-ahead test from 2025; each forecaster saw only weeks up to its origin.
+- History by area (silver_area_cluster_history) comes from irregular archived listings plus daily snapshots: days not captured are missing, not zero.
+
 ## CONSTRAINTS
-- Priority is an operational rule, not a prediction. There is no local forecast. Places to check are not confirmed breeding sites.
+- Priority is an operational rule. The area outlook is a probability, not a case forecast. Places to check are not confirmed breeding sites.
 
 ## Instructions you must follow when providing summaries
 - State the snapshot date or year used, say plainly when there are no rows, and never invent values."""

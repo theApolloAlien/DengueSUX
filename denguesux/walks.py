@@ -27,7 +27,7 @@ from shapely.ops import unary_union
 from shapely.strtree import STRtree
 
 from .inspection import CHECKLISTS, _slug, _source_receipt, load_hdb, load_point_layers, order_route, block_facts
-from .map_context import _rounded, hdb_block_details, route_footprints
+from .map_context import _rounded, hdb_block_details, load_city_context, route_footprints
 from .onemap import OneMapClient, canonical_street, write_json
 from .runtime import ROOT
 
@@ -228,6 +228,7 @@ def build_walks(root=ROOT, *, offline=False, client=None, areas=None, top_n=TOP_
     details = hdb_block_details(hdb)
     footprint_payload, blocks = load_blocks(root, street_codes, facts)
     footprint_source = _source_receipt(root / "data/raw/inspection/hdb_existing_building.geojson.gz")
+    city, city_source = load_city_context(root)  # grey non-HDB context; absent until scripts/collect_city_context.py runs
     tree = cKDTree([_xy(b["lon"], b["lat"]) for b in blocks])
     places, point_sources, _, _ = load_point_layers(root)
     point_sources = [s for s in point_sources if str(s.get("source_file", "")).split(".")[0] in ("hawker_centres", "parks")]
@@ -337,11 +338,11 @@ def build_walks(root=ROOT, *, offline=False, client=None, areas=None, top_n=TOP_
         index[code] = plan
         log(f"{code} {area['name']}: {plan['status']} · {basis} · {len(plan['stops'])} stops · {plan['route'].get('method')} {plan['route'].get('distance_m')}")
     # Official HDB footprints around each walk (and storeys), in one pass over the source.
-    footprints = route_footprints({"areas": index}, footprint_payload, street_codes, details)
+    footprints = route_footprints({"areas": index}, footprint_payload, street_codes, details, city=city)
     summary = {"generated_at": generated, "formula": FORMULA, "landuse_note": LANDUSE_NOTE if landuse_tree else None,
-               "footprint_note": footprints["note"], "method": footprints["method"],
+               "footprint_note": footprints["note"], "method": footprints["method"], "footprint_coverage": footprints["coverage"],
                "onemap_status": client.status, "map_data_stale": client.map_data_stale,
-               "sources": [s for s in (hdb_source, footprint_source, *point_sources, landuse_source,
+               "sources": [s for s in (hdb_source, footprint_source, city_source, *point_sources, landuse_source,
                            {"name": "SLA OneMap Search and Routing", "url": "https://www.onemap.gov.sg/apidocs/", "attribution": "© OneMap, Singapore Land Authority"}) if s],
                "areas": {}}
     for code, plan in index.items():
@@ -364,7 +365,9 @@ def build_walks(root=ROOT, *, offline=False, client=None, areas=None, top_n=TOP_
         temporary.replace(target)
         summary["areas"][code] = {"status": plan["status"], "basis": plan["basis"], "stops": len(plan["stops"]),
                                   "route_method": plan["route"].get("method"), "distance_m": plan["route"].get("distance_m"),
-                                  "buildings": len(payload["buildings"]["features"]), "landuse": len(landuse["features"]),
+                                  "buildings": sum(1 for f in payload["buildings"]["features"] if f["properties"].get("role") != "city"),
+                                  "city_buildings": sum(1 for f in payload["buildings"]["features"] if f["properties"].get("role") == "city"),
+                                  "landuse": len(landuse["features"]),
                                   "bytes": target.stat().st_size}
     if areas:  # partial rebuild: keep other areas' rows
         previous = json.loads((out_dir / "index.json").read_text()) if (out_dir / "index.json").exists() else {}

@@ -1,0 +1,97 @@
+# Databricks SQL alerts (Alerts v2). Each fires when its condition is TRUE and emails var.alert_email.
+resources:
+  alerts:
+    new_high_priority_area:
+      display_name: "[DengueSUX] New High-priority area"
+      custom_summary: "A planning area became High priority today"
+      custom_description: "{{ALERT_NAME}}: {{QUERY_RESULT_VALUE}} High-priority alert(s) were raised from today's NEA snapshot. Open DengueSUX to plan a check walk."
+      query_text: >-
+        SELECT count(*) AS high_alerts_today
+        FROM ${var.catalog}.${var.schema}.gold_alerts
+        WHERE severity = 'high' AND snapshot_date = date_format(current_date(), 'yyyy-MM-dd')
+          AND kind IN ('area_high', 'new_cluster', 'growing_cluster')
+      warehouse_id: ${var.warehouse_id}
+      evaluation:
+        comparison_operator: GREATER_THAN
+        source: {name: high_alerts_today, display: high_alerts_today}
+        threshold: {value: {double_value: 0}}
+        empty_result_state: OK
+        notification:
+          notify_on_ok: false
+          retrigger_seconds: 86400
+          subscriptions:
+            - user_email: ${var.alert_email}
+      schedule:
+        pause_status: UNPAUSED
+        quartz_cron_schedule: "0 0 9 * * ?"
+        timezone_id: Asia/Singapore
+
+    predicted_new_hotspot:
+      display_name: "[DengueSUX] Area outlook predicts a new hotspot"
+      custom_summary: "An area not High today is forecast High in two weeks"
+      custom_description: "{{ALERT_NAME}}: {{QUERY_RESULT_VALUE}} area(s) are forecast to reach 10+ people in clusters within about two weeks. Check gold_area_forecast."
+      query_text: >-
+        SELECT count(*) AS predicted_new_high
+        FROM ${var.catalog}.${var.schema}.gold_area_forecast
+        WHERE band = 'High' AND band_now <> 'High'
+      warehouse_id: ${var.warehouse_id}
+      evaluation:
+        comparison_operator: GREATER_THAN
+        source: {name: predicted_new_high, display: predicted_new_high}
+        threshold: {value: {double_value: 0}}
+        empty_result_state: OK
+        notification:
+          notify_on_ok: false
+          retrigger_seconds: 86400
+          subscriptions:
+            - user_email: ${var.alert_email}
+      schedule:
+        pause_status: UNPAUSED
+        quartz_cron_schedule: "0 5 9 * * ?"
+        timezone_id: Asia/Singapore
+
+    stale_official_labels:
+      display_name: "[DengueSUX] Official weekly labels are going stale"
+      custom_summary: "The newest official weekly count is more than 14 days old"
+      custom_description: "{{ALERT_NAME}}: the latest MOH/CDA week ended {{QUERY_RESULT_VALUE}} days ago. At 21 days the live national outlook is withdrawn. Run the pipeline job or upload the workbook."
+      query_text: >-
+        SELECT datediff(current_date(), max(week_end)) AS label_age_days
+        FROM ${var.catalog}.${var.schema}.silver_national_weekly
+      warehouse_id: ${var.warehouse_id}
+      evaluation:
+        comparison_operator: GREATER_THAN
+        source: {name: label_age_days, display: label_age_days}
+        threshold: {value: {double_value: 14}}
+        empty_result_state: TRIGGERED
+        notification:
+          notify_on_ok: true
+          retrigger_seconds: 172800
+          subscriptions:
+            - user_email: ${var.alert_email}
+      schedule:
+        pause_status: UNPAUSED
+        quartz_cron_schedule: "0 0 10 * * ?"
+        timezone_id: Asia/Singapore
+
+    missed_daily_snapshot:
+      display_name: "[DengueSUX] Daily NEA cluster snapshot missed"
+      custom_summary: "No cluster snapshot has landed today"
+      custom_description: "{{ALERT_NAME}}: the newest saved cluster snapshot is {{QUERY_RESULT_VALUE}} day(s) old. Cluster history cannot be recovered later; check the daily job."
+      query_text: >-
+        SELECT datediff(current_date(), max(CAST(snapshot_date AS DATE))) AS days_since_snapshot
+        FROM ${var.catalog}.${var.schema}.bronze_live_clusters
+      warehouse_id: ${var.warehouse_id}
+      evaluation:
+        comparison_operator: GREATER_THAN
+        source: {name: days_since_snapshot, display: days_since_snapshot}
+        threshold: {value: {double_value: 0}}
+        empty_result_state: TRIGGERED
+        notification:
+          notify_on_ok: true
+          retrigger_seconds: 86400
+          subscriptions:
+            - user_email: ${var.alert_email}
+      schedule:
+        pause_status: UNPAUSED
+        quartz_cron_schedule: "0 0 11 * * ?"
+        timezone_id: Asia/Singapore

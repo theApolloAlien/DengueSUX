@@ -20,7 +20,11 @@ import time
 MAX_BYTES = 25 * 1024 * 1024
 REFRESH_SECONDS = 60
 MAX_BACKOFF_SECONDS = 15 * 60
-PUBLIC_PARTS = ('current', 'model', 'inspection', 'growth', 'notices', 'alerts', 'footprints', 'population', 'aedes', 'feed')
+PUBLIC_PARTS = ('current', 'model', 'inspection', 'growth', 'notices', 'alerts', 'footprints', 'population', 'aedes', 'feed',
+                'area_forecast', 'area_history', 'ledger', 'pipeline_status')
+OPTIONAL_PARTS = {'aedes': {'available': False, 'features': []}, 'feed': {'items': [], 'job_completed_at': None},
+                  'area_forecast': {'available': False, 'areas': []}, 'area_history': {'dates': [], 'areas': {}},
+                  'ledger': {'national': [], 'records': 0}, 'pipeline_status': {'available': False}}
 PUBLIC_FILES = ('dashboard.json',) + tuple(name + '.json' for name in PUBLIC_PARTS)
 VOLUME_PATTERN = re.compile(r'/Volumes/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*')
 POINTER = '.snapshot-current'
@@ -61,10 +65,10 @@ def _decode(body):
 def validate_snapshot(body):
     """Reject truncated, private, undated or structurally incomplete public exports."""
     payload = _decode(body)
-    if not isinstance(payload, dict) or not {'meta', *(x for x in PUBLIC_PARTS if x not in ('aedes','feed'))}.issubset(payload) or set(payload) - {'meta', *PUBLIC_PARTS}:
+    if not isinstance(payload, dict) or not {'meta', *(x for x in PUBLIC_PARTS if x not in OPTIONAL_PARTS)}.issubset(payload) or set(payload) - {'meta', *PUBLIC_PARTS}:
         raise ValueError('Snapshot must contain exactly the approved public artifacts')
-    payload.setdefault('aedes', {'available':False,'features':[]})
-    payload.setdefault('feed', {'items':[],'job_completed_at':None})
+    for key, default in OPTIONAL_PARTS.items():
+        payload.setdefault(key, dict(default))
     if any(not isinstance(payload[key], dict) for key in payload):
         raise ValueError('Invalid snapshot artifact')
     if payload['meta'].get('synthetic_data') is not False:

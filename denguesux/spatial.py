@@ -104,6 +104,75 @@ def weather_day(root, day):
     return result
 
 
+V1_ENDPOINTS = {"rainfall": "rainfall", "temperature": "air-temperature", "humidity": "relative-humidity"}
+
+
+def live_weather_days(root):
+    """Completed days landed by the daily job from the v1 public API (all three metrics present)."""
+    folder = Path(root) / "data/raw/live_weather_api"
+    sets = []
+    for api in V1_ENDPOINTS.values():
+        path = folder / api
+        sets.append({p.name[:10] for p in path.glob("????-??-??.json.gz")} if path.exists() else set())
+    return sorted(set.intersection(*sets)) if sets else []
+
+
+def weather_day_v1(root, day):
+    """Same output as ``weather_day`` from a landed v1 daily payload; checksums are verified first."""
+    import hashlib
+    result = {}
+    for metric, api in V1_ENDPOINTS.items():
+        expected = METRICS[metric][1]
+        raw = Path(root) / "data/raw/live_weather_api" / api / f"{day}.json.gz"
+        receipt = json.loads(raw.with_suffix(raw.suffix + ".receipt.json").read_text())
+        blob = raw.read_bytes()
+        if hashlib.sha256(blob).hexdigest() != receipt["stored_sha256"]:
+            raise ValueError("Landed weather checksum mismatch")
+        payload = json.loads(gzip.decompress(blob))
+        stations = {s["id"]: s for s in payload.get("metadata", {}).get("stations", [])}
+        readings = defaultdict(dict)
+        for item in payload.get("items", []):
+            stamp = item["timestamp"]
+            if stamp[:10] != day:
+                raise ValueError(f"Returned weather date mismatch: {stamp}")
+            for row in item.get("readings", []):
+                value = row.get("value")
+                if not isinstance(value, (int, float)) or not math.isfinite(value):
+                    continue
+                valid = 0 <= value <= 100 if metric == "rainfall" else -10 <= value <= 50 if metric == "temperature" else 0 <= value <= 100
+                if valid and row.get("station_id") in stations:
+                    readings[row["station_id"]][stamp] = value
+        result[metric] = []
+        for sid, observations in readings.items():
+            station = stations[sid]
+            coverage = len(observations) / expected
+            if coverage < 0.9 or coverage > 1.05:
+                continue
+            result[metric].append({"station_id": sid, "station_name": station["name"], "latitude": station["location"]["latitude"],
+                                   "longitude": station["location"]["longitude"],
+                                   "value": sum(observations.values()) if metric == "rainfall" else sum(observations.values()) / len(observations),
+                                   "coverage": round(coverage, 4), "date": day, "source": "data.gov.sg v1 daily API (landed by the daily job)"})
+    return result
+
+
+def latest_weather_day(root):
+    """Newest day with saved readings in either the v2 archive layout or the daily job's v1 landing."""
+    days = []
+    for api, _ in METRICS.values():
+        folder = Path(root) / "data/raw/weather" / api
+        if folder.exists():
+            days.extend(path.name for path in folder.iterdir() if path.is_dir() and len(path.name) == 10 and path.name[4] == "-")
+    days.extend(live_weather_days(root))
+    return max(days) if days else None
+
+
+def read_weather_day(root, day):
+    v2 = all((Path(root) / "data/raw/weather" / api / day).exists() for api, _ in METRICS.values())
+    if not v2 and day in live_weather_days(root):
+        return weather_day_v1(root, day)
+    return weather_day(root, day)
+
+
 def _station_for_point(stations, point):
     choices = sorted([(distance_km((point.y, point.x), (s["latitude"], s["longitude"])), s) for s in stations], key=lambda x: x[0])
     if choices and choices[0][0] <= 15:
@@ -190,14 +259,9 @@ def build_current(root=ROOT, day=None, *, save=True, snapshot_date=None):
     if day is None:
         exported = root / "output/web/current.json"
         previous = json.loads(exported.read_text()) if exported.exists() else {}
-        day = previous.get("weather_date")
-        if not day:
-            available_days = []
-            for api, _ in METRICS.values():
-                folder = root / "data/raw/weather" / api
-                if folder.exists():
-                    available_days.extend(path.name for path in folder.iterdir() if path.is_dir() and len(path.name) == 10 and path.name[4] == "-")
-            day = max(available_days) if available_days else (dt.datetime.now(dt.timezone(dt.timedelta(hours=8))).date() - dt.timedelta(days=1)).isoformat()
+        # Advance only to a newer day that was actually observed; never re-date older readings.
+        candidates = [d for d in (previous.get("weather_date"), latest_weather_day(root)) if d]
+        day = max(candidates) if candidates else (dt.datetime.now(dt.timezone(dt.timedelta(hours=8))).date() - dt.timedelta(days=1)).isoformat()
     boundary = read_geo(root / "data/raw/boundaries/planning_areas_2025.geojson.gz")
     source = root / "data/raw/dengue/active_clusters.geojson.gz"
     snapshots = sorted((root / "data/snapshots/clusters").glob("*/snapshot.json"))
@@ -236,7 +300,7 @@ def build_current(root=ROOT, day=None, *, save=True, snapshot_date=None):
         prior = growth_row.get("baseline_case_size")
         center = geometry.representative_point()
         cluster_features.append({"type": "Feature", "geometry": feature["geometry"], "properties": {"id": str(props["OBJECTID"]), "name": str(props["LOCALITY"]).strip(), "cases": current_cases, "previous_cases": prior, "growth_cases": growth_row.get("growth_cases"), "growth_status": growth_row.get("classification", "not_enough_history"), "growth_label": growth_row.get("status_label", "Not enough history yet"), "growth_baseline_date": growth_report["baseline_date"], "area_code": code, "area_codes": codes, "area_names": [area_names[c] for c in codes], "updated_at": props["FMEL_UPD_D"], "construction_sites": reported_construction(props.get("CONSTRUCTION_SITES")), "longitude": center.x, "latitude": center.y}})
-    weather_readings = weather_day(root, day)
+    weather_readings = read_weather_day(root, day)
     areas, features = [], []
     for feature in boundary["features"]:
         props, code = feature["properties"], feature["properties"]["PLN_AREA_C"]

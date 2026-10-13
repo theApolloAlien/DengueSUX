@@ -60,3 +60,44 @@ def test_postal_lookup_is_offered_only_when_onemap_answers(monkeypatch):
         server._postal_probe.update(checked=0.0, ok=False)
         monkeypatch.setattr(server, '_onemap_client', lambda: Fake(works))
         assert client.get('/api/locate/status').json() == {'postal': works}
+
+
+def test_alert_feed_is_valid_atom_and_filters_by_area():
+    import xml.etree.ElementTree as ET
+    from fastapi.testclient import TestClient
+    import app as server
+    client = TestClient(server.app)
+    response = client.get('/feeds/alerts.xml')
+    assert response.status_code == 200 and response.headers['content-type'].startswith('application/atom+xml')
+    root = ET.fromstring(response.text)
+    ns = {'a': 'http://www.w3.org/2005/Atom'}
+    everything = root.findall('a:entry', ns)
+    one = ET.fromstring(client.get('/feeds/alerts.xml?area=JW').text).findall('a:entry', ns)
+    assert len(one) <= len(everything)
+    assert all(e.find('a:id', ns).text.endswith(':JW') for e in one)
+    assert client.get('/feeds/alerts.xml?area=jw').status_code == 422
+
+
+def test_single_layered_stylesheet_is_served_and_linked():
+    html = client.get('/').text
+    assert html.count('rel="stylesheet"') == 3  # leaflet, icons, app.css
+    assert '/app.css' in html and '/styles.css' not in html
+    css = client.get('/app.css').text
+    assert css.startswith('/* DengueSUX stylesheet') and '@layer tokens, base, components, product, theme, views, overrides;' in css
+    # The `html body` hack is gone from every class rule. Two theme element rules keep it on purpose (demoted into the base
+    # layer, where `html body h2` must still outrank `dialog h2`); nothing after the base layer uses it.
+    assert 'html body .' not in css and 'html body' not in css.split('@layer components{', 1)[1]
+    assert sum('html body' in line for line in css.splitlines()) <= 3  # header comment + two demoted element rules
+
+
+def test_telegram_status_exposes_only_public_facts(monkeypatch):
+    from denguesux import telegram
+    monkeypatch.delenv('TELEGRAM_BOT_TOKEN', raising=False)
+    assert client.get('/api/telegram/status').json() == {'available': False}
+    monkeypatch.setenv('TELEGRAM_BOT_TOKEN', '123:not-a-real-token')
+    monkeypatch.setattr(telegram.Bot, 'me', lambda self: {'username': 'DengueSUXbot', 'id': 1})
+    telegram._STATUS.clear()
+    body = client.get('/api/telegram/status').json()
+    assert body == {'available': True, 'username': 'DengueSUXbot', 'link': 'https://t.me/DengueSUXbot'}
+    assert 'not-a-real-token' not in client.get('/api/telegram/status').text
+    telegram._STATUS.clear()

@@ -1,0 +1,1048 @@
+{
+ "datasets": [
+  {
+   "name": "ds_today",
+   "displayName": "Today",
+   "queryLines": [
+    "SELECT s.clusters, s.people, s.large_clusters, s.snapshot_date,\n",
+    "       (SELECT count(*) FROM gold_area_forecast WHERE band = 'High') AS areas_high_in_two_weeks,\n",
+    "       (SELECT count(*) FROM gold_area_forecast WHERE band = 'High' AND band_now <> 'High') AS new_hotspots,\n",
+    "       (SELECT datediff(current_date(), max(week_end)) FROM silver_national_weekly) AS label_age_days\n",
+    "FROM gold_daily_cluster_summary s\n",
+    "WHERE s.snapshot_date = (SELECT max(snapshot_date) FROM gold_daily_cluster_summary)\n"
+   ]
+  },
+  {
+   "name": "ds_outlook",
+   "displayName": "Two-week area outlook",
+   "queryLines": [
+    "SELECT area_name, band_now, band, p_any, p_high, people_now, clusters_now, top_driver, as_of\n",
+    "FROM gold_area_forecast\n",
+    "WHERE p_any >= 0.1 OR band <> 'Low'\n",
+    "ORDER BY p_high DESC\n"
+   ]
+  },
+  {
+   "name": "ds_national",
+   "displayName": "National forecast vs reported",
+   "queryLines": [
+    "SELECT CAST(target_week_end AS DATE) AS week_end, actual AS reported, round(selected_prediction, 1) AS forecast,\n",
+    "       round(lower, 1) AS range_low, round(upper, 1) AS range_high, round(baseline, 1) AS four_week_average\n",
+    "FROM gold_national_predictions\n",
+    "WHERE segment IN ('prospective', 'live') AND CAST(target_week_end AS DATE) >= date_sub(current_date(), 400)\n",
+    "ORDER BY week_end\n"
+   ]
+  },
+  {
+   "name": "ds_ledger",
+   "displayName": "Published forecasts",
+   "queryLines": [
+    "SELECT kind, target, CAST(published_at AS TIMESTAMP) AS published_at, prediction, lower, upper, actual, covered, abs_error, model_version\n",
+    "FROM gold_forecast_ledger WHERE kind = 'national' ORDER BY target\n"
+   ]
+  },
+  {
+   "name": "ds_bench_summary",
+   "displayName": "Benchmark summary",
+   "queryLines": [
+    "SELECT 'DengueSUX model' AS forecaster, round(avg(abs(actual - denguesux)), 1) AS mean_abs_error FROM gold_ai_forecast_benchmark\n",
+    "UNION ALL SELECT 'Four-week average', round(avg(abs(actual - four_week_average)), 1) FROM gold_ai_forecast_benchmark\n",
+    "UNION ALL SELECT 'Databricks ai_forecast', round(avg(abs(actual - ai_forecast)), 1) FROM gold_ai_forecast_benchmark\n"
+   ]
+  },
+  {
+   "name": "ds_bench",
+   "displayName": "Benchmark by week",
+   "queryLines": [
+    "SELECT target_week_end, actual AS reported, denguesux, four_week_average, ai_forecast FROM gold_ai_forecast_benchmark ORDER BY target_week_end\n"
+   ]
+  },
+  {
+   "name": "ds_daily",
+   "displayName": "Daily clusters",
+   "queryLines": [
+    "SELECT snapshot_date, clusters, people, large_clusters, people_change FROM gold_daily_cluster_summary ORDER BY snapshot_date\n"
+   ]
+  },
+  {
+   "name": "ds_history",
+   "displayName": "Areas with clusters since 2019",
+   "queryLines": [
+    "SELECT date, count(DISTINCT area_code) AS areas_with_clusters FROM silver_area_cluster_history WHERE clusters > 0 GROUP BY date ORDER BY date\n"
+   ]
+  },
+  {
+   "name": "ds_outcomes",
+   "displayName": "Field outcomes",
+   "queryLines": [
+    "SELECT area_code, place_type, reports, stops_reported, water_found_reports, cleared_reports, last_reported_at FROM gold_field_outcomes ORDER BY last_reported_at DESC\n"
+   ]
+  }
+ ],
+ "pages": [
+  {
+   "name": "week",
+   "displayName": "This week",
+   "pageType": "PAGE_TYPE_CANVAS",
+   "layoutVersion": "GRID_V1",
+   "layout": [
+    {
+     "widget": {
+      "name": "title",
+      "multilineTextboxSpec": {
+       "lines": [
+        "# DengueSUX operations\n",
+        "Where to check first this week, what is likely in two weeks, and how the national forecast is tracking. Places to check, not confirmed breeding sites. Data: NEA, MOH/CDA and URA open data, refreshed daily.\n"
+       ]
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "kpi-clusters",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_today",
+         "fields": [
+          {
+           "name": "clusters",
+           "expression": "`clusters`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "clusters",
+         "displayName": "Active clusters"
+        }
+       },
+       "frame": {
+        "title": "Active clusters",
+        "showTitle": true
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 2,
+      "width": 3,
+      "height": 3
+     }
+    },
+    {
+     "widget": {
+      "name": "kpi-people",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_today",
+         "fields": [
+          {
+           "name": "people",
+           "expression": "`people`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "people",
+         "displayName": "People in clusters"
+        }
+       },
+       "frame": {
+        "title": "People in clusters",
+        "showTitle": true
+       }
+      }
+     },
+     "position": {
+      "x": 3,
+      "y": 2,
+      "width": 3,
+      "height": 3
+     }
+    },
+    {
+     "widget": {
+      "name": "kpi-high",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_today",
+         "fields": [
+          {
+           "name": "areas_high_in_two_weeks",
+           "expression": "`areas_high_in_two_weeks`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "areas_high_in_two_weeks",
+         "displayName": "Areas likely High in 2 weeks"
+        }
+       },
+       "frame": {
+        "title": "Areas likely High in 2 weeks",
+        "showTitle": true
+       }
+      }
+     },
+     "position": {
+      "x": 6,
+      "y": 2,
+      "width": 3,
+      "height": 3
+     }
+    },
+    {
+     "widget": {
+      "name": "kpi-labels",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_today",
+         "fields": [
+          {
+           "name": "label_age_days",
+           "expression": "`label_age_days`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "label_age_days",
+         "displayName": "Days since last official week"
+        }
+       },
+       "frame": {
+        "title": "Days since last official week",
+        "showTitle": true
+       }
+      }
+     },
+     "position": {
+      "x": 9,
+      "y": 2,
+      "width": 3,
+      "height": 3
+     }
+    },
+    {
+     "widget": {
+      "name": "outlook-bar",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_outlook",
+         "fields": [
+          {
+           "name": "area_name",
+           "expression": "`area_name`"
+          },
+          {
+           "name": "p_high",
+           "expression": "`p_high`"
+          },
+          {
+           "name": "band",
+           "expression": "`band`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 3,
+       "widgetType": "bar",
+       "encodings": {
+        "x": {
+         "fieldName": "p_high",
+         "scale": {
+          "type": "quantitative"
+         },
+         "displayName": "Chance of 10+ people in clusters in about two weeks"
+        },
+        "y": {
+         "fieldName": "area_name",
+         "scale": {
+          "type": "categorical",
+          "sort": {
+           "by": "x-reversed"
+          }
+         },
+         "displayName": " "
+        },
+        "color": {
+         "fieldName": "band",
+         "scale": {
+          "type": "categorical",
+          "mappings": [
+           {
+            "value": "High",
+            "color": "#E4664B"
+           },
+           {
+            "value": "Medium",
+            "color": "#E9B44C"
+           },
+           {
+            "value": "Low",
+            "color": "#7FA889"
+           }
+          ]
+         },
+         "displayName": "Outlook band"
+        }
+       },
+       "frame": {
+        "title": "Chance of 10+ people in clusters in about two weeks",
+        "showTitle": true
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 5,
+      "width": 6,
+      "height": 7
+     }
+    },
+    {
+     "widget": {
+      "name": "national-line",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_national",
+         "fields": [
+          {
+           "name": "week_end",
+           "expression": "`week_end`"
+          },
+          {
+           "name": "reported",
+           "expression": "`reported`"
+          },
+          {
+           "name": "forecast",
+           "expression": "`forecast`"
+          },
+          {
+           "name": "four_week_average",
+           "expression": "`four_week_average`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 3,
+       "widgetType": "line",
+       "encodings": {
+        "x": {
+         "fieldName": "week_end",
+         "scale": {
+          "type": "temporal"
+         },
+         "displayName": " "
+        },
+        "y": {
+         "scale": {
+          "type": "quantitative"
+         },
+         "fields": [
+          {
+           "fieldName": "reported",
+           "displayName": "Reported"
+          },
+          {
+           "fieldName": "forecast",
+           "displayName": "Forecast (2 weeks ahead)"
+          },
+          {
+           "fieldName": "four_week_average",
+           "displayName": "Four-week average"
+          }
+         ]
+        }
+       },
+       "frame": {
+        "title": "National weekly count vs the forecast made two weeks earlier",
+        "showTitle": true
+       }
+      }
+     },
+     "position": {
+      "x": 6,
+      "y": 5,
+      "width": 6,
+      "height": 7
+     }
+    },
+    {
+     "widget": {
+      "name": "outlook-table",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_outlook",
+         "fields": [
+          {
+           "name": "area_name",
+           "expression": "`area_name`"
+          },
+          {
+           "name": "band_now",
+           "expression": "`band_now`"
+          },
+          {
+           "name": "band",
+           "expression": "`band`"
+          },
+          {
+           "name": "p_any",
+           "expression": "`p_any`"
+          },
+          {
+           "name": "p_high",
+           "expression": "`p_high`"
+          },
+          {
+           "name": "people_now",
+           "expression": "`people_now`"
+          },
+          {
+           "name": "top_driver",
+           "expression": "`top_driver`"
+          },
+          {
+           "name": "as_of",
+           "expression": "`as_of`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "area_name",
+          "displayName": "Area"
+         },
+         {
+          "fieldName": "band_now",
+          "displayName": "Now"
+         },
+         {
+          "fieldName": "band",
+          "displayName": "In ~2 weeks"
+         },
+         {
+          "fieldName": "p_any",
+          "displayName": "Chance of any cluster"
+         },
+         {
+          "fieldName": "p_high",
+          "displayName": "Chance of 10+ people"
+         },
+         {
+          "fieldName": "people_now",
+          "displayName": "People now"
+         },
+         {
+          "fieldName": "top_driver",
+          "displayName": "Main driver"
+         },
+         {
+          "fieldName": "as_of",
+          "displayName": "As of"
+         }
+        ]
+       },
+       "frame": {
+        "title": "Two-week outlook by planning area",
+        "showTitle": true
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 12,
+      "width": 12,
+      "height": 6
+     }
+    }
+   ]
+  },
+  {
+   "name": "record",
+   "displayName": "Track record",
+   "pageType": "PAGE_TYPE_CANVAS",
+   "layoutVersion": "GRID_V1",
+   "layout": [
+    {
+     "widget": {
+      "name": "title2",
+      "multilineTextboxSpec": {
+       "lines": [
+        "# What we said, what happened\n",
+        "Every published forecast is written once to an append-only Delta table and scored when the official count arrives. The benchmark fits each forecaster only on weeks before its forecast.\n"
+       ]
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "ledger-table",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_ledger",
+         "fields": [
+          {
+           "name": "target",
+           "expression": "`target`"
+          },
+          {
+           "name": "published_at",
+           "expression": "`published_at`"
+          },
+          {
+           "name": "prediction",
+           "expression": "`prediction`"
+          },
+          {
+           "name": "lower",
+           "expression": "`lower`"
+          },
+          {
+           "name": "upper",
+           "expression": "`upper`"
+          },
+          {
+           "name": "actual",
+           "expression": "`actual`"
+          },
+          {
+           "name": "covered",
+           "expression": "`covered`"
+          },
+          {
+           "name": "model_version",
+           "expression": "`model_version`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "target",
+          "displayName": "Target week"
+         },
+         {
+          "fieldName": "published_at",
+          "displayName": "Published"
+         },
+         {
+          "fieldName": "prediction",
+          "displayName": "Forecast"
+         },
+         {
+          "fieldName": "lower",
+          "displayName": "80% low"
+         },
+         {
+          "fieldName": "upper",
+          "displayName": "80% high"
+         },
+         {
+          "fieldName": "actual",
+          "displayName": "Reported"
+         },
+         {
+          "fieldName": "covered",
+          "displayName": "In range"
+         },
+         {
+          "fieldName": "model_version",
+          "displayName": "Model"
+         }
+        ]
+       },
+       "frame": {
+        "title": "Published national forecasts",
+        "showTitle": true
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 2,
+      "width": 12,
+      "height": 5
+     }
+    },
+    {
+     "widget": {
+      "name": "bench-bar",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_bench_summary",
+         "fields": [
+          {
+           "name": "forecaster",
+           "expression": "`forecaster`"
+          },
+          {
+           "name": "mean_abs_error",
+           "expression": "`mean_abs_error`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 3,
+       "widgetType": "bar",
+       "encodings": {
+        "x": {
+         "fieldName": "mean_abs_error",
+         "scale": {
+          "type": "quantitative"
+         },
+         "displayName": "Mean absolute error, people a week (2025 onward, two weeks ahead)"
+        },
+        "y": {
+         "fieldName": "forecaster",
+         "scale": {
+          "type": "categorical",
+          "sort": {
+           "by": "x-reversed"
+          }
+         },
+         "displayName": " "
+        }
+       },
+       "frame": {
+        "title": "Mean absolute error, people a week (2025 onward, two weeks ahead)",
+        "showTitle": true
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 7,
+      "width": 5,
+      "height": 6
+     }
+    },
+    {
+     "widget": {
+      "name": "bench-line",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_bench",
+         "fields": [
+          {
+           "name": "target_week_end",
+           "expression": "`target_week_end`"
+          },
+          {
+           "name": "reported",
+           "expression": "`reported`"
+          },
+          {
+           "name": "denguesux",
+           "expression": "`denguesux`"
+          },
+          {
+           "name": "ai_forecast",
+           "expression": "`ai_forecast`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 3,
+       "widgetType": "line",
+       "encodings": {
+        "x": {
+         "fieldName": "target_week_end",
+         "scale": {
+          "type": "temporal"
+         },
+         "displayName": " "
+        },
+        "y": {
+         "scale": {
+          "type": "quantitative"
+         },
+         "fields": [
+          {
+           "fieldName": "reported",
+           "displayName": "Reported"
+          },
+          {
+           "fieldName": "denguesux",
+           "displayName": "DengueSUX"
+          },
+          {
+           "fieldName": "ai_forecast",
+           "displayName": "ai_forecast"
+          }
+         ]
+        }
+       },
+       "frame": {
+        "title": "Two weeks ahead: reported vs DengueSUX vs ai_forecast",
+        "showTitle": true
+       }
+      }
+     },
+     "position": {
+      "x": 5,
+      "y": 7,
+      "width": 7,
+      "height": 6
+     }
+    }
+   ]
+  },
+  {
+   "name": "live",
+   "displayName": "Live data",
+   "pageType": "PAGE_TYPE_CANVAS",
+   "layoutVersion": "GRID_V1",
+   "layout": [
+    {
+     "widget": {
+      "name": "title3",
+      "multilineTextboxSpec": {
+       "lines": [
+        "# Live data and field outcomes\n",
+        "Daily NEA snapshots pass Lakeflow expectations before they are counted. Field reports are self-reports at planned stops.\n"
+       ]
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "daily-line",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_daily",
+         "fields": [
+          {
+           "name": "snapshot_date",
+           "expression": "`snapshot_date`"
+          },
+          {
+           "name": "people",
+           "expression": "`people`"
+          },
+          {
+           "name": "clusters",
+           "expression": "`clusters`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 3,
+       "widgetType": "line",
+       "encodings": {
+        "x": {
+         "fieldName": "snapshot_date",
+         "scale": {
+          "type": "temporal"
+         },
+         "displayName": " "
+        },
+        "y": {
+         "scale": {
+          "type": "quantitative"
+         },
+         "fields": [
+          {
+           "fieldName": "people",
+           "displayName": "People in clusters"
+          },
+          {
+           "fieldName": "clusters",
+           "displayName": "Clusters"
+          }
+         ]
+        }
+       },
+       "frame": {
+        "title": "Daily active clusters (saved snapshots)",
+        "showTitle": true
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 2,
+      "width": 6,
+      "height": 6
+     }
+    },
+    {
+     "widget": {
+      "name": "history-line",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_history",
+         "fields": [
+          {
+           "name": "date",
+           "expression": "`date`"
+          },
+          {
+           "name": "areas_with_clusters",
+           "expression": "`areas_with_clusters`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 3,
+       "widgetType": "line",
+       "encodings": {
+        "x": {
+         "fieldName": "date",
+         "scale": {
+          "type": "temporal"
+         },
+         "displayName": " "
+        },
+        "y": {
+         "scale": {
+          "type": "quantitative"
+         },
+         "fields": [
+          {
+           "fieldName": "areas_with_clusters",
+           "displayName": "Areas with clusters"
+          }
+         ]
+        }
+       },
+       "frame": {
+        "title": "Planning areas with a cluster, every listed day since 2019",
+        "showTitle": true
+       }
+      }
+     },
+     "position": {
+      "x": 6,
+      "y": 2,
+      "width": 6,
+      "height": 6
+     }
+    },
+    {
+     "widget": {
+      "name": "outcomes-table",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_outcomes",
+         "fields": [
+          {
+           "name": "area_code",
+           "expression": "`area_code`"
+          },
+          {
+           "name": "place_type",
+           "expression": "`place_type`"
+          },
+          {
+           "name": "stops_reported",
+           "expression": "`stops_reported`"
+          },
+          {
+           "name": "water_found_reports",
+           "expression": "`water_found_reports`"
+          },
+          {
+           "name": "cleared_reports",
+           "expression": "`cleared_reports`"
+          },
+          {
+           "name": "last_reported_at",
+           "expression": "`last_reported_at`"
+          }
+         ],
+         "disaggregated": true
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "widgetType": "table",
+       "encodings": {
+        "columns": [
+         {
+          "fieldName": "area_code",
+          "displayName": "Area"
+         },
+         {
+          "fieldName": "place_type",
+          "displayName": "Place"
+         },
+         {
+          "fieldName": "stops_reported",
+          "displayName": "Stops"
+         },
+         {
+          "fieldName": "water_found_reports",
+          "displayName": "Water found"
+         },
+         {
+          "fieldName": "cleared_reports",
+          "displayName": "Cleared"
+         },
+         {
+          "fieldName": "last_reported_at",
+          "displayName": "Last report"
+         }
+        ]
+       },
+       "frame": {
+        "title": "Field outcomes",
+        "showTitle": true
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 8,
+      "width": 12,
+      "height": 5
+     }
+    }
+   ]
+  }
+ ],
+ "uiSettings": {
+  "theme": {
+   "canvasBackgroundColor": {
+    "light": "#F7F8F4",
+    "dark": "#0E1F1A"
+   },
+   "widgetBackgroundColor": {
+    "light": "#FFFFFF",
+    "dark": "#132A23"
+   },
+   "widgetBorderColor": {
+    "light": "#FFFFFF",
+    "dark": "#132A23"
+   },
+   "fontColor": {
+    "light": "#193E33",
+    "dark": "#E7EFE8"
+   },
+   "selectionColor": {
+    "light": "#2272B4",
+    "dark": "#8ACAFF"
+   },
+   "visualizationColors": [
+    "#1F6B52",
+    "#E9B44C",
+    "#E4664B",
+    "#6C8EBF",
+    "#9B6BB5",
+    "#7FA889",
+    "#C9921F"
+   ],
+   "widgetHeaderAlignment": "LEFT",
+   "widgetCornerRadius": 12
+  },
+  "genieSpace": {
+   "isEnabled": true,
+   "overrideId": "01f1c453b05c1c59b2a085809d89246d",
+   "enablementMode": "ENABLED"
+  }
+ }
+}

@@ -52,7 +52,7 @@
     if (!host || !current?.boundaries?.features?.length || !supported()) return null;
     const theme = THEMES[opts.theme || 'night'];
     const state = {closed: false, map: null, frame: 0, hover: null, idleSince: performance.now(), markers: []};
-    const box = document.createElement('div'); box.className = `landscape3d is-${opts.theme || 'night'}`; box.setAttribute('role', 'img');
+    const box = document.createElement('div'); box.className = `landscape3d is-${opts.theme || 'night'}`; box.setAttribute('role', opts.onPick ? 'region' : 'img');
     box.setAttribute('aria-label', 'Three-dimensional map of Singapore planning areas, raised by people in active NEA dengue clusters');
     host.append(box);
     const tip = document.createElement('div'); tip.className = 'landscape-tip'; tip.hidden = true; host.append(tip);
@@ -72,6 +72,8 @@
         if (state.closed || state.built) return; state.built = true;
         try { map.setSky({'sky-color': theme.sky, 'horizon-color': theme.horizon, 'fog-color': theme.background, 'sky-horizon-blend': .8, 'horizon-fog-blend': .5, 'fog-ground-blend': .55, 'atmosphere-blend': 0}); } catch {}
         map.setLight({anchor: 'map', color: '#fff4e2', intensity: .42, position: [1.4, 215, 40]});
+        state.areas = areas; state.target = new Map(areas.features.map(f => [f.properties.code, {height: f.properties.height, risk: f.properties.risk}]));
+        if (!reduced.matches && opts.rise !== false) areas.features.forEach(f => { f.properties.height = 0; });
         map.addSource('areas', {type: 'geojson', data: areas});
         map.addSource('beacons', {type: 'geojson', data: beacons});
         const risk = ['match', ['get', 'risk'], 'High', COLOR.High, 'Medium', COLOR.Medium, theme.low];
@@ -79,6 +81,7 @@
           'fill-extrusion-color': ['case', ['boolean', ['feature-state', 'hover'], false], ['match', ['get', 'risk'], 'High', '#ffa48c', 'Medium', '#ffd37a', '#4f957a'], risk],
           'fill-extrusion-height': ['get', 'height'], 'fill-extrusion-base': 0, 'fill-extrusion-opacity': .94, 'fill-extrusion-vertical-gradient': true}});
         map.addLayer({id: 'areas-edge', type: 'line', source: 'areas', paint: {'line-color': theme.edge, 'line-width': .8, 'line-opacity': .7}});
+        map.addLayer({id: 'areas-selected', type: 'line', source: 'areas', filter: ['==', ['get', 'code'], ''], paint: {'line-color': opts.theme === 'day' ? '#163f35' : '#fff6dc', 'line-width': 3}});
         map.addLayer({id: 'cluster-beacons', type: 'fill-extrusion', source: 'beacons', paint: {'fill-extrusion-color': COLOR.cluster, 'fill-extrusion-height': ['get', 'top'], 'fill-extrusion-base': ['get', 'base'], 'fill-extrusion-opacity': .9}});
         // Persistent padding keeps the island (and the orbit's pivot) in the open part of the frame. It is measured
         // when the stage has a real size (the view may still be hidden at mount) and again after every resize.
@@ -122,6 +125,7 @@
           map.on('dragend', () => { state.idleSince = performance.now() + 4000; });
         }
         host.classList.add('is-ready');
+        if (!reduced.matches && opts.rise !== false) { beaconsVisible(false); animateTo(state.target, 1400, 'riseOut').then(() => beaconsVisible(true)); } else state.ready = true;
         orbit();
       };
       map.once('load', ready); map.once('style.load', ready);
@@ -133,12 +137,65 @@
       const loop = now => {
         if (state.closed) return;
         const dt = Math.min(.1, (now - last) / 1000); last = now;
-        if (opts.orbit !== false && !reduced.matches && !document.hidden && now > state.idleSince && state.map && !state.map.isMoving()) state.map.setBearing(state.map.getBearing() + 4 * dt);
+        // Off-screen (another view is showing) the loop idles instead of re-rendering the map every frame.
+        if (opts.orbit !== false && !reduced.matches && !document.hidden && box.offsetParent !== null && now > state.idleSince && state.map && !state.map.isMoving()) state.map.setBearing(state.map.getBearing() + 4 * dt);
         state.frame = requestAnimationFrame(loop);
       };
       state.frame = requestAnimationFrame(loop);
     }
+    // Animate every prism towards target heights (and risk colours) — used for the rise-in, the two-week
+    // outlook and the time-lapse. Heights interpolate on the GeoJSON so colours switch at the midpoint.
+    function animateTo(target, ms = 900, easing = 'inOut') {
+      if (!state.map?.getSource('areas')) return Promise.resolve();
+      cancelAnimationFrame(state.morph);
+      const from = new Map(state.areas.features.map(f => [f.properties.code, f.properties.height]));
+      const ease = easing === 'riseOut' ? x => 1 - Math.pow(1 - x, 3) : x => x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+      const start = performance.now(), duration = reduced.matches ? 0 : ms;
+      return new Promise(resolve => {
+        const tick = now => {
+          if (state.closed) return resolve();
+          const k = duration ? Math.min(1, (now - start) / duration) : 1, e = ease(k);
+          state.areas.features.forEach(f => { const t = target.get(f.properties.code) || {height: 90, risk: 'Low'}; const h0 = from.get(f.properties.code) ?? 90;
+            f.properties.height = Math.round(h0 + (t.height - h0) * e); if (k >= .5 || h0 <= 100) { f.properties.risk = t.risk; if (t.people != null) f.properties.people = t.people; if (t.clusters != null) f.properties.clusters = t.clusters; } });
+          state.map.getSource('areas').setData(state.areas);
+          if (k < 1) state.morph = requestAnimationFrame(tick); else { state.ready = true; resolve(); }
+        };
+        state.morph = requestAnimationFrame(tick);
+      });
+    }
+    function caption(text) { const small = host.querySelector('.landscape-legend small'); if (small) small.textContent = text; }
+    function beaconsVisible(on) { if (state.map?.getLayer('cluster-beacons')) state.map.setLayoutProperty('cluster-beacons', 'visibility', on ? 'visible' : 'none'); }
     return {
+      get map() { return state.map; },
+      ready() { return new Promise(resolve => { const check = () => state.closed || state.ready ? resolve() : setTimeout(check, 80); check(); }); },
+      /** people: Map(code -> {people, clusters}); heights and colours follow the same rule as the live snapshot. */
+      setPeople(people, ms = 700) {
+        const target = new Map((state.areas?.features || []).map(f => { const p = people.get(f.properties.code) || {people: 0, clusters: 0};
+          return [f.properties.code, {height: heightFor(p.people), risk: p.people >= 10 ? 'High' : p.clusters > 0 ? 'Medium' : 'Low', people: p.people, clusters: p.clusters}]; }));
+        beaconsVisible(false); return animateTo(target, ms);
+      },
+      /** The two-week outlook: height follows the chance of 10+ people in clusters; colour follows the outlook band. */
+      showOutlook(outlook, ms = 1100) {
+        const by = new Map((outlook?.areas || []).map(a => [a.code, a]));
+        const target = new Map((state.areas?.features || []).map(f => { const a = by.get(f.properties.code);
+          return [f.properties.code, {height: a ? Math.round(90 + 3600 * a.p_high + 600 * a.p_any) : 90, risk: a?.band || 'Low'}]; }));
+        beaconsVisible(false); caption('Height = chance of 10+ people in clusters in about two weeks · trained on NEA listings since 2020'); return animateTo(target, ms);
+      },
+      showNow(ms = 900) { beaconsVisible(true); caption(`Height = people in active clusters · NEA ${new Date(current.as_of).toLocaleDateString('en-SG', {day: 'numeric', month: 'short'})}`); return animateTo(state.target, ms); },
+      caption,
+      /** Today's labels describe today; hide them while the heights show another day or the outlook. */
+      labels(on) { state.markers.forEach(m => m.getElement().classList.toggle('is-off', !on)); },
+      select(code) { if (state.map?.getLayer('areas-selected')) state.map.setFilter('areas-selected', ['==', ['get', 'code'], code || '']); },
+      /** Fly into one area: the island sinks and the camera dives towards it; resolves when the dive ends. */
+      async dive(code, ms = 1900) {
+        const f = state.areas?.features.find(x => x.properties.code === code); if (!f || !state.map) return;
+        state.idleSince = Infinity; this.select(code);
+        const sink = new Map(state.areas.features.map(x => [x.properties.code, {height: x.properties.code === code ? x.properties.height : 20, risk: x.properties.risk}]));
+        const [lng, lat] = centroid(f.geometry);
+        state.map.easeTo({center: [lng, lat], zoom: 13.6, pitch: 72, bearing: state.map.getBearing() + 25, duration: reduced.matches ? 0 : ms, easing: x => 1 - Math.pow(1 - x, 3)});
+        await animateTo(sink, ms * .7);
+        if (!reduced.matches) await new Promise(r => setTimeout(r, ms * .35));
+      },
       resize() { state.map?.resize(); },
       dispose() { state.closed = true; state.observer?.disconnect(); cancelAnimationFrame(state.frame); state.markers.forEach(m => m.remove()); state.map?.remove(); box.remove(); tip.remove(); host.querySelector('.landscape-legend')?.remove(); },
     };

@@ -1,0 +1,11 @@
+{
+ "endpoint": "databricks-meta-llama-3-3-70b-instruct",
+ "run_id": "8c82fb3bfe6d490588b4f637c15ea492",
+ "metrics": {
+  "grounded_figures/mean": 1.0,
+  "behaviour/mean": 0.929,
+  "agent/latency_seconds/mean": 5.476,
+  "no_diagnosis/mean": 0.964,
+  "honest_uncertainty/mean": 0.857
+ }
+}

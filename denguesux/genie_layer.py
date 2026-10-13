@@ -25,6 +25,30 @@ TABLE_COMMENTS = {
          'snapshot_date': 'Latest cluster snapshot date; not daily incident-case date.',
          'generated_at': 'UTC time alerts were generated.',
          'source_tables_json': 'Documented upstream table names. This is provenance metadata, not evidence of captured Unity Catalog lineage.'}),
+    'silver_area_cluster_history': (
+        'People in active dengue clusters by planning area on every listed day: archived NEA cluster listings (Internet Archive, 2019 onward, placed by block or street) plus the daily data.gov.sg snapshots. Days that were not captured are absent, not zero.',
+        {'date': 'Listing or snapshot date.', 'area_code': 'URA planning area code.', 'area_name': 'Planning area name.',
+         'people': 'People in active clusters touching the area that day (cases since each cluster started). A shared cluster counts in each area.',
+         'clusters': 'Active clusters touching the area that day.', 'red': 'Clusters with 10 or more people.',
+         'source': 'NEA listing (Internet Archive) or data.gov.sg daily snapshot.',
+         'track_record': 'Share of earlier listed days on which this area had a cluster (uses only earlier days).'}),
+    'gold_area_forecast': (
+        'Two-week planning-area outlook from the latest snapshot: chance of any active cluster and of 10+ people in clusters about two weeks later, from logistic models trained on archived NEA listings. A check-first outlook, not a case forecast.',
+        {'as_of': 'Snapshot date the outlook was made from.', 'area_code': 'URA planning area code.', 'area_name': 'Planning area name.',
+         'band': 'Most likely band in about two weeks: High (10+ people in clusters), Medium (a cluster, fewer than 10) or Low (no cluster).',
+         'band_now': 'Band on the as_of snapshot, by the same rule.', 'p_any': 'Probability of at least one active cluster in about two weeks.',
+         'p_high': 'Probability of 10 or more people in clusters in about two weeks.', 'people_now': 'People in clusters on as_of.',
+         'clusters_now': 'Active clusters on as_of.', 'top_driver': 'Feature group that moved this area\'s High probability most.'}),
+    'gold_forecast_ledger': (
+        'Append-only record of every forecast DengueSUX published (national two-week counts and daily area outlooks). Predictions are never edited; actual, covered, abs_error and band_correct are filled when the outcome is observed. Change Data Feed is on.',
+        {'kind': 'national or area.', 'published_at': 'UTC time the forecast was first published.', 'target': 'Target epidemiological week, or the area window.',
+         'prediction': 'National forecast: expected people in the target week.', 'lower': '80% range lower bound.', 'upper': '80% range upper bound.',
+         'band': 'Area outlook band.', 'actual': 'Observed outcome once available (people reported, or people in clusters for areas).',
+         'covered': 'True when the national actual fell inside the 80% range.', 'band_correct': 'True when the area outlook band matched what happened.'}),
+    'gold_national_scores': (
+        'Every feature week scored in Spark by the Unity Catalog registered national_forecast model (champion alias) and its no-weather challenger. In-sample fits for lineage and comparison, not an evaluation.',
+        {'champion_prediction': 'Prediction from the champion model version.', 'challenger_prediction': 'Prediction from the challenger (no weather) version.',
+         'target_cases': 'People reported in the target week, when known.'}),
     'bronze_live_weather': (
         'Append-only original NEA weather API response envelopes, one metric per completed Singapore day, ingested with Auto Loader. Payload is unchanged source JSON; gaps are not filled. Separate from the historical station-day extracts used by the forecast.', {}),
     'bronze_live_clusters': (
@@ -118,7 +142,32 @@ TABLE_SOURCES = {
     'gold_area_priorities': 'NEA_URA', 'gold_cluster_growth': 'NEA_snapshots', 'gold_resident_notices': 'NEA_inspection_rules',
     'gold_alerts': 'NEA_MOH_CDA_rules', 'inspection_candidates': 'NEA_HDB_OneMap_rules',
     'inspection_routes': 'NEA_HDB_OneMap_routes', 'dim_planning_area': 'URA_2025', 'field_reports': 'user_submitted',
+    'silver_area_cluster_history': 'NEA_listing_archive_and_snapshots', 'gold_area_forecast': 'NEA_area_model',
+    'gold_area_forecast_backtest': 'NEA_area_model', 'gold_forecast_ledger': 'published_forecasts',
+    'gold_national_scores': 'MOH_CDA_NEA_registered_model',
 }
+
+# Delta constraints and layout. ALTER ... ADD CONSTRAINT checks every existing row, so a constraint that
+# is in place is a verified invariant of the table, not a comment. Re-adding an existing one fails harmlessly.
+QUALITY = {
+    'gold_area_priorities': ["ADD CONSTRAINT priority_band CHECK (priority IN ('High', 'Medium', 'Low'))",
+                             "ADD CONSTRAINT people_not_negative CHECK (cluster_cases >= 0 AND cluster_count >= 0)"],
+    'gold_national_predictions': ["ADD CONSTRAINT range_ordered CHECK (lower >= 0 AND upper >= lower)",
+                                  "ADD CONSTRAINT forecast_not_negative CHECK (prediction >= 0)"],
+    'silver_national_weekly': ["ADD CONSTRAINT weekly_cases_not_negative CHECK (cases >= 0)"],
+    'gold_area_forecast': ["ADD CONSTRAINT outlook_band CHECK (band IN ('High', 'Medium', 'Low') AND band_now IN ('High', 'Medium', 'Low'))",
+                           "ADD CONSTRAINT probabilities_valid CHECK (p_any BETWEEN 0 AND 1 AND p_high BETWEEN 0 AND 1 AND p_high <= p_any + 0.000001)",
+                           "SET TBLPROPERTIES (delta.enableChangeDataFeed = true)"],
+    'gold_forecast_ledger': ["ADD CONSTRAINT ledger_kind CHECK (kind IN ('national', 'area'))"],
+    'gold_cluster_growth': ["SET TBLPROPERTIES (delta.enableChangeDataFeed = true)"],
+    'field_reports': ["ADD CONSTRAINT report_outcome CHECK (outcome IN ('water_found', 'cleared', 'nothing'))"],
+    'bronze_live_weather': ["CLUSTER BY (snapshot_date)"],
+    'bronze_live_clusters': ["CLUSTER BY (snapshot_date)"],
+}
+
+
+def quality_statements(prefix, table):
+    return [f'ALTER TABLE {prefix}.{table} {clause}' for clause in QUALITY.get(table, [])]
 OPTIONAL_TABLES = {'field_reports', 'gold_alerts', 'bronze_live_weather', 'bronze_live_clusters'}
 
 
@@ -136,13 +185,16 @@ def apply_governance(execute, prefix, tables=None):
     """Reapply comments/tags without making missing objects or tag privileges a data failure."""
     applied, skipped = 0, []
     for table in tables if tables is not None else TABLE_SOURCES:
-        for sql in comment_statements(prefix, table) + tag_statements(prefix, table):
+        for sql in comment_statements(prefix, table) + tag_statements(prefix, table) + quality_statements(prefix, table):
             try:
                 execute(sql)
                 applied += 1
             except Exception as exc:
                 # Never log arbitrary exception text: remote errors can include sensitive records.
-                skipped.append({'table': table, 'operation': 'tags' if 'SET TAGS' in sql else 'comment', 'error_type': type(exc).__name__})
+                operation = 'tags' if 'SET TAGS' in sql else 'constraint' if 'CONSTRAINT' in sql else 'layout' if ('CLUSTER BY' in sql or 'TBLPROPERTIES' in sql) else 'comment'
+                if operation == 'constraint' and 'already exists' in str(exc).lower():
+                    continue
+                skipped.append({'table': table, 'operation': operation, 'error_type': type(exc).__name__})
     if skipped:
         print(f'GOVERNANCE: skipped {len(skipped)} optional statements; first: {skipped[0]}')
     return {'applied': applied, 'skipped': skipped}
@@ -171,6 +223,12 @@ def statements(prefix, areas):
     values = ', '.join(f'({_q(c)}, {_q(n)}, {_q(r)})' for c, n, r in sorted(areas))
     dim = f'{prefix}.dim_planning_area'
     view = f'{prefix}.inspection_places'
+    outcomes = f'{prefix}.gold_field_outcomes'
+    out_view = (f"CREATE OR REPLACE VIEW {outcomes} COMMENT {_q('Field-report outcomes by planning area and place type, without free-text notes. Self-reports at planned public stops, not confirmed breeding sites.')} AS "
+                f"SELECT area_code, place_type, COUNT(*) AS reports, COUNT(DISTINCT stop_id) AS stops_reported, "
+                f"SUM(CASE WHEN outcome = 'water_found' THEN 1 ELSE 0 END) AS water_found_reports, "
+                f"SUM(CASE WHEN outcome = 'cleared' THEN 1 ELSE 0 END) AS cleared_reports, MAX(reported_at) AS last_reported_at "
+                f"FROM {prefix}.field_reports GROUP BY area_code, place_type")
     out = [f'CREATE OR REPLACE TABLE {dim} (area_code STRING COMMENT {_q(DIM_AREA_COLUMNS["area_code"])}, area_name STRING COMMENT {_q(DIM_AREA_COLUMNS["area_name"])}, region STRING COMMENT {_q(DIM_AREA_COLUMNS["region"])}) COMMENT {_q(DIM_AREA_COMMENT)}',
            f'INSERT INTO {dim} VALUES {values}']
     for table in TABLE_COMMENTS:
@@ -197,4 +255,5 @@ SELECT c.area_code, d.area_name, d.region, c.rank AS place_rank,
 FROM {prefix}.inspection_candidates c
 LEFT JOIN {dim} d ON d.area_code = c.area_code
 LEFT JOIN {prefix}.gold_cluster_growth g ON g.cluster_id = c.cluster_id""")
+    out.append(out_view)  # last: field_reports exists only once the app has created it
     return out

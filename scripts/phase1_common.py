@@ -11,7 +11,7 @@ import time
 import urllib.error
 import urllib.request
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(os.environ.get('DENGUE_ROOT') or Path(__file__).resolve().parents[1])  # a Volume path on Databricks
 HEADERS = {'User-Agent': 'Mozilla/5.0 (DengueRadar feasibility check)', 'Accept': '*/*'}
 
 def utc_now():

@@ -73,3 +73,23 @@ def test_damaged_local_line_does_not_hide_other_reports(tmp_path):
     storage.path.parent.mkdir(parents=True)
     storage.path.write_text('{"area_code":"JW","stop_id":"a","outcome":"nothing","reported_at":"2026-10-10 01:00:00.000","note":"n"}\n{broken\n')
     assert storage.recent('JW') == [{'area_code': 'JW', 'stop_id': 'a', 'outcome': 'nothing', 'reported_at': '2026-10-10 01:00:00.000'}]
+
+
+def test_summary_counts_this_week_by_area_and_marks_rechecks():
+    import datetime as dt
+    from denguesux.field_reports import summarise, annotate_inspection
+    now = dt.datetime(2026, 10, 14, 4, 0, tzinfo=dt.timezone.utc)  # Wednesday noon in Singapore
+    rows = [  # newest first
+        {"stop_id": "a", "area_code": "JW", "outcome": "water_found", "reported_at": "2026-10-13 02:00:00.000"},
+        {"stop_id": "b", "area_code": "JW", "outcome": "cleared", "reported_at": "2026-10-12 01:00:00.000"},
+        {"stop_id": "a", "area_code": "JW", "outcome": "nothing", "reported_at": "2026-10-01 01:00:00.000"},
+    ]
+    summary = summarise(rows, now)
+    assert summary["this_week"]["reports"] == 2 and summary["this_week"]["water_found"] == 1
+    assert summary["by_area"]["JW"] == {"stops_checked": 2, "water_found": 1, "cleared": 1, "last_reported_at": "2026-10-13 02:00:00.000"}
+    plan = {"areas": {"JW": {"stops": [{"id": "a"}, {"id": "c"}]}}}
+    annotate_inspection(plan, rows, now)
+    stops = plan["areas"]["JW"]["stops"]
+    assert stops[0]["recheck_first"] is True and stops[0]["field_outcome"]["outcome"] == "water_found"
+    assert stops[1]["field_outcome"] is None and stops[1]["recheck_first"] is False
+    assert plan["community"]["stops_checked"] == 2

@@ -134,11 +134,44 @@ def make_report(*, area_code, stop_id, stop_name, place_type, outcome, note, pla
             "note": (note or "").strip()[:280] or None, "plan_as_of": plan_as_of, "source": source}
 
 
-def summarise(rows):
-    """Per-stop latest outcome and counts, for the plan screen and the map."""
-    latest = {}
+def _week_start_utc(now=None):
+    """Monday 00:00 Singapore time, as a UTC 'YYYY-MM-DD HH:MM:SS' string comparable with reported_at."""
+    sgt = dt.timezone(dt.timedelta(hours=8))
+    now = (now or dt.datetime.now(dt.timezone.utc)).astimezone(sgt)
+    monday = (now - dt.timedelta(days=now.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
+    return monday.astimezone(dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def summarise(rows, now=None):
+    """Per-stop latest outcome and counts, for the plan screen, the map and the home page.
+
+    Rows arrive newest first. Counts are self-reports at planned public stops, not confirmed breeding sites."""
+    latest, areas = {}, {}
     for row in rows:
-        latest.setdefault(row["stop_id"], {"stop_id": row["stop_id"], "outcome": row["outcome"], "reported_at": row["reported_at"]})
+        if row["stop_id"] not in latest:
+            latest[row["stop_id"]] = {"stop_id": row["stop_id"], "outcome": row["outcome"], "reported_at": row["reported_at"]}
+            area = areas.setdefault(row.get("area_code"), {"stops_checked": 0, "water_found": 0, "cleared": 0, "last_reported_at": row["reported_at"]})
+            area["stops_checked"] += 1
+            area["water_found"] += row["outcome"] == "water_found"
+            area["cleared"] += row["outcome"] == "cleared"
+    week = _week_start_utc(now)
+    this_week = [row for row in rows if str(row["reported_at"]) >= week]
     return {"reports": len(rows), "stops_checked": len(latest),
             "water_found": sum(row["outcome"] == "water_found" for row in latest.values()),
-            "last_reported_at": rows[0]["reported_at"] if rows else None, "by_stop": latest}
+            "last_reported_at": rows[0]["reported_at"] if rows else None, "by_stop": latest, "by_area": areas,
+            "this_week": {"reports": len(this_week), "stops_checked": len({row["stop_id"] for row in this_week}),
+                          "water_found": sum(row["outcome"] == "water_found" for row in this_week), "since_utc": week},
+            "caveat": "Self-reported outcomes at planned public stops; not confirmed breeding sites."}
+
+
+def annotate_inspection(inspection, rows, now=None):
+    """Mark each planned stop with its latest field outcome; stops with water found are re-checked first next time."""
+    summary = summarise(rows, now)
+    for code, plan in (inspection.get("areas") or {}).items():
+        for stop in plan.get("stops") or []:
+            latest = summary["by_stop"].get(str(stop.get("id")))
+            stop["field_outcome"] = {"outcome": latest["outcome"], "reported_at": latest["reported_at"]} if latest else None
+            stop["recheck_first"] = bool(latest and latest["outcome"] == "water_found")
+        plan["community"] = summary["by_area"].get(code)
+    inspection["community"] = {k: summary[k] for k in ("reports", "stops_checked", "water_found", "last_reported_at", "this_week", "caveat")}
+    return inspection

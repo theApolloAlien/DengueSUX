@@ -345,10 +345,19 @@ def build_inspection(root=ROOT, *, radius_m=300, top_n=8, offline=False, spark=N
     statuses.insert(0, {"layer": "HDB Property Information", "status": "partial" if blocks else "blocked",
                        "rows": len(hdb), "shortlisted_rows": len(hdb_shortlist), "verified_cluster_blocks": len(blocks), "extra_geocode_budget": max_extra_geocodes,
                        "reason": "Block list has no coordinates. Coverage is restricted to exactly geocoded source cluster blocks and a bounded shortlist of HDB blocks on their reported streets; other streets are not exhausted."})
-    statuses.append({"layer": "Elderly residents", "status": "dropped", "reason": "Historical HDB town counts lack a valid all-age denominator and planning-area join. Elderly share is unavailable; it adds no points."})
+    equity_path = root / "data/phase2_inputs/resident_equity.json"
+    elderly_by_area = {}
+    if equity_path.exists():
+        equity = json.loads(equity_path.read_text())
+        names = {str(a["name"]).strip().upper(): a["code"] for a in current["areas"]}
+        elderly_by_area = {names[str(r["area_name"]).strip().upper()]: r["elderly_share"] for r in equity["areas"]
+                           if str(r["area_name"]).strip().upper() in names and r.get("elderly_share") is not None}
+        statuses.append({"layer": "Elderly residents", "status": "used", "reason": f"SingStat June 2026 residents aged 65+ by planning area ({len(elderly_by_area)} areas with published counts); up to 10 points so stops near older residents are checked sooner. Areas without a published count add no points."})
+    else:
+        statuses.append({"layer": "Elderly residents", "status": "dropped", "reason": "No planning-area age table is saved. Elderly share is unavailable; it adds no points."})
     elderly_path = root / "data/raw/inspection/hdb_elderly.csv.gz"
     if elderly_path.exists() and elderly_path.with_suffix(elderly_path.suffix + ".receipt.json").exists():
-        sources.append({**_source_receipt(elderly_path), "usage": "Audited and dropped: no valid elderly share or planning-area join"})
+        sources.append({**_source_receipt(elderly_path), "usage": "Audited and dropped: historical HDB town counts lack a valid all-age denominator; SingStat 2026 planning-area ages are used instead"})
     # Only use a growth export generated for this same snapshot day.
     growth_rows = _growth_rows(root, as_of)
     candidates, area_results = [], {}
@@ -367,7 +376,8 @@ def build_inspection(root=ROOT, *, radius_m=300, top_n=8, offline=False, spark=N
                 continue
             grow = growth_rows.get(anchor["cluster_id"], {})
             delta = grow.get("growth_cases") if grow.get("history_available") else None
-            score, components = score_candidate(place["place_type"], metres, radius_m, anchor["cluster_cases"], growth_cases=delta)
+            score, components = score_candidate(place["place_type"], metres, radius_m, anchor["cluster_cases"], growth_cases=delta,
+                                                elderly_share=elderly_by_area.get(code))
             distance_label = "At a verified block associated with" if metres < 5 else f"About {max(10, round(metres / 10) * 10):,} m from a verified block associated with"
             reason = f"{distance_label} the {anchor['cluster_cases']}-person cluster. {place['place_type'].title()} checks may reveal stagnant water; no breeding site is confirmed."
             if place["place_type"] == "park":

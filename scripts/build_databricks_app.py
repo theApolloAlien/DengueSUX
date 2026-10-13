@@ -11,7 +11,28 @@ import shutil
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-MODULES = ["__init__.py", "notices.py", "growth.py", "runtime.py", "assistant.py", "chat_cards.py", "care.py", "field_reports.py", "onemap.py", "alerts.py", "app_snapshot.py"]  # all the app imports at request time
+MODULES = ["__init__.py", "notices.py", "growth.py", "runtime.py", "assistant.py", "chat_cards.py", "care.py", "field_reports.py", "onemap.py", "alerts.py", "app_snapshot.py", "telegram.py"]  # all the app imports at request time
+
+def bundle_styles(web):
+    """One render-blocking stylesheet instead of many: app CSS files are joined in their page order.
+
+    Since the @layer rewrite the app ships a single app.css, so this only acts if more than one app
+    stylesheet is ever linked again. Vendor CSS keeps its own files (paths relative to its folder)."""
+    import re
+    index = web / "index.html"
+    html = index.read_text()
+    links = re.findall(r'<link rel="stylesheet" href="/([a-z0-9-]+\.css)">', html)
+    if len(links) < 2:
+        return
+    joined = "\n".join(f"/* {name} */\n" + (web / name).read_text() for name in links)
+    (web / "app.bundle.css").write_text(joined)
+    first = True
+    for name in links:
+        tag = f'<link rel="stylesheet" href="/{name}">'
+        html = html.replace(tag, '<link rel="stylesheet" href="/app.bundle.css">' if first else "", 1)
+        first = False
+    index.write_text(re.sub(r"\n\s*\n", "\n", html))
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -30,6 +51,7 @@ def main():
     # Never ship hidden local snapshot generations, temporary writes or OS files.
     skip = shutil.ignore_patterns(".*", "*.tmp", "*.part", "__pycache__")
     shutil.copytree(REPO / "app", out / "app", ignore=skip)
+    bundle_styles(out / "app/web")
     for m in MODULES:
         shutil.copy2(REPO / "denguesux" / m, out / "denguesux" / m)
     shutil.copytree(args.web_from, out / "output/web", ignore=skip, symlinks=False)

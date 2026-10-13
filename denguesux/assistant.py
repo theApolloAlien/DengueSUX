@@ -24,6 +24,57 @@ _cache: dict = {}
 _cache_lock = threading.Lock()
 
 
+def _tracer():
+    """MLflow tracing when it is installed and a tracking destination is configured; otherwise nothing."""
+    import os
+    if os.environ.get('DENGUE_TRACING', '1') == '0' or not (os.environ.get('MLFLOW_TRACKING_URI') or os.environ.get('MLFLOW_EXPERIMENT_ID')):
+        return None
+    try:
+        import mlflow
+        return mlflow
+    except Exception:
+        return None
+
+
+class _NoSpan:
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    def set_inputs(self, *_):
+        pass
+
+    def set_outputs(self, *_):
+        pass
+
+    def set_attributes(self, *_):
+        pass
+
+
+def span(name: str, span_type: str = 'CHAIN', inputs=None):
+    """A real MLflow span (Agent/Tool/Chat model), or a no-op so the app never depends on tracing."""
+    mlflow = _tracer()
+    if mlflow is None:
+        return _NoSpan()
+    try:
+        context = mlflow.start_span(name=name, span_type=span_type)
+        active = context.__enter__()
+        if inputs is not None:
+            active.set_inputs(inputs)
+
+        class _Span:
+            def __enter__(self_inner):
+                return active
+
+            def __exit__(self_inner, *exc):
+                return context.__exit__(*exc)
+        return _Span()
+    except Exception:
+        return _NoSpan()
+
+
 def load_data(root: Path) -> dict:
     """The same bundle the web page loads (output/web/dashboard.json), cached until the file changes.
     Chats run on parallel threads: the stamp and the data are swapped together under a lock, so no reader sees one without the other."""
@@ -56,6 +107,7 @@ def _sources(data: dict) -> dict:
         'live': {'id': 'live', 'name': 'National outlook with 80% ranges', 'date': _day(model.get('live_forecast', {}).get('issued_from_week_end')) if model.get('live_forecast') else None, 'url': bulletin_url, 'table': 'gold_national_predictions', 'segment': 'live'},
         'prospective': {'id': 'prospective', 'name': f"2023+ retrospective evaluation · MLflow run {str(model.get('run_id') or '')[:8]}", 'date': _day(data.get('meta', {}).get('generated_at')), 'url': None, 'table': 'gold_national_predictions', 'segment': 'prospective'},
         'genie': {'id': 'genie', 'name': 'Databricks Genie over the gold Delta tables', 'date': _day(cur.get('as_of')), 'url': None, 'table': 'workspace.denguesux'},
+        'outlook': {'id': 'outlook', 'name': 'Two-week area outlook (trained on archived NEA cluster listings since 2019)', 'date': (data.get('area_forecast') or {}).get('as_of'), 'url': None, 'table': 'gold_area_forecast'},
     }
 
 
@@ -114,6 +166,28 @@ def tool_get_area(data, area):
             'priority_rule': 'High = active clusters with at least 10 people; Medium = active cluster under 10 people; Low = no active cluster. An operational rule, not a validated forecast.',
             'clusters': [{'locality': p['name'], 'people': p['cases'], 'shared_with': [n for n in p.get('area_names', []) if n != a['name']], 'updated': _day(p.get('updated_at'))} for p in clusters[:6]],
             'weather': _weather(a), 'weather_date': data['current'].get('weather_date'), 'snapshot_date': _day(data['current'].get('as_of'))}, ['clusters', 'weather']
+
+
+def tool_area_outlook(data, area=None, n=5):
+    """Chances of any cluster and of 10+ people in clusters in about two weeks, for one area or the top areas."""
+    o = data.get('area_forecast') or {}
+    rows = o.get('areas') or []
+    if not rows:
+        return {'error': 'area_outlook_unavailable'}, []
+    def shape(r):
+        return {'name': r['name'], 'band_now': r['band_now'], 'likely_band_in_two_weeks': r['band'],
+                'chance_of_any_cluster_percent': round(100 * r['p_any']), 'chance_of_10_plus_people_percent': round(100 * r['p_high']),
+                'people_in_clusters_now': r['people_now'], 'main_drivers': [d['group'] + ' ' + d['direction'] + ' the chance' for d in (r.get('drivers') or [])[:3]]}
+    meta = {'as_of': o.get('as_of'), 'horizon': 'about two weeks', 'method': 'Logistic models trained on archived NEA cluster listings since 2019; chances, not certainties; places to check, not a case forecast.',
+            'validation': f"Leave-one-year-out Brier score {o.get('evaluation', {}).get('model', {}).get('brier_any', 0):.3f} vs {o.get('evaluation', {}).get('persistence', {}).get('brier_any', 0):.3f} for assuming nothing changes."}
+    if area:
+        a, close = _find_area(data, area)
+        if not a:
+            return _unknown_area(area, close), []
+        row = next((r for r in rows if r['code'] == a['code']), None)
+        return ({**shape(row), **meta} if row else {'error': 'area_not_in_outlook'}), ['outlook']
+    n = max(1, min(int(n or 5), 15))
+    return {'areas': [shape(r) for r in rows[:n]], 'new_high_expected': [r['name'] for r in rows if r['band'] == 'High' and r['band_now'] != 'High'], **meta}, ['outlook']
 
 
 def tool_cluster_growth(data, area=None):
@@ -309,6 +383,8 @@ TOOLS = {
                         'parameters': {'type': 'object', 'properties': {'area': {'type': 'string'}}, 'required': ['area']}},
     'forecast_week': {'fn': tool_forecast_week, 'description': 'The 2022 national forecast replay for one week: forecast vs reported, the first High warning, and what drove it. `when` can be a month ("March 2022" gives the first High week in it), a date, "peak" or "first high warning". For "the early warning" use "first high warning".',
                       'parameters': {'type': 'object', 'properties': {'when': {'type': 'string'}}}},
+    'area_outlook': {'fn': tool_area_outlook, 'description': 'Two-week outlook per planning area: chance of any active cluster and of 10+ people in clusters in about two weeks, the likely band, and the main drivers. Use for "what is likely in two weeks", "which areas may become hotspots" or the future of one area. Give an area for one, or none for the top areas.',
+                     'parameters': {'type': 'object', 'properties': {'area': {'type': 'string', 'description': 'Planning area name; omit for the top areas.'}, 'n': {'type': 'integer', 'description': 'How many areas when no area is given, 1-15.'}}}},
     'live_outlook': {'fn': tool_live_outlook, 'description': 'Current national outlook for unreported weeks: official label date, forecast, 80% range, typical week and missing weather inputs. Use for next week, latest forecast or expected nationally; unavailable if stale.',
                      'parameters': {'type': 'object', 'properties': {}}},
     'forecast_evaluation': {'fn': tool_forecast_evaluation, 'description': 'Accuracy and range coverage of the fixed recipe in the 2023+ retrospective evaluation, with annual results and missing weather disclosure. Use for how accurate or reliable the model is; this is not recorded real-time performance.',
@@ -558,8 +634,21 @@ def make_diagrammer(llm):
     return diagram
 
 
-def run_chat(messages, llm, root: Path, genie=None, now: datetime | None = None, max_steps: int = MAX_STEPS, on_event=None, stream_final=None, language="en", diagram=None) -> dict:
-    """llm(messages, tools) -> assistant message dict (OpenAI chat format). diagram(question, answer), when given, draws general answers."""
+def run_chat(messages, llm, root: Path, genie=None, now: datetime | None = None, max_steps: int = MAX_STEPS, on_event=None, stream_final=None, language="en", diagram=None, stream_llm=None) -> dict:
+    """Traced entry point; see _run_chat."""
+    question = (messages[-1].get('content') if messages and isinstance(messages[-1], dict) else '') or ''
+    with span('ask_denguesux', 'AGENT', {'question': str(question)[:2000], 'language': language, 'turns': len(messages or [])}) as root_span:
+        result = _run_chat(messages, llm, root, genie, now, max_steps, on_event, stream_final, language, diagram, stream_llm)
+        root_span.set_outputs({'answer': result.get('answer', '')[:4000], 'tools': [s['tool'] for s in result.get('steps', [])],
+                               'cards': len(result.get('cards') or []), 'mode': result.get('mode', 'assistant')})
+        return result
+
+
+def _run_chat(messages, llm, root: Path, genie=None, now: datetime | None = None, max_steps: int = MAX_STEPS, on_event=None, stream_final=None, language="en", diagram=None, stream_llm=None) -> dict:
+    """llm(messages, tools) -> assistant message dict (OpenAI chat format). diagram(question, answer), when given, draws general answers.
+
+    stream_llm(messages, tools, on_delta) streams every step: text deltas reach the user as they arrive and tool
+    calls are assembled from their deltas, so the final answer is never generated twice."""
     from .care import symptom_question, fixed_response
     cleaned = clean_messages(messages)
     if symptom_question(cleaned[-1]['content']):
@@ -579,18 +668,41 @@ def run_chat(messages, llm, root: Path, genie=None, now: datetime | None = None,
     convo = [{'role': 'system', 'content': system_prompt(data, now) + f'\nAnswer the latest question in this language: {LANGUAGE_NAMES.get(language, "English")}, even if earlier turns used another language.' + ('\n' + language_notes(language) if language_notes(language) else '')}] + clean_messages(messages)
     calls, used = [], []
     for step in range(max_steps + 1):
-        reply = llm(convo, tool_schemas() if step < max_steps else None)
+        tools = tool_schemas() if step < max_steps else None
+        streamed = []
+        with span(f'model_step_{step + 1}', 'CHAT_MODEL', {'messages': len(convo), 'tools_offered': bool(tools)}) as model_span:
+            if stream_llm is not None and on_event is not None:
+                def forward(delta):
+                    streamed.append(delta)
+                    on_event({'type': 'delta', 'text': delta})
+                try:
+                    reply = stream_llm(convo, tools, forward)
+                except Exception:
+                    if streamed:
+                        on_event({'type': 'reset'})
+                        streamed.clear()
+                    reply = llm(convo, tools)
+            else:
+                reply = llm(convo, tools)
+            model_span.set_outputs({'tool_calls': [tc['function']['name'] for tc in (reply.get('tool_calls') or [])], 'text': _text(reply)[:1500]})
         wanted = (reply.get('tool_calls') or []) if step < max_steps else []  # last turn must answer in words
+        if wanted and streamed and on_event:
+            on_event({'type': 'reset'})  # words that preceded a tool call are not the answer
         if not wanted:
             answer = _text(reply)
-            if stream_final is not None:
+            if stream_final is not None and stream_llm is None:
                 answer = ''
                 for delta in stream_final(convo):
                     answer += delta
                     if on_event: on_event({'type':'delta','text':delta})
             if not answer:
                 answer = "I couldn't put an answer together. Try rephrasing, or ask about an area, a route or the national forecast."
-            answer = checked_answer(answer, calls, convo, llm)
+            with span('grounding_check', 'PARSER', {'answer': answer[:2000]}) as check_span:
+                checked = checked_answer(answer, calls, convo, llm)
+                check_span.set_outputs({'changed': checked != answer, 'unsupported_figures': unsupported_figures(answer, calls, '')})
+            if checked != answer and on_event and (streamed or stream_final is not None):
+                on_event({'type': 'replace', 'text': checked})  # the shown text is corrected, never silently swapped
+            answer = checked
             # A general answer (no data tool) gets a small diagram of its own, plus a pointer to related live data.
             drawn = diagram(cleaned[-1]['content'], answer) if diagram and not calls else None
             return {'answer': answer, **({'diagram': drawn} if drawn else {}), 'steps': [{'tool': c['tool'], 'args': c['args']} for c in calls], 'trace': [{'tool': c['tool'], 'args': c['args'], 'result': c['result'], **({'area_code': c['area_code']} if c.get('area_code') else {})} for c in calls],
@@ -610,15 +722,17 @@ def run_chat(messages, llm, root: Path, genie=None, now: datetime | None = None,
                 result, src = {'error': 'unknown_tool', 'available': list(TOOLS)}, []
             else:
                 kwargs = {k: v for k, v in args.items() if k in tool['parameters']['properties']}
-                try:
-                    if name in ('data_status', 'live_outlook'):
-                        result, src = tool['fn'](data, now)
-                    elif name == 'query_database':
-                        result, src = tool_query_database(data, genie=genie, **kwargs)
-                    else:
-                        result, src = tool['fn'](data, **kwargs)
-                except (TypeError, KeyError, ValueError):
-                    result, src = {'error': 'bad_arguments', 'expected': tool['parameters']}, []
+                with span(name, 'TOOL' if name != 'query_database' else 'RETRIEVER', kwargs) as tool_span:
+                    try:
+                        if name in ('data_status', 'live_outlook'):
+                            result, src = tool['fn'](data, now)
+                        elif name == 'query_database':
+                            result, src = tool_query_database(data, genie=genie, **kwargs)
+                        else:
+                            result, src = tool['fn'](data, **kwargs)
+                    except (TypeError, KeyError, ValueError):
+                        result, src = {'error': 'bad_arguments', 'expected': tool['parameters']}, []
+                    tool_span.set_outputs({'result': json.dumps(result, default=str)[:3000], 'sources': src})
             for s in src:
                 if s not in used:
                     used.append(s)
@@ -678,3 +792,61 @@ def make_final_stream(endpoint: str, client=None):
         finally:
             response.close()
     return stream
+
+
+def make_stream_llm(endpoint: str, client=None):
+    """Stream one chat step: text deltas go to on_delta as they arrive; tool-call deltas are assembled by index."""
+    if client is None:
+        from databricks.sdk import WorkspaceClient
+        from databricks.sdk.core import Config
+        client = WorkspaceClient(config=Config(http_timeout_seconds=60, retry_timeout_seconds=10))
+
+    def call(messages, tools, on_delta):
+        body = {'messages': messages, 'max_tokens': 900, 'temperature': 0.2, 'stream': True}
+        if tools:
+            body['tools'] = tools
+        result = client.api_client.do('POST', f'/serving-endpoints/{endpoint}/invocations', body=body, raw=True)
+        response = result['contents']
+        if hasattr(response, 'set_chunk_size'):
+            response.set_chunk_size(1)
+        text, calls, line = [], {}, bytearray()
+        try:
+            while True:
+                byte = response.read(1)
+                if not byte:
+                    raise ValueError('Serving stream ended before completion')
+                if byte != b'\n':
+                    line.extend(byte)
+                    if len(line) > 1024 * 1024:
+                        raise ValueError('Oversized model event')
+                    continue
+                value = bytes(line).decode('utf-8').strip()
+                line.clear()
+                if not value.startswith('data:'):
+                    continue
+                value = value[5:].strip()
+                if value == '[DONE]':
+                    break
+                event = json.loads(value)
+                if event.get('error'):
+                    raise ValueError('Serving stream failed')
+                for choice in event.get('choices') or []:
+                    delta = choice.get('delta') or {}
+                    content = delta.get('content')
+                    if isinstance(content, str) and content:
+                        text.append(content)
+                        if not calls:
+                            on_delta(content)
+                    for part in delta.get('tool_calls') or []:
+                        slot = calls.setdefault(part.get('index', len(calls)), {'id': None, 'type': 'function', 'function': {'name': '', 'arguments': ''}})
+                        slot['id'] = part.get('id') or slot['id']
+                        function = part.get('function') or {}
+                        slot['function']['name'] += function.get('name') or ''
+                        slot['function']['arguments'] += function.get('arguments') or ''
+        finally:
+            response.close()
+        message = {'role': 'assistant', 'content': ''.join(text)}
+        if calls:
+            message['tool_calls'] = [{**slot, 'id': slot['id'] or f'call_{index}'} for index, slot in sorted(calls.items())]
+        return message
+    return call

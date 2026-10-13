@@ -45,10 +45,13 @@ async def main(base, out):
                 snap = await page.evaluate("RouteFlythrough.snapshot()")
                 ok = bool(snap['total']) and (snap['tour'] or snap['stops'] > 1)
                 results[area['code']] = {'name': area['name'], 'ok': ok, 'mode': 'flyover' if snap['tour'] else 'walk', 'stops': snap['stops'],
-                                         'route_m': round(snap['total']), 'parks_and_water': snap['landuse']}
+                                         'route_m': round(snap['total']), 'parks_and_water': snap['landuse'], 'city_buildings': snap.get('city')}
             except Exception as exc:  # recorded, not raised: one area must not hide the others
                 results[area['code']] = {'name': area['name'], 'ok': False, 'error': type(exc).__name__}
         checks['all_areas_3d'] = all(r['ok'] for r in results.values())
+        # Grey non-HDB context (Overture) should appear in nearly every scene; a few island or industrial areas may have none.
+        checks['areas_with_city_buildings'] = sum(1 for r in results.values() if (r.get('city_buildings') or 0) > 0)
+        checks['city_context'] = checks['areas_with_city_buildings'] >= 45
         checks['area_errors'] = [e for e in errors if 'Transition was aborted' not in e]
         # One walk end to end at double speed: pauses at a stop with a 3D illustration and a highlight on the block.
         await page.evaluate("h => { location.hash = h; }", '#plan/toa-payoh')
@@ -109,7 +112,7 @@ async def main(base, out):
         checks['phone_errors'] = [e for e in errors if 'Transition was aborted' not in e]
         await context.close()
         await browser.close()
-    passed = (checks['all_areas_3d'] and checks['walk_pauses_with_illustration'] and checks['illustration_dialog'] and checks['flyover_moves']
+    passed = (checks['all_areas_3d'] and checks['city_context'] and checks['walk_pauses_with_illustration'] and checks['illustration_dialog'] and checks['flyover_moves']
               and checks['hero_3d'] and checks['forecast_chart'] and checks['deep_link_from_hidden_map'] and checks['map_3d']
               and not checks['home_overflow'] and not checks['phone_overflow'] and not checks['phone_plan_overflow']
               and not checks['errors'] and not checks['phone_errors'] and not checks['area_errors'])

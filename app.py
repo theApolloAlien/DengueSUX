@@ -1,4 +1,5 @@
 """Local prototype server. Forecast computation remains in portable notebook stages."""
+from contextlib import asynccontextmanager
 from pathlib import Path
 import json
 import os
@@ -7,11 +8,19 @@ from typing import Literal, Optional
 from fastapi import Request, FastAPI, HTTPException, Path as PathParam, Query
 from pydantic import BaseModel, Field, field_validator
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 ROOT=Path(__file__).resolve().parent
-app=FastAPI(title='DengueSUX',docs_url=None,redoc_url=None)
+
+@asynccontextmanager
+async def lifespan(_app):
+    # The Telegram bot answers residents while the app runs; it starts only when a token is attached.
+    from denguesux.telegram import start_polling
+    start_polling(ROOT)
+    yield
+
+app=FastAPI(title='DengueSUX',docs_url=None,redoc_url=None,lifespan=lifespan)
 app.add_middleware(GZipMiddleware, minimum_size=1024, compresslevel=6)
 
 @app.middleware('http')
@@ -34,18 +43,81 @@ def data_status():
     from denguesux.app_snapshot import refresh_snapshot
     return refresh_snapshot(ROOT)
 
+@app.get('/api/trace/status')
+def trace_status():
+    """Is assistant tracing configured, and does a probe span export? Reports error types only, never messages or secrets."""
+    out = {'tracking_uri_set': bool(os.environ.get('MLFLOW_TRACKING_URI')), 'experiment_set': bool(os.environ.get('MLFLOW_EXPERIMENT_ID'))}
+    try:
+        import mlflow
+        out['mlflow_version'] = getattr(mlflow, '__version__', None)
+    except Exception as exc:
+        out['import_error'] = type(exc).__name__
+        out['missing_module'] = getattr(exc, 'name', None)  # a module name, never data
+        return out
+    try:
+        with mlflow.start_span(name='trace_status_probe', span_type='CHAIN') as span:
+            span.set_inputs({'probe': True})
+        out['probe_trace_id'] = mlflow.get_last_active_trace_id()
+        out['exported'] = bool(out['probe_trace_id'])
+    except Exception as exc:
+        out['probe_error'] = type(exc).__name__
+    return out
+
+@app.get('/api/telegram/status')
+def telegram_status():
+    """Whether the alert bot is configured and its public username; never chat ids or the token."""
+    from denguesux.telegram import status
+    return status()
+
 @app.get('/api/health')
 def health():
     return {'status':'ready' if (ROOT/'output/web/dashboard.json').exists() else 'awaiting_pipeline','synthetic_data':False}
 
 @app.get('/data/{name}')
 def data(name:str):
-    allowed={'dashboard.json','current.json','model.json','inspection.json','growth.json','notices.json','alerts.json','footprints.json','population.json','aedes.json','feed.json'}
+    from denguesux.app_snapshot import PUBLIC_FILES
+    allowed=set(PUBLIC_FILES)
     if name not in allowed: raise HTTPException(404)
     _refresh_snapshot()
     p=(ROOT/'output/web'/name).resolve()  # pin one published generation for the whole response
     if not p.exists(): raise HTTPException(503,'Run the pipeline to prepare real data.')
     return FileResponse(p,media_type='application/json')
+
+@app.get('/feeds/alerts.xml')
+def alert_feed(request: Request, area: Optional[str] = Query(default=None, pattern=r'^[A-Z]{2,3}$')):
+    """Atom feed of today's alerts and two-week outlook warnings, optionally for one area.
+
+    Anyone can follow it in a feed reader or a chat bot without giving us an email address or phone number."""
+    from xml.sax.saxutils import escape
+    _refresh_snapshot()
+    def load(name):
+        try: return json.loads((ROOT/'output/web'/name).read_text())
+        except (OSError, json.JSONDecodeError): return {}
+    alerts, outlook = load('alerts.json'), load('area_forecast.json')
+    base = str(request.base_url).rstrip('/')
+    entries = []
+    for item in alerts.get('alerts', []):
+        if area and area not in (item.get('area_codes') or []): continue
+        code = area or (item.get('area_codes') or [''])[0]
+        entries.append((f"alert:{alerts.get('snapshot_date')}:{item.get('kind')}:{code}", item.get('title',''), item.get('message',''),
+                        f"{base}/#plan/{code}" if code else f"{base}/#week", alerts.get('generated_at')))
+    for row in outlook.get('areas', []):
+        if area and row.get('code') != area: continue
+        if row.get('band') == 'High' and row.get('band_now') != 'High':
+            entries.append((f"outlook:{outlook.get('as_of')}:{row['code']}", f"{row['name']} may reach High within about two weeks",
+                            f"Chance of 10 or more people in dengue clusters: {round(100*row.get('p_high',0))}%. A check-first outlook, not a case forecast.",
+                            f"{base}/#map", outlook.get('generated_at')))
+    updated = alerts.get('generated_at') or outlook.get('generated_at') or '1970-01-01T00:00:00+00:00'
+    title = 'DengueSUX alerts' + (f' · {area}' if area else '')
+    body = [f'<?xml version="1.0" encoding="utf-8"?>', '<feed xmlns="http://www.w3.org/2005/Atom">',
+            f'<title>{escape(title)}</title>', f'<id>{escape(base)}/feeds/alerts.xml{("?area="+area) if area else ""}</id>',
+            f'<updated>{escape(updated)}</updated>', f'<link href="{escape(base)}/"/>',
+            '<subtitle>Places to check, not confirmed breeding sites. Generated from NEA open data.</subtitle>']
+    for entry_id, entry_title, summary, link, stamp in entries:
+        body += ['<entry>', f'<id>urn:denguesux:{escape(entry_id)}</id>', f'<title>{escape(entry_title)}</title>',
+                 f'<updated>{escape(stamp or updated)}</updated>', f'<link href="{escape(link)}"/>', f'<summary>{escape(summary)}</summary>', '</entry>']
+    body.append('</feed>')
+    return Response('\n'.join(body), media_type='application/atom+xml')
 
 @app.get('/data/walks/{area_code}.json')
 def walk(area_code: str = PathParam(pattern=r'^[A-Z]{2,3}$')):
@@ -176,7 +248,7 @@ async def chat_stream(body: ChatBody, request: Request):
     import asyncio
     import queue
     import threading
-    from denguesux.assistant import run_chat, make_llm, make_final_stream, make_diagrammer
+    from denguesux.assistant import run_chat, make_llm, make_stream_llm, make_diagrammer
     pending=queue.Queue(maxsize=64)
     stopped=threading.Event()
     def emit(event):
@@ -189,7 +261,7 @@ async def chat_stream(body: ChatBody, request: Request):
             llm=make_llm(endpoint)
             result=run_chat([m.model_dump() for m in body.messages],llm,ROOT,
                 genie=(lambda q:_genie_ask(q)) if _genie_space() else None,
-                on_event=emit,stream_final=make_final_stream(endpoint),language=body.language,diagram=make_diagrammer(llm))
+                on_event=emit,stream_llm=make_stream_llm(endpoint),language=body.language,diagram=make_diagrammer(llm))
             emit({'type':'done',**result})
         except InterruptedError: pass
         except Exception:

@@ -42,7 +42,7 @@ Every HDB block shown in the Jurong West, Bishan and Bukit Batok scenes was matc
 
 - **Heights:** 109 of 113 independently tagged blocks have exactly the published storey count; the two Bukit Batok differences are OSM tagging errors (one block tagged “0 levels”).
 - **Positions:** Bukit Batok's lower overlap is a consistent ~5 m south-east shift of the OSM outlines, unrelated to building height (so not satellite lean). Overlaid on SLA's OneMap base map, the HDB outlines sit on the official building fills and the OSM outlines do not (`docs/audit/model-audit-bukitbatok-overlay.jpg`). The HDB geometry is the more accurate one and stays.
-- **Known model limits:** one height per block (taller and shorter wings of the same block share the published maximum); flat roofs; no terrain; non-HDB buildings not modelled.
+- **Known model limits:** one height per block (taller and shorter wings of the same block share the published maximum); flat roofs; no terrain; non-HDB buildings are grey Overture/OpenStreetMap context (13 Oct 2026), raised only from a listed height or floor count.
 
 ### Route walk: from dizzying to useful
 
@@ -119,7 +119,7 @@ Fallback demo: `demo/denguesux_finishing_20261010-163531.mp4` (61.6 s, 1440×900
 ## Remaining limitations and actions
 
 - **Live forecast expiry (action before Demo Day):** the saved outlook targets the week ending 17 Oct 2026 and is correctly withdrawn after that. Refresh the official weekly labels (`scripts/collect_moh_weekly.py`), weather and pipeline once CDA publishes EW40/EW41, then rerun the `pipeline` job; until then the card says “Unavailable”.
-- 35 HDB street codes remain unverified; their blocks stay flat. Non-HDB buildings are not modelled.
+- 35 HDB street codes remain unverified; their blocks stay flat. Non-HDB buildings are drawn in grey from Overture Maps as context, not data (13 Oct 2026).
 - Heights are estimates from storeys, not surveyed heights.
 - Walking routes need a OneMap token; the cloud job reuses saved routes and marks the plan stale when it cannot refresh them. The local token expires 13 Oct 2026.
 - Growth classification still needs two snapshots 7–9 days apart (“Not enough history yet” is shown honestly).

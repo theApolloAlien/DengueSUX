@@ -18,6 +18,8 @@ def public_snapshot():
     # and marker strings stay inside tmp_path and are never published as observations.
     payload = json.loads((Path(__file__).resolve().parents[1] / 'output/web/dashboard.json').read_text())
     payload['meta']['generated_at'] = '2026-10-09T00:00:00+00:00'
+    for key, default in snapshots.OPTIONAL_PARTS.items():
+        payload.setdefault(key, copy.deepcopy(default))
     return payload
 
 

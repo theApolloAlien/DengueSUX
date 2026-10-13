@@ -42,56 +42,56 @@
       "resident_population": 250890,
       "population_year": 2026,
       "source_value": "250890",
-      "cluster_cases": 97,
-      "cluster_cases_per_10000_residents": 3.87
+      "cluster_cases": 99,
+      "cluster_cases_per_10000_residents": 3.95
     },
     "JE": {
       "area_name": "Jurong East",
       "resident_population": 72160,
       "population_year": 2026,
       "source_value": "72160",
-      "cluster_cases": 91,
-      "cluster_cases_per_10000_residents": 12.61
+      "cluster_cases": 93,
+      "cluster_cases_per_10000_residents": 12.89
     },
     "BS": {
       "area_name": "Bishan",
       "resident_population": 87810,
       "population_year": 2026,
       "source_value": "87810",
-      "cluster_cases": 12,
-      "cluster_cases_per_10000_residents": 1.37
-    },
-    "WC": {
-      "area_name": "Western Water Catchment",
-      "resident_population": 590,
-      "population_year": 2026,
-      "source_value": "590",
-      "cluster_cases": 6,
-      "cluster_cases_per_10000_residents": 101.69
-    },
-    "BK": {
-      "area_name": "Bukit Batok",
-      "resident_population": 165680,
-      "population_year": 2026,
-      "source_value": "165680",
-      "cluster_cases": 5,
-      "cluster_cases_per_10000_residents": 0.3
-    },
-    "SB": {
-      "area_name": "Sembawang",
-      "resident_population": 115270,
-      "population_year": 2026,
-      "source_value": "115270",
-      "cluster_cases": 2,
-      "cluster_cases_per_10000_residents": 0.17
+      "cluster_cases": 13,
+      "cluster_cases_per_10000_residents": 1.48
     },
     "AM": {
       "area_name": "Ang Mo Kio",
       "resident_population": 159330,
       "population_year": 2026,
       "source_value": "159330",
+      "cluster_cases": 6,
+      "cluster_cases_per_10000_residents": 0.38
+    },
+    "SG": {
+      "area_name": "Serangoon",
+      "resident_population": 115860,
+      "population_year": 2026,
+      "source_value": "115860",
+      "cluster_cases": 5,
+      "cluster_cases_per_10000_residents": 0.43
+    },
+    "WD": {
+      "area_name": "Woodlands",
+      "resident_population": 255280,
+      "population_year": 2026,
+      "source_value": "255280",
       "cluster_cases": 2,
-      "cluster_cases_per_10000_residents": 0.13
+      "cluster_cases_per_10000_residents": 0.08
+    },
+    "HG": {
+      "area_name": "Hougang",
+      "resident_population": 226100,
+      "population_year": 2026,
+      "source_value": "226100",
+      "cluster_cases": 2,
+      "cluster_cases_per_10000_residents": 0.09
     },
     "PR": {
       "area_name": "Pasir Ris",
@@ -101,59 +101,11 @@
       "cluster_cases": 2,
       "cluster_cases_per_10000_residents": 0.14
     },
-    "PN": {
-      "area_name": "Pioneer",
-      "resident_population": 50,
-      "population_year": 2026,
-      "source_value": "50",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
-    "BL": {
-      "area_name": "Boon Lay",
+    "NE": {
+      "area_name": "North-Eastern Islands",
       "resident_population": 30,
       "population_year": 2026,
       "source_value": "30",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
-    "SK": {
-      "area_name": "Sungei Kadut",
-      "resident_population": 700,
-      "population_year": 2026,
-      "source_value": "700",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
-    "WI": {
-      "area_name": "Western Islands",
-      "resident_population": null,
-      "population_year": 2026,
-      "source_value": "-",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": null
-    },
-    "PG": {
-      "area_name": "Punggol",
-      "resident_population": 204490,
-      "population_year": 2026,
-      "source_value": "204490",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
-    "TH": {
-      "area_name": "Tengah",
-      "resident_population": 34340,
-      "population_year": 2026,
-      "source_value": "34340",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
-    "BD": {
-      "area_name": "Bedok",
-      "resident_population": 272120,
-      "population_year": 2026,
-      "source_value": "272120",
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
@@ -165,13 +117,29 @@
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
-    "MD": {
-      "area_name": "Mandai",
-      "resident_population": 2030,
+    "BL": {
+      "area_name": "Boon Lay",
+      "resident_population": 30,
       "population_year": 2026,
-      "source_value": "2030",
+      "source_value": "30",
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
+    },
+    "SE": {
+      "area_name": "Sengkang",
+      "resident_population": 265830,
+      "population_year": 2026,
+      "source_value": "265830",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "CC": {
+      "area_name": "Central Water Catchment",
+      "resident_population": null,
+      "population_year": 2026,
+      "source_value": "-",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": null
     },
     "SM": {
       "area_name": "Simpang",
@@ -189,35 +157,27 @@
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
-    "BT": {
-      "area_name": "Bukit Timah",
-      "resident_population": 86720,
+    "MD": {
+      "area_name": "Mandai",
+      "resident_population": 2030,
       "population_year": 2026,
-      "source_value": "86720",
+      "source_value": "2030",
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
-    "LK": {
-      "area_name": "Lim Chu Kang",
-      "resident_population": 20,
+    "SB": {
+      "area_name": "Sembawang",
+      "resident_population": 115270,
       "population_year": 2026,
-      "source_value": "20",
+      "source_value": "115270",
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
-    "SE": {
-      "area_name": "Sengkang",
-      "resident_population": 265830,
+    "TH": {
+      "area_name": "Tengah",
+      "resident_population": 34340,
       "population_year": 2026,
-      "source_value": "265830",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
-    "CK": {
-      "area_name": "Choa Chu Kang",
-      "resident_population": 185520,
-      "population_year": 2026,
-      "source_value": "185520",
+      "source_value": "34340",
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
@@ -229,11 +189,75 @@
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
-    "HG": {
-      "area_name": "Hougang",
-      "resident_population": 226100,
+    "WC": {
+      "area_name": "Western Water Catchment",
+      "resident_population": 590,
       "population_year": 2026,
-      "source_value": "226100",
+      "source_value": "590",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "LK": {
+      "area_name": "Lim Chu Kang",
+      "resident_population": 20,
+      "population_year": 2026,
+      "source_value": "20",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "CK": {
+      "area_name": "Choa Chu Kang",
+      "resident_population": 185520,
+      "population_year": 2026,
+      "source_value": "185520",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "SL": {
+      "area_name": "Seletar",
+      "resident_population": 300,
+      "population_year": 2026,
+      "source_value": "300",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "SK": {
+      "area_name": "Sungei Kadut",
+      "resident_population": 700,
+      "population_year": 2026,
+      "source_value": "700",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "PN": {
+      "area_name": "Pioneer",
+      "resident_population": 50,
+      "population_year": 2026,
+      "source_value": "50",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "BK": {
+      "area_name": "Bukit Batok",
+      "resident_population": 165680,
+      "population_year": 2026,
+      "source_value": "165680",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "TS": {
+      "area_name": "Tuas",
+      "resident_population": 80,
+      "population_year": 2026,
+      "source_value": "80",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "PG": {
+      "area_name": "Punggol",
+      "resident_population": 204490,
+      "population_year": 2026,
+      "source_value": "204490",
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
@@ -245,67 +269,11 @@
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
-    "TM": {
-      "area_name": "Tampines",
-      "resident_population": 296060,
+    "BT": {
+      "area_name": "Bukit Timah",
+      "resident_population": 86720,
       "population_year": 2026,
-      "source_value": "296060",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
-    "WD": {
-      "area_name": "Woodlands",
-      "resident_population": 255280,
-      "population_year": 2026,
-      "source_value": "255280",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
-    "CC": {
-      "area_name": "Central Water Catchment",
-      "resident_population": null,
-      "population_year": 2026,
-      "source_value": "-",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": null
-    },
-    "ME": {
-      "area_name": "Marina East",
-      "resident_population": null,
-      "population_year": 2026,
-      "source_value": "-",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": null
-    },
-    "MS": {
-      "area_name": "Marina South",
-      "resident_population": null,
-      "population_year": 2026,
-      "source_value": "-",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": null
-    },
-    "SG": {
-      "area_name": "Serangoon",
-      "resident_population": 115860,
-      "population_year": 2026,
-      "source_value": "115860",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
-    "SV": {
-      "area_name": "Straits View",
-      "resident_population": null,
-      "population_year": 2026,
-      "source_value": "-",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": null
-    },
-    "BM": {
-      "area_name": "Bukit Merah",
-      "resident_population": 144690,
-      "population_year": 2026,
-      "source_value": "144690",
+      "source_value": "86720",
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
@@ -324,6 +292,22 @@
       "source_value": "102550",
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
+    },
+    "ME": {
+      "area_name": "Marina East",
+      "resident_population": null,
+      "population_year": 2026,
+      "source_value": "-",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": null
+    },
+    "MS": {
+      "area_name": "Marina South",
+      "resident_population": null,
+      "population_year": 2026,
+      "source_value": "-",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": null
     },
     "MU": {
       "area_name": "Museum",
@@ -381,27 +365,11 @@
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
-    "SL": {
-      "area_name": "Seletar",
-      "resident_population": 300,
-      "population_year": 2026,
-      "source_value": "300",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
     "SR": {
       "area_name": "Singapore River",
       "resident_population": 4770,
       "population_year": 2026,
       "source_value": "4770",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
-    "SI": {
-      "area_name": "Southern Islands",
-      "resident_population": 2840,
-      "population_year": 2026,
-      "source_value": "2840",
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
@@ -413,6 +381,22 @@
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
+    "CH": {
+      "area_name": "Changi",
+      "resident_population": 1950,
+      "population_year": 2026,
+      "source_value": "1950",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "WI": {
+      "area_name": "Western Islands",
+      "resident_population": null,
+      "population_year": 2026,
+      "source_value": "-",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": null
+    },
     "CB": {
       "area_name": "Changi Bay",
       "resident_population": null,
@@ -421,11 +405,59 @@
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": null
     },
-    "MP": {
-      "area_name": "Marine Parade",
-      "resident_population": 48490,
+    "QT": {
+      "area_name": "Queenstown",
+      "resident_population": 101970,
       "population_year": 2026,
-      "source_value": "48490",
+      "source_value": "101970",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "TM": {
+      "area_name": "Tampines",
+      "resident_population": 296060,
+      "population_year": 2026,
+      "source_value": "296060",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "BD": {
+      "area_name": "Bedok",
+      "resident_population": 272120,
+      "population_year": 2026,
+      "source_value": "272120",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "BM": {
+      "area_name": "Bukit Merah",
+      "resident_population": 144690,
+      "population_year": 2026,
+      "source_value": "144690",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "SI": {
+      "area_name": "Southern Islands",
+      "resident_population": 2840,
+      "population_year": 2026,
+      "source_value": "2840",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": 0.0
+    },
+    "SV": {
+      "area_name": "Straits View",
+      "resident_population": null,
+      "population_year": 2026,
+      "source_value": "-",
+      "cluster_cases": 0,
+      "cluster_cases_per_10000_residents": null
+    },
+    "TP": {
+      "area_name": "Toa Payoh",
+      "resident_population": 148940,
+      "population_year": 2026,
+      "source_value": "148940",
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
@@ -437,43 +469,11 @@
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     },
-    "QT": {
-      "area_name": "Queenstown",
-      "resident_population": 101970,
+    "MP": {
+      "area_name": "Marine Parade",
+      "resident_population": 48490,
       "population_year": 2026,
-      "source_value": "101970",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
-    "TP": {
-      "area_name": "Toa Payoh",
-      "resident_population": 148940,
-      "population_year": 2026,
-      "source_value": "148940",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
-    "NE": {
-      "area_name": "North-Eastern Islands",
-      "resident_population": 30,
-      "population_year": 2026,
-      "source_value": "30",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
-    "TS": {
-      "area_name": "Tuas",
-      "resident_population": 80,
-      "population_year": 2026,
-      "source_value": "80",
-      "cluster_cases": 0,
-      "cluster_cases_per_10000_residents": 0.0
-    },
-    "CH": {
-      "area_name": "Changi",
-      "resident_population": 1950,
-      "population_year": 2026,
-      "source_value": "1950",
+      "source_value": "48490",
       "cluster_cases": 0,
       "cluster_cases_per_10000_residents": 0.0
     }

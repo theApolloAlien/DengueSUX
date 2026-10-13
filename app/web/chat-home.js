@@ -22,7 +22,7 @@
  function checkingLine(areas){const high=areas.filter(a=>a.risk==='High').length,active=areas.filter(a=>a.cluster_count>0).length;if(!active)return 'No active clusters in the latest NEA snapshot.';return high?`${high} ${high===1?'area needs':'areas need'} checking first, ${active} with active clusters.`:`${active} ${active===1?'area has':'areas have'} active clusters.`;}
  function heroStats(){const t=data.current?.totals||{},clusters=t.clusters??data.current?.clusters?.features?.length,people=t.cluster_cases,active=data.current.areas.filter(a=>a.cluster_count>0).length;
   const cells=[[clusters,'active clusters'],[people,'people in clusters'],[active,'areas affected']].filter(([v])=>Number.isFinite(v));
-  return cells.length?`<dl class="hero-stats">${cells.map(([v,l])=>`<div><dt>${esc(l)}</dt><dd>${number(v)}</dd></div>`).join('')}</dl><a class="hero-explore" href="#map">Explore the 3D map <i class="ph ph-arrow-right" aria-hidden="true"></i></a>`:'';}
+  return cells.length?`<dl class="hero-stats">${cells.map(([v,l])=>`<div><dt>${esc(l)}</dt><dd>${number(v)}</dd></div>`).join('')}</dl><a class="hero-explore" href="#map/3d">Explore the 3D map <i class="ph ph-arrow-right" aria-hidden="true"></i></a>`:'';}
  // The home stage: a live 3D Singapore raised by people in active clusters (falls back to the illustration).
  function mountStage(){const intro=home.querySelector('.home-intro'),stage=intro?.querySelector('.hero-stage');if(!stage||!window.Landscape3D?.supported())return;intro.classList.add('has-stage');
   window.Landscape3D.mount(stage,data.current,{theme:'night',zoomOut:-.18,labels:w=>w>820?5:3,onPick:code=>window.Product?.go('map',code),
@@ -78,8 +78,10 @@
    const reader=r.body.getReader(),decoder=new TextDecoder();let buffer='',text='',done;
    try{while(true){const chunk=await reader.read();buffer+=decoder.decode(chunk.value||new Uint8Array(),{stream:!chunk.done});let end;
     while((end=buffer.indexOf('\n\n'))>=0){const block=buffer.slice(0,end);buffer=buffer.slice(end+2);for(const line of block.split('\n')){if(!line.startsWith('data:'))continue;const event=JSON.parse(line.slice(5));
-     if(event.type==='step'){const labels={get_area:'Looking up the area',top_areas:'Checking area priorities',cluster_growth:'Comparing cluster snapshots',inspection_plan:'Reading the field plan',live_outlook:'Checking the national outlook',forecast_week:'Reading the dated forecast',data_status:'Checking source dates',query_database:'Querying the gold tables',forecast_evaluation:'Checking past forecast error'};el.querySelector('.chat-answer-body').textContent=(labels[event.tool]||'Reading data')+'…';}
+     if(event.type==='step'){const labels={get_area:'Looking up the area',top_areas:'Checking area priorities',cluster_growth:'Comparing cluster snapshots',inspection_plan:'Reading the field plan',live_outlook:'Checking the national outlook',forecast_week:'Reading the dated forecast',data_status:'Checking source dates',query_database:'Querying the gold tables',forecast_evaluation:'Checking past forecast error',area_outlook:'Reading the two-week area outlook'};el.querySelector('.chat-answer-body').textContent=(labels[event.tool]||'Reading data')+'…';}
      if(event.type==='delta'){text+=event.text;el.querySelector('.chat-answer-body').textContent=text;el.querySelector('h2 small').textContent='AI · streaming';}
+     if(event.type==='reset'){text='';el.querySelector('.chat-answer-body').textContent='Reading data…';}
+     if(event.type==='replace'){text=event.text;el.querySelector('.chat-answer-body').textContent=text;el.querySelector('h2 small').textContent='AI · checked against the data';}
      if(event.type==='done')done=event;
      if(event.type==='error')throw Error(event.message);
     }}if(chunk.done)break;}

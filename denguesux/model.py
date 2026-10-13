@@ -11,6 +11,8 @@ from typing import Any
 from pathlib import Path
 
 import mlflow
+import mlflow.data
+import mlflow.models
 import mlflow.sklearn
 import numpy as np
 import pandas as pd
@@ -260,6 +262,129 @@ def _interval_calibration(frame: pd.DataFrame, key: str):
             "method": "Empirical quantiles of log((actual+10)/(forecast+10)) from the selected model's validation folds"}
 
 
+def _fold_errors(frame: pd.DataFrame, key: str):
+    """Dated log-ratio errors of the selected recipe on its 2019–2021 validation folds."""
+    out = []
+    for train, validation in _rolling_folds(frame):
+        prediction = NationalForecastRegressor(key).fit(train[FEATURES], train.target_cases).predict(validation[FEATURES])
+        for end, actual, predicted in zip(pd.to_datetime(validation.target_week_end), validation.target_cases.to_numpy(float), prediction):
+            out.append((end, float(np.log((actual + INTERVAL_OFFSET) / (predicted + INTERVAL_OFFSET)))))
+    return out
+
+
+ROLLING_WINDOW_WEEKS = 104
+ROLLING_MIN_ERRORS = 26
+
+
+def rolling_interval(prediction, issue_date, errors, calibration, level=INTERVAL_LEVEL):
+    """Rolling recalibration: quantiles of the last two years of errors observable before the issue date.
+
+    Only errors whose target week ended before the forecast was issued are used, so no future
+    outcome shapes a range. With fewer than 26 such errors the fixed 2019–2021 range is kept.
+    """
+    issue = pd.Timestamp(issue_date)
+    window = [ratio for end, ratio in errors if end < issue and end >= issue - pd.Timedelta(weeks=ROLLING_WINDOW_WEEKS)]
+    if len(window) < ROLLING_MIN_ERRORS:
+        return (*_interval([prediction], calibration), "fixed_2019_2021", len(window))
+    tail = (1 - level) / 2
+    low, high = np.quantile(window, [tail, 1 - tail])
+    base = float(prediction) + INTERVAL_OFFSET
+    return (np.array([max(0.0, base * np.exp(low) - INTERVAL_OFFSET)]), np.array([base * np.exp(high) - INTERVAL_OFFSET]),
+            "rolling_104_weeks" if level == INTERVAL_LEVEL else "adaptive_conformal", len(window))
+
+
+ACI_GAMMA = 0.05  # chosen after comparing 0.005–0.05 on 2023+ (see scoring.adaptive_sensitivity)
+
+
+def adaptive_intervals(rows, errors, calibration, gamma=ACI_GAMMA):
+    """Adaptive conformal inference (Gibbs & Candès, 2021) on top of the rolling window.
+
+    The quantile level is nudged after every outcome that was observable before the next issue
+    date: a miss widens later ranges, a hit narrows them, so long-run coverage tracks 80%.
+    """
+    target = 1 - INTERVAL_LEVEL
+    alpha, observed, out = target, set(), []
+    ordered = sorted(range(len(rows)), key=lambda i: rows[i]["issue_date"])
+    results = [None] * len(rows)
+    for index in ordered:
+        row = rows[index]
+        issue = pd.Timestamp(row["issue_date"])
+        for other in ordered:
+            o = rows[other]
+            if other in observed or results[other] is None or pd.Timestamp(o["target_week_end"]) >= issue:
+                continue
+            low, high = results[other]
+            miss = not (low <= o["actual"] <= high)
+            alpha = float(np.clip(alpha + gamma * (target - miss), 0.01, 0.6))
+            observed.add(other)
+        window = [ratio for end, ratio in errors if end < issue and end >= issue - pd.Timedelta(weeks=ROLLING_WINDOW_WEEKS)]
+        if len(window) < ROLLING_MIN_ERRORS:
+            low, high = _interval([row["prediction"]], calibration)
+            results[index] = (float(low[0]), float(high[0]))
+            continue
+        q_low, q_high = np.quantile(window, [alpha / 2, 1 - alpha / 2])
+        base = float(row["prediction"]) + INTERVAL_OFFSET
+        results[index] = (max(0.0, base * np.exp(q_low) - INTERVAL_OFFSET), base * np.exp(q_high) - INTERVAL_OFFSET)
+    return results, alpha
+
+
+def _aci_sensitivity(rows, errors, calibration, actual):
+    out = []
+    for gamma in (0.005, 0.01, 0.02, 0.05):
+        result, alpha = adaptive_intervals(rows, errors, calibration, gamma=gamma)
+        low = np.array([r[0] for r in result]); high = np.array([r[1] for r in result])
+        out.append({"gamma": gamma, "coverage": float(np.mean((low <= actual) & (actual <= high))),
+                    "interval_score": float(np.mean(interval_score(low, high, actual))), "final_level": float(1 - alpha)})
+    return {"rows": out, "note": "Step size compared after seeing 2023+ outcomes; the chosen step's 2023+ coverage is therefore optimistic."}
+
+
+def interval_score(lower, upper, actual, alpha=1 - INTERVAL_LEVEL):
+    """Gneiting–Raftery interval score: width plus 2/alpha times any miss (lower is better)."""
+    lower, upper, actual = (np.asarray(v, dtype=float) for v in (lower, upper, actual))
+    return (upper - lower) + (2 / alpha) * np.maximum(lower - actual, 0) + (2 / alpha) * np.maximum(actual - upper, 0)
+
+
+def pinball(quantile_value, actual, q):
+    diff = np.asarray(actual, dtype=float) - np.asarray(quantile_value, dtype=float)
+    return np.maximum(q * diff, (q - 1) * diff)
+
+
+def diebold_mariano(errors_a, errors_b, horizon=2):
+    """DM test on absolute-error loss differential with a Newey–West variance (lag = horizon − 1).
+
+    Negative statistic means model A has lower loss. Two-sided p-value from the normal approximation.
+    """
+    from math import erf, sqrt
+    d = np.abs(np.asarray(errors_a, dtype=float)) - np.abs(np.asarray(errors_b, dtype=float))
+    n = len(d)
+    if n < 10:
+        return None
+    mean = d.mean()
+    centred = d - mean
+    variance = centred @ centred / n
+    for lag in range(1, horizon):
+        variance += 2 * (1 - lag / horizon) * (centred[lag:] @ centred[:-lag]) / n
+    if variance <= 0:
+        return None
+    stat = mean / sqrt(variance / n)
+    p_value = 2 * (1 - 0.5 * (1 + erf(abs(stat) / sqrt(2))))
+    return {"statistic": float(stat), "p_value": float(p_value), "n": n, "loss": "absolute error",
+            "reading": "negative means the forecast has lower error than the comparison"}
+
+
+def seasonal_naive(frame: pd.DataFrame, rows: pd.DataFrame):
+    """Same epidemiological week one year earlier (week 53 uses week 52)."""
+    if not {"cases", "epi_year", "epi_number"} <= set(frame.columns):
+        return np.full(len(rows), np.nan)
+    history = frame.dropna(subset=["cases"]).set_index(["epi_year", "epi_number"]).cases
+    out = []
+    for _, row in rows.iterrows():
+        year, week = _target_week(row)
+        key = (year - 1, min(week, 52))
+        out.append(float(history.get(key, np.nan)))
+    return np.asarray(out, dtype=float)
+
+
 def _interval(prediction, calibration):
     base = np.asarray(prediction, dtype=float) + calibration["offset"]
     return (np.maximum(0.0, base * np.exp(calibration["lower_log_ratio"]) - calibration["offset"]),
@@ -367,12 +492,81 @@ def prospective_evaluation(frame: pd.DataFrame, key: str, thresholds, calibratio
         by_year[str(int(year))] = summary
         rows.extend(year_rows)
     overall = _summary(rows, thresholds)
-    return {"window": f"{rows[0]['target_date']} to {rows[-1]['target_week_end']}", "protocol":
+    scoring = _proper_scores(frame, known, rows, key, calibration)
+    return {"scoring": scoring, "window": f"{rows[0]['target_date']} to {rows[-1]['target_week_end']}", "protocol":
             "Retrospective evaluation of the fixed 2019–2021 selection and hyperparameters; refitted once a year on labels ending before that year's first assumed issue date. Later years are excluded from recipe selection. Revised workbook counts and immediate publication are assumed; these are not forecasts recorded in real time.",
             "overall": overall, "by_year": by_year, "predictions": rows}
 
 
-def live_forecast(frame: pd.DataFrame, key: str, thresholds, calibration, label_metadata=None):
+def _out_of_sample_errors(frame, key, replay_rows=None, prospective_rows=None):
+    errors = _fold_errors(frame, key)
+    for rows in (replay_rows or [], prospective_rows or []):
+        for row in rows:
+            if row.get("actual") is not None:
+                errors.append((pd.Timestamp(row["target_week_end"]),
+                               float(np.log((row["actual"] + INTERVAL_OFFSET) / (row["prediction"] + INTERVAL_OFFSET)))))
+    return sorted(errors, key=lambda item: item[0])
+
+
+def _proper_scores(frame, known, rows, key, calibration):
+    """Interval score, pinball loss, rolling recalibration, seasonal-naive baseline and a DM test, 2023 onward."""
+    # Rolling ranges may use 2019–2021 fold errors, the 2022 replay and earlier 2023+ weeks, never later ones.
+    replay_errors = []
+    test = known[(pd.to_datetime(known.target_week_start) >= EVALUATION_START) & (pd.to_datetime(known.target_week_start) < EVALUATION_END)]
+    if len(test):
+        cutoff = pd.to_datetime(test.issue_date).min()
+        fit = known[pd.to_datetime(known.target_week_end) < cutoff]
+        pred = NationalForecastRegressor(key).fit(fit[FEATURES], fit.target_cases).predict(test[FEATURES])
+        replay_errors = [{"target_week_end": str(pd.Timestamp(e).date()), "actual": float(a), "prediction": float(p)}
+                         for e, a, p in zip(test.target_week_end, test.target_cases, pred)]
+    errors = _out_of_sample_errors(frame, key, replay_errors, rows)
+    actual = np.array([r["actual"] for r in rows], dtype=float)
+    lower_fixed = np.array([r["lower"] for r in rows]); upper_fixed = np.array([r["upper"] for r in rows])
+    lower_roll, upper_roll, methods = [], [], []
+    for r in rows:
+        low, high, method, _ = rolling_interval(r["prediction"], r["issue_date"], errors, calibration)
+        lower_roll.append(float(low[0])); upper_roll.append(float(high[0])); methods.append(method)
+        r["lower_rolling"], r["upper_rolling"] = float(low[0]), float(high[0])
+    lower_roll, upper_roll = np.array(lower_roll), np.array(upper_roll)
+    adaptive, final_alpha = adaptive_intervals(rows, errors, calibration)
+    lower_aci = np.array([a[0] for a in adaptive]); upper_aci = np.array([a[1] for a in adaptive])
+    for r, (low, high) in zip(rows, adaptive):
+        r["lower_adaptive"], r["upper_adaptive"] = low, high
+    target_rows = known[known.target_week_start.astype(str).isin([r["target_date"] for r in rows])].drop_duplicates("target_week_start")
+    target_rows = target_rows.set_index(target_rows.target_week_start.astype(str)).loc[[r["target_date"] for r in rows]]
+    naive = seasonal_naive(frame, target_rows.reset_index(drop=True))
+    for r, value in zip(rows, naive):
+        r["seasonal_naive"] = None if np.isnan(value) else float(value)
+    selected = np.array([r["prediction"] for r in rows]); baseline = np.array([r["baseline"] for r in rows])
+    valid = ~np.isnan(naive)
+    return {
+        "level": INTERVAL_LEVEL,
+        "fixed": {"coverage": float(np.mean((lower_fixed <= actual) & (actual <= upper_fixed))),
+                  "interval_score": float(np.mean(interval_score(lower_fixed, upper_fixed, actual))),
+                  "mean_width": float(np.mean(upper_fixed - lower_fixed)),
+                  "pinball_10": float(np.mean(pinball(lower_fixed, actual, 0.1))), "pinball_90": float(np.mean(pinball(upper_fixed, actual, 0.9)))},
+        "rolling": {"coverage": float(np.mean((lower_roll <= actual) & (actual <= upper_roll))),
+                    "interval_score": float(np.mean(interval_score(lower_roll, upper_roll, actual))),
+                    "mean_width": float(np.mean(upper_roll - lower_roll)),
+                    "pinball_10": float(np.mean(pinball(lower_roll, actual, 0.1))), "pinball_90": float(np.mean(pinball(upper_roll, actual, 0.9))),
+                    "weeks_using_rolling": int(sum(m == "rolling_104_weeks" for m in methods)),
+                    "method": f"Quantiles of the last {ROLLING_WINDOW_WEEKS} weeks of out-of-sample log-ratio errors observable before each issue date (2019–2021 folds, 2022 replay, earlier 2023+ weeks); fixed 2019–2021 range when fewer than {ROLLING_MIN_ERRORS}."},
+        "adaptive": {"coverage": float(np.mean((lower_aci <= actual) & (actual <= upper_aci))),
+                     "interval_score": float(np.mean(interval_score(lower_aci, upper_aci, actual))),
+                     "mean_width": float(np.mean(upper_aci - lower_aci)),
+                     "pinball_10": float(np.mean(pinball(lower_aci, actual, 0.1))), "pinball_90": float(np.mean(pinball(upper_aci, actual, 0.9))),
+                     "final_level": float(1 - final_alpha), "gamma": ACI_GAMMA,
+                     "method": f"Adaptive conformal inference: the rolling window's quantile level moves by {ACI_GAMMA} after each observed outcome (miss widens, hit narrows), aiming at 80% long-run coverage."},
+        "adaptive_sensitivity": _aci_sensitivity(rows, errors, calibration, actual),
+        "mae": {"selected": float(np.mean(np.abs(actual - selected))), "four_week_average": float(np.mean(np.abs(actual - baseline))),
+                "seasonal_naive": float(np.mean(np.abs(actual[valid] - naive[valid]))) if valid.any() else None,
+                "seasonal_naive_weeks": int(valid.sum())},
+        "diebold_mariano": {"vs_four_week_average": diebold_mariano(actual - selected, actual - baseline),
+                            "vs_seasonal_naive": diebold_mariano((actual - selected)[valid], (actual - naive)[valid]) if valid.sum() >= 10 else None},
+    }
+
+
+def live_forecast(frame: pd.DataFrame, key: str, thresholds, calibration, label_metadata=None, errors=None, level=INTERVAL_LEVEL):
     """Forecasts whose target week has not been reported yet, from the latest official labels."""
     if not (label_metadata or {}).get("available", False):
         return None
@@ -387,13 +581,17 @@ def live_forecast(frame: pd.DataFrame, key: str, thresholds, calibration, label_
         predictor = NationalForecastRegressor(key).fit(fit[FEATURES], fit.target_cases)
         forecast = _prediction_rows(predictor, pending.loc[[index]], fit, thresholds, calibration, frame)[0]
         forecast.update(trained_on_labels_through=str(pd.Timestamp(fit.target_week_end.max()).date()), training_rows=int(len(fit)))
+        if errors:
+            low, high, method, count = rolling_interval(forecast["prediction"], forecast["issue_date"], errors, calibration, level=level)
+            forecast.update(lower_fixed=forecast["lower"], upper_fixed=forecast["upper"], lower=float(low[0]), upper=float(high[0]),
+                            interval_method=method, interval_errors=count)
         rows.append(forecast)
     latest = frame.dropna(subset=["cases"]).sort_values("week_start").iloc[-1]
     return {"issued_from_week_end": str(pd.Timestamp(latest.week_end).date()), "latest_reported_people": float(latest.cases),
             "latest_epi_week": f"{int(latest.epi_year)}-W{int(latest.epi_number):02d}",
             "trained_on_labels_through": str(pd.Timestamp(fit.target_week_end.max()).date()), "training_rows": int(len(fit)),
             "forecasts": rows, "headline": rows[-1], "available": True,
-            "note": "Forecasts for weeks not yet reported. Each row uses only labels ending before its assumed issue date; publication delays are unknown. The range is the model's own 80% error spread from 2019–2021, not a guarantee."}
+            "note": "Forecasts for weeks not yet reported. Each row uses only labels ending before its assumed issue date; publication delays are unknown. The range is the model's own 80% error spread over the last two years of out-of-sample forecasts, not a guarantee."}
 
 
 def feature_set_comparison(frame: pd.DataFrame, thresholds):
@@ -437,7 +635,46 @@ def _lead_sentence(item):
     return "no High warning before peak"
 
 
-def train_and_evaluate(frame: pd.DataFrame, label_metadata: dict[str, Any] | None = None):
+REGISTERED_NAME = os.environ.get("DENGUE_MODEL_NAME", "national_forecast")
+
+
+def _register(run_id, prospective, feature_sets):
+    """Register champion and challenger; aliases tell the scorer which version to load.
+
+    On Databricks the registry is Unity Catalog (catalog.schema.national_forecast). Locally the
+    SQLite tracking store's registry is used. Registration failures propagate on Databricks.
+    """
+    from mlflow import MlflowClient
+    prefix = os.environ.get("DENGUE_TABLE_PREFIX", "")
+    on_databricks = bool(os.environ.get("DATABRICKS_RUNTIME_VERSION"))
+    name = f"{prefix}.{REGISTERED_NAME}" if prefix and on_databricks else REGISTERED_NAME
+    try:
+        client = MlflowClient()
+        versions = {}
+        for alias in ("champion", "challenger"):
+            version = mlflow.register_model(f"runs:/{run_id}/{alias}", name)
+            client.set_registered_model_alias(name, alias, version.version)
+            tags = {"role": alias, "feature_set": "all" if alias == "champion" else "no_weather", "horizon_weeks": "2"}
+            if feature_sets:
+                fs = feature_sets["all" if alias == "champion" else "no_weather"]
+                if fs.get("prospective_mae") is not None:
+                    tags["prospective_mae"] = f"{fs['prospective_mae']:.2f}"
+            for key, value in tags.items():
+                client.set_model_version_tag(name, version.version, key, value)
+            versions[alias] = str(version.version)
+        try:
+            client.update_registered_model(name, description="DengueSUX national two-week dengue forecast. champion = locked 2019–2021 selection "
+                                           "with weather; challenger = same recipe without weather. Scored in Spark by the gold stage.")
+        except Exception:
+            pass
+        return {"name": name, "versions": versions, "registry": "unity_catalog" if on_databricks else "local", "status": "registered"}
+    except Exception as error:
+        if on_databricks:
+            raise
+        return {"name": name, "registry": "local", "status": "unavailable", "reason": type(error).__name__}
+
+
+def train_and_evaluate(frame: pd.DataFrame, label_metadata: dict[str, Any] | None = None, training_table: str | None = None):
     """Lock selection on 2019–2021 folds, then evaluate selected model once on 2022."""
     frame = frame.sort_values("week_start").reset_index(drop=True)
     train, validation, test = chronological_split(frame)
@@ -479,7 +716,9 @@ def train_and_evaluate(frame: pd.DataFrame, label_metadata: dict[str, Any] | Non
     replay_summary = _summary(predictions, thresholds)
     # Later retrospective evaluation keeps the recipe fixed; unreported targets pass the freshness gate.
     prospective = prospective_evaluation(frame, selected_key, thresholds, calibration)
-    live = live_forecast(frame, selected_key, thresholds, calibration, label_metadata)
+    oos_errors = _out_of_sample_errors(frame, selected_key, predictions, prospective["predictions"] if prospective else [])
+    adaptive_level = (prospective or {}).get("scoring", {}).get("adaptive", {}).get("final_level", INTERVAL_LEVEL)
+    live = live_forecast(frame, selected_key, thresholds, calibration, label_metadata, errors=oos_errors, level=adaptive_level)
     feature_sets = feature_set_comparison(frame, thresholds)
     weather_missingness = {"method": "Share of prediction weeks with at least one missing weather lag supplied to the selected learned estimator. Its imputer uses training-set medians internally; observations and exported features remain missing. The four-week-average baseline does not use weather.",
                            "replay_2022": _weather_missingness(predictions),
@@ -533,8 +772,28 @@ def train_and_evaluate(frame: pd.DataFrame, label_metadata: dict[str, Any] | Non
                                 "prospective_interval_coverage": prospective["overall"]["interval_coverage"]} if prospective else {}),
                             **({"live_forecast_people": live["headline"]["prediction"]} if live else {}),
                             **{f"validation_{key}_selection_mae": values["selection_mae"] for key, values in comparison.items()}})
-        mlflow.sklearn.log_model(predictor, name="selected_national_model", input_example=fit[FEATURES].head(3),
-                                 code_paths=[str(Path(__file__).resolve().parent)])
+        if training_table:
+            # Unity Catalog lineage: the Delta feature table is recorded as this run's training input.
+            mlflow.log_input(mlflow.data.load_delta(table_name=training_table), context="training")
+        if prospective and prospective.get("scoring"):
+            sc = prospective["scoring"]
+            mlflow.log_metrics({"prospective_interval_score_fixed": sc["fixed"]["interval_score"], "prospective_interval_score_rolling": sc["rolling"]["interval_score"],
+                                "prospective_coverage_rolling": sc["rolling"]["coverage"],
+                                **({"prospective_seasonal_naive_mae": sc["mae"]["seasonal_naive"]} if sc["mae"]["seasonal_naive"] is not None else {}),
+                                **({"dm_vs_baseline_stat": sc["diebold_mariano"]["vs_four_week_average"]["statistic"],
+                                    "dm_vs_baseline_p": sc["diebold_mariano"]["vs_four_week_average"]["p_value"]} if sc["diebold_mariano"]["vs_four_week_average"] else {})})
+        # Champion = the locked selection refitted on every observed label; challenger = same recipe without weather.
+        live_fit = frame.dropna(subset=["target_cases"])
+        champion = NationalForecastRegressor(selected_key).fit(live_fit[FEATURES], live_fit.target_cases)
+        challenger_key = selected_key if selected_key != "baseline" else "gradient_boosting"
+        challenger = NationalForecastRegressor(challenger_key, "no_weather").fit(live_fit[FEATURES], live_fit.target_cases)
+        example = live_fit[FEATURES].astype(float).tail(3)  # doubles, so missing weather stays a valid null in Spark
+        signature = mlflow.models.infer_signature(example, champion.predict(example))
+        code = [str(Path(__file__).resolve().parent)]
+        mlflow.sklearn.log_model(predictor, name="selected_national_model", input_example=fit[FEATURES].head(3), code_paths=code)
+        mlflow.sklearn.log_model(champion, name="champion", signature=signature, input_example=example, code_paths=code)
+        mlflow.sklearn.log_model(challenger, name="challenger", signature=signature, input_example=example, code_paths=code)
+        result["registry"] = _register(run.info.run_id, prospective, feature_sets)
         mlflow.log_dict(result, "evaluation.json")
         # One child run per feature set, so the MLflow UI can compare "with weather" and "without weather".
         for name, values in feature_sets.items():
@@ -616,6 +875,26 @@ def _prospective_report(prospective, live, feature_sets, calibration, replay_sum
                   "| Year | Weeks | Forecast error | Simple-average error | 80% range coverage | Peak week (people) |", "| --- | ---: | ---: | ---: | ---: | --- |"]
         for year, v in prospective["by_year"].items():
             lines.append(f"| {year} | {v['n']} | {v['selected']['mae']:.1f} | {v['baseline']['mae']:.1f} | {v['interval_coverage']:.0%} | {v['peak']['week']} ({v['peak']['people']:.0f}) |")
+    if prospective and prospective.get("scoring"):
+        sc = prospective["scoring"]
+        dm = sc["diebold_mariano"]["vs_four_week_average"]
+        dm_naive = sc["diebold_mariano"]["vs_seasonal_naive"]
+        lines += ["", "## Proper scoring and recalibrated ranges (2023 onward)", "",
+                  "| Range method | 80% coverage | Mean width | Interval score (lower is better) | Pinball 10% | Pinball 90% |",
+                  "| --- | ---: | ---: | ---: | ---: | ---: |",
+                  f"| Fixed 2019–2021 | {sc['fixed']['coverage']:.0%} | {sc['fixed']['mean_width']:.1f} | {sc['fixed']['interval_score']:.1f} | {sc['fixed']['pinball_10']:.2f} | {sc['fixed']['pinball_90']:.2f} |",
+                  f"| Rolling 104 weeks | {sc['rolling']['coverage']:.0%} | {sc['rolling']['mean_width']:.1f} | {sc['rolling']['interval_score']:.1f} | {sc['rolling']['pinball_10']:.2f} | {sc['rolling']['pinball_90']:.2f} |",
+                  f"| Adaptive conformal (live) | {sc['adaptive']['coverage']:.0%} | {sc['adaptive']['mean_width']:.1f} | {sc['adaptive']['interval_score']:.1f} | {sc['adaptive']['pinball_10']:.2f} | {sc['adaptive']['pinball_90']:.2f} |",
+                  "", sc["rolling"]["method"], sc["adaptive"]["method"], sc["adaptive_sensitivity"]["note"], "",
+                  "| Adaptive step | Coverage | Interval score |", "| ---: | ---: | ---: |",
+                  *[f"| {r['gamma']} | {r['coverage']:.1%} | {r['interval_score']:.1f} |" for r in sc["adaptive_sensitivity"]["rows"]], "",
+                  "| Point forecast | Mean absolute error |", "| --- | ---: |",
+                  f"| Selected model | {sc['mae']['selected']:.1f} |", f"| Four-week average | {sc['mae']['four_week_average']:.1f} |",
+                  f"| Seasonal naive (same week last year, {sc['mae']['seasonal_naive_weeks']} weeks) | {sc['mae']['seasonal_naive']:.1f} |" if sc['mae']['seasonal_naive'] is not None else "| Seasonal naive | — |",
+                  "",
+                  (f"Diebold–Mariano test against the four-week average (absolute error, Newey–West, horizon 2): statistic {dm['statistic']:.2f}, p = {dm['p_value']:.3f} over {dm['n']} weeks." if dm else "Diebold–Mariano test unavailable.")
+                  + (f" Against seasonal naive: statistic {dm_naive['statistic']:.2f}, p = {dm_naive['p_value']:.3f}." if dm_naive else ""),
+                  "A negative statistic favours the forecast. A p-value above 0.05 means the difference could be chance at this sample size.", ""]
     lines += ["", "## Ranges", "", f"{calibration['method']}, {calibration['calibration_predictions']} predictions. "
               f"Coverage in the 2022 replay: {replay_summary['interval_coverage']:.0%}. The range describes past forecast error, not a guarantee.", ""]
     if live:

@@ -128,3 +128,49 @@ def test_footprint_coordinates_are_only_rounded_to_centimetres():
     anchor = {"id": "a", "block": "117", "postal": "610117", "max_floor_lvl": 4}
     [feature] = route_footprints({"areas": {"E": {"cluster_blocks": [anchor]}}}, {"features": [footprint(coordinates=raw)]})["areas"]["E"]["features"]
     assert feature["geometry"]["coordinates"][0][0] == [103.7, 1.3000001]
+
+
+def city_building(x0, y0, size=0.0002, **props):
+    return {"type": "Feature", "properties": {"id": f"ov-{x0}-{y0}", **props},
+            "geometry": {"type": "Polygon", "coordinates": [[[x0, y0], [x0 + size, y0], [x0 + size, y0 + size], [x0, y0 + size], [x0, y0]]]}}
+
+
+def test_city_buildings_are_grey_context_that_never_replace_hdb_shapes():
+    from denguesux.map_context import city_index
+    hdb = footprint(coordinates=[[[103.7040, 1.3040], [103.7045, 1.3040], [103.7045, 1.3045], [103.7040, 1.3045], [103.7040, 1.3040]]])
+    anchor = {"id": "a", "block": "117", "postal": "610117", "max_floor_lvl": 10, "longitude": 103.705, "latitude": 1.305}
+    city = city_index({"features": [
+        city_building(103.7041, 1.3041, size=0.0003, name="Covered by the HDB block", height=50),  # dropped: an HDB shape covers it
+        city_building(103.7050, 1.3050, name="Condo", height=40.4, num_floors=12, **{"class": "residential"}),
+        city_building(103.7055, 1.3055, name="School", num_floors=5, subtype="education"),
+        city_building(103.7060, 1.3060, name="Shop"),
+        city_building(103.7058, 1.3058, size=0.00001, name="Shed"),  # about 1 m²: too small to draw
+        city_building(103.7200, 1.3200, name="Far away", height=99),
+        {"type": "Feature", "properties": {"id": "bowtie"}, "geometry": {"type": "Polygon", "coordinates": [[[103.7050, 1.3056], [103.7052, 1.3058], [103.7052, 1.3056], [103.7050, 1.3058], [103.7050, 1.3056]]]}},
+    ]})
+    result = route_footprints({"areas": {"E": {"cluster_blocks": [anchor], "stops": [{**anchor, "number": 1}]}}}, {"features": [hdb]}, city=city)
+    features = {f["properties"]["id"]: f["properties"] for f in result["areas"]["E"]["features"]}
+    cities = {p["name"]: p for p in features.values() if p["role"] == "city"}
+    assert set(cities) == {"Condo", "School", "Shop"}
+    assert features["a"]["role"] == "stop" and features["a"]["height_m"] == 29.3  # the HDB block is untouched
+    assert cities["Condo"]["height_m"] == 40.4 and cities["Condo"]["height_method"] == "overture_height" and cities["Condo"]["kind"] == "residential"
+    assert cities["School"]["height_m"] == 15.0 and cities["School"]["height_method"] == "overture_num_floors_x3m" and cities["School"]["max_floor_lvl"] == 5
+    assert "height_m" not in cities["Shop"] and cities["Shop"]["height_method"] == "unavailable"  # flat: no invented height
+    assert all(p.get("stop_id") is None and p.get("block") is None and not p.get("cluster_block") for p in cities.values())
+    assert set(cities["Condo"]) == {"id", "role", "height_m", "height_method", "name", "kind"}
+    assert result["coverage"]["city_buildings"] == 3
+    assert result["coverage"]["city_buildings_with_height"] == 2
+    assert result["coverage"]["city_buildings_overlapping_hdb_skipped"] == 1
+    assert "Overture" in result["method"]["city_context"] and "never replace an HDB shape" in result["note"]
+
+
+def test_city_context_is_optional_and_height_is_never_inferred():
+    from denguesux.map_context import city_height
+    anchor = {"id": "a", "block": "117", "postal": "610117", "max_floor_lvl": 10, "longitude": 103.705, "latitude": 1.305}
+    result = route_footprints({"areas": {"E": {"cluster_blocks": [anchor]}}}, {"features": [footprint()]})
+    assert all(f["properties"]["role"] != "city" for f in result["areas"]["E"]["features"])
+    assert result["coverage"]["city_buildings"] == 0 and result["method"]["city_context"] is None
+    assert city_height({"height": 0, "num_floors": 0}) == (None, "unavailable")
+    assert city_height({"height": True}) == (None, "unavailable")
+    assert city_height({"height": 1200}) == (None, "unavailable")  # nothing in Singapore is that tall; a bad tag stays flat
+    assert city_height({"num_floors": 4.0}) == (12.0, "overture_num_floors_x3m")

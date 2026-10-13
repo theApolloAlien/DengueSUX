@@ -138,6 +138,15 @@ def main():
         tidy.extend((week, disease, cases, printed, receipt["source_url"], receipt["sha256"], receipt["retrieved_at_utc"])
                     for week, disease, cases, printed in rows)
         print(f"{year}: {receipt['weeks']} weeks through {receipt['last_week']} ({receipt['publisher']})", flush=True)
+    if TIDY.exists():
+        # A partial run (for example only the current year) keeps every other year's saved rows.
+        with gzip.open(TIDY, "rt") as handle:
+            kept = [tuple(row.values()) for row in csv.DictReader(handle) if int(row["epi_week"][:4]) not in set(args.years)]
+        tidy = sorted(kept + tidy, key=lambda row: (row[0], row[1]))
+        saved = ROOT / "data/evidence/dengue/moh_weekly_manifest.json"
+        if saved.exists():
+            previous = json.loads(saved.read_text()).get("workbooks", [])
+            receipts = sorted([w for w in previous if w["year"] not in set(args.years)] + receipts, key=lambda w: w["year"])
     buffer = io.StringIO()
     writer = csv.writer(buffer, lineterminator="\n")
     writer.writerow(["epi_week", "disease", "cases", "printed_week_range", "source_url", "source_sha256", "retrieved_at_utc"])

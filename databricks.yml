@@ -1,8 +1,13 @@
-# DengueSUX jobs for Databricks Free Edition (serverless only: no cluster is configured).
+# DengueSUX on Databricks Free Edition (serverless only: no cluster is configured).
 # Deploy: databricks bundle deploy --profile denguesux
-# Run: databricks bundle run pipeline --profile denguesux
+# Run:    databricks bundle run pipeline --profile denguesux
+# The Databricks App is deployed separately (scripts/build_databricks_app.py, then `databricks apps deploy`),
+# because its source folder is assembled from the pipeline's published JSON.
 bundle:
   name: denguesux
+
+include:
+  - resources/*.yml
 
 variables:
   data_root:
@@ -11,14 +16,62 @@ variables:
   table_prefix:
     description: Writable catalog.schema for the Delta tables
     default: workspace.denguesux
+  catalog:
+    description: Catalog for the declarative pipeline and dashboard
+    default: workspace
+  schema:
+    description: Schema for the declarative pipeline and dashboard
+    default: denguesux
+  warehouse_id:
+    description: SQL warehouse for alerts, the dashboard and app field reports (the Free Edition 2X-Small warehouse)
+    default: 16273598aba1e69d
+  public_url:
+    description: Public URL of the Databricks App; Telegram messages link to its field plans.
+    default: https://denguesux-7474658048209156.aws.databricksapps.com
+  telegram_chat_id:
+    description: Optional Telegram channel or chat (e.g. @denguesux_alerts) that receives the daily alert digest.
+    default: ""
+  alert_email:
+    description: Who receives job failure emails and SQL alert notifications
+    default: ${workspace.current_user.userName}
 
 resources:
+  pipelines:
+    live_quality:
+      name: DengueSUX live data quality (weather + clusters)
+      catalog: ${var.catalog}
+      schema: ${var.schema}
+      serverless: true
+      continuous: false
+      channel: current
+      libraries:
+        - glob:
+            include: ./pipelines/live_quality/**
+      root_path: ./pipelines/live_quality
+
   jobs:
     pipeline:
-      name: DengueSUX pipeline (bronze, silver, gold)
+      name: DengueSUX pipeline (labels, bronze, silver, gold)
       max_concurrent_runs: 1
+      email_notifications:
+        on_failure: ["${var.alert_email}"]
+      schedule:
+        # CDA publishes each week's bulletin about a week after it ends; Tuesday and Friday runs pick it up
+        # well before the live outlook's 21-day label-freshness gate closes.
+        quartz_cron_expression: "0 30 10 ? * TUE,FRI"
+        timezone_id: Asia/Singapore
+        pause_status: UNPAUSED
       tasks:
+        - task_key: official_labels
+          notebook_task:
+            notebook_path: ./notebooks/09_collect_labels.py
+            base_parameters: {repo_root: "${workspace.file_path}", data_root: "${var.data_root}"}
+          timeout_seconds: 600
+          max_retries: 1
+          min_retry_interval_millis: 120000
         - task_key: bronze
+          depends_on: [{task_key: official_labels}]
+          run_if: ALL_DONE  # a publisher outage must not stop the pipeline; the label gate decides freshness
           notebook_task:
             notebook_path: ./notebooks/run_stage.py
             base_parameters: {stage: bronze, repo_root: "${workspace.file_path}", data_root: "${var.data_root}", table_prefix: "${var.table_prefix}"}
@@ -35,10 +88,31 @@ resources:
             notebook_path: ./notebooks/run_stage.py
             base_parameters: {stage: gold, repo_root: "${workspace.file_path}", data_root: "${var.data_root}", table_prefix: "${var.table_prefix}"}
           timeout_seconds: 3600
+        - task_key: ai_forecast_benchmark
+          depends_on: [{task_key: gold}]
+          sql_task:
+            file: {path: ./sql/ai_forecast_benchmark_table.sql}
+            warehouse_id: ${var.warehouse_id}
+          timeout_seconds: 900
+        - task_key: metric_views
+          depends_on: [{task_key: gold}]
+          sql_task:
+            file: {path: ./sql/metric_view_forecast_performance.sql}
+            warehouse_id: ${var.warehouse_id}
+          timeout_seconds: 600
+        - task_key: platform_status
+          depends_on: [{task_key: ai_forecast_benchmark}, {task_key: metric_views}]
+          run_if: ALL_DONE
+          notebook_task:
+            notebook_path: ./notebooks/10_platform_status.py
+            base_parameters: {repo_root: "${workspace.file_path}", data_root: "${var.data_root}", table_prefix: "${var.table_prefix}"}
+          timeout_seconds: 600
 
     daily_inspection:
       name: DengueSUX daily inspection refresh
       max_concurrent_runs: 1
+      email_notifications:
+        on_failure: ["${var.alert_email}"]
       schedule:
         quartz_cron_expression: "0 15 8 * * ?"
         timezone_id: Asia/Singapore
@@ -51,6 +125,12 @@ resources:
           timeout_seconds: 1800
           max_retries: 1
           min_retry_interval_millis: 60000
+        - task_key: live_data_quality
+          depends_on: [{task_key: live_api_autoloader}]
+          run_if: ALL_DONE  # still validate whatever landed
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.live_quality.id}
+          timeout_seconds: 1800
         - task_key: high_aedes_population
           notebook_task:
             notebook_path: ./notebooks/07_aedes.py
@@ -62,7 +142,7 @@ resources:
           run_if: ALL_DONE  # still preserve today's cluster snapshot if weather/Auto Loader fails
           notebook_task:
             notebook_path: ./notebooks/05_daily_inspection.py
-            base_parameters: {data_root: "${var.data_root}", table_prefix: "${var.table_prefix}"}
+            base_parameters: {data_root: "${var.data_root}", table_prefix: "${var.table_prefix}", public_url: "${var.public_url}", telegram_chat_id: "${var.telegram_chat_id}"}
           timeout_seconds: 1800
           max_retries: 1
           min_retry_interval_millis: 60000
@@ -74,16 +154,32 @@ resources:
             base_parameters: {repo_root: "${workspace.file_path}", data_root: "${var.data_root}", table_prefix: "${var.table_prefix}"}
           timeout_seconds: 600
           max_retries: 1
+        - task_key: platform_status
+          depends_on: [{task_key: official_and_news_feed}, {task_key: live_data_quality}]
+          run_if: ALL_DONE  # report failures too; that is the point of a status panel
+          notebook_task:
+            notebook_path: ./notebooks/10_platform_status.py
+            base_parameters: {repo_root: "${workspace.file_path}", data_root: "${var.data_root}", table_prefix: "${var.table_prefix}"}
+          timeout_seconds: 600
 
 targets:
   dev:
     default: true
+  prod:
+    # Same Free Edition workspace, separate deployment root; schedules run as deployed. Not deployed by default.
+    mode: production
+    workspace:
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/prod
+    permissions:
+      - level: CAN_MANAGE
+        user_name: ${workspace.current_user.userName}
 
 sync:
   include:
     - denguesux/*.py
     - scripts/*.py
     - notebooks/*.py
+    - pipelines/**
   exclude:
     - .env
     - .env.*

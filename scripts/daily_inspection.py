@@ -33,12 +33,42 @@ def run_daily(root=ROOT, *, spark=None, offline=False, radius_m=300, top_n=8, se
         write_table(spark.createDataFrame(area_rows, "area_code string, area_name string, priority string, heuristic_score double, cluster_count int, cluster_cases int, weather_date string"), "gold_area_priorities")
     from denguesux.inspection import build_inspection
     inspection = build_inspection(root=root, radius_m=radius_m, top_n=top_n, offline=offline, spark=spark)
+    if spark is not None:
+        # Close the loop: today's plans carry each stop's latest field outcome from the Unity Catalog table.
+        try:
+            from denguesux.field_reports import annotate_inspection
+            from denguesux.runtime import TABLE_PREFIX
+            rows = [r.asDict() for r in spark.sql(
+                f"SELECT report_id, CAST(reported_at AS STRING) AS reported_at, area_code, stop_id, stop_name, place_type, outcome, plan_as_of, source "
+                f"FROM {TABLE_PREFIX}.field_reports ORDER BY reported_at DESC LIMIT 5000").collect()]
+            inspection = annotate_inspection(inspection, rows)
+            _atomic_json(root / "output/web/inspection.json", inspection)
+        except Exception as error:
+            print(f"Field outcomes not attached: {type(error).__name__}")
     notices = write_notices(root, spark=spark)
     from denguesux.alerts import write_alerts
     # Only the scheduled job sends alerts; manual and test runs never message anyone.
     alerts = write_alerts(root, spark=spark, send=send_alerts)
+    telegram = {"status": "not_sent"}
+    if send_alerts:
+        # Telegram subscribers get their areas' signals (High, new or growing cluster, forecast High); counts only are logged.
+        from denguesux.telegram import push_daily
+        try:
+            telegram = push_daily(root, spark=spark)
+        except Exception as error:
+            telegram = {"status": "error", "error": type(error).__name__}
+        print({"telegram": telegram})
     from denguesux.map_context import build_map_context
     build_map_context(root)
+    # Two-week area outlook from today's snapshot, recorded in the append-only ledger, then scored when due.
+    area = None
+    try:
+        from denguesux.area_forecast import build_area_forecast
+        area = build_area_forecast(root, spark=spark)
+    except Exception as error:  # the outlook is additive; never block the daily snapshot
+        print(f"Area outlook skipped: {type(error).__name__}: {str(error)[:200]}")
+    from denguesux.ledger import update as update_ledger
+    update_ledger(root, area_result=area, model_version="area-logistic", spark=spark)
     dashboard_path = root / "output/web/dashboard.json"
     if dashboard_path.exists():
         dashboard = json.loads(dashboard_path.read_text())
@@ -47,7 +77,7 @@ def run_daily(root=ROOT, *, spark=None, offline=False, radius_m=300, top_n=8, se
         dashboard["inspection"] = inspection
         dashboard["notices"] = notices
         dashboard["alerts"] = alerts
-        for name in ('footprints', 'population', 'aedes', 'feed'):
+        for name in ('footprints', 'population', 'aedes', 'feed', 'area_forecast', 'area_history', 'ledger', 'pipeline_status'):
             path = root / 'output/web' / f'{name}.json'
             if path.exists():
                 dashboard[name] = json.loads(path.read_text())
@@ -60,7 +90,7 @@ def run_daily(root=ROOT, *, spark=None, offline=False, radius_m=300, top_n=8, se
                "snapshot_count": growth["snapshot_count"], "growth_status": growth["status"],
                "notice_count": sum(len(value) for value in notices["notices"].values()),
                "inspection_status": "ready" if any(area.get("stops") for area in inspection.get("areas", {}).values()) else "no_route_candidates",
-               "offline": offline,
+               "offline": offline, "telegram": telegram,
                "scheduler": "Runner only; scheduler activation is a deployment step."}
     _atomic_json(root / "output/daily_inspection_status.json", summary)
     return summary

@@ -24,6 +24,7 @@
   const current = () => data.current || {};
   const model = () => data.model || {};
   const liveForecast = () => {
+    if (window.DengueLiveForecast) return window.DengueLiveForecast();
     const m=model(),live=m.live_forecast,gate=m.current_forecast||{};
     if(live?.available!==true||gate.available!==true||data.meta?.labels?.gate?.available===false)return null;
     const today=new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Singapore'});

@@ -8,7 +8,8 @@
   return `<h1 class="styleguide-title">Design system</h1><div class="component-grid"><section class="component-sample"><h2>Semantic colours</h2><div class="token-swatches">${colors.map(c=>`<div class="token-swatch"><b style="background:var(--${c})"></b>${c}</div>`).join('')}</div></section><section class="component-sample"><h2>Type & figures</h2>${['xs','sm','md','lg','xl','hero'].map(s=>`<p style="font-size:var(--font-${s})">${s} · 68</p>`).join('')}</section><section class="component-sample"><h2>Buttons</h2><button class="solid-button">Plan a check</button> <button class="outline-button">Copy link</button> <button class="text-button">View map</button> <button class="icon-button" aria-label="Close"><i class="ph ph-x"></i></button><button class="solid-button" disabled>Unavailable</button><button class="outline-button" aria-busy="true">Loading…</button></section><section class="component-sample"><h2>Inputs & controls</h2><label class="search-box">Area <input placeholder="Find an area"></label><div class="segmented"><button class="active" aria-pressed="true">List</button><button aria-pressed="false">Table</button></div><label><input type="checkbox" checked> Stop checked</label><p><kbd>⌘</kbd> <kbd>K</kbd> Search</p></section><section class="component-sample"><h2>Priority & status</h2><span class="badge low">Low</span> <span class="badge medium">Medium</span> <span class="badge high">High</span><div class="inline-banner">Saved snapshot · 10 Oct</div><div class="inline-banner error" role="status">Data unavailable <button class="text-button" onclick="this.closest('div').remove()">Dismiss</button></div></section><section class="component-sample"><h2>Loading & progress</h2><div class="skeleton" style="height:64px" aria-label="Loading"></div><progress aria-label="Checklist progress" value="2" max="8"></progress><progress aria-label="Loading data"></progress><p>Missing stays missing: —</p></section><section class="component-sample"><h2>Layers</h2><button class="outline-button" data-methodology>Open dialog</button><details><summary>Sources</summary>NEA, MOH and URA</details><p title="Source dates are always retained">Tooltip: saved data</p></section></div>`;
  }
  let api,section='week',routing=false,table=false,sortKey='cluster_cases',sortDirection=-1,commandItems=[],activeIndex=0;
- const names={week:'This week',map:'Map',plan:'Field plan',forecast:'Forecast',styleguide:'Design system'};
+ const names={week:'This week',map:'Map',plan:'Field plan',forecast:'Forecast',platform:'How it runs',poster:'Poster',styleguide:'Design system'};
+ const EXTRA_VIEWS=['platform','poster'];
  const slug=a=>a.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-$/,'');
  const areaFor=key=>api.state.areas.find(a=>a.code===key||slug(a)===key);
  const href=(view,area)=>`#${view}${area?'/'+slug(area):''}`;
@@ -24,7 +25,7 @@
  function freshness(){const raw=api.state.data.current?.as_of,stamp=Date.parse(raw),days=Math.floor((Date.now()-stamp)/86400000);const valid=Number.isFinite(stamp)&&days>=0;$('#data-timestamp').innerHTML=`<span class="status-dot"></span>Clusters · ${valid?(days===0?'saved today':days===1?'saved yesterday':days+' d ago'):'date unavailable'}`;$('#data-timestamp').classList.toggle('fresh',valid&&days<=1);$('#data-timestamp').classList.toggle('stale',!valid||days>1);}
  function go(view,code){if(!api)return;const area=areaFor(code),target=href(view==='signals'?'map':view,area);if(location.hash===target)route();else location.hash=target;}
  function route(){
-  if(!api)return;const parts=location.hash.slice(1).split('/');let next=parts[0]||'week';if(next==='signals')next='map';if(!names[next])next='week';const area=areaFor(parts[1]||'');
+  if(!api)return;const parts=location.hash.slice(1).split('/');let next=parts[0]||'week';if(next==='signals')next='map';if(!names[next])next='week';if(next==='styleguide'&&!new URLSearchParams(location.search).has('dev'))next='week';const area=areaFor(parts[1]||'');
   const apply=()=>{
    routing=true;api.stopReplay();window.Fieldwork.closePlan();$$('.view-content').forEach(n=>n.hidden=true);section=next;api.state.view=next==='plan'?'inspection':next;
    $('.page-heading').hidden=next==='styleguide'||next==='week';$('#breadcrumb').innerHTML=`${names[next]}${area?'<span>/</span>'+esc(area.name):''}`;
@@ -39,7 +40,11 @@
    }
    if(next==='forecast'){$('#forecast-view').hidden=false;requestAnimationFrame(api.drawChart);}
    if(next==='styleguide')$('#styleguide-view').hidden=false;
-   $('#route-error').hidden=!parts[1]||!!area;document.title=`${names[next]}${area?' / '+area.name:''} · DengueSUX`;routing=false;window.scrollTo({top:0,behavior:'instant'});requestAnimationFrame(()=>window.Motion?.section());
+   if(EXTRA_VIEWS.includes(next)){const node=document.getElementById(next+'-view');if(node)node.hidden=false;if(next==='poster')$('.page-heading').hidden=true;}
+   if(next==='platform')$('#page-title').textContent='How DengueSUX runs on Databricks';
+   if(next==='map'){const sub=parts[1]==='3d'?'3d':parts[2]==='3d'?'3d':null;if(sub)requestAnimationFrame(()=>setMapView('3d'));}
+   document.dispatchEvent(new CustomEvent('denguesux:route',{detail:{view:next,area,parts}}));
+   $('#route-error').hidden=!parts[1]||!!area||parts[1]==='3d';document.title=`${names[next]}${area?' / '+area.name:''} · DengueSUX`;routing=false;window.scrollTo({top:0,behavior:'instant'});requestAnimationFrame(()=>window.Motion?.section());
   };
   const previous=section;document.documentElement.style.setProperty('--travel',Object.keys(names).indexOf(next)>=Object.keys(names).indexOf(previous)?'8px':'-8px');
   // A hidden tab aborts view transitions (the DOM update still runs); swallow that rejection instead of logging it.
@@ -58,8 +63,9 @@
  function setMapView(view){
   mapView=view;table=view==='table';$('.explorer').hidden=table;$('#map-table').hidden=!table;
   $$('[data-map-view]').forEach(b=>{const active=b.dataset.mapView===view;b.classList.toggle('active',active);b.setAttribute('aria-pressed',active);});
+  if(section==='map'&&!routing){const base=location.hash.split('/').filter(x=>x&&x!=='3d');const target=(base.length?base.join('/'):'#map')+(view==='3d'?'/3d':'');if(location.hash!==target)history.replaceState(null,'',target);}
   const panel=$('.map-panel');panel.classList.toggle('is-3d',view==='3d');
-  if(view==='3d'&&!landscape&&window.Landscape3D?.supported()){const host=document.createElement('div');host.className='map-3d-host';panel.append(host);landscape=window.Landscape3D.mount(host,api.state.data.current,{theme:'day',orbit:false,labels:8,onPick:code=>api.selectArea(code,false),padding:{top:50,bottom:50,left:40,right:40}});}
+  if(view==='3d'&&!landscape&&window.Landscape3D?.supported()){const host=document.createElement('div');host.className='map-3d-host';panel.append(host);landscape=window.Landscape3D.mount(host,api.state.data.current,{theme:'day',orbit:false,labels:8,onPick:code=>api.selectArea(code,false),padding:{top:50,bottom:50,left:40,right:40}});window.Product.landscape=landscape;document.dispatchEvent(new CustomEvent('denguesux:landscape',{detail:{landscape,host}}));}
   $('.map-3d-host')?.toggleAttribute('hidden',view!=='3d');
   if(table)tableRows();else requestAnimationFrame(()=>{api.state.map?.invalidateSize();landscape?.resize();});
  }
@@ -67,9 +73,10 @@
  function fuzzy(text,query){text=text.toLowerCase();query=query.toLowerCase();let at=0;for(const c of text)if(c===query[at])at++;return at===query.length;}
  function commands(){
   const query=$('#command-search').value.trim(),recent=store.get('recent',[]);
-  let items=Object.entries(names).filter(([id])=>id!=='styleguide').map(([id,label])=>({id,label,kind:'Section',run:()=>go(id)}));
+  let items=Object.entries(names).filter(([id])=>id!=='styleguide'&&id!=='poster').map(([id,label])=>({id,label,kind:'Section',run:()=>go(id)}));
   items.push({id:'postal',label:'Check my postal code',kind:'Action',run:()=>{go('week');requestAnimationFrame(()=>{$('#ask-input')?.focus();});}}, {id:'copy',label:'Copy link',kind:'Action',run:copyLink});
-  api.state.areas.forEach(a=>{items.push({id:'map:'+a.code,label:a.name,kind:'Area',run:()=>go('map',a.code)});items.push({id:'plan:'+a.code,label:'Plan a check in '+a.name,kind:'Field plan',run:()=>go('plan',a.code)});});
+  api.state.areas.forEach(a=>{items.push({id:'map:'+a.code,label:a.name,kind:'Area',run:()=>go('map',a.code)});items.push({id:'plan:'+a.code,label:'Plan a check in '+a.name,kind:'Field plan',run:()=>go('plan',a.code)});items.push({id:'poster:'+a.code,label:'Poster for '+a.name,kind:'Print',run:()=>go('poster',a.code)});});
+  items.push({id:'story',label:'Play the 2-minute story',kind:'Demo',run:()=>window.Story?.play()},{id:'timelapse',label:'Replay clusters since 2019 in 3D',kind:'3D',run:()=>window.Timelapse3D?.open()});
   items=items.filter(item=>!query||fuzzy(item.label,query)).sort((a,b)=>{const ai=recent.indexOf(a.id),bi=recent.indexOf(b.id);return (ai<0?999:ai)-(bi<0?999:bi);});
   if(query)items.push({id:'ask',label:'Ask: '+query,kind:'Question',run:()=>{$('#ask-fab').click();const input=$('#ask-input');if(input){input.value=query;input.focus();}}});
   commandItems=items.slice(0,14);activeIndex=0;$('#command-results').innerHTML=commandItems.map((item,i)=>`<div id="command-${i}" role="option" class="command-option" aria-selected="${i===0}" data-command="${i}"><span>${esc(item.label)}</span><small>${!query&&recent.includes(item.id)?'Recent':item.kind}</small></div>`).join('')||'<p class="command-empty">No matches. Try an area name.</p>';
@@ -114,7 +121,7 @@
   if(!api.liveForecast())forecast.insertAdjacentHTML('afterbegin','<p class="forecast-empty">No current forecast is available from the saved official reports.</p>');
   const banner=document.createElement('div');banner.id='route-error';banner.className='inline-banner';banner.hidden=true;banner.textContent='Area not found. Choose one from the list.';$('#main').prepend(banner);
   $('#sidebar-collapse').onclick=()=>{const collapsed=document.body.classList.toggle('sidebar-collapsed');$('#sidebar-collapse').setAttribute('aria-expanded',!collapsed);$('#sidebar-collapse').setAttribute('aria-label',collapsed?'Expand sidebar':'Collapse sidebar');store.set('sidebar',collapsed);requestAnimationFrame(()=>api.state.map?.invalidateSize());};if(store.get('sidebar',false))$('#sidebar-collapse').click();
-  layers();$('#guide-toast').onclick=()=>api.toast('Copied');$('#guide-ask').onclick=()=>$('#ask-fab').click();$('#guide-palette').onclick=openCommand;freshness();connectivity();$('#tour-replay').onclick=tour;$('#styleguide-view [data-methodology]').onclick=()=>$('#methodology-dialog').showModal();window.ChatHome?.mount(api);window.Product.ready=true;window.addEventListener('hashchange',route);route();const noticeLang=new URLSearchParams(location.search).get('notice'),noticeArea=areaFor(location.hash.split('/')[1]||'');if(noticeLang&&noticeArea&&['en','zh','ms','ta'].includes(noticeLang))window.Fieldwork.openNotice(noticeArea,noticeLang);
+  layers();$('#guide-toast').onclick=()=>api.toast('Copied');$('#guide-ask').onclick=()=>$('#ask-fab').click();$('#guide-palette').onclick=openCommand;freshness();connectivity();$('#tour-replay').onclick=tour;$('#styleguide-view [data-methodology]').onclick=()=>$('#methodology-dialog').showModal();window.ChatHome?.mount(api);window.Product.ready=true;document.dispatchEvent(new CustomEvent('denguesux:ready',{detail:{api,go,setMapView}}));window.addEventListener('hashchange',route);route();const noticeLang=new URLSearchParams(location.search).get('notice'),noticeArea=areaFor(location.hash.split('/')[1]||'');if(noticeLang&&noticeArea&&['en','zh','ms','ta'].includes(noticeLang))window.Fieldwork.openNotice(noticeArea,noticeLang);
  }
- window.Product={init,go,selected,copyLink,busy,onReady,ready:false,openingPlan:false};
+ window.Product={init,go,selected,copyLink,busy,onReady,setMapView:v=>setMapView(v),ready:false,openingPlan:false};
 })();

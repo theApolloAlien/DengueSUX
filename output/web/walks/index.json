@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T16:22:55.167592+00:00",
+  "generated_at": "2026-10-13T10:12:08.957485+00:00",
   "formula": {
     "label": "Walk order / 100 (assumed operational rule, not a prediction)",
     "expression": "min(100, place type + compactness + homes nearby)",
@@ -22,16 +22,29 @@
     "missing": "No case counts are used. Places without a verified location are left out, never estimated."
   },
   "landuse_note": "URA Master Plan 2025 zoning (planned use): parks and open space in green, water bodies in blue.",
-  "footprint_note": "Official HDB footprints. Estimated height = published max_floor_lvl × 2.8 m + 1.3 m roof allowance (the NUS Urban Analytics Lab HDB 3D convention), not a surveyed height. Blocks without a verified storey count stay flat; non-HDB buildings are not modelled. Places to check, not confirmed breeding sites.",
+  "footprint_note": "Official HDB footprints. Estimated height = published max_floor_lvl × 2.8 m + 1.3 m roof allowance (the NUS Urban Analytics Lab HDB 3D convention), not a surveyed height. Blocks without a verified storey count stay flat. Non-HDB buildings (role 'city') are grey context from Overture Maps (OpenStreetMap, Microsoft, Google and Esri footprints), raised only where a height or floor count is listed; they never replace an HDB shape. Places to check, not confirmed breeding sites.",
   "method": {
     "storey_height_m": 2.8,
     "roof_allowance_m": 1.3,
     "context_margin_m": 160,
     "height_reference": "Biljecki (2020), NUS Urban Analytics Lab hdb3d: 2.8 m floor-to-floor + 1.3 m roof",
-    "coordinate_rounding": "7 decimal places (about 1 cm)"
+    "coordinate_rounding": "7 decimal places (about 1 cm)",
+    "city_context": "Overture Maps buildings (OpenStreetMap, Microsoft, Google, Esri) within the same margin as context, not data: grey, raised only from a listed height or floor count, dropped where an HDB footprint covers them",
+    "city_floor_height_m": 3.0
   },
-  "onemap_status": "ready",
-  "map_data_stale": false,
+  "footprint_coverage": {
+    "matched_blocks": 24,
+    "unmatched_blocks": 0,
+    "context_blocks": 103,
+    "context_blocks_with_storeys": 103,
+    "invalid_source_geometries_skipped": 4,
+    "verified_street_codes": 625,
+    "city_buildings": 3912,
+    "city_buildings_with_height": 360,
+    "city_buildings_overlapping_hdb_skipped": 142
+  },
+  "onemap_status": "renewal_failed",
+  "map_data_stale": true,
   "sources": [
     {
       "dataset_id": "d_17f5382f26140b1fdae0ba2ef6239d2f",
@@ -50,6 +63,16 @@
       "raw_sha256": "7c987511548de3a82da403cabca02702031e02ade8703a9e401417883dfeb702",
       "stored_sha256": "f1631140cf45a179104e468d4ce0eefafb625db40ab773c065ea9d6696a3c9b8",
       "source_file": "hdb_existing_building.geojson.gz"
+    },
+    {
+      "dataset_id": "overture:2026-09-23.1:buildings",
+      "name": "Overture Maps buildings (OpenStreetMap, Microsoft, Google, Esri)",
+      "url": "https://docs.overturemaps.org/guides/buildings/",
+      "retrieved_at": "2026-10-13T09:02:56.372797+00:00",
+      "raw_sha256": "51f190563a3e13d12b3694bb1bd5df4fd77f28042eb3837a0117cc522e074d27",
+      "stored_sha256": "fbaf58f1acb90e12f74d38207b08f36bf96c766e35a936036259e038a897bef6",
+      "source_file": "overture_buildings_sg.geojson.gz",
+      "attribution": "© OpenStreetMap contributors (ODbL); Microsoft, Google and Esri footprints via the Overture Maps Foundation"
     },
     {
       "dataset_id": "d_4a086da0a5553be1d89383cd90d07ecd",
@@ -92,8 +115,9 @@
       "route_method": "onemap_walk",
       "distance_m": 1465,
       "buildings": 32,
+      "city_buildings": 75,
       "landuse": 63,
-      "bytes": 115990
+      "bytes": 143129
     },
     "JE": {
       "status": "ready",
@@ -102,8 +126,9 @@
       "route_method": "onemap_walk",
       "distance_m": 979,
       "buildings": 43,
-      "landuse": 62,
-      "bytes": 213330
+      "city_buildings": 74,
+      "landuse": 58,
+      "bytes": 237649
     },
     "BS": {
       "status": "ready",
@@ -112,48 +137,53 @@
       "route_method": "onemap_walk",
       "distance_m": 897,
       "buildings": 14,
+      "city_buildings": 126,
       "landuse": 50,
-      "bytes": 67856
-    },
-    "WC": {
-      "status": "no_places",
-      "basis": "near_cluster",
-      "stops": 0,
-      "route_method": "unavailable",
-      "distance_m": null,
-      "buildings": 0,
-      "landuse": 58,
-      "bytes": 214660
-    },
-    "BK": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 648,
-      "buildings": 58,
-      "landuse": 69,
-      "bytes": 157424
-    },
-    "SB": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 863,
-      "buildings": 78,
-      "landuse": 65,
-      "bytes": 287943
+      "bytes": 111901
     },
     "AM": {
       "status": "ready",
       "basis": "near_cluster",
-      "stops": 5,
-      "route_method": "onemap_walk",
-      "distance_m": 1504,
-      "buildings": 16,
-      "landuse": 62,
-      "bytes": 73023
+      "stops": 7,
+      "route_method": "approximate_order",
+      "distance_m": 1313,
+      "buildings": 12,
+      "city_buildings": 856,
+      "landuse": 60,
+      "bytes": 375581
+    },
+    "SG": {
+      "status": "ready",
+      "basis": "near_cluster",
+      "stops": 7,
+      "route_method": "approximate_order",
+      "distance_m": 526,
+      "buildings": 56,
+      "city_buildings": 1692,
+      "landuse": 30,
+      "bytes": 679120
+    },
+    "WD": {
+      "status": "ready",
+      "basis": "near_cluster",
+      "stops": 1,
+      "route_method": "approximate_order",
+      "distance_m": 0,
+      "buildings": 0,
+      "city_buildings": 109,
+      "landuse": 20,
+      "bytes": 51124
+    },
+    "HG": {
+      "status": "ready",
+      "basis": "near_cluster",
+      "stops": 7,
+      "route_method": "approximate_order",
+      "distance_m": 1156,
+      "buildings": 30,
+      "city_buildings": 1231,
+      "landuse": 38,
+      "bytes": 510341
     },
     "PR": {
       "status": "ready",
@@ -162,448 +192,9 @@
       "route_method": "onemap_walk",
       "distance_m": 1221,
       "buildings": 48,
+      "city_buildings": 99,
       "landuse": 43,
-      "bytes": 142563
-    },
-    "PN": {
-      "status": "ready",
-      "basis": "nearest_outside",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 335,
-      "buildings": 32,
-      "landuse": 14,
-      "bytes": 97462
-    },
-    "BL": {
-      "status": "ready",
-      "basis": "nearest_outside",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 1315,
-      "buildings": 31,
-      "landuse": 7,
-      "bytes": 93865
-    },
-    "SK": {
-      "status": "ready",
-      "basis": "park_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 619,
-      "buildings": 35,
-      "landuse": 45,
-      "bytes": 126722
-    },
-    "WI": {
-      "status": "no_places",
-      "basis": null,
-      "stops": 0,
-      "route_method": "unavailable",
-      "distance_m": null,
-      "buildings": 0,
-      "landuse": 11,
-      "bytes": 27682
-    },
-    "PG": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 1704,
-      "buildings": 128,
-      "landuse": 97,
-      "bytes": 443054
-    },
-    "TH": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 402,
-      "buildings": 72,
-      "landuse": 37,
-      "bytes": 305409
-    },
-    "BD": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 1949,
-      "buildings": 49,
-      "landuse": 66,
-      "bytes": 144781
-    },
-    "CL": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 1173,
-      "buildings": 54,
-      "landuse": 59,
-      "bytes": 147763
-    },
-    "MD": {
-      "status": "ready",
-      "basis": "park_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 763,
-      "buildings": 24,
-      "landuse": 6,
-      "bytes": 62083
-    },
-    "SM": {
-      "status": "ready",
-      "basis": "nearest_outside",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 573,
-      "buildings": 31,
-      "landuse": 14,
-      "bytes": 187410
-    },
-    "YS": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 1180,
-      "buildings": 52,
-      "landuse": 44,
-      "bytes": 132203
-    },
-    "BT": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 1215,
-      "buildings": 10,
-      "landuse": 23,
-      "bytes": 50293
-    },
-    "LK": {
-      "status": "ready",
-      "basis": "park_hub",
-      "stops": 3,
-      "route_method": "onemap_walk",
-      "distance_m": 8191,
-      "buildings": 0,
-      "landuse": 43,
-      "bytes": 64033
-    },
-    "SE": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 819,
-      "buildings": 72,
-      "landuse": 29,
-      "bytes": 252700
-    },
-    "CK": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 872,
-      "buildings": 54,
-      "landuse": 44,
-      "bytes": 183290
-    },
-    "BP": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 743,
-      "buildings": 58,
-      "landuse": 38,
-      "bytes": 183791
-    },
-    "HG": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 820,
-      "buildings": 33,
-      "landuse": 38,
-      "bytes": 128967
-    },
-    "PL": {
-      "status": "ready",
-      "basis": "nearest_outside",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 898,
-      "buildings": 39,
-      "landuse": 8,
-      "bytes": 67925
-    },
-    "TM": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 896,
-      "buildings": 26,
-      "landuse": 74,
-      "bytes": 119809
-    },
-    "WD": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 644,
-      "buildings": 32,
-      "landuse": 68,
-      "bytes": 119045
-    },
-    "CC": {
-      "status": "ready",
-      "basis": "park_hub",
-      "stops": 4,
-      "route_method": "onemap_walk",
-      "distance_m": 3115,
-      "buildings": 0,
-      "landuse": 28,
-      "bytes": 44284
-    },
-    "ME": {
-      "status": "ready",
-      "basis": "park_hub",
-      "stops": 4,
-      "route_method": "onemap_walk",
-      "distance_m": 4636,
-      "buildings": 27,
-      "landuse": 58,
-      "bytes": 94602
-    },
-    "MS": {
-      "status": "ready",
-      "basis": "nearest_outside",
-      "stops": 4,
-      "route_method": "onemap_walk",
-      "distance_m": 1785,
-      "buildings": 0,
-      "landuse": 115,
-      "bytes": 72027
-    },
-    "SG": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 694,
-      "buildings": 47,
-      "landuse": 33,
-      "bytes": 145617
-    },
-    "SV": {
-      "status": "ready",
-      "basis": "nearest_outside",
-      "stops": 4,
-      "route_method": "onemap_walk",
-      "distance_m": 1050,
-      "buildings": 9,
-      "landuse": 26,
-      "bytes": 34556
-    },
-    "BM": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 1118,
-      "buildings": 54,
-      "landuse": 52,
-      "bytes": 168594
-    },
-    "DT": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 1119,
-      "buildings": 10,
-      "landuse": 99,
-      "bytes": 84602
-    },
-    "KL": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 700,
-      "buildings": 38,
-      "landuse": 72,
-      "bytes": 133632
-    },
-    "MU": {
-      "status": "ready",
-      "basis": "park_hub",
-      "stops": 4,
-      "route_method": "onemap_walk",
-      "distance_m": 1739,
-      "buildings": 0,
-      "landuse": 42,
-      "bytes": 31365
-    },
-    "NT": {
-      "status": "ready",
-      "basis": "hawker_hub",
-      "stops": 4,
-      "route_method": "onemap_walk",
-      "distance_m": 2840,
-      "buildings": 7,
-      "landuse": 26,
-      "bytes": 35228
-    },
-    "NV": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 1235,
-      "buildings": 42,
-      "landuse": 24,
-      "bytes": 117553
-    },
-    "OR": {
-      "status": "ready",
-      "basis": "park_hub",
-      "stops": 4,
-      "route_method": "onemap_walk",
-      "distance_m": 1728,
-      "buildings": 0,
-      "landuse": 34,
-      "bytes": 26205
-    },
-    "OT": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 1917,
-      "buildings": 31,
-      "landuse": 30,
-      "bytes": 87513
-    },
-    "RV": {
-      "status": "ready",
-      "basis": "park_hub",
-      "stops": 3,
-      "route_method": "onemap_walk",
-      "distance_m": 911,
-      "buildings": 3,
-      "landuse": 34,
-      "bytes": 26257
-    },
-    "RC": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 947,
-      "buildings": 21,
-      "landuse": 40,
-      "bytes": 68582
-    },
-    "SL": {
-      "status": "ready",
-      "basis": "park_hub",
-      "stops": 4,
-      "route_method": "onemap_walk",
-      "distance_m": 2376,
-      "buildings": 0,
-      "landuse": 21,
-      "bytes": 23019
-    },
-    "SR": {
-      "status": "ready",
-      "basis": "park_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 813,
-      "buildings": 8,
-      "landuse": 68,
-      "bytes": 58900
-    },
-    "SI": {
-      "status": "ready",
-      "basis": "nearest_outside",
-      "stops": 1,
-      "route_method": "approximate_order",
-      "distance_m": 0,
-      "buildings": 0,
-      "landuse": 9,
-      "bytes": 12998
-    },
-    "TN": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 6,
-      "route_method": "onemap_walk",
-      "distance_m": 1839,
-      "buildings": 31,
-      "landuse": 34,
-      "bytes": 89409
-    },
-    "CB": {
-      "status": "no_places",
-      "basis": null,
-      "stops": 0,
-      "route_method": "unavailable",
-      "distance_m": null,
-      "buildings": 0,
-      "landuse": 4,
-      "bytes": 7002
-    },
-    "MP": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 1034,
-      "buildings": 37,
-      "landuse": 16,
-      "bytes": 104426
-    },
-    "GL": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 654,
-      "buildings": 43,
-      "landuse": 43,
-      "bytes": 108062
-    },
-    "QT": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 1199,
-      "buildings": 40,
-      "landuse": 63,
-      "bytes": 137281
-    },
-    "TP": {
-      "status": "ready",
-      "basis": "busiest_hub",
-      "stops": 7,
-      "route_method": "onemap_walk",
-      "distance_m": 1064,
-      "buildings": 42,
-      "landuse": 23,
-      "bytes": 110949
+      "bytes": 200839
     },
     "NE": {
       "status": "ready",
@@ -612,8 +203,196 @@
       "route_method": "approximate_order",
       "distance_m": 890,
       "buildings": 0,
+      "city_buildings": 4,
       "landuse": 3,
-      "bytes": 11652
+      "bytes": 13702
+    },
+    "CL": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 1173,
+      "buildings": 54,
+      "city_buildings": 80,
+      "landuse": 59,
+      "bytes": 183000
+    },
+    "BL": {
+      "status": "ready",
+      "basis": "nearest_outside",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 1315,
+      "buildings": 31,
+      "city_buildings": 89,
+      "landuse": 7,
+      "bytes": 125532
+    },
+    "SE": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 819,
+      "buildings": 72,
+      "city_buildings": 40,
+      "landuse": 29,
+      "bytes": 268384
+    },
+    "CC": {
+      "status": "ready",
+      "basis": "park_hub",
+      "stops": 4,
+      "route_method": "onemap_walk",
+      "distance_m": 3115,
+      "buildings": 0,
+      "city_buildings": 1005,
+      "landuse": 28,
+      "bytes": 361908
+    },
+    "SM": {
+      "status": "ready",
+      "basis": "nearest_outside",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 573,
+      "buildings": 31,
+      "city_buildings": 10,
+      "landuse": 14,
+      "bytes": 191244
+    },
+    "YS": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 1180,
+      "buildings": 52,
+      "city_buildings": 47,
+      "landuse": 44,
+      "bytes": 146942
+    },
+    "MD": {
+      "status": "ready",
+      "basis": "park_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 763,
+      "buildings": 24,
+      "city_buildings": 107,
+      "landuse": 6,
+      "bytes": 97012
+    },
+    "SB": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 863,
+      "buildings": 78,
+      "city_buildings": 36,
+      "landuse": 56,
+      "bytes": 302764
+    },
+    "TH": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 402,
+      "buildings": 72,
+      "city_buildings": 11,
+      "landuse": 37,
+      "bytes": 311818
+    },
+    "BP": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 743,
+      "buildings": 58,
+      "city_buildings": 32,
+      "landuse": 38,
+      "bytes": 201364
+    },
+    "WC": {
+      "status": "ready",
+      "basis": "nearest_outside",
+      "stops": 7,
+      "route_method": "approximate_order",
+      "distance_m": 448,
+      "buildings": 29,
+      "city_buildings": 24,
+      "landuse": 21,
+      "bytes": 150546
+    },
+    "LK": {
+      "status": "ready",
+      "basis": "park_hub",
+      "stops": 3,
+      "route_method": "onemap_walk",
+      "distance_m": 8191,
+      "buildings": 0,
+      "city_buildings": 967,
+      "landuse": 43,
+      "bytes": 337280
+    },
+    "CK": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 872,
+      "buildings": 54,
+      "city_buildings": 24,
+      "landuse": 44,
+      "bytes": 190996
+    },
+    "SL": {
+      "status": "ready",
+      "basis": "park_hub",
+      "stops": 4,
+      "route_method": "onemap_walk",
+      "distance_m": 2376,
+      "buildings": 0,
+      "city_buildings": 603,
+      "landuse": 21,
+      "bytes": 207072
+    },
+    "SK": {
+      "status": "ready",
+      "basis": "park_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 619,
+      "buildings": 35,
+      "city_buildings": 26,
+      "landuse": 45,
+      "bytes": 135000
+    },
+    "PN": {
+      "status": "ready",
+      "basis": "nearest_outside",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 335,
+      "buildings": 32,
+      "city_buildings": 30,
+      "landuse": 14,
+      "bytes": 112688
+    },
+    "BK": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 648,
+      "buildings": 58,
+      "city_buildings": 48,
+      "landuse": 39,
+      "bytes": 159315
     },
     "TS": {
       "status": "no_places",
@@ -622,8 +401,185 @@
       "route_method": "unavailable",
       "distance_m": null,
       "buildings": 0,
+      "city_buildings": 0,
       "landuse": 62,
-      "bytes": 27502
+      "bytes": 28506
+    },
+    "PG": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 1704,
+      "buildings": 128,
+      "city_buildings": 57,
+      "landuse": 97,
+      "bytes": 466062
+    },
+    "PL": {
+      "status": "ready",
+      "basis": "nearest_outside",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 898,
+      "buildings": 39,
+      "city_buildings": 47,
+      "landuse": 8,
+      "bytes": 83579
+    },
+    "BT": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 1215,
+      "buildings": 10,
+      "city_buildings": 223,
+      "landuse": 23,
+      "bytes": 125356
+    },
+    "DT": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 1119,
+      "buildings": 10,
+      "city_buildings": 814,
+      "landuse": 99,
+      "bytes": 330460
+    },
+    "KL": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 700,
+      "buildings": 38,
+      "city_buildings": 54,
+      "landuse": 72,
+      "bytes": 153326
+    },
+    "ME": {
+      "status": "ready",
+      "basis": "park_hub",
+      "stops": 4,
+      "route_method": "onemap_walk",
+      "distance_m": 4636,
+      "buildings": 27,
+      "city_buildings": 511,
+      "landuse": 58,
+      "bytes": 300226
+    },
+    "MS": {
+      "status": "ready",
+      "basis": "nearest_outside",
+      "stops": 4,
+      "route_method": "onemap_walk",
+      "distance_m": 1785,
+      "buildings": 0,
+      "city_buildings": 80,
+      "landuse": 115,
+      "bytes": 120739
+    },
+    "MU": {
+      "status": "ready",
+      "basis": "park_hub",
+      "stops": 4,
+      "route_method": "onemap_walk",
+      "distance_m": 1739,
+      "buildings": 0,
+      "city_buildings": 157,
+      "landuse": 42,
+      "bytes": 104903
+    },
+    "NT": {
+      "status": "ready",
+      "basis": "hawker_hub",
+      "stops": 4,
+      "route_method": "onemap_walk",
+      "distance_m": 2840,
+      "buildings": 7,
+      "city_buildings": 886,
+      "landuse": 26,
+      "bytes": 338525
+    },
+    "NV": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 1235,
+      "buildings": 42,
+      "city_buildings": 309,
+      "landuse": 24,
+      "bytes": 234106
+    },
+    "OR": {
+      "status": "ready",
+      "basis": "park_hub",
+      "stops": 4,
+      "route_method": "onemap_walk",
+      "distance_m": 1728,
+      "buildings": 0,
+      "city_buildings": 449,
+      "landuse": 34,
+      "bytes": 205618
+    },
+    "OT": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 1917,
+      "buildings": 31,
+      "city_buildings": 465,
+      "landuse": 30,
+      "bytes": 235705
+    },
+    "RV": {
+      "status": "ready",
+      "basis": "park_hub",
+      "stops": 3,
+      "route_method": "onemap_walk",
+      "distance_m": 911,
+      "buildings": 3,
+      "city_buildings": 130,
+      "landuse": 34,
+      "bytes": 93659
+    },
+    "RC": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 947,
+      "buildings": 21,
+      "city_buildings": 592,
+      "landuse": 40,
+      "bytes": 264036
+    },
+    "SR": {
+      "status": "ready",
+      "basis": "park_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 813,
+      "buildings": 8,
+      "city_buildings": 637,
+      "landuse": 68,
+      "bytes": 260500
+    },
+    "TN": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 6,
+      "route_method": "onemap_walk",
+      "distance_m": 1839,
+      "buildings": 31,
+      "city_buildings": 199,
+      "landuse": 34,
+      "bytes": 187013
     },
     "CH": {
       "status": "ready",
@@ -632,8 +588,130 @@
       "route_method": "onemap_walk",
       "distance_m": 1187,
       "buildings": 7,
+      "city_buildings": 112,
       "landuse": 24,
-      "bytes": 42874
+      "bytes": 79009
+    },
+    "WI": {
+      "status": "no_places",
+      "basis": null,
+      "stops": 0,
+      "route_method": "unavailable",
+      "distance_m": null,
+      "buildings": 0,
+      "city_buildings": 0,
+      "landuse": 11,
+      "bytes": 28686
+    },
+    "CB": {
+      "status": "no_places",
+      "basis": null,
+      "stops": 0,
+      "route_method": "unavailable",
+      "distance_m": null,
+      "buildings": 0,
+      "city_buildings": 0,
+      "landuse": 4,
+      "bytes": 8006
+    },
+    "QT": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 1199,
+      "buildings": 40,
+      "city_buildings": 96,
+      "landuse": 63,
+      "bytes": 179392
+    },
+    "TM": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 896,
+      "buildings": 26,
+      "city_buildings": 81,
+      "landuse": 74,
+      "bytes": 170606
+    },
+    "BD": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 1949,
+      "buildings": 49,
+      "city_buildings": 114,
+      "landuse": 66,
+      "bytes": 184041
+    },
+    "BM": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 1118,
+      "buildings": 54,
+      "city_buildings": 42,
+      "landuse": 52,
+      "bytes": 182278
+    },
+    "SI": {
+      "status": "ready",
+      "basis": "nearest_outside",
+      "stops": 1,
+      "route_method": "approximate_order",
+      "distance_m": 0,
+      "buildings": 0,
+      "city_buildings": 4,
+      "landuse": 9,
+      "bytes": 15195
+    },
+    "SV": {
+      "status": "ready",
+      "basis": "nearest_outside",
+      "stops": 4,
+      "route_method": "onemap_walk",
+      "distance_m": 1050,
+      "buildings": 9,
+      "city_buildings": 522,
+      "landuse": 26,
+      "bytes": 200384
+    },
+    "TP": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 1064,
+      "buildings": 42,
+      "city_buildings": 53,
+      "landuse": 23,
+      "bytes": 138516
+    },
+    "GL": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 654,
+      "buildings": 43,
+      "city_buildings": 65,
+      "landuse": 43,
+      "bytes": 127722
+    },
+    "MP": {
+      "status": "ready",
+      "basis": "busiest_hub",
+      "stops": 7,
+      "route_method": "onemap_walk",
+      "distance_m": 1034,
+      "buildings": 37,
+      "city_buildings": 75,
+      "landuse": 16,
+      "bytes": 135187
     }
   }
 }

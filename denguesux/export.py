@@ -34,7 +34,7 @@ def export_dashboard(current=None,model=None):
                    {'name':'URA Master Plan 2025 boundaries','url':'https://data.gov.sg/datasets/d_2cc750190544007400b2cfd5d7f53209/view'},
                    {'name':'Weekly national infectious disease bulletin','url':'https://data.gov.sg/datasets/d_ca168b2cb763640d72c4600a68f9909e/view'},
                    {'name':'NEA weather collections','url':'https://data.gov.sg/collections'}]},'current':current,'model':model}
-    for name in ('inspection', 'growth', 'notices', 'alerts', 'footprints', 'population', 'aedes', 'feed'):
+    for name in ('inspection', 'growth', 'notices', 'alerts', 'footprints', 'population', 'aedes', 'feed', 'area_forecast', 'area_history', 'ledger', 'pipeline_status'):
         path=out/f'{name}.json'
         if path.exists(): result[name]=json.loads(path.read_text())
     (out/'dashboard.json').write_text(json.dumps(result,ensure_ascii=False,separators=(',',':'),allow_nan=False))

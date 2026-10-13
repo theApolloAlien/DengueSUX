@@ -10,5 +10,6 @@ fastapi==0.119.1
 uvicorn==0.38.0
 epiweeks==2.3.0
 duckdb==1.4.5
+overturemaps==1.0.2  # non-HDB building context for the 3D walks (scripts/collect_city_context.py)
 pytest==8.4.2
 requests>=2.32,<3

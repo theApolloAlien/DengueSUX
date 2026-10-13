@@ -118,8 +118,9 @@ def gold(spark):
     # Small supervised matrix only is collected; all weekly transforms above use PySpark.
     from .model import train_and_evaluate
     from .export import _label_status
+    from .runtime import TABLE_PREFIX
     label_status = _label_status()
-    result,predictions=train_and_evaluate(df.toPandas(), label_metadata={
+    result,predictions=train_and_evaluate(df.toPandas(), training_table=f'{TABLE_PREFIX}.gold_national_features' if TABLE_PREFIX else None, label_metadata={
         'available': bool(label_status.get('gate', {}).get('available')),
         'reason': '; '.join(label_status.get('gate', {}).get('reasons', [])) or 'Recent official weekly labels passed the freshness gate.',
         'mode': 'live_forecast' if label_status.get('gate', {}).get('available') else 'historical_backtest',
@@ -128,6 +129,7 @@ def gold(spark):
         'source': label_status.get('source_kind'),
     })
     write_table(spark.createDataFrame(predictions),'gold_national_predictions')
+    result.setdefault('registry',{})['spark_scoring']=score_registered(spark,result.get('registry') or {})
     from .spatial import build_current
     current=build_current()
     area_rows=[(a['code'],a['name'],a['risk'],a['score'],a['cluster_count'],a['cluster_cases'],current['weather_date']) for a in current['areas']]
@@ -142,6 +144,18 @@ def gold(spark):
     write_alerts(spark=spark)
     from .map_context import build_map_context
     build_map_context()
+    area=None
+    try:
+        from .area_forecast import build_area_forecast
+        area=build_area_forecast(spark=spark)
+    except ValueError as error:
+        print(f'AREA OUTLOOK: skipped ({error})')
+    from .ledger import update as update_ledger
+    versions=(result.get('registry') or {}).get('versions') or {}
+    update_ledger(model_result=result,area_result=area,model_version=f"champion v{versions['champion']}" if versions.get('champion') else result.get('run_id'),spark=spark)
+    import json as _json
+    from .runtime import ROOT as _ROOT
+    (_ROOT/'output/web/model.json').write_text(_json.dumps(result,indent=2,allow_nan=False))
     from .export import export_dashboard
     export_dashboard(current,result)
     genie_layer(spark,current)
@@ -155,6 +169,42 @@ def genie_layer(spark,current=None):
     if current is None:
         from .spatial import build_current
         current=build_current()
-    for statement in statements(TABLE_PREFIX,[(a['code'],a['name'],a['region']) for a in current['areas']]): spark.sql(statement)
+    for statement in statements(TABLE_PREFIX,[(a['code'],a['name'],a['region']) for a in current['areas']]):
+        try: spark.sql(statement)
+        except Exception as error:
+            if 'gold_field_outcomes' not in statement: raise
+            print(f'GENIE: field outcomes view skipped ({type(error).__name__}); field_reports is created by the app.')
     apply_governance(spark.sql, TABLE_PREFIX)
     print('GENIE: dim_planning_area, inspection_places view, comments and best-effort tags refreshed.')
+
+
+def score_registered(spark, registry):
+    """Score every feature week in Spark with the registered champion and challenger (Unity Catalog lineage:
+    gold_national_features -> model -> gold_national_scores). Failures are reported, not hidden."""
+    from .model import FEATURES
+    name=registry.get('name')
+    if registry.get('status')!='registered' or not name:
+        return {'status':'skipped','reason':'model not registered'}
+    try:
+        import mlflow.pyfunc
+        features=read_table(spark,'gold_national_features')
+        frame=features.select('week_start','week_end','target_week_start','target_cases',*[F.col(c).cast('double').alias(c) for c in FEATURES])
+        out=frame
+        for alias in ('champion','challenger'):
+            udf=mlflow.pyfunc.spark_udf(spark,f'models:/{name}@{alias}',result_type='double',env_manager='local')
+            out=out.withColumn(f'{alias}_prediction',F.greatest(F.lit(0.0),udf(F.struct(*[F.col(c) for c in FEATURES]))))
+        versions=registry.get('versions',{})
+        out=(out.select('week_start','week_end','target_week_start','target_cases','champion_prediction','challenger_prediction')
+             .withColumn('model_name',F.lit(name)).withColumn('champion_version',F.lit(versions.get('champion')))
+             .withColumn('challenger_version',F.lit(versions.get('challenger'))).withColumn('scored_at',F.current_timestamp()))
+        write_table(out,'gold_national_scores')
+        recent=out.filter(F.col('target_cases').isNotNull()&(F.col('target_week_start')>=F.lit('2023-01-01').cast('date')))
+        stats=recent.select(F.avg(F.abs(F.col('target_cases')-F.col('champion_prediction'))).alias('champion_in_sample_mae'),
+                            F.avg(F.abs(F.col('target_cases')-F.col('challenger_prediction'))).alias('challenger_in_sample_mae'),F.count('*').alias('weeks')).first()
+        print('SCORING: gold_national_scores written with the registered champion and challenger in Spark.')
+        return {'status':'scored','table':'gold_national_scores','uri':f'models:/{name}@champion',
+                'note':'Champion and challenger are refitted on all observed labels, so these are in-sample fits, not evaluation.',
+                **{k:(float(v) if v is not None else None) for k,v in stats.asDict().items()}}
+    except Exception as error:
+        print(f'SCORING: Spark scoring unavailable ({type(error).__name__}: {str(error)[:200]})')
+        return {'status':'failed','reason':f'{type(error).__name__}: {str(error)[:300]}'}

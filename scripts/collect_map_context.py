@@ -100,7 +100,46 @@ def population_source(root=ROOT):
     write_json(root / "data/evidence/population/singstat_residents_2026.profile.json", profile)
     output = {"source": profile, "areas": rows}
     write_json(root / "data/phase2_inputs/resident_population.json", output)
+    write_json(root / "data/phase2_inputs/resident_equity.json", equity_shares(body, profile))
     return output
+
+
+ELDERLY_GROUPS = ("65 - 69", "70 - 74", "75 - 79", "80 - 84", "85 - 89", "90 & Over")
+
+
+def equity_shares(body, profile):
+    """Share of residents aged 65+ and living in 1- and 2-room flats, per planning area (Subzone = Total).
+
+    Used only to plan outreach (printed notices, door-to-door help), never to raise or lower dengue risk.
+    Cells that are not numbers stay null; no rounded detail cell is summed into a total that SingStat published."""
+    import io
+    import openpyxl
+    sheet = openpyxl.load_workbook(io.BytesIO(body), read_only=True, data_only=True)["2026(Total)"]
+    totals, elderly, small = {}, {}, {}
+    for row in sheet.iter_rows(values_only=True):
+        if len(row) < 5 or row[1] != "Total" or row[0] in (None, "Total", "Planning Area"):
+            continue
+        area, age, dwelling, value = str(row[0]).strip(), str(row[2]).strip(), str(row[3]).strip(), row[4]
+        number = value if isinstance(value, (int, float)) and not isinstance(value, bool) else None
+        if age == "Total" and dwelling == "Total":
+            totals[area] = number
+        elif age == "Total" and dwelling.startswith("1- and 2-Room"):
+            small[area] = number
+        elif age in ELDERLY_GROUPS and dwelling == "Total":
+            elderly.setdefault(area, []).append(number)
+    areas = []
+    for area, total in sorted(totals.items()):
+        older = elderly.get(area, [])
+        older_total = sum(older) if older and all(v is not None for v in older) else None
+        valid = isinstance(total, (int, float)) and total > 0
+        areas.append({"area_name": area, "residents": total, "aged_65_plus": older_total,
+                      "elderly_share": round(older_total / total, 4) if valid and older_total is not None else None,
+                      "small_flat_residents": small.get(area),
+                      "small_flat_share": round(small[area] / total, 4) if valid and isinstance(small.get(area), (int, float)) else None})
+    return {"source": {k: profile[k] for k in ("source_name", "population_reference", "boundary_vintage")},
+            "definition": "elderly_share = residents aged 65 and over / all residents; small_flat_share = residents in HDB 1- and 2-room flats / all residents (Subzone = Total).",
+            "use": "Outreach planning only (who may need printed notices or help clearing containers). Not a dengue risk factor and never added to priority.",
+            "areas": areas}
 
 
 ONEMAP_SEARCH = "https://www.onemap.gov.sg/api/common/elastic/search"
