@@ -175,3 +175,111 @@ def annotate_inspection(inspection, rows, now=None):
         plan["community"] = summary["by_area"].get(code)
     inspection["community"] = {k: summary[k] for k in ("reports", "stops_checked", "water_found", "last_reported_at", "this_week", "caveat")}
     return inspection
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Team mode: who is walking which area this week. Claims carry only a display name (the signed-in workspace user's
+# preferred username, forwarded by Databricks Apps), an area code and a week; nothing else about the person.
+CLAIMS_TABLE = "walk_claims"
+CLAIM_COLUMNS = "claim_id string, claimed_at timestamp, week_start string, area_code string, claimed_by string, status string"
+
+
+def _claims_table():
+    prefix = os.environ.get("DENGUE_TABLE_PREFIX", "workspace.denguesux")
+    return f"{prefix}.{CLAIMS_TABLE}"
+
+
+def week_start(day=None):
+    """Monday of the week that contains `day` (Singapore time), as an ISO date string."""
+    sgt = dt.timezone(dt.timedelta(hours=8))
+    today = (day or dt.datetime.now(sgt)).astimezone(sgt).date() if isinstance(day, dt.datetime) or day is None else day
+    return (today - dt.timedelta(days=today.weekday())).isoformat()
+
+
+def make_claim(*, area_code, claimed_by, week):
+    return {"claim_id": uuid.uuid4().hex, "claimed_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="milliseconds"),
+            "week_start": week, "area_code": area_code, "claimed_by": str(claimed_by)[:120], "status": "claimed"}
+
+
+class LocalClaims:
+    def __init__(self, root):
+        self.path = Path(root) / "data/private/walk_claims.jsonl"
+
+    def add(self, claim):
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        with self.path.open("a") as handle:
+            handle.write(json.dumps(claim, ensure_ascii=False) + "\n")
+
+    def rows(self):
+        if not self.path.exists():
+            return []
+        out = []
+        for line in self.path.read_text().splitlines():
+            try:
+                row = json.loads(line) if line.strip() else None
+            except json.JSONDecodeError:
+                continue
+            if isinstance(row, dict):
+                out.append(row)
+        return out
+
+
+class WarehouseClaims(WarehouseStore):
+    def __init__(self, warehouse_id):
+        super().__init__(warehouse_id)
+        self.table = _claims_table()
+
+    def _ensure(self):
+        if not self._ready:
+            self._run(f"CREATE TABLE IF NOT EXISTS {self.table} ({CLAIM_COLUMNS}) "
+                      "COMMENT 'Who is walking which planning area in which week (team mode). Display name of the signed-in app user only.'")
+            self._ready = True
+
+    def add(self, claim):
+        self._ensure()
+        names = ["claim_id", "claimed_at", "week_start", "area_code", "claimed_by", "status"]
+        self._run(f"INSERT INTO {self.table} ({', '.join(names)}) VALUES ({', '.join(':' + n for n in names)})",
+                  [(n, claim[n], "TIMESTAMP" if n == "claimed_at" else "STRING") for n in names])
+
+    def rows(self):
+        self._ensure()
+        response = self._run(f"SELECT claim_id, CAST(claimed_at AS STRING), week_start, area_code, claimed_by, status FROM {self.table} "
+                             f"WHERE week_start >= :since ORDER BY claimed_at DESC LIMIT 2000", [("since", (dt.date.today() - dt.timedelta(days=60)).isoformat(), "STRING")])
+        names = ["claim_id", "claimed_at", "week_start", "area_code", "claimed_by", "status"]
+        return [dict(zip(names, row)) for row in (response.result.data_array or [])] if response.result else []
+
+
+_CLAIM_STORES = {}
+
+
+def claims_store(root):
+    warehouse = os.environ.get("DATABRICKS_WAREHOUSE_ID")
+    if not warehouse:
+        return LocalClaims(root)
+    if warehouse not in _CLAIM_STORES:
+        _CLAIM_STORES[warehouse] = WarehouseClaims(warehouse)
+    return _CLAIM_STORES[warehouse]
+
+
+def current_claims(rows, week=None):
+    """The latest claim or release per (week, area); released areas drop out."""
+    week = week or week_start()
+    latest = {}
+    for row in sorted(rows, key=lambda r: str(r.get("claimed_at") or ""), reverse=True):
+        key = (row.get("week_start"), row.get("area_code"))
+        if key not in latest:
+            latest[key] = row
+    return [row for (wk, _), row in latest.items() if row.get("status") == "claimed" and wk >= week]
+
+
+def reports_csv(rows):
+    """Field outcomes as CSV for a town council spreadsheet. Notes are never included."""
+    import csv
+    import io
+    names = ["report_id", "reported_at", "area_code", "stop_id", "stop_name", "place_type", "outcome", "plan_as_of", "source"]
+    buffer = io.StringIO()
+    writer = csv.DictWriter(buffer, fieldnames=names, extrasaction="ignore")
+    writer.writeheader()
+    for row in rows:
+        writer.writerow({k: row.get(k) for k in names})
+    return buffer.getvalue()

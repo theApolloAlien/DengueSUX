@@ -23,21 +23,21 @@
   <link rel="stylesheet" href="/app.css">
 </head>
 <body>
-  <script>document.body.dataset.bootView=location.hash.split("/")[0].slice(1)||"week";</script>
+  <script>document.body.dataset.bootView=location.hash.split("/")[0].slice(1)||"week";try{const t=JSON.parse(localStorage.getItem("denguesux:theme"));document.documentElement.dataset.theme=t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";}catch{}</script>
   <a class="skip-link" href="#main">Skip to dashboard</a>
   <noscript><p class="no-script">This interactive dashboard needs JavaScript to display the map and evidence.</p></noscript>
   <div class="app-shell">
     <aside class="nav-rail" aria-label="Main navigation">
       <a class="brand-mark" href="#week" aria-label="DengueSUX home"><img src="/brand/logo-mark.svg" width="28" height="28" alt=""><span>Dengue<b>SUX</b></span></a>
-      <button class="command-trigger" id="command-open"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><span>Find anything</span><kbd>⌘ K</kbd></button>
+      <button class="command-trigger" id="command-open"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><span data-i18n="nav.find">Find anything</span><kbd>⌘ K</kbd></button>
       <nav class="section-nav" aria-label="Sections"><span class="nav-indicator" aria-hidden="true"></span>
-        <a href="#week" class="rail-button active" data-section="week" aria-current="page" title="This week"><i class="ph ph-squares-four" aria-hidden="true"></i><span>This week</span></a>
-        <a href="#map" class="rail-button" data-section="map" title="Map"><i class="ph ph-map-trifold" aria-hidden="true"></i><span>Map</span></a>
-        <a href="#plan" class="rail-button" data-section="plan" title="Field plan"><i class="ph ph-footprints" aria-hidden="true"></i><span>Field plan</span></a>
-        <a href="#forecast" class="rail-button" data-section="forecast" title="Forecast"><i class="ph ph-chart-line-up" aria-hidden="true"></i><span>Forecast</span></a>
-        <a href="#platform" class="rail-button" data-section="platform" title="How it runs"><i class="ph ph-flow-arrow" aria-hidden="true"></i><span>How it runs</span></a>
+        <a href="#week" class="rail-button active" data-section="week" aria-current="page" title="This week"><i class="ph ph-squares-four" aria-hidden="true"></i><span data-i18n="nav.week">This week</span></a>
+        <a href="#map" class="rail-button" data-section="map" title="Map"><i class="ph ph-map-trifold" aria-hidden="true"></i><span data-i18n="nav.map">Map</span></a>
+        <a href="#plan" class="rail-button" data-section="plan" title="Field plan"><i class="ph ph-footprints" aria-hidden="true"></i><span data-i18n="nav.plan">Field plan</span></a>
+        <a href="#forecast" class="rail-button" data-section="forecast" title="Forecast"><i class="ph ph-chart-line-up" aria-hidden="true"></i><span data-i18n="nav.forecast">Forecast</span></a>
+        <a href="#platform" class="rail-button" data-section="platform" title="How it runs"><i class="ph ph-flow-arrow" aria-hidden="true"></i><span data-i18n="nav.platform">How it runs</span></a>
       </nav>
-      <div class="rail-bottom"><button id="sidebar-collapse" class="text-button" aria-label="Collapse sidebar" aria-expanded="true"><i class="ph ph-sidebar-simple" aria-hidden="true"></i><span>Collapse</span></button><span class="sidebar-note">Singapore · Open data</span></div>
+      <div class="rail-bottom"><button id="sidebar-collapse" class="text-button" aria-label="Collapse sidebar" aria-expanded="true"><i class="ph ph-sidebar-simple" aria-hidden="true"></i><span data-i18n="nav.collapse">Collapse</span></button><span class="sidebar-note" data-i18n="nav.note">Singapore · Open data</span></div>
     </aside>
 
     <div class="page-shell">
@@ -46,14 +46,14 @@
         <div class="topbar-actions">
           <button class="data-status" id="data-timestamp" data-methodology aria-label="View snapshot dates and sources"><span class="status-dot"></span> Saved data</button>
           <button class="icon-button mobile-command" id="mobile-command" aria-label="Find anything"><i class="ph ph-magnifying-glass" aria-hidden="true"></i></button>
-          <details class="help-menu"><summary aria-label="Help"><i class="ph ph-question" aria-hidden="true"></i><span>Help</span></summary><div><button data-methodology>How to read this</button><button id="shortcuts-open">Keyboard shortcuts</button><button id="tour-replay">Replay tour</button><button data-about>Our story</button></div></details><span class="ask-slot" aria-hidden="true"></span>
+          <details class="help-menu"><summary aria-label="Help"><i class="ph ph-question" aria-hidden="true"></i><span data-i18n="nav.help">Help</span></summary><div><button id="theme-toggle" data-i18n="common.dark">Dark mode</button><button data-methodology>How to read this</button><button id="shortcuts-open">Keyboard shortcuts</button><button id="tour-replay">Replay tour</button><button data-about>Our story</button></div></details><span class="ask-slot" aria-hidden="true"></span>
         </div>
       </header>
 
       <main id="main" aria-busy="true">
         <div class="page-heading compact">
           <div><h1 id="page-title">This week</h1><p id="page-description" class="page-description">Find an area. Understand the signals. Plan your next check.</p></div>
-          <button class="outline-button" id="download-data" aria-label="Export dashboard data"><i class="ph ph-download-simple" aria-hidden="true"></i> Export data</button>
+          <button class="outline-button" id="download-data" aria-label="Export dashboard data"><i class="ph ph-download-simple" aria-hidden="true"></i> <span data-i18n="nav.export">Export data</span></button>
         </div>
 
 
@@ -166,7 +166,7 @@
           </div>
         </section>
 
-        <footer><span class="honesty-note">Places to check, not confirmed breeding sites</span>
+        <footer><span class="honesty-note" data-i18n="common.honest">Places to check, not confirmed breeding sites</span>
           <span>DengueSUX <span class="footer-dot">·</span> Research prototype <span class="footer-dot">·</span> <button data-about>Our story</button></span>
           <span>Data: NEA, MOH and URA via data.gov.sg</span>
         </footer>
@@ -195,6 +195,9 @@
     <div id="notice-content"></div>
   </dialog>
 
+  <script src="/i18n.js" defer></script>
+  <script src="/offline.js" defer></script>
+  <script src="/share-card.js" defer></script>
   <script src="/vendor/leaflet/leaflet.js" defer></script>
   <script src="/fieldwork.js" defer></script>
   <script src="/embedded.js" defer></script>

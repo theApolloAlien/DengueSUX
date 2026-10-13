@@ -93,3 +93,40 @@ def test_summary_counts_this_week_by_area_and_marks_rechecks():
     assert stops[0]["recheck_first"] is True and stops[0]["field_outcome"]["outcome"] == "water_found"
     assert stops[1]["field_outcome"] is None and stops[1]["recheck_first"] is False
     assert plan["community"]["stops_checked"] == 2
+
+
+def test_claims_keep_only_the_latest_status_per_week_and_area(tmp_path):
+    from denguesux.field_reports import LocalClaims, current_claims, make_claim, week_start
+    store = LocalClaims(tmp_path)
+    week = week_start()
+    first = make_claim(area_code="JW", claimed_by="ana", week=week)
+    store.add(first)
+    released = make_claim(area_code="JW", claimed_by="ana", week=week)
+    released["status"] = "released"
+    released["claimed_at"] = "2999-01-01T00:00:00.000+00:00"  # later than the claim
+    store.add(released)
+    store.add(make_claim(area_code="BS", claimed_by="ben", week=week))
+    store.add(make_claim(area_code="TP", claimed_by="old", week="2020-01-06"))  # an old week drops out
+    current = current_claims(store.rows())
+    assert [(c["area_code"], c["claimed_by"]) for c in current] == [("BS", "ben")]
+
+
+def test_reports_csv_never_carries_notes():
+    from denguesux.field_reports import reports_csv
+    text = reports_csv([{"report_id": "r1", "reported_at": "2026-10-13T00:00:00Z", "area_code": "JW", "stop_id": "s", "stop_name": "Blk 1",
+                         "place_type": "block", "outcome": "nothing", "plan_as_of": None, "source": "app:ana", "note": "private words"}])
+    assert "private words" not in text and "app:ana" in text and text.splitlines()[0].startswith("report_id,")
+
+
+def test_team_endpoints_use_the_forwarded_identity(monkeypatch, tmp_path):
+    from fastapi.testclient import TestClient
+    import app as webapp
+    monkeypatch.delenv("DATABRICKS_WAREHOUSE_ID", raising=False)
+    client = TestClient(webapp.app)
+    me = client.get("/api/me", headers={"x-forwarded-preferred-username": "ana.tan", "x-forwarded-email": "ana@example.org"}).json()
+    assert me["signed_in"] is True and me["name"] == "ana.tan" and "example.org" not in str(me)
+    assert client.get("/api/me").json()["signed_in"] is False
+    links = client.get("/api/links").json()
+    assert set(links) == {"resident_url", "app_url", "telegram"}
+    bad = client.post("/api/claims", json={"area_code": "ZZZ"})
+    assert bad.status_code == 404

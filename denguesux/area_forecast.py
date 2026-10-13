@@ -209,8 +209,43 @@ def _scores(y_any, y_high, p_any, p_high, bands, truth_bands):
             "band_accuracy": float(np.mean(np.asarray(bands) == np.asarray(truth_bands)))}
 
 
+def _transition_rates(train):
+    """Empirical chance of any cluster / 10+ people two weeks later, given today's band (a probabilistic persistence)."""
+    state = pd.Series(band_now(train.people, train.clusters), index=train.index)
+    rates = {}
+    for band in ("Low", "Medium", "High"):
+        rows = train[state == band]
+        rates[band] = (float(rows.y_any.mean()), float(rows.y_high.mean())) if len(rows) else (float(train.y_any.mean()), float(train.y_high.mean()))
+    return rates
+
+
+def _apply_transition(rates, test):
+    state = band_now(test.people, test.clusters)
+    return np.array([rates[s][0] for s in state]), np.array([rates[s][1] for s in state])
+
+
+def _bootstrap(scored, n=400, seed=SEED):
+    """Resample origin dates (the unit that is really independent) to put 95% intervals on the headline comparisons."""
+    rng = np.random.default_rng(seed)
+    dates = scored.date.unique()
+    groups = {d: scored[scored.date == d] for d in dates}
+    truth_all = {d: band_now(groups[d].target_people, groups[d].y_any) for d in dates}
+    stats = {"model_brier_high": [], "diff_brier_high_vs_transition": [], "diff_brier_high_vs_persistence": [], "diff_band_accuracy_vs_persistence": []}
+    for _ in range(n):
+        pick = rng.choice(dates, size=len(dates), replace=True)
+        part = pd.concat([groups[d] for d in pick], ignore_index=True)
+        truth = np.concatenate([truth_all[d] for d in pick])
+        bm = float(brier_score_loss(part.y_high, part.p_high)); bt = float(brier_score_loss(part.y_high, part.tm_high))
+        bp = float(brier_score_loss(part.y_high, (part.people >= HIGH_PEOPLE).astype(float)))
+        am = float(np.mean(band_from_probabilities(part.p_any, part.p_high) == truth)); ap = float(np.mean(band_now(part.people, part.clusters) == truth))
+        stats["model_brier_high"].append(bm); stats["diff_brier_high_vs_transition"].append(bm - bt)
+        stats["diff_brier_high_vs_persistence"].append(bm - bp); stats["diff_band_accuracy_vs_persistence"].append(am - ap)
+    return {k: {"low": round(float(np.percentile(v, 2.5)), 4), "high": round(float(np.percentile(v, 97.5)), 4), "mean": round(float(np.mean(v)), 4)} for k, v in stats.items()}
+
+
 def evaluate(examples):
-    """Leave one origin year out; persistence and track record are the baselines."""
+    """Leave one origin year out, plus forward chaining; baselines are hard persistence, a transition-matrix persistence
+    (the empirical chance of each outcome given today's band) and the area's track record; bootstrap intervals by origin date."""
     examples = examples.copy()
     examples["year"] = examples.date.dt.year
     predictions = []
@@ -221,6 +256,7 @@ def evaluate(examples):
         p_any, p_high = _predict(_fit(train), test)
         part = test[["date", "target_date", "area_code", "area_name", "people", "clusters", "target_people", "y_any", "y_high", "track_record", "year"]].copy()
         part["p_any"], part["p_high"] = p_any, np.minimum(p_high, p_any)
+        part["tm_any"], part["tm_high"] = _apply_transition(_transition_rates(train), test)
         predictions.append(part)
     scored = pd.concat(predictions, ignore_index=True)
     truth = band_now(scored.target_people, scored.y_any)
@@ -233,23 +269,52 @@ def evaluate(examples):
     result = {
         "model": _scores(scored.y_any, scored.y_high, scored.p_any, scored.p_high, model_bands, truth),
         "persistence": _scores(scored.y_any, scored.y_high, persistence_any, persistence_high, persistence_bands, truth),
+        "transition_persistence": _scores(scored.y_any, scored.y_high, scored.tm_any, scored.tm_high, band_from_probabilities(scored.tm_any, scored.tm_high), truth),
         "track_record": _scores(scored.y_any, scored.y_high, track, track_high, band_from_probabilities(track, track_high), truth),
         "by_year": {},
+        "baselines_note": ("persistence = today's band carried forward as a certainty; transition_persistence = the empirical chance of each outcome "
+                           "given today's band, learned from the training years (a fair probabilistic baseline); track_record = how often the area had a cluster before."),
     }
     for year, part in scored.groupby("year"):
         t = band_now(part.target_people, part.y_any)
         result["by_year"][str(int(year))] = {
             "origins": int(part.date.nunique()), "examples": int(len(part)),
             "model": _scores(part.y_any, part.y_high, part.p_any, part.p_high, band_from_probabilities(part.p_any, part.p_high), t),
-            "persistence": _scores(part.y_any, part.y_high, (part.clusters > 0).astype(float), (part.people >= HIGH_PEOPLE).astype(float), band_now(part.people, part.clusters), t)}
-    # New hotspots: areas not High at the origin that were High two weeks later.
+            "persistence": _scores(part.y_any, part.y_high, (part.clusters > 0).astype(float), (part.people >= HIGH_PEOPLE).astype(float), band_now(part.people, part.clusters), t),
+            "transition_persistence": _scores(part.y_any, part.y_high, part.tm_any, part.tm_high, band_from_probabilities(part.tm_any, part.tm_high), t)}
+    # Forward chaining: each year predicted only from earlier years (no future leakage), pooled over the years that have enough history.
+    forward_parts = []
+    for year in sorted(examples.year.unique())[1:]:
+        train, test = examples[examples.year < year], examples[examples.year == year]
+        if train.y_high.nunique() < 2 or train.y_any.nunique() < 2 or len(test) == 0:
+            continue
+        p_any, p_high = _predict(_fit(train), test)
+        part = test[["date", "people", "clusters", "target_people", "y_any", "y_high", "year"]].copy()
+        part["p_any"], part["p_high"] = p_any, np.minimum(p_high, p_any)
+        part["tm_any"], part["tm_high"] = _apply_transition(_transition_rates(train), test)
+        forward_parts.append(part)
+    if forward_parts:
+        fwd = pd.concat(forward_parts, ignore_index=True)
+        ft = band_now(fwd.target_people, fwd.y_any)
+        result["forward_chaining"] = {
+            "years": [int(y) for y in sorted(fwd.year.unique())], "examples": int(len(fwd)),
+            "model": _scores(fwd.y_any, fwd.y_high, fwd.p_any, fwd.p_high, band_from_probabilities(fwd.p_any, fwd.p_high), ft),
+            "persistence": _scores(fwd.y_any, fwd.y_high, (fwd.clusters > 0).astype(float), (fwd.people >= HIGH_PEOPLE).astype(float), band_now(fwd.people, fwd.clusters), ft),
+            "transition_persistence": _scores(fwd.y_any, fwd.y_high, fwd.tm_any, fwd.tm_high, band_from_probabilities(fwd.tm_any, fwd.tm_high), ft),
+            "note": "Trained only on earlier years; the first year has no training data and is skipped."}
+    result["bootstrap"] = {"resamples": 400, "unit": "origin date", **_bootstrap(scored)}
+    # New hotspots: areas not High at the origin that were High two weeks later, and the model's false alarms among the rest.
+    not_high = scored[scored.people < HIGH_PEOPLE]
+    flagged = not_high[band_from_probabilities(not_high.p_any, not_high.p_high) == "High"]
     new_high = scored[(scored.people < HIGH_PEOPLE) & (scored.y_high == 1)]
     result["new_high"] = {"count": int(len(new_high)),
                           "caught_by_model": int((band_from_probabilities(new_high.p_any, new_high.p_high) == "High").sum()),
                           "model_median_rank_percentile": float(np.median([
                               (scored[scored.date == row.date].p_high < row.p_high).mean() for row in new_high.itertuples()])) if len(new_high) else None,
+                          "flagged_not_high_at_origin": int(len(flagged)), "false_alarms": int((flagged.y_high == 0).sum()),
+                          "precision": round(float((flagged.y_high == 1).mean()), 3) if len(flagged) else None,
                           "caught_by_persistence": 0,
-                          "note": "Persistence can never flag a new High area; the model can only by ranking it."}
+                          "note": "Persistence can never flag a new High area; the model can only by ranking it. False alarms are areas the model called High that did not reach 10+ people."}
     return result, scored
 
 
@@ -325,7 +390,7 @@ def build_area_forecast(root=ROOT, *, save=True, spark=None, register=False):
             "Archived listings are irregular Internet Archive captures, not a complete daily record; only pairs 10–21 days apart are used.",
             "Archived clusters are placed by their block or street breakdown; the live map places them by polygon overlap. Captures where under 60% of listed cases could be placed are excluded.",
             "Validation leaves out one year of origin dates at a time. Areas in the same listing are not independent, so treat the sample as small.",
-            "Band accuracy is close to simply assuming today's band persists; the gain is in calibrated chances and in flagging areas that newly reach High, which persistence never can.",
+            "Band accuracy is close to simply assuming today's band persists; the gain is in calibrated chances and in flagging areas that newly reach High, which persistence never can. The fair comparison is transition_persistence (the empirical chance of each outcome given today's band); bootstrap intervals by origin date say how sure that comparison is.",
             "People in clusters count cases since a cluster started, not weekly incidence. This is a check-first outlook, not a case forecast.",
         ],
         "synthetic_data": False,

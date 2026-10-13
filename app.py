@@ -311,8 +311,27 @@ def _reports():
     from denguesux.field_reports import store
     return store(ROOT)
 
+def _user(request: Request):
+    """The signed-in workspace user as Databricks Apps forwards them (preferred username); None locally. No email is kept."""
+    email = request.headers.get('x-forwarded-email') or ''
+    name = request.headers.get('x-forwarded-preferred-username') or (email.split('@')[0] if email else '')
+    name = ''.join(ch for ch in name if ch.isalnum() or ch in '._-@ ')[:80].strip()
+    return {'name': name} if name else None
+
+@app.get('/api/links')
+def links():
+    """Public links: the resident site (no sign-in), this app and the Telegram bot."""
+    return {'resident_url': (os.environ.get('DENGUE_RESIDENT_URL') or '').rstrip('/') or None, 'app_url': os.environ.get('DENGUE_PUBLIC_URL') or None, 'telegram': 'https://t.me/DengueSUXbot'}
+
+@app.get('/api/me')
+def me(request: Request):
+    """Who the app sees (display name only) and the current planning week, for team mode."""
+    from denguesux.field_reports import week_start
+    u = _user(request)
+    return {'signed_in': bool(u), 'name': u['name'] if u else None, 'week_start': week_start()}
+
 @app.post('/api/reports')
-def add_report(body: FieldReportBody, verify_only: bool = False):
+def add_report(body: FieldReportBody, request: Request, verify_only: bool = False):
     """Record an unverified finding at a planned stop; personal details are not requested."""
     from denguesux.field_reports import make_report
     if verify_only:
@@ -325,7 +344,8 @@ def add_report(body: FieldReportBody, verify_only: bool = False):
     if stop is None:
         raise HTTPException(422, 'That stop is not in the current inspection plan for this area. Reload the plan and try again.')
     fields = {**body.model_dump(), 'stop_name': str(stop.get('name') or body.stop_name)[:160], 'place_type': str(stop.get('place_type') or body.place_type)[:40]}
-    report = make_report(**fields, source='databricks_app' if os.environ.get('DATABRICKS_WAREHOUSE_ID') else 'local')
+    user = _user(request)
+    report = make_report(**fields, source=f"app:{user['name']}" if user else ('databricks_app' if os.environ.get('DATABRICKS_WAREHOUSE_ID') else 'local'))
     try:
         _reports().add(report)
     except Exception as exc:
@@ -333,13 +353,67 @@ def add_report(body: FieldReportBody, verify_only: bool = False):
     return {'saved': True, 'report_id': report['report_id'], 'reported_at': report['reported_at']}
 
 @app.get('/api/reports')
-def list_reports(area_code: Optional[str] = Query(default=None, pattern=r'^[A-Z]{2,3}$')):
+def list_reports(request: Request, area_code: Optional[str] = Query(default=None, pattern=r'^[A-Z]{2,3}$'), mine: bool = False):
     from denguesux.field_reports import summarise
     try:
         rows = _reports().recent(area_code)
     except Exception as exc:
         raise HTTPException(503, f'Reports are unavailable: {type(exc).__name__}') from None
+    if mine:
+        u = _user(request)
+        rows = [r for r in rows if u and r.get('source') == f"app:{u['name']}"]
     return summarise(rows)
+
+@app.get('/api/reports.csv')
+def reports_csv_export(area_code: Optional[str] = Query(default=None, pattern=r'^[A-Z]{2,3}$')):
+    """Field outcomes as CSV for a town-council spreadsheet (stop, outcome, time; never the note)."""
+    from denguesux.field_reports import reports_csv
+    try:
+        rows = _reports().recent(area_code, limit=5000)
+    except Exception as exc:
+        raise HTTPException(503, f'Reports are unavailable: {type(exc).__name__}') from None
+    return Response(reports_csv(rows), media_type='text/csv', headers={'Content-Disposition': 'attachment; filename="denguesux-field-reports.csv"'})
+
+class ClaimBody(BaseModel):
+    area_code: str = Field(pattern=r'^[A-Z]{2,3}$')
+    week: Optional[str] = Field(default=None, pattern=r'^\d{4}-\d{2}-\d{2}$')
+    release: bool = False
+
+def _area_codes():
+    try:
+        return {a['code'] for a in json.loads((ROOT/'output/web/current.json').read_text())['areas']}
+    except (OSError, ValueError, KeyError):
+        return set()
+
+@app.get('/api/claims')
+def list_claims(request: Request, mine: bool = False):
+    """Team mode: who is walking which area this week and next (display names only)."""
+    from denguesux.field_reports import claims_store, current_claims, week_start
+    u = _user(request)
+    try:
+        rows = current_claims(claims_store(ROOT).rows())
+    except Exception as exc:
+        raise HTTPException(503, f'Claims are unavailable: {type(exc).__name__}') from None
+    if mine:
+        rows = [r for r in rows if u and r.get('claimed_by') == u['name']]
+    return {'week_start': week_start(), 'me': u['name'] if u else None, 'claims': rows}
+
+@app.post('/api/claims')
+def add_claim(body: ClaimBody, request: Request):
+    """Claim (or release) an area's walk for a week. Locally the claimant is 'local'."""
+    from denguesux.field_reports import claims_store, make_claim, week_start
+    if body.area_code not in _area_codes():
+        raise HTTPException(404, 'Unknown planning area.')
+    u = _user(request) or {'name': 'local'}
+    week = body.week or week_start()
+    claim = make_claim(area_code=body.area_code, claimed_by=u['name'], week=week)
+    if body.release:
+        claim['status'] = 'released'
+    try:
+        claims_store(ROOT).add(claim)
+    except Exception as exc:
+        raise HTTPException(503, f'Claim could not be saved: {type(exc).__name__}') from None
+    return {'saved': True, 'claim': claim}
 
 def _onemap_client():
     from denguesux.onemap import OneMapClient

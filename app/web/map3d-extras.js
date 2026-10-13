@@ -23,6 +23,7 @@
         <button type="button" data-mode3d="outlook" aria-pressed="false" ${outlook ? '' : 'disabled'}>In two weeks</button>
         <button type="button" data-mode3d="history" aria-pressed="false" ${h?.dates?.length > 2 ? '' : 'disabled'}>${icon('clock-counter-clockwise')} Since ${esc((h?.dates?.[0] || '').slice(0, 4))}</button>
       </div>
+      <button type="button" class="outline-button compare-button" id="compare-button" aria-pressed="false" title="Two synced views side by side">${icon('columns')} <span>Compare</span></button>
       <button type="button" class="solid-button dive-button" id="dive-button" hidden>${icon('arrow-down-right')} <span>Dive in</span></button>`;
     host.append(bar);
     const player = document.createElement('div');
@@ -37,6 +38,7 @@
     host.append(player);
     bar.querySelectorAll('[data-mode3d]').forEach(b => b.onclick = () => setMode(b.dataset.mode3d));
     $('#dive-button', bar).onclick = dive;
+    $('#compare-button', bar).onclick = () => compare.open ? closeCompare() : openCompare();
     $('#timelapse-play', player).onclick = () => timer ? stop() : play();
     $('#timelapse-scrub', player).oninput = e => { stop(); show(Number(e.target.value), 250); };
     $('#timelapse-speed', player).onclick = () => setSpeed(speed === 1 ? 4 : 1);
@@ -139,6 +141,44 @@
     return walkIndex;
   }
 
+  // Split screen: the island beside itself with a different day or the outlook, cameras locked together.
+  const compare = {open: false, land: null, host: null, sync: null, what: 'outlook'};
+  function compareTargets() {
+    const h = history(), out = [];
+    if (data().area_forecast?.areas?.length) out.push(['outlook', 'In two weeks (outlook)']);
+    if (h?.dates?.length) {
+      const totals = h.dates.map(d => (h.areas?.[d] || []).reduce((n, r) => n + r[1], 0)), i = totals.indexOf(Math.max(...totals));
+      out.push(['peak:' + h.dates[i], `The peak, ${day(h.dates[i])}`]);
+      const y = h.dates.find(d => d > new Date(Date.now() - 365 * 864e5).toISOString().slice(0, 10)); if (y) out.push(['day:' + y, `A year ago, ${day(y)}`]);
+    }
+    return out;
+  }
+  async function openCompare() {
+    if (compare.open || !land?.map) return;
+    const panel = host.parentElement, targets = compareTargets(); if (!panel || !targets.length) return;
+    compare.open = true; stop(); setMode('now'); panel.classList.add('is-compare'); $('#compare-button', host).setAttribute('aria-pressed', 'true');
+    const h2 = document.createElement('div'); h2.className = 'map-3d-host map-3d-compare'; panel.append(h2); compare.host = h2;
+    const bar = document.createElement('div'); bar.className = 'compare-bar';
+    bar.innerHTML = `<label class="sr-only" for="compare-what">Right view</label><select id="compare-what">${targets.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select><span class="compare-left">Left: today</span>`;
+    h2.append(bar);
+    compare.land = window.Landscape3D.mount(h2, data().current, {theme: 'night', orbit: false, gestures: false, intro: false, rise: false, labels: 0, interactive: false, padding: {top: 50, bottom: 50, left: 20, right: 20}});
+    if (!compare.land) return closeCompare();
+    await compare.land.ready(); land.resize(); compare.land.resize();
+    const apply = async () => { const v = $('#compare-what', bar).value; compare.what = v;
+      if (v === 'outlook') await compare.land.showOutlook(data().area_forecast);
+      else { const date = v.split(':')[1]; compare.land.labels(false); await compare.land.setPeople(peopleOn(date), 700); compare.land.caption(`Height = people in active clusters on ${day(date)}`); } };
+    $('#compare-what', bar).onchange = apply; await apply();
+    const m1 = land.map, m2 = compare.land.map;
+    compare.sync = () => { if (!m2 || !compare.open) return; m2.jumpTo({center: m1.getCenter(), zoom: m1.getZoom(), bearing: m1.getBearing(), pitch: m1.getPitch()}); };
+    m1.on('move', compare.sync); compare.sync();
+  }
+  function closeCompare() {
+    if (!compare.open) return; compare.open = false;
+    try { land?.map?.off('move', compare.sync); } catch {}
+    compare.land?.dispose(); compare.host?.remove(); compare.land = null; compare.host = null;
+    host.parentElement?.classList.remove('is-compare'); $('#compare-button', host)?.setAttribute('aria-pressed', 'false'); land?.resize();
+  }
+  document.addEventListener('denguesux:route', e => { if (e.detail.view !== 'map') closeCompare(); });
   function syncDive() {
     const button = host && $('#dive-button', host); if (!button) return;
     const area = api.state.areas.find(a => a.code === selected), entry = walkIndexData?.areas?.[area?.code];

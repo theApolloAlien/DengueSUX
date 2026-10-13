@@ -72,6 +72,20 @@
       <dl class="bench-dl"><div><dt>DengueSUX</dt><dd>${num(b.denguesux_mae, 1)}</dd></div><div><dt>Four-week average</dt><dd>${num(b.four_week_average_mae, 1)}</dd></div><div><dt>ai_forecast</dt><dd>${num(b.ai_forecast_mae, 1)}</dd></div>${Number.isFinite(Number(b.ai_forecast_log104_mae)) ? `<div><dt>ai_forecast, log counts · 104 weeks</dt><dd>${num(b.ai_forecast_log104_mae, 1)}</dd></div>` : ''}</dl><p class="platform-note">Mean absolute error, people a week.</p></section>`;
   }
 
+  // Lineage as Unity Catalog recorded it (system.access.table_lineage), grouped by the table that was written.
+  function lineageLive(status) {
+    const l = status?.lineage_live; if (!l?.edges?.length) return '';
+    const byTarget = {}; l.edges.forEach(e => { (byTarget[e.target] ||= []).push(e); });
+    return `<section class="platform-card lineage-live"><h3>${icon('tree-structure')} Lineage recorded by Unity Catalog</h3><p class="platform-note">${esc(l.source)} · ${num(l.edges.length)} source → target edges.</p>
+      <ul class="lineage-edges">${Object.entries(byTarget).slice(0, 14).map(([t, es]) => `<li><code>${esc(t)}</code><span>← ${es.slice(0, 5).map(e => `<code>${esc(e.source)}</code>`).join(', ')}${es.length > 5 ? ` +${es.length - 5}` : ''}</span></li>`).join('')}</ul></section>`;
+  }
+  // Compute this workspace used in the last 30 days (DBUs from system.billing.usage; Free Edition has no invoice).
+  function cost(status) {
+    const c = status?.cost; if (!c?.by_sku?.length) return '';
+    const max = Math.max(...c.by_sku.map(i => i.dbu), .01);
+    return `<section class="platform-card"><h3>${icon('coins')} Compute used, last 30 days</h3><p class="platform-note">${esc(c.source)} · <strong>${num(c.total_dbu, 1)} DBU</strong> in total, all serverless.</p>
+      <div class="cost-rows">${c.by_sku.slice(0, 5).map(i => `<div class="bench-row"><span title="${esc(i.sku)}">${esc(i.sku.replace(/^PREMIUM_/, '').replace(/_US_EAST_OHIO$/, '').replace(/_/g, ' ').toLowerCase())}</span><span class="bench-bar"><b style="width:${Math.max(3, i.dbu / max * 100)}%"></b></span><strong>${num(i.dbu, 1)}</strong></div>`).join('')}</div></section>`;
+  }
   function links(status) {
     const l = status?.links || {};
     if (!l.dashboard && !l.genie) return '';
@@ -97,7 +111,8 @@
     view.innerHTML = `<div class="platform-intro"><p>Every number in DengueSUX comes from this pipeline. ${status ? `Status read from the workspace ${esc(ago(status.generated_at))}.` : 'Live job and table status appears when the app runs on Databricks.'}</p></div>
       ${links(status)}
       ${lineage(status)}
-      <div class="platform-grid">${jobs(status)}${quality(status)}${model(status, data.model)}${bench(status)}${services()}</div>`;
+      <div class="platform-grid">${jobs(status)}${quality(status)}${model(status, data.model)}${bench(status)}${cost(status)}${services()}</div>
+      ${lineageLive(status)}`;
   }
 
   function mount() {

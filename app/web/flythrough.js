@@ -204,7 +204,7 @@
     if(!stops.length&&!track)return;
     const wrap=$('.inspection-map-wrap'),column=$('.inspection-map-column');if(!wrap||!column)return;
     const toolbar=document.createElement('div');toolbar.className='route-preview-toolbar';
-    toolbar.innerHTML=`<div class="route-view-tabs" role="group" aria-label="Inspection map view"><button type="button" data-map-mode="2d" aria-pressed="true"><i class="ph ph-map-trifold" aria-hidden="true"></i> 2D map</button><button type="button" data-map-mode="3d" aria-pressed="false"><i class="ph ph-cube" aria-hidden="true"></i> ${isTour?'3D flyover':'3D walk preview'}</button></div><span class="route-preview-label">Official HDB shapes · grey city context</span>`;
+    toolbar.innerHTML=`<div class="route-view-tabs" role="group" aria-label="Inspection map view"><button type="button" data-map-mode="2d" aria-pressed="true"><i class="ph ph-map-trifold" aria-hidden="true"></i> 2D map</button><button type="button" data-map-mode="3d" aria-pressed="false"><i class="ph ph-cube" aria-hidden="true"></i> ${isTour?'3D flyover':'3D walk preview'}</button><button type="button" data-map-mode="full" aria-pressed="false" title="Full screen: swipe between stops; the screen stays awake"><i class="ph ph-arrows-out" aria-hidden="true"></i> Full screen</button></div><span class="route-preview-label">Official HDB shapes · grey city context</span>`;
     column.insertBefore(toolbar,wrap);
     const container=document.createElement('div');container.id='route-3d';container.hidden=true;container.setAttribute('role','region');container.setAttribute('aria-label',isTour?'3D flyover of the area':'3D inspection route with estimated HDB block heights');wrap.prepend(container);
     const tour=document.createElement('section');tour.className='route-tour';tour.hidden=true;tour.setAttribute('aria-label','Route preview controls');
@@ -267,9 +267,24 @@
     if(state.recorder){state.recorder.stop();return;}
     const canvas=state.map?.getCanvas();if(!canvas?.captureStream)return;
     const type=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm','video/mp4'].find(t=>MediaRecorder.isTypeSupported(t));if(!type)return;
-    const chunks=[],recorder=new MediaRecorder(canvas.captureStream(30),{mimeType:type,videoBitsPerSecond:5e6});
+    // The recording is drawn from a composite: the WebGL frame plus the stop pins, walker, cluster labels and the stop card.
+    const composite=document.createElement('canvas');composite.width=canvas.width;composite.height=canvas.height;state.composite=composite;
+    const compose=()=>{if(!state.recorder||!state.map)return;const c=composite.getContext('2d'),dpr=canvas.width/Math.max(1,canvas.clientWidth),map=state.map;
+      c.drawImage(canvas,0,0);c.font=`700 ${13*dpr}px "DM Sans",sans-serif`;c.textAlign='center';c.textBaseline='middle';
+      state.markers.forEach((m,i)=>{const p=map.project(m.getLngLat()),sel=i===state.index,r=(sel?17:15)*dpr;c.beginPath();c.arc(p.x*dpr,p.y*dpr,r,0,Math.PI*2);c.fillStyle=sel?COLORS.selected:COLORS.stop;c.fill();c.lineWidth=2*dpr;c.strokeStyle='#fff';c.stroke();c.fillStyle=sel?'#14382d':'#fff';c.fillText(String(i+1),p.x*dpr,p.y*dpr+dpr);});
+      if(state.walker){const p=map.project(state.walker.getLngLat());c.beginPath();c.arc(p.x*dpr,p.y*dpr,10*dpr,0,Math.PI*2);c.fillStyle=COLORS.selected;c.fill();c.lineWidth=3*dpr;c.strokeStyle='#fff';c.stroke();}
+      (state.labels||[]).forEach(m=>{const p=map.project(m.getLngLat()),text=m.getElement().textContent.replace(/\s+/g,' ').trim().slice(0,46);c.font=`600 ${12*dpr}px "DM Sans",sans-serif`;const w=c.measureText(text).width+16*dpr;c.fillStyle='#fffdf5ee';c.fillRect(p.x*dpr-w/2,p.y*dpr-34*dpr,w,22*dpr);c.fillStyle='#7a2e1f';c.fillText(text,p.x*dpr,p.y*dpr-23*dpr);});
+      const card=state.container.querySelector('.route-stop-card');
+      if(card){const title=card.querySelector('strong')?.textContent.trim()||'',items=[...card.querySelectorAll('li')].map(l=>l.textContent.trim()).slice(0,3),look=card.querySelector('canvas');
+        const x=12*dpr,y=12*dpr,w=250*dpr,lh=18*dpr,h=(42+items.length*18+(look?110:0))*dpr;c.fillStyle='#fffdf5f2';c.fillRect(x,y,w,h);c.fillStyle=COLORS.selected;c.fillRect(x,y,w,3*dpr);
+        c.textAlign='left';c.fillStyle='#163f35';c.font=`700 ${13*dpr}px "DM Sans",sans-serif`;c.fillText(title.slice(0,34),x+10*dpr,y+18*dpr);
+        let yy=y+30*dpr;if(look&&look.width){c.drawImage(look,x+10*dpr,yy,w-20*dpr,100*dpr);yy+=108*dpr;}
+        c.font=`${12*dpr}px "DM Sans",sans-serif`;items.forEach((t,i)=>{c.fillStyle=i===0?'#163f35':'#7d8a72';c.fillText('• '+t.slice(0,40),x+10*dpr,yy+i*lh+8*dpr);});c.textAlign='center';}
+      state.composeFrame=requestAnimationFrame(compose);};
+    const chunks=[],recorder=new MediaRecorder(composite.captureStream(30),{mimeType:type,videoBitsPerSecond:5e6});
+    state.composeFrame=requestAnimationFrame(compose);
     recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
-    recorder.onstop=()=>{state.recorder=null;button.classList.remove('is-recording');button.querySelector('span').textContent='Record';
+    recorder.onstop=()=>{state.recorder=null;cancelAnimationFrame(state.composeFrame);button.classList.remove('is-recording');button.querySelector('span').textContent='Record';
       const blob=new Blob(chunks,{type}),url=URL.createObjectURL(blob),link=document.createElement('a');
       link.href=url;link.download=`denguesux-walk-${state.area.code.toLowerCase()}.${type.includes('mp4')?'mp4':'webm'}`;link.click();setTimeout(()=>URL.revokeObjectURL(url),4000);};
     recorder.start(500);state.recorder=recorder;button.classList.add('is-recording');button.querySelector('span').textContent='Stop';
@@ -515,8 +530,33 @@
       const outcome=window.Insights?.community()?.by_stop?.[stop.id]?.outcome||stop.field_outcome?.outcome||null;
       return {type:'Feature',id:i,properties:{base:h+6,top:h+46,outcome},geometry:{type:'Polygon',coordinates:[circle([stop.longitude,stop.latitude],3.2,20)]}};})};
   }
+  async function enterFullscreen(state){
+    if(state.fullscreen||state.closed)return;
+    const overlay=document.createElement('div');overlay.className='walk-fullscreen';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-label',`3D walk, ${state.area.name}`);
+    overlay.innerHTML=`<header class="walk-fullscreen-head"><strong>${esc(state.area.name)}</strong><span>${state.isTour?'3D flyover':'Swipe for the next stop'}</span><button type="button" class="icon-button walk-fullscreen-close" aria-label="Close full screen"><i class="ph ph-x" aria-hidden="true"></i></button></header><div class="walk-fullscreen-stage"></div><div class="walk-fullscreen-tools"></div>`;
+    document.body.append(overlay);state.fullscreen=overlay;document.body.classList.add('walk-fullscreen-open');
+    overlay.querySelector('.walk-fullscreen-stage').append(state.container);overlay.querySelector('.walk-fullscreen-tools').append(state.tour);
+    state.container.hidden=false;state.tour.hidden=false;
+    overlay.querySelector('.walk-fullscreen-close').onclick=()=>exitFullscreen(state);
+    state.fsKey=e=>{if(e.key==='Escape'){e.preventDefault();exitFullscreen(state);}};document.addEventListener('keydown',state.fsKey);
+    // Swipe left or right for the next or previous stop (a tap or drag on the map itself still rotates it).
+    let sx=null,sy=null;const stage=overlay.querySelector('.walk-fullscreen-stage');
+    stage.addEventListener('touchstart',e=>{if(e.touches.length===1){sx=e.touches[0].clientX;sy=e.touches[0].clientY;}},{passive:true});
+    stage.addEventListener('touchend',e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5&&!state.isTour)goToStop(state,state.index+(dx<0?1:-1));},{passive:true});
+    try{state.wakeLock=await navigator.wakeLock?.request('screen');}catch{}
+    try{await overlay.requestFullscreen?.();}catch{}
+    requestAnimationFrame(()=>{state.map?.resize();if(!state.map)setMode(state,'3d');});
+  }
+  function exitFullscreen(state){
+    const overlay=state.fullscreen;if(!overlay)return;state.fullscreen=null;
+    document.removeEventListener('keydown',state.fsKey);try{state.wakeLock?.release();}catch{}state.wakeLock=null;
+    if(document.fullscreenElement===overlay)document.exitFullscreen?.().catch(()=>{});
+    state.wrap.prepend(state.container);state.wrap.after(state.tour);overlay.remove();document.body.classList.remove('walk-fullscreen-open');
+    requestAnimationFrame(()=>state.map?.resize());
+  }
   async function setMode(state,mode){
     if(state.closed)return;
+    if(mode==='full'){if(state.mode!=='3d')await setMode(state,'3d');return enterFullscreen(state);}
     state.mode=mode;pause(state);
     state.toolbar.querySelectorAll('[data-map-mode]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.mapMode===mode)));
     state.container.hidden=mode!=='3d';$('#inspection-map').hidden=mode==='3d';$('#fit-inspection').hidden=mode==='3d';
@@ -636,7 +676,7 @@
   }
   function dispose(){
     if(!current)return;const state=current;if(state.recorder){try{state.recorder.stop();}catch{}}pause(state);state.closed=true;(state.done||[]).splice(0).forEach(r=>r());cancelAnimationFrame(state.pulse);reduced.removeEventListener('change',state.motionChange);document.removeEventListener('visibilitychange',state.visibility);
-    state.popup?.remove();closeCallout(state);state.map?.remove();state.toolbar.remove();state.tour.remove();state.container.remove();$('.inspection-legend')?.classList.remove('is-hidden-3d');current=null;
+    if(state.fullscreen)exitFullscreen(state);state.popup?.remove();closeCallout(state);state.map?.remove();state.toolbar.remove();state.tour.remove();state.container.remove();$('.inspection-legend')?.classList.remove('is-hidden-3d');current=null;
   }
   // Read-only state for automated checks and support; exposes no data beyond what is on screen.
   function snapshot(){const s=current;if(!s)return null;return {mode:s.mode,tour:s.isTour,phase:s.phase,playing:s.playing,along:s.along,total:s.track?.total??null,stop:s.index+1,stops:s.plan.stops.length,bearing:s.map?.getBearing()??null,pitch:s.map?.getPitch()??null,zoom:s.map?.getZoom()??null,look:s.callout?stopKey(s,s.index):null,bands:s.bandKey,eye:!!(s.eyeUntil&&performance.now()<s.eyeUntil),buildError:s.buildError||null,fitDebug:s.fitDebug||null,hour:s.hour??null,rain:!!s.rain,shadows:s.map?.getSource('shadows')?._data?.features?.length??null,landuse:s.map?.getSource("landuse")?._data?.features?.length??null,city:s.buildings?.features.filter(f=>f.properties.role==='city').length??null,ready:!!s.ready};}

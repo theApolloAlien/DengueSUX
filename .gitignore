@@ -41,3 +41,6 @@ daisi-round1-3-slide-template.pdf
 deck/gallery/DengueSUX_gallery_*.png
 deck/gallery/gallery_*.html
 demo/*.mov
+
+# Generated resident site (scripts/build_public_site.py); published to the gh-pages branch
+public/

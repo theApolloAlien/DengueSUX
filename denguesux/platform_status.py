@@ -128,6 +128,24 @@ def benchmark_facts(spark, prefix):
     return {k: (float(v) if isinstance(v, (int, float)) else str(v)) for k, v in row.items()}
 
 
+def lineage_facts(spark, prefix):
+    """Real lineage edges from Unity Catalog's system table (last 30 days), not a typed diagram."""
+    rows = spark.sql(f"""SELECT source_table_full_name AS source, target_table_full_name AS target, count(*) AS events, max(event_date) AS last_seen
+        FROM system.access.table_lineage WHERE (target_table_full_name LIKE '{prefix}.%' OR source_table_full_name LIKE '{prefix}.%')
+        AND event_date >= date_sub(current_date(), 30) AND source_table_full_name IS NOT NULL AND source_table_full_name <> ''
+        GROUP BY 1, 2 ORDER BY target, events DESC LIMIT 120""").collect()
+    return {"source": "system.access.table_lineage (last 30 days)",
+            "edges": [{"source": r["source"].replace(prefix + ".", ""), "target": r["target"].replace(prefix + ".", ""), "events": int(r["events"]), "last_seen": str(r["last_seen"])} for r in rows]}
+
+
+def cost_facts(spark):
+    """Compute used by this workspace in the last 30 days, from the billing system table (DBUs; Free Edition has no bill)."""
+    rows = spark.sql("""SELECT sku_name, round(sum(usage_quantity), 2) AS dbu, min(usage_date) AS from_day, max(usage_date) AS to_day
+        FROM system.billing.usage WHERE usage_date >= date_sub(current_date(), 30) GROUP BY sku_name ORDER BY dbu DESC LIMIT 10""").collect()
+    items = [{"sku": r["sku_name"], "dbu": float(r["dbu"]), "from": str(r["from_day"]), "to": str(r["to_day"])} for r in rows]
+    return {"source": "system.billing.usage (last 30 days)", "total_dbu": round(sum(i["dbu"] for i in items), 2), "by_sku": items}
+
+
 def link_facts(client):
     """Workspace links for the operations dashboard and the Genie space (opened by signed-in staff only)."""
     host = client.config.host.rstrip("/")
@@ -147,6 +165,7 @@ def build(spark, root, prefix):
               "tables": table_facts(spark, prefix), "jobs": _safe(lambda: job_facts(client), []),
               "pipeline": _safe(lambda: pipeline_facts(client, spark)), "model": _safe(lambda: model_facts(prefix)),
               "benchmark": _safe(lambda: benchmark_facts(spark, prefix)), "links": _safe(lambda: link_facts(client), {}),
+              "lineage_live": _safe(lambda: lineage_facts(spark, prefix)), "cost": _safe(lambda: cost_facts(spark)),
               "note": "Read from the workspace at run time: Jobs API, DESCRIBE HISTORY/DETAIL, the pipeline event log and the Unity Catalog model registry."}
     root = Path(root)
     out = root / "output/web/pipeline_status.json"

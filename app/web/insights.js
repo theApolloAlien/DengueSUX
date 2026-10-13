@@ -31,12 +31,12 @@
     if (!o) return `<section class="insight-card"><h2>${icon('binoculars')} Two-week area outlook</h2><p class="insight-empty">The area outlook appears after the next pipeline run.</p></section>`;
     const rows = o.areas.filter(a => a.band !== 'Low' || a.p_any >= 0.25).slice(0, 5);
     const rising = o.areas.filter(a => a.band === 'High' && a.band_now !== 'High');
-    const ev = o.evaluation || {}, m = ev.model || {}, p = ev.persistence || {};
+    const ev = o.evaluation || {}, m = ev.model || {}, p = ev.persistence || {}, tp = ev.transition_persistence, bs = ev.bootstrap?.diff_brier_high_vs_transition, nh = ev.new_high;
     return `<section class="insight-card outlook-card" aria-labelledby="outlook-title">
       <header><h2 id="outlook-title">${icon('binoculars')} In about two weeks</h2><a href="#map/3d">3D map →</a></header>
       <p class="insight-lede">${rising.length ? `<strong>${rising.map(a => esc(a.name)).join(', ')}</strong> may become High.` : 'No area is expected to newly reach High.'} Chance of 10+ people in clusters:</p>
       <ol class="outlook-list">${rows.map(a => `<li><a href="#map/${slug(a.name)}"><span class="outlook-name">${esc(a.name)}<small>${esc(a.band_now)} now → ${esc(a.band)}</small></span>${bar(a.p_high, a.band.toLowerCase())}<b>${pct(a.p_high)}</b></a></li>`).join('')}</ol>
-      <p class="insight-foot" title="${esc(o.method)}">Trained on ${num(o.training?.origin_dates)} archived NEA listings since ${esc((o.training?.first_origin || '').slice(0, 4))}. Brier ${num(m.brier_any, 3)} vs ${num(p.brier_any, 3)} for “stays the same”. Chances, not certainties.</p>
+      <p class="insight-foot" title="${esc(o.method)}">Trained on ${num(o.training?.origin_dates)} archived NEA listings since ${esc((o.training?.first_origin || '').slice(0, 4))}. Brier ${num(m.brier_any, 3)} vs ${num(p.brier_any, 3)} for “stays the same”${tp ? ` and ${num(tp.brier_any, 3)} for a fair probabilistic persistence${bs ? ` (95% interval of the difference on the 10+ target: ${num(bs.low, 3)} to ${num(bs.high, 3)}, so about level)` : ''}` : ''}. Its edge is ranking (AUC ${num(m.auc_high, 2)} vs ${num(tp?.auc_high ?? p.auc_high, 2)})${nh ? ` and new High areas: ${num(nh.caught_by_model)} of ${num(nh.count)} caught, ${num(nh.false_alarms)} false alarms` : ''}. Chances, not certainties.</p>
     </section>`;
   }
 
@@ -74,7 +74,7 @@
     block.setAttribute('aria-label', 'Outlook, track record and community checks');
     const row = document.createElement('div');
     row.className = 'home-insights';
-    row.innerHTML = outlookCard() + ledgerCard() + communityCard();
+    row.innerHTML = outlookCard() + communityCard();  // the ledger's latest rows sit inside the national card now
     block.append(row);
     grid.after(block);
     const history = data().area_history;
@@ -127,7 +127,7 @@
     if (reports) pieces.push(`<p class="outreach-note">${icon('check-circle')} <span><strong>${num(reports.stops_checked)}</strong> stops checked here${reports.water_found ? `, ${num(reports.water_found)} with water found` : ''}.<small>Last report ${day(reports.last_reported_at)}</small></span></p>`);
     const feed = `/feeds/alerts.xml?area=${encodeURIComponent(area.code)}`;
     const share = `DengueSUX: ${area.name} has ${area.cluster_cases} ${area.cluster_cases === 1 ? 'person' : 'people'} in active dengue clusters. Check for stagnant water today. ${location.origin}/#plan/${slug(area.name)}`;
-    pieces.push(`<div class="follow-row">${telegramLink(area)}<a class="text-button" href="${feed}" title="Atom feed: follow in any feed reader or chat bot. We store no contact details.">${icon('rss')} Follow alerts</a><a class="text-button" href="https://wa.me/?text=${encodeURIComponent(share)}" target="_blank" rel="noopener">${icon('whatsapp-logo')} Share</a><a class="text-button" href="#poster/${slug(area.name)}">${icon('printer')} Lift poster</a></div>`);
+    pieces.push(`<div class="follow-row">${telegramLink(area)}<button type="button" class="text-button share-button" data-share-area="${esc(area.code)}" title="A share-ready image of this area's numbers with a QR code">${icon('share-network')} Share card</button><a class="text-button" href="${feed}" title="Atom feed: follow in any feed reader or chat bot. We store no contact details.">${icon('rss')} Follow alerts</a><a class="text-button" href="https://wa.me/?text=${encodeURIComponent(share)}" target="_blank" rel="noopener">${icon('whatsapp-logo')} Share</a><a class="text-button" href="#poster/${slug(area.name)}">${icon('printer')} Lift poster</a></div>`);
     node.insertAdjacentHTML('beforeend', pieces.join(''));
   }
 

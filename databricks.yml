@@ -101,8 +101,22 @@ resources:
             file: {path: ./sql/metric_view_forecast_performance.sql}
             warehouse_id: ${var.warehouse_id}
           timeout_seconds: 600
+        # AI Functions (pay-per-token, a few hundred short calls per run): back-translation checks of the resident notices
+        # and a theme for each field-report note. Neither changes a draft or copies a note.
+        - task_key: ai_notice_checks
+          depends_on: [{task_key: gold}]
+          sql_task:
+            file: {path: ./sql/ai_notice_checks.sql}
+            warehouse_id: ${var.warehouse_id}
+          timeout_seconds: 1500
+        - task_key: ai_field_report_themes
+          depends_on: [{task_key: gold}]
+          sql_task:
+            file: {path: ./sql/ai_field_report_themes.sql}
+            warehouse_id: ${var.warehouse_id}
+          timeout_seconds: 900
         - task_key: platform_status
-          depends_on: [{task_key: ai_forecast_benchmark}, {task_key: metric_views}]
+          depends_on: [{task_key: ai_forecast_benchmark}, {task_key: metric_views}, {task_key: ai_notice_checks}, {task_key: ai_field_report_themes}]
           run_if: ALL_DONE
           notebook_task:
             notebook_path: ./notebooks/10_platform_status.py

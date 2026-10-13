@@ -348,7 +348,7 @@ def push_daily(root=ROOT, *, spark=None, bot=None, base_url=None):
     if bot is None and not token:
         return {"status": "no_token", "chats": 0, "sent": 0}
     bot = bot or Bot(token)
-    base_url = base_url or os.environ.get("DENGUE_PUBLIC_URL", "https://denguesux.app")
+    base_url = base_url or os.environ.get("DENGUE_RESIDENT_URL") or os.environ.get("DENGUE_PUBLIC_URL", "https://denguesux.app")
     messages = daily_messages(load_data(root), store(root, spark).all(), base_url)
     sent, errors = 0, 0
     for chat_id, text in messages.items():
@@ -394,7 +394,7 @@ def start_polling(root=ROOT, log=print):
     if not token or os.environ.get("TELEGRAM_POLL", "1") == "0":
         return None
     bot = Bot(token)
-    base_url = os.environ.get("DENGUE_PUBLIC_URL", "https://denguesux.app")
+    base_url = os.environ.get("DENGUE_RESIDENT_URL") or os.environ.get("DENGUE_PUBLIC_URL", "https://denguesux.app")
     thread = threading.Thread(target=poll, args=(bot, store(root), lambda: load_data(root), base_url), kwargs={"log": log}, daemon=True, name="telegram-bot")
     thread.start()
     return thread

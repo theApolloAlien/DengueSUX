@@ -27,3 +27,6 @@ env:
     valueFrom: telegram-token
   - name: DENGUE_PUBLIC_URL
     value: https://denguesux-7474658048209156.aws.databricksapps.com
+  # Residents (poster QR, Telegram links) go to the static public site, which needs no workspace sign-in.
+  - name: DENGUE_RESIDENT_URL
+    value: https://theapolloalien.github.io/DengueSUX

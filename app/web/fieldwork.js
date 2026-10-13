@@ -129,7 +129,8 @@
     const limits=isWalk?`<p>Up to ${stops.length||7} official places within about ${radius} m of the walk centre. Block pins sit inside each block’s official HDB footprint; hawker and park points are official source points, not verified entrances. Inspect only publicly accessible places; never enter homes or climb to gutters.</p><p>${esc(walk.landuse_note||'')}</p>`
       :`<p>Top ${inspection.top_n||8} available places; ${radius} m from exact cluster blocks. A place can be outside the selected area if it is near a shared cluster. Source points are approximate locations, not verified public entrances. Inspect only publicly accessible places; never enter homes or climb to gutters.</p>`;
     $('#inspection-view').innerHTML=`<div class="inspection-nav"><button id="back-to-areas" class="text-button">${icon('arrow-left')} Map</button><span>FIELD PLAN <span class="nav-step">/</span> ${esc(area.name)}</span><button id="print-plan" class="text-button" ${stops.length?'':'disabled'}>${icon('printer')} Print / save PDF</button></div>
-      <header class="inspection-heading"><div><h1 tabindex="-1">${heading}<span>${esc(area.name)}${isWalk&&stops.length?' · routine walk':''}</span></h1></div><button class="outline-button" id="plan-notice">${icon('translate')} Resident notice</button></header>
+      <header class="inspection-heading"><div><h1 tabindex="-1">${heading}<span>${esc(area.name)}${isWalk&&stops.length?' · routine walk':''}</span></h1></div><button class="outline-button" id="plan-notice">${icon('translate')} <span data-i18n="plan.notice">Resident notice</span></button></header>
+      ${stops.length&&!window.DENGUESUX_DATA?`<div class="field-tools"><button type="button" class="outline-button" id="field-mode" aria-pressed="${document.body.classList.contains('field-mode')}">${icon('person-simple-walk')} <span data-i18n="plan.field">Field mode</span></button><button type="button" class="outline-button" id="claim-walk" hidden>${icon('hand-waving')} <span>Claim this walk</span></button><a class="text-button" id="reports-csv" href="/api/reports.csv?area_code=${esc(area.code)}" download>${icon('download-simple')} <span data-i18n="plan.csv">Export outcomes (CSV)</span></a><span class="claim-line" id="claim-line" hidden></span></div><div class="field-gps" id="field-gps" hidden></div>`:''}
       <div class="plan-evidence">${isWalk?`<span title="Walk saved from official HDB, NEA and NParks layers">${icon('calendar-dots')} Walk saved ${date(walk.generated_at)}</span><span title="NEA cluster snapshot">${icon('crosshair')} Clusters as of ${date(data.current?.as_of)}</span>`:`<span title="NEA source updated ${esc(sourceDates.join(' / ')||'unavailable')}">${icon('calendar-dots')} Saved ${date(inspection.as_of||data.current?.as_of)}</span><span title="Assumed search radius around each cluster block">${icon('circles-three')} ${radius} m radius</span>`}${plan.impact?`<span class="impact-chip" title="${esc(plan.impact.source)}. ${esc(plan.impact.note)}">${icon('house-line')} <strong>${num(plan.impact.homes_in_route_blocks)}</strong> homes on this route</span>`:''}</div>
       ${isWalk?walkBanner(area,plan,ctx):''}
       ${stale?`<div class="field-warning">${icon('cloud-warning')}<span title="${esc(inspection.stale_note||'Cached geocodes are being used because OneMap could not be refreshed.')}">Saved map data · check access on site.</span></div>`:''}
@@ -139,6 +140,8 @@
     if(toolbar)$('#inspection-view').prepend(toolbar);
     $('#back-to-areas').addEventListener('click',()=>{closePlan();actions.back();$('#area-detail .plan-button')?.focus();});
     $('#print-plan').addEventListener('click',()=>window.print());$('#plan-notice').addEventListener('click',()=>openNotice(area));
+    if($('#field-mode')){$('#field-mode').onclick=()=>fieldMode(area,!document.body.classList.contains('field-mode'));if(document.body.classList.contains('field-mode'))fieldMode(area,true);}
+    if(!loading)loadClaim(area);window.I18N?.apply();
     $('.stop-list').querySelectorAll('[data-stop]').forEach(b=>b.addEventListener('click',()=>focusStop(b.dataset.stop)));
     const asOf=isWalk?walk.generated_at:inspection.as_of;
     $('.stop-list').querySelectorAll('input[type=checkbox]').forEach(c=>c.addEventListener('change',()=>{const key=`denguesux-check:${asOf}:${area.code}:${c.dataset.check}`;try{sessionStorage.setItem(key,String(c.checked));}catch{}updateProgress();}));
@@ -155,6 +158,34 @@
     if(!ctx.rerender||document.activeElement===document.body)$('.inspection-heading h1').focus({preventScroll:true});
   }
   function walkFormula(formula){if(!formula||typeof formula==='string')return '';return `<dl class="formula-rules"><div><dt>Place type · cap 25</dt><dd>Blocks 25 · hawker centres 20 · parks 15</dd></div>${['compactness','homes'].map(k=>`<div><dt>${k==='homes'?'Homes nearby':'Compactness'} · cap ${formula[k]?.cap}</dt><dd>${esc(formula[k]?.expression)}</dd></div>`).join('')}</dl><p>${esc(formula.missing)} This order is not a disease probability or proof of stagnant water.</p>`;}
+  // Field mode: large targets, the screen stays awake, and the distance from this phone to the next unchecked stop
+  // (computed on the device from the browser's position; never sent anywhere).
+  let gpsWatch=null,wakeLock=null;
+  async function fieldMode(area,on){
+    document.body.classList.toggle('field-mode',on);$('#field-mode')?.setAttribute('aria-pressed',String(on));try{sessionStorage.setItem('denguesux:field',on?'1':'');}catch{}
+    const gps=$('#field-gps');
+    if(!on){if(gpsWatch!=null)navigator.geolocation?.clearWatch(gpsWatch);gpsWatch=null;try{wakeLock?.release();}catch{}wakeLock=null;if(gps)gps.hidden=true;return;}
+    try{wakeLock=await navigator.wakeLock?.request('screen');}catch{}
+    if(!gps||!navigator.geolocation)return;gps.hidden=false;gps.innerHTML=`${icon('crosshair-simple')} <span>${esc(window.I18N?window.I18N.t('plan.gps'):'Show my distance to the next stop')}</span><small>Location stays on this phone</small>`;
+    gpsWatch=navigator.geolocation.watchPosition(pos=>{
+      const stops=plan?.stops||[],next=stops.find(s=>{const c=document.querySelector(`.stop-done input[data-check="${CSS.escape(String(s.id))}:done"], #stop-${CSS.escape(String(s.id))} .stop-done input`);return !(c&&c.checked);})||stops[0];if(!next)return;
+      const d=distanceM([pos.coords.longitude,pos.coords.latitude],[next.longitude,next.latitude]);
+      gps.innerHTML=`${icon('crosshair-simple')} <span>${esc(window.I18N?window.I18N.t('plan.toNext',Math.round(d),next.number):`${Math.round(d)} m to stop ${next.number}`)}</span><small>${esc(next.name)} · ±${Math.round(pos.coords.accuracy||0)} m</small>`;
+    },()=>{gps.innerHTML=`${icon('crosshair-simple')} <span>Location unavailable</span><small>Allow location to see the distance to the next stop</small>`;},{enableHighAccuracy:true,maximumAge:5000});
+  }
+  const distanceM=(a,b)=>{const lat=(a[1]+b[1])*Math.PI/360;return Math.hypot((a[0]-b[0])*Math.cos(lat),a[1]-b[1])*111195;};
+  // Team mode: who claimed this area's walk for the week.
+  async function loadClaim(area){
+    const line=$('#claim-line'),button=$('#claim-walk');if(!line||!button)return;
+    try{const r=await fetch('/api/claims',{signal:AbortSignal.timeout(12000)});if(!r.ok)throw 0;const c=await r.json();
+      const mine=(c.claims||[]).filter(x=>x.area_code===area.code),claim=mine[0],me=c.me;
+      const t=(k,...a)=>window.I18N?window.I18N.t(k,...a):k;
+      button.hidden=false;line.hidden=!claim;if(claim)line.innerHTML=`${icon('hand-waving')} ${esc(t('plan.claimedBy',claim.claimed_by+(claim.claimed_by===me?' (me)':'')))}`;
+      const release=!!claim&&(claim.claimed_by===me||me==null);
+      button.querySelector('span').textContent=release?t('plan.release'):t('plan.claim');
+      button.onclick=async()=>{button.disabled=true;try{await fetch('/api/claims',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({area_code:area.code,release})});actions.toast(release?'Walk released.':'Walk claimed for this week.');await loadClaim(area);}catch{actions.toast('Could not save the claim.');}finally{button.disabled=false;}};
+    }catch{button.hidden=true;line.hidden=true;}
+  }
   function updateProgress(){
     const checks=[...document.querySelectorAll('.stop-list input[type=checkbox]')];
     const meter=$('#stop-progress');if(!meter)return;

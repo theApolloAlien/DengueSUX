@@ -3541,3 +3541,83 @@
   .route-tour-scene .route-hour{height:34px;margin-left:auto}
   .route-tour-controls .route-tour-light{display:none}
 }
+@layer views{
+  /* Split-screen compare on the Map page's 3D island */
+  .map-panel.is-compare .map-3d-host:not(.map-3d-compare){width:50%;right:auto}
+  .map-panel.is-compare .map-3d-compare{position:absolute;top:0;right:0;bottom:0;width:50%;border-left:2px solid #fffdf5;z-index:3}
+  .compare-bar{position:absolute;z-index:4;top:12px;left:12px;display:flex;gap:10px;align-items:center;background:#0b221cd9;color:#e9efe6;padding:6px 8px;border-radius:8px;font-size:12px}
+  .compare-bar select{background:#163f35;color:#fff;border:1px solid #3f7a63;border-radius:6px;padding:4px 6px;font:600 12px "DM Sans",sans-serif}
+  .compare-left{opacity:.8}
+  .compare-button{padding:0 10px;height:36px;font-size:12px}
+  .compare-button[aria-pressed=true]{background:#163f35;color:#fff;border-color:#163f35}
+  @media (max-width:850px){.map-panel.is-compare .map-3d-host:not(.map-3d-compare){width:100%;height:50%}.map-panel.is-compare .map-3d-compare{width:100%;height:50%;top:auto;left:0;border-left:0;border-top:2px solid #fffdf5}}
+}
+@layer views{
+  /* Full-screen walk (phones): the scene fills the screen, controls sit below, swipe moves between stops */
+  .walk-fullscreen{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;background:#0f1d18;color:#fff}
+  .walk-fullscreen-head{display:flex;align-items:center;gap:10px;padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top));font-size:13px}
+  .walk-fullscreen-head strong{font-size:15px}.walk-fullscreen-head span{color:#bcd2c6;flex:1}
+  .walk-fullscreen-head .icon-button{color:#fff;border-color:#3f7a63}
+  .walk-fullscreen-stage{flex:1;position:relative;min-height:0}.walk-fullscreen-stage #route-3d{position:absolute;inset:0;height:auto}
+  .walk-fullscreen-tools{max-height:42vh;overflow:auto;background:#f6f7ee;color:#193e33;padding-bottom:env(safe-area-inset-bottom)}
+  .walk-fullscreen-tools .route-tour{margin:0;border:0;border-radius:0}
+  .walk-fullscreen-tools .route-3d-legend,.walk-fullscreen-tools .route-3d-note{display:none}
+  body.walk-fullscreen-open{overflow:hidden}
+  @media (max-width:760px){.walk-fullscreen-tools{max-height:46vh}.route-view-tabs [data-map-mode=full]{font-weight:700}}
+}
+@layer theme{
+  /* Dark mode: semantic tokens flip, then the surfaces that still carry literal colours. Chosen in Help, or follows the system. */
+  :root[data-theme="dark"]{color-scheme:dark;--surface-1:#101c17;--surface-2:#16241e;--surface-3:#1d2d26;--text-1:#e8efe9;--text-2:#b8c6bc;--text-3:#9fb0a4;--border-subtle:#27372f;--border-strong:#3a4d43;--accent:#8fd1b4;
+    --paper:#0f1a15;--white:#16241e;--forest:#2f6a55;--ink:#e8efe9;--muted:#9fb0a4;--line:#27372f;--mint:#1b2b24;--sea:#14221c;--shadow:0 12px 28px #00000066}
+  :root[data-theme="dark"] body{background:#0f1a15;color:#e8efe9}
+  :root[data-theme="dark"] .nav-rail{background:#0b1511;border-color:#27372f}
+  :root[data-theme="dark"] .topbar{background:#0f1a15;border-color:#27372f}
+  :root[data-theme="dark"] .rail-button.active,:root[data-theme="dark"] .rail-button[aria-current=page]{background:#1d2d26;color:#fff}
+  :root[data-theme="dark"] .rail-button,:root[data-theme="dark"] .command-trigger,:root[data-theme="dark"] .sidebar-note,:root[data-theme="dark"] .breadcrumb{color:#bcd2c6}
+  :root[data-theme="dark"] .command-trigger,:root[data-theme="dark"] .search-box,:root[data-theme="dark"] input,:root[data-theme="dark"] select,:root[data-theme="dark"] textarea{background:#101c17;color:#e8efe9;border-color:#3a4d43}
+  :root[data-theme="dark"] .insight-card,:root[data-theme="dark"] .area-browser,:root[data-theme="dark"] .map-panel,:root[data-theme="dark"] .area-detail,:root[data-theme="dark"] .forecast-chart-card,:root[data-theme="dark"] .forecast-detail,:root[data-theme="dark"] .inspection-stop,:root[data-theme="dark"] .record-block,:root[data-theme="dark"] .platform-card,:root[data-theme="dark"] .answer-card,:root[data-theme="dark"] .plan-picker,:root[data-theme="dark"] .route-tour,:root[data-theme="dark"] .week-priorities,:root[data-theme="dark"] .week-activity,:root[data-theme="dark"] .stat-item,:root[data-theme="dark"] .live-outlook,:root[data-theme="dark"] .home-composer,:root[data-theme="dark"] .chat-answer,:root[data-theme="dark"] .shared-checklist,:root[data-theme="dark"] .plan-sources,:root[data-theme="dark"] .week-summary,:root[data-theme="dark"] .timelapse-player,:root[data-theme="dark"] .no-scene-note,:root[data-theme="dark"] .poster-sms,:root[data-theme="dark"] .tour-chip,:root[data-theme="dark"] .growth-model,:root[data-theme="dark"] .inline-banner{background:#16241e;border-color:#27372f;color:#e8efe9}
+  :root[data-theme="dark"] .ask-chip,:root[data-theme="dark"] .filter,:root[data-theme="dark"] .segmented button,:root[data-theme="dark"] .map-chip,:root[data-theme="dark"] .outline-button,:root[data-theme="dark"] .icon-button,:root[data-theme="dark"] .route-tour-controls button,:root[data-theme="dark"] .route-tour-scene button,:root[data-theme="dark"] .route-hour,:root[data-theme="dark"] .timelapse-speed,:root[data-theme="dark"] .route-view-tabs button,:root[data-theme="dark"] .mode-button,:root[data-theme="dark"] .view-tab{background:#1d2d26;color:#e8efe9;border-color:#3a4d43}
+  :root[data-theme="dark"] .segmented button.active,:root[data-theme="dark"] .filter.active,:root[data-theme="dark"] .route-view-tabs button[aria-pressed=true],:root[data-theme="dark"] .mode-button.active{background:#2f6a55;color:#fff;border-color:#2f6a55}
+  :root[data-theme="dark"] .text-button,:root[data-theme="dark"] a{color:#9fd4bd}
+  :root[data-theme="dark"] .solid-button,:root[data-theme="dark"] .ask-fab{background:#2f6a55;color:#fff}
+  :root[data-theme="dark"] dialog,:root[data-theme="dark"] .help-menu>div,:root[data-theme="dark"] .layers-menu,:root[data-theme="dark"] .map-legend,:root[data-theme="dark"] .cluster-timeline,:root[data-theme="dark"] .command-option,:root[data-theme="dark"] .maplibregl-popup-content,:root[data-theme="dark"] .leaflet-popup-content-wrapper,:root[data-theme="dark"] .leaflet-popup-tip{background:#16241e;color:#e8efe9;border-color:#27372f}
+  :root[data-theme="dark"] .command-option[aria-selected=true]{background:#1d2d26}
+  :root[data-theme="dark"] .area-list .area-row,:root[data-theme="dark"] .area-row:hover,:root[data-theme="dark"] .area-row.active,:root[data-theme="dark"] .priority-row,:root[data-theme="dark"] .ledger-table td,:root[data-theme="dark"] .ledger-table th,:root[data-theme="dark"] table td,:root[data-theme="dark"] table th{border-color:#27372f;color:#e8efe9}
+  :root[data-theme="dark"] .area-row.active,:root[data-theme="dark"] .area-row:hover{background:#1d2d26}
+  :root[data-theme="dark"] .skeleton,:root[data-theme="dark"] .boot-hero,:root[data-theme="dark"] .boot-list>div{background:#1d2d26}
+  :root[data-theme="dark"] .toast{background:#e8efe9;color:#101c17}
+  :root[data-theme="dark"] footer,:root[data-theme="dark"] .stat-note,:root[data-theme="dark"] .page-description,:root[data-theme="dark"] .card-meta,:root[data-theme="dark"] .insight-foot,:root[data-theme="dark"] .platform-note,:root[data-theme="dark"] .route-3d-note,:root[data-theme="dark"] .route-3d-status,:root[data-theme="dark"] .composer-privacy,:root[data-theme="dark"] small{color:#9fb0a4}
+  :root[data-theme="dark"] h1,:root[data-theme="dark"] h2,:root[data-theme="dark"] h3,:root[data-theme="dark"] .stat-value,:root[data-theme="dark"] .page-title{color:#f1f5f0}
+  :root[data-theme="dark"] .leaflet-tile-pane{filter:brightness(.78) invert(1) hue-rotate(185deg) saturate(.45)}
+  :root[data-theme="dark"] .leaflet-container{background:#14221c}
+  :root[data-theme="dark"] .print-route rect{fill:#16241e}
+  :root[data-theme="dark"] .inspection-pin{background:#2f6a55;color:#fff;border-color:#101c17}
+  :root[data-theme="dark"] #route-3d{background:#14221c}
+  :root[data-theme="dark"] .look-dialog .look-stage,:root[data-theme="dark"] .route-callout-look{background:#1d2d26}
+  :root[data-theme="dark"] .field-warning,:root[data-theme="dark"] .coverage-note{background:#2b2515;color:#f3d9a4;border-color:#5a4a1e}
+  :root[data-theme="dark"] .poster-sheet{background:#fff;color:#193e33}
+  :root[data-theme="dark"] .chat-question{background:#1d2d26;color:#e8efe9}
+  :root[data-theme="dark"] .walk-fullscreen-tools{background:#16241e;color:#e8efe9}
+}
+@layer views{
+  /* Field mode: bigger targets for a phone held in one hand on a walk; location stays on the device. */
+  body.field-mode .inspection-stop{padding:18px 16px;font-size:16px}
+  body.field-mode .inspection-stop h3{font-size:19px}
+  body.field-mode .stop-number{width:44px;height:44px;font-size:17px}
+  body.field-mode .report-options button,body.field-mode .stop-done,body.field-mode .stop-checklist label{min-height:48px;font-size:15px}
+  body.field-mode .stop-checklist input[type=checkbox]{width:24px;height:24px}
+  body.field-mode .inspection-map-column{position:sticky;top:0;z-index:3}
+  .field-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+  .field-tools .outline-button[aria-pressed=true]{background:#163f35;color:#fff;border-color:#163f35}
+  .field-gps{display:flex;gap:8px;align-items:center;padding:10px 12px;border-radius:8px;background:#163f35;color:#fff;font-weight:600;font-size:15px}
+  .field-gps small{font-weight:400;opacity:.8}
+  .claim-line{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:#4d5f52;margin:0 0 12px}
+  .claim-line strong{color:#163f35}
+  .my-walks{margin-top:18px}.my-walks ul{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:6px}.my-walks li{display:flex;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid #e0e5d6;border-radius:8px;background:#fff;font-size:13px}
+  .chat-voice{display:inline-flex;align-items:center;gap:6px}
+  #chat-mic.is-listening{color:#c2523c}
+  .chat-listen{margin-left:auto;font-size:12px}
+  .share-button i{margin-right:4px}
+  .nav-rail{padding-bottom:env(safe-area-inset-bottom)}
+  @media (max-width:760px){.nav-rail{height:calc(68px + env(safe-area-inset-bottom))}}
+}

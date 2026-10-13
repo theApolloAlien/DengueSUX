@@ -26,7 +26,8 @@
     if (!area) { view.innerHTML = '<p class="poster-empty">Choose an area from the map to make a poster.</p>'; return; }
     const notice = api.state.data.notices?.notices?.[area.code]?.[language];
     const head = HEAD[language];
-    const url = `${location.origin}/#plan/${slug(area.name)}`;
+    // Residents land on the public page (no sign-in) when one is configured; the app link is the fallback.
+    const url = window.DengueLinks?.resident_url ? `${window.DengueLinks.resident_url}/areas/${slug(area.name)}.html` : `${location.origin}/#plan/${slug(area.name)}`;
     const telegram = window.DengueTelegram?.username ? `https://t.me/${window.DengueTelegram.username}?start=${encodeURIComponent(area.code)}` : '';
     const date = new Date(api.state.data.current?.as_of).toLocaleDateString('en-SG', { day: 'numeric', month: 'long', year: 'numeric' });
     const short = new Date(api.state.data.current?.as_of).toLocaleDateString('en-SG', { day: 'numeric', month: 'short' });
